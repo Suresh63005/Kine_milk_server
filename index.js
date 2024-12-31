@@ -24,6 +24,36 @@ const swaggerUi = require('swagger-ui-express');
 // Models 
 
 const admin = require("./Models/Admin");
+const address = require("./Models/Address");
+const Banner = require("./Models/Banner");
+const Cash = require("./Models/Cash");
+const Category = require("./Models/Category");
+const Coupon = require("./Models/Coupon");
+const Delivery = require("./Models/Delivery");
+const Favorite = require("./Models/Favorite");
+const Mcat = require("./Models/Mcat");
+const Milk = require("./Models/Milk");
+const NormalOrder = require("./Models/NormalOrder");
+const NormalOrderProduct = require("./Models/NormalOrderProduct");
+const Notification = require("./Models/Notification");
+const Page = require("./Models/Page");
+const PaymentList = require("./Models/PaymentList");
+const PayoutSetting = require("./Models/PayoutSetting");
+const Photo = require("./Models/Photo");
+const Product = require("./Models/Product");
+const ProductAttribute = require("./Models/ProductAttribute");
+const Rider = require("./Models/Rider");
+const Rnoti = require("./Models/Rnoti");
+const ServiceDetails = require("./Models/ServiceDetails");
+const Snoti = require("./Models/Snoti");
+const SubscribeOrder = require("./Models/SubscribeOrder");
+const SubscribeOrderProduct = require("./Models/SubscribeOrderProduct");
+const Time = require("./Models/Time");
+const User = require("./Models/User");
+const WalletReport = require("./Models/WalletReport");
+const Zone = require("./Models/Zone");
+
+
 
 
 app.use(morgan("dev"));

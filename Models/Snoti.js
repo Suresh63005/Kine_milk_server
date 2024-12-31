@@ -1,5 +1,5 @@
 const { DataTypes } = require('sequelize');
-const sequelize = require('../path/to/your/sequelize/instance'); // Adjust the path to your Sequelize instance
+const sequelize = require('../config/db')
 
 const Snoti = sequelize.define('Snoti', {
   id: {
@@ -25,10 +25,8 @@ const Snoti = sequelize.define('Snoti', {
     allowNull: false,
   },
 }, {
-  tableName: 'tbl_snoti', // Match the table name in the database
-  timestamps: false, // Disable timestamps if not present in your table
-  charset: 'latin1',
-  collate: 'latin1_general_ci',
+  tableName: 'tbl_snoti', 
+  timestamps: true,
 });
 
 module.exports = Snoti;

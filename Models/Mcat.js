@@ -1,11 +1,10 @@
 const { DataTypes } = require('sequelize');
-const sequelize = require('../path/to/your/sequelize/instance'); // Adjust the path to your Sequelize instance
-
+const sequelize = require('../config/db')
 const Mcat = sequelize.define('Mcat', {
   id: {
     type: DataTypes.INTEGER,
     primaryKey: true,
-    autoIncrement: true, // Assuming you want auto-incrementing IDs
+    autoIncrement: true,
     allowNull: false,
   },
   store_id: {
@@ -26,9 +25,8 @@ const Mcat = sequelize.define('Mcat', {
   },
 }, {
   tableName: 'tbl_mcat', // Match the table name in the database
-  timestamps: false, // Disable timestamps if not present in your table
-  charset: 'latin1',
-  collate: 'latin1_general_ci',
+  timestamps: true,
+  
 });
 
 module.exports = Mcat;

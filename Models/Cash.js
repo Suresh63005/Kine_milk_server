@@ -1,5 +1,5 @@
 const { DataTypes } = require('sequelize');
-const sequelize = require('../path/to/your/sequelize/instance'); // Adjust the path to your Sequelize instance
+const sequelize = require('../config/db')
 
 const Cash = sequelize.define('Cash', {
   id: {
@@ -26,9 +26,7 @@ const Cash = sequelize.define('Cash', {
   },
 }, {
   tableName: 'tbl_cash',
-  timestamps: false,
-  charset: 'latin1',
-  collate: 'latin1_general_ci',
+  timestamps: true,
 });
 
 module.exports = Cash;

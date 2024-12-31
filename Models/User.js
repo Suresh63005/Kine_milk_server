@@ -1,5 +1,5 @@
 const { DataTypes } = require('sequelize');
-const sequelize = require('../config/database'); // Path to your sequelize instance
+const sequelize = require('../config/db')
 
 const User = sequelize.define('tbl_user', {
   id: {
@@ -52,9 +52,7 @@ const User = sequelize.define('tbl_user', {
   },
 }, {
   tableName: 'tbl_user',
-  timestamps: false, // Assuming the table doesn't have createdAt and updatedAt columns
-  charset: 'utf8mb3', // You can use utf8mb3 if required, or switch to utf8 if needed
-  collate: 'utf8mb3_general_ci', // Same as SQL statement
+  timestamps: true,
 });
 
 module.exports = User;

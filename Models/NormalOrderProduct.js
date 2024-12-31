@@ -1,5 +1,5 @@
 const { DataTypes } = require('sequelize');
-const sequelize = require('../path/to/your/sequelize/instance'); // Adjust the path to your Sequelize instance
+const sequelize = require('../config/db')
 
 const NormalOrderProduct = sequelize.define('NormalOrderProduct', {
   id: {
@@ -38,9 +38,7 @@ const NormalOrderProduct = sequelize.define('NormalOrderProduct', {
   },
 }, {
   tableName: 'tbl_normal_order_product', // Match the table name in the database
-  timestamps: false, // Disable timestamps if not present in your table
-  charset: 'latin1',
-  collate: 'latin1_general_ci',
+  timestamps: true,
 });
 
 module.exports = NormalOrderProduct;
