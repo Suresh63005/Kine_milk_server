@@ -9,7 +9,7 @@ const cookieParser = require("cookie-parser");
 const bodyParser = require("body-parser");
 const session = require("express-session");
 const path = require("path");
-// const sequelize = require("./db");
+const sequelize = require("./config/db");
 const PORT = process.env.PORT || 5001;
 const morgan = require("morgan");
 const swaggerUi = require('swagger-ui-express');
@@ -19,6 +19,11 @@ const swaggerUi = require('swagger-ui-express');
 
 // app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerFile));
 
+
+
+// Models 
+
+const admin = require("./Models/Admin");
 
 
 app.use(morgan("dev"));
@@ -31,7 +36,7 @@ app.use(express.urlencoded({ extended: true }));
 
 app.use(
   cors({
-    origin: ["http://localhost:3000"],
+    origin: ["http://localhost:3001"],
     credentials: true,
   })
 );
@@ -45,6 +50,19 @@ app.use(
     cookie: { secure: false },
   })
 );
+
+sequelize
+  .sync()
+  .then(() => {
+    console.log("Database & tables created!");
+  })
+  .catch((err) => {
+    console.error("Unable to create the database:", err);
+  });
+
+
+
+app.use('/user', require('./AdminRoutes/Auth_route'))
 
 app.get("/", (req, res) => {
     res.send("Server is Running");
