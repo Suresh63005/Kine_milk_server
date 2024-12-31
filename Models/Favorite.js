@@ -1,5 +1,5 @@
 const { DataTypes } = require('sequelize');
-const sequelize = require('../path/to/your/sequelize/instance'); // Adjust the path to your Sequelize instance
+const sequelize = require('../config/db'); 
 
 const Favorite = sequelize.define('Favorite', {
   id: {
@@ -21,9 +21,9 @@ const Favorite = sequelize.define('Favorite', {
     allowNull: false,
   },
 }, {
-  tableName: 'tbl_fav', // Match the table name in the database
-  timestamps: false, // Disable timestamps as they're not included in the table schema
-  charset: 'latin1', // Match the charset specified in the table definition
+  tableName: 'tbl_fav', 
+  timestamps: false, 
+  charset: 'latin1',
 });
 
 module.exports = Favorite;

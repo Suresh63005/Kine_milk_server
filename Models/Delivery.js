@@ -1,5 +1,5 @@
 const { DataTypes } = require('sequelize');
-const sequelize = require('../path/to/your/sequelize/instance'); // Adjust the path to your Sequelize instance
+const sequelize = require('../config/db');
 
 const Delivery = sequelize.define('Delivery', {
   id: {
@@ -25,8 +25,8 @@ const Delivery = sequelize.define('Delivery', {
     allowNull: false,
   },
 }, {
-  tableName: 'tbl_delivery', // Match the table name in the database
-  timestamps: false, // Disable timestamps if not present in your table
+  tableName: 'tbl_delivery', 
+  timestamps: false, 
   charset: 'utf8mb3',
   collate: 'utf8mb3_general_ci',
 });

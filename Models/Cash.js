@@ -1,5 +1,5 @@
 const { DataTypes } = require('sequelize');
-const sequelize = require('../path/to/your/sequelize/instance'); // Adjust the path to your Sequelize instance
+const sequelize = require('../config/db'); 
 
 const Cash = sequelize.define('Cash', {
   id: {

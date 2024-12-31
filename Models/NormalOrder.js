@@ -1,5 +1,5 @@
 const { DataTypes } = require('sequelize');
-const sequelize = require('../path/to/your/sequelize/instance'); // Adjust the path to your Sequelize instance
+const sequelize = require('../config/db');
 
 const NormalOrder = sequelize.define('NormalOrder', {
   id: {
@@ -128,9 +128,9 @@ const NormalOrder = sequelize.define('NormalOrder', {
     type: DataTypes.TEXT,
   },
 }, {
-  tableName: 'tbl_normal_order', // Match the table name in the database
-  timestamps: false, // Disable timestamps as they're not included in the table schema
-  charset: 'latin1', // Match the charset specified in the table definition
+  tableName: 'tbl_normal_order', 
+  timestamps: false, 
+  charset: 'latin1',
 });
 
 module.exports = NormalOrder;

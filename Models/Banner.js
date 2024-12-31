@@ -1,5 +1,5 @@
 const { DataTypes } = require('sequelize');
-const sequelize = require('../path/to/your/sequelize/instance'); // Adjust the path to your Sequelize instance
+const sequelize = require('../config/db'); 
 
 const Banner = sequelize.define('Banner', {
   id: {
@@ -9,7 +9,7 @@ const Banner = sequelize.define('Banner', {
     allowNull: false,
   },
   img: {
-    type: DataTypes.TEXT('long'), // TEXT type for long text values
+    type: DataTypes.TEXT('long'), 
     allowNull: false,
   },
   status: {
@@ -17,8 +17,8 @@ const Banner = sequelize.define('Banner', {
     allowNull: false,
   },
 }, {
-  tableName: 'banner', // Match the table name in the database
-  timestamps: false, // Disable timestamps if not present in your table
+  tableName: 'banner', 
+  timestamps: false, 
   charset: 'utf8mb4',
   collate: 'utf8mb4_unicode_ci',
 });

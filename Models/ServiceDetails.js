@@ -1,5 +1,5 @@
 const { DataTypes } = require('sequelize');
-const sequelize = require('../path/to/your/sequelize/instance'); // Adjust the path to your Sequelize instance
+const sequelize = require('../config/db');
 
 const ServiceDetails = sequelize.define('ServiceDetails', {
   id: {
@@ -166,8 +166,8 @@ const ServiceDetails = sequelize.define('ServiceDetails', {
     allowNull: false,
   },
 }, {
-  tableName: 'service_details', // Match the table name in the database
-  timestamps: false, // Disable timestamps if not present in your table
+  tableName: 'service_details',
+  timestamps: false, 
   charset: 'utf8mb4',
   collate: 'utf8mb4_0900_ai_ci',
 });

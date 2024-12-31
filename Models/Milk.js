@@ -1,20 +1,20 @@
 const { DataTypes } = require('sequelize');
-const sequelize = require('../path/to/your/sequelize/instance'); // Adjust the path to your Sequelize instance
+const sequelize = require('../config/db');
 
 const Milk = sequelize.define('Milk', {
   id: {
     type: DataTypes.INTEGER,
     primaryKey: true,
-    autoIncrement: true, // Assuming you want auto-incrementing IDs
+    autoIncrement: true,
     allowNull: false,
   },
   data: {
-    type: DataTypes.LONGTEXT, // Use LONGTEXT for large text data
+    type: DataTypes.LONGTEXT, 
     allowNull: false,
   },
 }, {
-  tableName: 'tbl_milk', // Match the table name in the database
-  timestamps: false, // Disable timestamps if not present in your table
+  tableName: 'tbl_milk', 
+  timestamps: false, 
   charset: 'utf8mb4',
   collate: 'utf8mb4_0900_ai_ci',
 });

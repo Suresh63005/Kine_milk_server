@@ -1,12 +1,12 @@
 const { DataTypes } = require('sequelize');
-const sequelize = require('../config/database'); // Path to your sequelize instance
+const sequelize = require('../config/db'); 
 
 const Zone = sequelize.define('zones', {
   id: {
     type: DataTypes.INTEGER,
     primaryKey: true,
     allowNull: false,
-    autoIncrement: true, // Assuming auto increment for the id field
+    autoIncrement: true,
   },
   title: {
     type: DataTypes.TEXT,
@@ -26,8 +26,8 @@ const Zone = sequelize.define('zones', {
   }
 }, {
   tableName: 'zones',
-  timestamps: false, // Assuming the table doesn't have createdAt and updatedAt columns
-  charset: 'latin1',  // You can adjust the charset as needed
+  timestamps: false,
+  charset: 'latin1',
 });
 
 module.exports = Zone;
