@@ -1,11 +1,13 @@
 const { DataTypes } = require('sequelize');
+
 const sequelize = require('../config/db')
+
 
 const Rnoti = sequelize.define('Rnoti', {
   id: {
     type: DataTypes.INTEGER,
     primaryKey: true,
-    autoIncrement: true, // Assuming you want auto-incrementing IDs
+    autoIncrement: true,
     allowNull: false,
   },
   rid: {
@@ -17,12 +19,15 @@ const Rnoti = sequelize.define('Rnoti', {
     allowNull: false,
   },
   date: {
-    type: DataTypes.DATE, // Use DATE for datetime values
+    type: DataTypes.DATE, 
     allowNull: false,
   },
 }, {
+
   tableName: 'tbl_rnoti', 
   timestamps: true,
+
+
 });
 
 module.exports = Rnoti;

@@ -1,5 +1,7 @@
 const { DataTypes } = require('sequelize');
+
 const sequelize = require('../config/db')
+
 
 const Cash = sequelize.define('Cash', {
   id: {

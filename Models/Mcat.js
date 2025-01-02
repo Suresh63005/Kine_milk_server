@@ -1,5 +1,7 @@
 const { DataTypes } = require('sequelize');
+
 const sequelize = require('../config/db')
+
 const Mcat = sequelize.define('Mcat', {
   id: {
     type: DataTypes.INTEGER,
@@ -24,9 +26,11 @@ const Mcat = sequelize.define('Mcat', {
     allowNull: false,
   },
 }, {
+
   tableName: 'tbl_mcat', // Match the table name in the database
   timestamps: true,
   
+
 });
 
 module.exports = Mcat;

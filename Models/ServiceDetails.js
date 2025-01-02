@@ -1,5 +1,7 @@
 const { DataTypes } = require('sequelize');
+
 const sequelize = require('../config/db')
+
 
 const ServiceDetails = sequelize.define('ServiceDetails', {
   id: {
@@ -166,8 +168,11 @@ const ServiceDetails = sequelize.define('ServiceDetails', {
     allowNull: false,
   },
 }, {
+
   tableName: 'service_details', // Match the table name in the database
   timestamps: true,
+
+
 });
 
 module.exports = ServiceDetails;

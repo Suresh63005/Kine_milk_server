@@ -13,6 +13,8 @@ const sequelize = require("./config/db");
 const PORT = process.env.PORT || 5001;
 const morgan = require("morgan");
 const swaggerUi = require('swagger-ui-express');
+const logger=require("morgan")
+app.use(logger('dev'))
 // const swaggerFile = require('./swagger-output.json');
 // require("./models/index");
 

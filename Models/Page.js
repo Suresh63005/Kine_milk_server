@@ -1,11 +1,12 @@
 const { DataTypes } = require('sequelize');
 const sequelize = require('../config/db')
 
+
 const Page = sequelize.define('Page', {
   id: {
     type: DataTypes.INTEGER,
     primaryKey: true,
-    autoIncrement: true, // Assuming you want auto-incrementing IDs
+    autoIncrement: true, 
     allowNull: false,
   },
   title: {
@@ -22,7 +23,9 @@ const Page = sequelize.define('Page', {
   },
 }, {
   tableName: 'tbl_page',
+
   timestamps: true,
+
 });
 
 module.exports = Page;

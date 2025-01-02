@@ -1,11 +1,13 @@
 const { DataTypes } = require('sequelize');
+
 const sequelize = require('../config/db')
+
 
 const Rider = sequelize.define('Rider', {
   id: {
     type: DataTypes.INTEGER,
     primaryKey: true,
-    autoIncrement: true, // Assuming you want auto-incrementing IDs
+    autoIncrement: true,
     allowNull: false,
   },
   store_id: {
@@ -37,7 +39,7 @@ const Rider = sequelize.define('Rider', {
     allowNull: false,
   },
   rdate: {
-    type: DataTypes.DATEONLY, // Use DATEONLY for date without time
+    type: DataTypes.DATEONLY, 
     allowNull: false,
   },
   status: {
@@ -46,7 +48,10 @@ const Rider = sequelize.define('Rider', {
   },
 }, {
   tableName: 'tbl_rider', 
+
   timestamps: true,
+
+
 });
 
 module.exports = Rider;

@@ -1,12 +1,16 @@
 const { DataTypes } = require('sequelize');
+
 const sequelize = require('../config/db')
+=======
+const sequelize = require('../config/db'); 
+
 
 const User = sequelize.define('tbl_user', {
   id: {
     type: DataTypes.INTEGER,
     primaryKey: true,
     allowNull: false,
-    autoIncrement: true, // Assuming auto increment for the id field
+    autoIncrement: true,
   },
   name: {
     type: DataTypes.TEXT,
@@ -52,7 +56,10 @@ const User = sequelize.define('tbl_user', {
   },
 }, {
   tableName: 'tbl_user',
+
   timestamps: true,
+
+
 });
 
 module.exports = User;

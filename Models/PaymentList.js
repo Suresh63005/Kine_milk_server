@@ -1,5 +1,7 @@
 const { DataTypes } = require('sequelize');
+
 const sequelize = require('../config/db')
+
 
 const PaymentList = sequelize.define('PaymentList', {
   id: {
@@ -35,7 +37,9 @@ const PaymentList = sequelize.define('PaymentList', {
   },
 }, {
   tableName: 'tbl_payment_list', 
+
   timestamps: true 
+
 });
 
 module.exports = PaymentList;

@@ -1,11 +1,13 @@
 const { DataTypes } = require('sequelize');
+
 const sequelize = require('../config/db')
+
 
 const NormalOrderProduct = sequelize.define('NormalOrderProduct', {
   id: {
     type: DataTypes.INTEGER,
     primaryKey: true,
-    autoIncrement: true, // Assuming you want auto-incrementing IDs
+    autoIncrement: true, 
     allowNull: false,
   },
   oid: {
@@ -37,8 +39,10 @@ const NormalOrderProduct = sequelize.define('NormalOrderProduct', {
     allowNull: false,
   },
 }, {
+
   tableName: 'tbl_normal_order_product', // Match the table name in the database
   timestamps: true,
+
 });
 
 module.exports = NormalOrderProduct;

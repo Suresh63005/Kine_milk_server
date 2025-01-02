@@ -1,5 +1,7 @@
 const { DataTypes } = require('sequelize');
+
 const sequelize = require('../config/db') 
+
 
 const Delivery = sequelize.define('Delivery', {
   id: {
@@ -26,8 +28,10 @@ const Delivery = sequelize.define('Delivery', {
   },
 }, {
   tableName: 'tbl_delivery', 
+
   timestamps: true, 
   
+
 });
 
 module.exports = Delivery;

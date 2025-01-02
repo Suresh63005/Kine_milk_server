@@ -1,5 +1,7 @@
 const { DataTypes } = require('sequelize');
+
 const sequelize = require('../config/db')
+
 
 const PayoutSetting = sequelize.define('PayoutSetting', {
   id: {
@@ -27,7 +29,7 @@ const PayoutSetting = sequelize.define('PayoutSetting', {
   created_at: {
     type: DataTypes.DATE,
     allowNull: false,
-    defaultValue: DataTypes.NOW, // Default to current date
+    defaultValue: DataTypes.NOW, 
   },
 }, {
   tableName: 'tbl_payout_settings',

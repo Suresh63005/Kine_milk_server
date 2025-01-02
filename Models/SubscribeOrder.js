@@ -1,5 +1,7 @@
 const { DataTypes } = require('sequelize');
+
 const sequelize = require('../config/db')
+
 
 const SubscribeOrder = sequelize.define('SubscribeOrder', {
   id: {
@@ -127,8 +129,11 @@ const SubscribeOrder = sequelize.define('SubscribeOrder', {
     allowNull: true,
   },
 }, {
+
   tableName: 'tbl_subscribe_order', 
   timestamps: true
+
+
 });
 
 module.exports = SubscribeOrder;

@@ -1,5 +1,7 @@
 const { DataTypes } = require('sequelize');
+
 const sequelize = require('../config/db')
+
 
 const NormalOrder = sequelize.define('NormalOrder', {
   id: {
@@ -128,8 +130,10 @@ const NormalOrder = sequelize.define('NormalOrder', {
     type: DataTypes.TEXT,
   },
 }, {
+
   tableName: 'tbl_normal_order', // Match the table name in the database
   timestamps: true,
+
 });
 
 module.exports = NormalOrder;

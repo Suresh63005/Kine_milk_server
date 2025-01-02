@@ -1,11 +1,13 @@
 const { DataTypes } = require('sequelize');
+
 const sequelize = require('../config/db')
+
 
 const Notification = sequelize.define('Notification', {
   id: {
     type: DataTypes.INTEGER,
     primaryKey: true,
-    autoIncrement: true, // Assuming you want auto-incrementing IDs
+    autoIncrement: true,
     allowNull: false,
   },
   uid: {
@@ -13,7 +15,7 @@ const Notification = sequelize.define('Notification', {
     allowNull: false,
   },
   datetime: {
-    type: DataTypes.DATE, // Use DATE for datetime values
+    type: DataTypes.DATE, 
     allowNull: false,
   },
   title: {
@@ -25,8 +27,10 @@ const Notification = sequelize.define('Notification', {
     allowNull: false,
   },
 }, {
+
   tableName: 'tbl_notification', // Match the table name in the database
   timestamps: true,
+
 });
 
 module.exports = Notification;

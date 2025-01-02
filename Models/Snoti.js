@@ -1,11 +1,15 @@
 const { DataTypes } = require('sequelize');
+
 const sequelize = require('../config/db')
+=======
+const sequelize = require('../config/db'); 
+
 
 const Snoti = sequelize.define('Snoti', {
   id: {
     type: DataTypes.INTEGER,
     primaryKey: true,
-    autoIncrement: true, // Assuming you want auto-incrementing IDs
+    autoIncrement: true,
     allowNull: false,
   },
   sid: {
@@ -13,7 +17,7 @@ const Snoti = sequelize.define('Snoti', {
     allowNull: false,
   },
   datetime: {
-    type: DataTypes.DATE, // Use DATE for datetime values
+    type: DataTypes.DATE,
     allowNull: false,
   },
   title: {
@@ -26,7 +30,10 @@ const Snoti = sequelize.define('Snoti', {
   },
 }, {
   tableName: 'tbl_snoti', 
+
   timestamps: true,
+
+
 });
 
 module.exports = Snoti;

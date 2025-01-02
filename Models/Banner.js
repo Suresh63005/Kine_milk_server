@@ -1,5 +1,7 @@
 const { DataTypes } = require('sequelize');
+
 const sequelize = require('../config/db')
+
 
 const Banner = sequelize.define('Banner', {
   id: {
@@ -9,7 +11,7 @@ const Banner = sequelize.define('Banner', {
     allowNull: false,
   },
   img: {
-    type: DataTypes.TEXT('long'), // TEXT type for long text values
+    type: DataTypes.TEXT('long'), 
     allowNull: false,
   },
   status: {
@@ -17,9 +19,11 @@ const Banner = sequelize.define('Banner', {
     allowNull: false,
   },
 }, {
+
   tableName: 'banner', // Match the table name in the database
   timestamps: true, // Disable timestamps if not present in your table
   
+
 });
 
 module.exports = Banner;

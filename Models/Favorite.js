@@ -1,5 +1,7 @@
 const { DataTypes } = require('sequelize');
+
 const sequelize = require('../config/db')
+
 
 const Favorite = sequelize.define('Favorite', {
   id: {
@@ -22,7 +24,12 @@ const Favorite = sequelize.define('Favorite', {
   },
 }, {
   tableName: 'tbl_fav', 
+
   timestamps: true,
+
+=======
+  timestamps: false, 
+  charset: 'latin1',
 
 });
 

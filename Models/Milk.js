@@ -9,12 +9,16 @@ const Milk = sequelize.define('Milk', {
     allowNull: false,
   },
   data: {
+
     type: DataTypes.TEXT('long'), 
+
     allowNull: false,
   },
 }, {
   tableName: 'tbl_milk', 
+
   timestamps: true, 
+
 });
 
 module.exports = Milk;
