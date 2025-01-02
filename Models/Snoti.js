@@ -1,11 +1,11 @@
 const { DataTypes } = require('sequelize');
-const sequelize = require('../path/to/your/sequelize/instance'); // Adjust the path to your Sequelize instance
+const sequelize = require('../config/db'); 
 
 const Snoti = sequelize.define('Snoti', {
   id: {
     type: DataTypes.INTEGER,
     primaryKey: true,
-    autoIncrement: true, // Assuming you want auto-incrementing IDs
+    autoIncrement: true,
     allowNull: false,
   },
   sid: {
@@ -13,7 +13,7 @@ const Snoti = sequelize.define('Snoti', {
     allowNull: false,
   },
   datetime: {
-    type: DataTypes.DATE, // Use DATE for datetime values
+    type: DataTypes.DATE,
     allowNull: false,
   },
   title: {
@@ -25,8 +25,8 @@ const Snoti = sequelize.define('Snoti', {
     allowNull: false,
   },
 }, {
-  tableName: 'tbl_snoti', // Match the table name in the database
-  timestamps: false, // Disable timestamps if not present in your table
+  tableName: 'tbl_snoti', 
+  timestamps: false, 
   charset: 'latin1',
   collate: 'latin1_general_ci',
 });

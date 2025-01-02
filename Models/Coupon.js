@@ -1,5 +1,5 @@
 const { DataTypes } = require('sequelize');
-const sequelize = require('../path/to/your/sequelize/instance'); // Adjust the path to your Sequelize instance
+const sequelize = require('../config/db');
 
 const Coupon = sequelize.define('Coupon', {
   id: {
@@ -29,7 +29,7 @@ const Coupon = sequelize.define('Coupon', {
     allowNull: false,
   },
   expire_date: {
-    type: DataTypes.DATEONLY, // Use DATEONLY for date without time
+    type: DataTypes.DATEONLY, 
     allowNull: false,
   },
   min_amt: {
@@ -47,7 +47,7 @@ const Coupon = sequelize.define('Coupon', {
   status: {
     type: DataTypes.INTEGER,
     allowNull: false,
-    defaultValue: 1, // Default value for status
+    defaultValue: 1,
   },
 }, {
   tableName: 'tbl_coupon',

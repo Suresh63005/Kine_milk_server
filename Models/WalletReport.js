@@ -1,11 +1,11 @@
 const { DataTypes } = require('sequelize');
-const sequelize = require('../path/to/your/sequelize/instance'); // Adjust the path to your Sequelize instance
+const sequelize = require('../config/db'); 
 
 const WalletReport = sequelize.define('WalletReport', {
   id: {
     type: DataTypes.INTEGER,
     primaryKey: true,
-    autoIncrement: true, // Assuming you want auto-incrementing IDs
+    autoIncrement: true, 
     allowNull: false,
   },
   uid: {
@@ -25,12 +25,12 @@ const WalletReport = sequelize.define('WalletReport', {
     allowNull: false,
   },
   tdate: {
-    type: DataTypes.DATE, // Use DATE for datetime values
+    type: DataTypes.DATE, 
     allowNull: false,
   },
 }, {
-  tableName: 'wallet_report', // Match the table name in the database
-  timestamps: false, // Disable timestamps if not present in your table
+  tableName: 'wallet_report', 
+  timestamps: false, 
   charset: 'latin1',
   collate: 'latin1_general_ci',
 });

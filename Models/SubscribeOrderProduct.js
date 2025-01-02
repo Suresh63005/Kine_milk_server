@@ -1,11 +1,10 @@
 const { DataTypes } = require('sequelize');
-const sequelize = require('../path/to/your/sequelize/instance'); // Adjust the path to your Sequelize instance
-
+const sequelize = require('../config/db'); 
 const SubscribeOrderProduct = sequelize.define('SubscribeOrderProduct', {
   id: {
     type: DataTypes.INTEGER,
     primaryKey: true,
-    autoIncrement: true, // Assuming you want auto-incrementing IDs
+    autoIncrement: true,
     allowNull: false,
   },
   oid: {
@@ -37,7 +36,7 @@ const SubscribeOrderProduct = sequelize.define('SubscribeOrderProduct', {
     allowNull: false,
   },
   startdate: {
-    type: DataTypes.DATEONLY, // Use DATEONLY for date without time
+    type: DataTypes.DATEONLY,
     allowNull: false,
   },
   totaldelivery: {
@@ -50,19 +49,19 @@ const SubscribeOrderProduct = sequelize.define('SubscribeOrderProduct', {
   },
   completedates: {
     type: DataTypes.TEXT,
-    allowNull: true, // Allow null for optional fields
+    allowNull: true, 
   },
   selectday: {
     type: DataTypes.TEXT,
-    allowNull: true, // Allow null for optional fields
+    allowNull: true, 
   },
   tslot: {
     type: DataTypes.TEXT,
     allowNull: false,
   },
 }, {
-  tableName: 'tbl_subscribe_order_product', // Match the table name in the database
-  timestamps: false, // Disable timestamps if not present in your table
+  tableName: 'tbl_subscribe_order_product', 
+  timestamps: false, 
   charset: 'latin1',
   collate: 'latin1_general_ci',
 });

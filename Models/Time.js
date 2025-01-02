@@ -1,11 +1,10 @@
 const { DataTypes } = require('sequelize');
-const sequelize = require('../path/to/your/sequelize/instance'); // Adjust the path to your Sequelize instance
-
+const sequelize = require('../config/db');
 const Time = sequelize.define('Time', {
   id: {
     type: DataTypes.INTEGER,
     primaryKey: true,
-    autoIncrement: true, // Assuming you want auto-incrementing IDs
+    autoIncrement: true,
     allowNull: false,
   },
   store_id: {
@@ -13,11 +12,11 @@ const Time = sequelize.define('Time', {
     allowNull: false,
   },
   mintime: {
-    type: DataTypes.TIME, // Use TIME for time values
+    type: DataTypes.TIME, 
     allowNull: false,
   },
   maxtime: {
-    type: DataTypes.TIME, // Use TIME for time values
+    type: DataTypes.TIME,
     allowNull: false,
   },
   status: {
@@ -25,8 +24,8 @@ const Time = sequelize.define('Time', {
     allowNull: false,
   },
 }, {
-  tableName: 'tbl_time', // Match the table name in the database
-  timestamps: false, // Disable timestamps if not present in your table
+  tableName: 'tbl_time', 
+  timestamps: false, 
   charset: 'latin1',
   collate: 'latin1_general_ci',
 });

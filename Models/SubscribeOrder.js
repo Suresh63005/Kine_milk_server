@@ -1,5 +1,5 @@
 const { DataTypes } = require('sequelize');
-const sequelize = require('../path/to/your/sequelize/instance'); // Adjust the path to your Sequelize instance
+const sequelize = require('../config/db');
 
 const SubscribeOrder = sequelize.define('SubscribeOrder', {
   id: {
@@ -127,9 +127,9 @@ const SubscribeOrder = sequelize.define('SubscribeOrder', {
     allowNull: true,
   },
 }, {
-  tableName: 'tbl_subscribe_order', // Match the table name in the database
-  timestamps: false, // Disable timestamps since they're not in the table schema
-  charset: 'latin1', // Match the charset specified in the table definition
+  tableName: 'tbl_subscribe_order',
+  timestamps: false,
+  charset: 'latin1',
 });
 
 module.exports = SubscribeOrder;
