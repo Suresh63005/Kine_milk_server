@@ -1,5 +1,7 @@
 const { DataTypes } = require('sequelize');
-const sequelize = require('../config/db');
+
+const sequelize = require('../config/db')
+
 
 const Rider = sequelize.define('Rider', {
   id: {
@@ -46,9 +48,10 @@ const Rider = sequelize.define('Rider', {
   },
 }, {
   tableName: 'tbl_rider', 
-  timestamps: false,
-  charset: 'latin1',
-  collate: 'latin1_general_ci',
+
+  timestamps: true,
+
+
 });
 
 module.exports = Rider;

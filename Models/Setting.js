@@ -1,5 +1,7 @@
 const { DataTypes } = require('sequelize');
-const sequelize = require('../config/db');
+
+const sequelize = require('../config/db')
+
 
 const Setting = sequelize.define('Setting', {
   id: {
@@ -69,9 +71,11 @@ const Setting = sequelize.define('Setting', {
     allowNull: false,
   },
 }, {
-  tableName: 'tbl_setting',
-  timestamps: false,
-  charset: 'latin1',
+
+  tableName: 'tbl_setting', // Match the table name in the database
+  timestamps: true,
+
+
 });
 
 module.exports = Setting;

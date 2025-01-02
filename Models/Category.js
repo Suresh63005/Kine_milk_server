@@ -1,5 +1,7 @@
 const { DataTypes } = require('sequelize');
-const sequelize = require('../config/db');
+
+const sequelize = require('../config/db')
+
 
 const Category = sequelize.define('Category', {
   id: {
@@ -26,9 +28,9 @@ const Category = sequelize.define('Category', {
   },
 }, {
   tableName: 'tbl_category', 
-  timestamps: false, 
-  charset: 'utf8mb3',
-  collate: 'utf8mb3_general_ci',
+  timestamps: true, 
+  
+
 });
 
 module.exports = Category;

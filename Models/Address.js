@@ -1,5 +1,7 @@
 const { DataTypes } = require('sequelize');
-const sequelize = require('../config/db'); // Adjust the path to your Sequelize instance
+
+const sequelize = require('../config/db'); 
+
 
 const Address = sequelize.define('Address', {
   id: {
@@ -38,9 +40,7 @@ const Address = sequelize.define('Address', {
   },
 }, {
   tableName: 'tbl_address',
-  timestamps: false,
-  charset: 'utf8mb4',
-  collate: 'utf8mb4_0900_ai_ci',
+  timestamps: true,
 });
 
 module.exports = Address;

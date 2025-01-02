@@ -1,5 +1,8 @@
 const { DataTypes } = require('sequelize');
-const sequelize = require('../config/db');
+
+const sequelize = require('../config/db')
+
+
 const Time = sequelize.define('Time', {
   id: {
     type: DataTypes.INTEGER,
@@ -24,10 +27,11 @@ const Time = sequelize.define('Time', {
     allowNull: false,
   },
 }, {
-  tableName: 'tbl_time', 
-  timestamps: false, 
-  charset: 'latin1',
-  collate: 'latin1_general_ci',
+
+  tableName: 'tbl_time', // Match the table name in the database
+  timestamps: true
+
+
 });
 
 module.exports = Time;

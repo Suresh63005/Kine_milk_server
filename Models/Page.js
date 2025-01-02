@@ -1,5 +1,6 @@
 const { DataTypes } = require('sequelize');
-const sequelize = require('../config/db');
+const sequelize = require('../config/db')
+
 
 const Page = sequelize.define('Page', {
   id: {
@@ -22,9 +23,9 @@ const Page = sequelize.define('Page', {
   },
 }, {
   tableName: 'tbl_page',
-  timestamps: false, 
-  charset: 'latin1',
-  collate: 'latin1_general_ci',
+
+  timestamps: true,
+
 });
 
 module.exports = Page;

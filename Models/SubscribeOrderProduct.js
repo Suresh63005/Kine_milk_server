@@ -1,5 +1,10 @@
 const { DataTypes } = require('sequelize');
+
+const sequelize = require('../config/db')
+
+=======
 const sequelize = require('../config/db'); 
+
 const SubscribeOrderProduct = sequelize.define('SubscribeOrderProduct', {
   id: {
     type: DataTypes.INTEGER,
@@ -61,9 +66,10 @@ const SubscribeOrderProduct = sequelize.define('SubscribeOrderProduct', {
   },
 }, {
   tableName: 'tbl_subscribe_order_product', 
-  timestamps: false, 
-  charset: 'latin1',
-  collate: 'latin1_general_ci',
+
+  timestamps: true
+
+
 });
 
 module.exports = SubscribeOrderProduct;

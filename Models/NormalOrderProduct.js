@@ -1,5 +1,7 @@
 const { DataTypes } = require('sequelize');
-const sequelize = require('../config/db');
+
+const sequelize = require('../config/db')
+
 
 const NormalOrderProduct = sequelize.define('NormalOrderProduct', {
   id: {
@@ -37,10 +39,10 @@ const NormalOrderProduct = sequelize.define('NormalOrderProduct', {
     allowNull: false,
   },
 }, {
-  tableName: 'tbl_normal_order_product', 
-  timestamps: false, 
-  charset: 'latin1',
-  collate: 'latin1_general_ci',
+
+  tableName: 'tbl_normal_order_product', // Match the table name in the database
+  timestamps: true,
+
 });
 
 module.exports = NormalOrderProduct;

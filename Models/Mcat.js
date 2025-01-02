@@ -1,5 +1,6 @@
 const { DataTypes } = require('sequelize');
-const sequelize = require('../config/db'); 
+
+const sequelize = require('../config/db')
 
 const Mcat = sequelize.define('Mcat', {
   id: {
@@ -25,10 +26,11 @@ const Mcat = sequelize.define('Mcat', {
     allowNull: false,
   },
 }, {
-  tableName: 'tbl_mcat',
-  timestamps: false, 
-  charset: 'latin1',
-  collate: 'latin1_general_ci',
+
+  tableName: 'tbl_mcat', // Match the table name in the database
+  timestamps: true,
+  
+
 });
 
 module.exports = Mcat;

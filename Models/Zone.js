@@ -1,12 +1,18 @@
 const { DataTypes } = require('sequelize');
-const sequelize = require('../config/db'); 
+
+const sequelize = require('../config/db')
+
+
 
 const Zone = sequelize.define('zones', {
   id: {
     type: DataTypes.INTEGER,
     primaryKey: true,
     allowNull: false,
-    autoIncrement: true,
+
+    autoIncrement: true, 
+
+
   },
   title: {
     type: DataTypes.TEXT,
@@ -26,8 +32,9 @@ const Zone = sequelize.define('zones', {
   }
 }, {
   tableName: 'zones',
-  timestamps: false,
-  charset: 'latin1',
+
+  timestamps: true,
+
 });
 
 module.exports = Zone;

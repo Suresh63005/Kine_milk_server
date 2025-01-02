@@ -1,5 +1,7 @@
 const { DataTypes } = require('sequelize');
-const sequelize = require('../config/db'); 
+
+const sequelize = require('../config/db')
+
 
 const Notification = sequelize.define('Notification', {
   id: {
@@ -25,10 +27,10 @@ const Notification = sequelize.define('Notification', {
     allowNull: false,
   },
 }, {
-  tableName: 'tbl_notification', 
-  timestamps: false, 
-  charset: 'latin1',
-  collate: 'latin1_general_ci',
+
+  tableName: 'tbl_notification', // Match the table name in the database
+  timestamps: true,
+
 });
 
 module.exports = Notification;

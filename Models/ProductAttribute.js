@@ -1,5 +1,7 @@
 const { DataTypes } = require('sequelize');
-const sequelize = require('../config/db');
+
+const sequelize = require('../config/db')
+
 
 const ProductAttribute = sequelize.define('ProductAttribute', {
   id: {
@@ -41,9 +43,11 @@ const ProductAttribute = sequelize.define('ProductAttribute', {
     allowNull: false,
   },
 }, {
-  tableName: 'tbl_product_attribute', 
-  timestamps: false, 
-  charset: 'latin1', 
+
+  tableName: 'tbl_product_attribute', // Match the table name in the database
+  timestamps: true,
+
+
 });
 
 module.exports = ProductAttribute;

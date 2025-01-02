@@ -1,5 +1,9 @@
 const { DataTypes } = require('sequelize');
+
+const sequelize = require('../config/db')
+=======
 const sequelize = require('../config/db'); 
+
 
 const WalletReport = sequelize.define('WalletReport', {
   id: {
@@ -29,10 +33,11 @@ const WalletReport = sequelize.define('WalletReport', {
     allowNull: false,
   },
 }, {
-  tableName: 'wallet_report', 
-  timestamps: false, 
-  charset: 'latin1',
-  collate: 'latin1_general_ci',
+
+  tableName: 'wallet_report', // Match the table name in the database
+  timestamps: true,
+
+
 });
 
 module.exports = WalletReport;

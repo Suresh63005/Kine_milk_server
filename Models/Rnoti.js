@@ -1,5 +1,7 @@
 const { DataTypes } = require('sequelize');
-const sequelize = require('../config/db');
+
+const sequelize = require('../config/db')
+
 
 const Rnoti = sequelize.define('Rnoti', {
   id: {
@@ -21,10 +23,11 @@ const Rnoti = sequelize.define('Rnoti', {
     allowNull: false,
   },
 }, {
-  tableName: 'tbl_rnoti',
-  timestamps: false, 
-  charset: 'latin1',
-  collate: 'latin1_general_ci',
+
+  tableName: 'tbl_rnoti', 
+  timestamps: true,
+
+
 });
 
 module.exports = Rnoti;

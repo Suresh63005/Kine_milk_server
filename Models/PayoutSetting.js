@@ -1,5 +1,7 @@
 const { DataTypes } = require('sequelize');
-const sequelize = require('../config/db'); 
+
+const sequelize = require('../config/db')
+
 
 const PayoutSetting = sequelize.define('PayoutSetting', {
   id: {
@@ -31,9 +33,7 @@ const PayoutSetting = sequelize.define('PayoutSetting', {
   },
 }, {
   tableName: 'tbl_payout_settings',
-  timestamps: false,
-  charset: 'utf8mb4',
-  collate: 'utf8mb4_0900_ai_ci',
+  timestamps: true,
 });
 
 module.exports = PayoutSetting;
