@@ -94,8 +94,8 @@ sequelize
 
 
 
-app.use('/user', require('./AdminRoutes/Auth_route'))
-
+app.use('/admin', require('./AdminRoutes/Auth_route'))
+app.use("/category",require("./AdminRoutes/Category.route"))
 app.get("/", (req, res) => {
     res.send("Server is Running");
   });
