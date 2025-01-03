@@ -68,7 +68,7 @@ app.use(express.urlencoded({ extended: true }));
 
 app.use(
   cors({
-    origin: ["http://localhost:3001"],
+    origin: ["http://localhost:3000"],
     credentials: true,
   })
 );
@@ -96,6 +96,9 @@ sequelize
 
 app.use('/admin', require('./AdminRoutes/Auth_route'))
 app.use("/category",require("./AdminRoutes/Category.route"))
+app.use("/product-attribute",require("./AdminRoutes/ProductAttributes.route"))
+app.use("/product-images",require("./AdminRoutes/ProductImages.route"))
+app.use("/delivery",require("./AdminRoutes/Delivery.route"))
 app.get("/", (req, res) => {
     res.send("Server is Running");
   });
