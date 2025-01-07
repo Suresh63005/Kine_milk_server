@@ -341,10 +341,87 @@ const DeliverySearchSchema = Joi.object({
   }),
 });
 
+
+// for faq
+const upsertFaqSchema = Joi.object({
+  id: Joi.string().pattern(/^\d+$/).allow(null, '').optional().messages({
+    "string.pattern.base": "ID must be a number.",
+    "any.only": "ID cannot be empty."
+  }),
+  question: Joi.string().trim().required().messages({
+    "string.base": "question must be a string.",
+    "any.required": "question is required.",
+  }),
+  answer: Joi.string().trim().required().messages({
+    "string.base": "answer must be a string.",
+    "any.required": "answer is required.",
+  }),
+  status: Joi.number().valid(0, 1).required().messages({
+    "number.base": "Status must be a number (0 or 1).",
+    "any.required": "Status is required.",
+  })
+});
+
+const getFaqIdBySchema = Joi.object({
+  id: Joi.number().integer().required().messages({
+    "number.base": "ID must be a number.",
+    "number.integer": "ID must be an integer.",
+    "any.required": "ID is required.",
+  }),
+});
+
+const FaqDeleteSchema = Joi.object({
+  id: Joi.number().integer().required().messages({
+    "number.base": "ID must be a number.",
+    "number.integer": "ID must be an integer.",
+    "any.required": "ID is required.",
+  }),
+  forceDelete: Joi.string().valid("true", "false").optional()
+      .messages({
+        "any.only": "forceDelete must be either 'true' or 'false'",
+      }),
+});
+
+const FaqSearchSchema = Joi.object({
+  id: Joi.string().pattern(/^\d+$/).allow(null, '').optional().messages({
+    "string.pattern.base": "ID must be a number.",
+    "any.only": "ID cannot be empty."
+  }),
+  
+  question: Joi.string().trim().required().messages({
+    "string.base": "Title must be a string.",
+    "any.required": "Title is required.",
+  }),
+  answer: Joi.string().trim().required().messages({
+    "string.base": "answer must be a string.",
+    "any.required": "answer is required.",
+  }),
+  
+  status: Joi.number().valid(0, 1).required().messages({
+    "number.base": "Status must be a number (0 or 1).",
+    "any.required": "Status is required.",
+  }),
+  
+  img: Joi.string().trim().optional().messages({
+    "string.base": "Image URL must be a string.",
+  }),
+  
+  cat_id: Joi.string().trim().required().messages({
+    "string.base": "Category ID must be a string.",
+    "any.required": "Category ID is required.",
+  }),
+
+  description: Joi.string().trim().required().messages({
+    "string.base": "Description must be a string.",
+    "any.required": "Description is required.",
+  }),
+});
+
 module.exports={registerAdminSchema,loginAdminSchema,updateAdminSchema, deleteAdminSchema,getAdminbyIdSchema,searchAdminSchema,
     getCategoryByIdSchema,categoryDeleteSchema,categorySearchSchema,upsertCategorySchema,
     getProductByIdSchema,ProductDeleteSchema,ProductSearchSchema,upsertProductSchema,
     getProductAttributeByIdSchema,ProductAttributeDeleteSchema,ProductAttributeSearchSchema,upsertProductAttributeSchema,
     ProductImagesByIdSchema,ProductImagesDeleteSchema,ProductImagesSearchSchema,ProductImagesUpsertSchema,
-    getDeliveryByIdSchema,DeliveryDeleteSchema,DeliverySearchSchema
+    getDeliveryByIdSchema,DeliveryDeleteSchema,DeliverySearchSchema,
+    upsertFaqSchema,getFaqIdBySchema,FaqDeleteSchema,FaqSearchSchema
 }
