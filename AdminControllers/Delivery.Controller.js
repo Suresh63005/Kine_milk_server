@@ -5,16 +5,16 @@ const logger = require("../utils/logger");
 const { getDeliveryByIdSchema, DeliveryDeleteSchema, DeliverySearchSchema } = require("../utils/validation");
 
 const getAllDelivery=asynHandler(async(req,res,next)=>{
-    const Delivery=await Delivery.findAll();
+    const DeliveryDetails=await Delivery.findAll();
     logger.info("sucessfully get all Delivery");
-    res.status(200).json(Delivery);
+    res.status(200).json(DeliveryDetails);
 });
 
 const getDeliveryCount=asynHandler(async(req,res)=>{
     const DeliveryCount=await Delivery.count();
-    const Delivery=await Delivery.findAll();
+    const DeliveryAll=await Delivery.findAll();
     logger.info("Delivery",DeliveryCount)
-    res.status(200).json({Delivery,Delivery:DeliveryCount})
+    res.status(200).json({DeliveryAll,Delivery:DeliveryCount})
 });
 
 const getDeliveryById=asynHandler(async(req,res)=>{
@@ -25,13 +25,13 @@ const getDeliveryById=asynHandler(async(req,res)=>{
     }
 
     const {id}=req.params;
-    const Delivery=await Delivery.findByPk({where:{id:id}});
-    if(!Delivery){
+    const DeliverybyId=await Delivery.findOne({where:{id:id}});
+    if(!DeliverybyId){
         logger.error('Delivery not found')
         return res.status(404).json({error:"Delivery not found"})
     }
     logger.info("Delivery found");
-    res.status(200).json(Delivery)
+    res.status(200).json(DeliverybyId)
 });
 
 const deleteDelivery = asynHandler(async (req, res) => {
@@ -43,25 +43,25 @@ const deleteDelivery = asynHandler(async (req, res) => {
     const { id } = req.params;
     const { forceDelete } = req.body;
 
-        const Delivery = await Delivery.findOne({ where: { id }, paranoid: false });
+        const DeliveryDelete = await Delivery.findOne({ where: { id }, paranoid: false });
 
-        if (!Delivery) {
+        if (!DeliveryDelete) {
             logger.error("Delivery not found");
             return res.status(404).json({ error: "Delivery not found" });
         }
 
-        if (Delivery.deletedAt && forceDelete !== "true") {
+        if (DeliveryDelete.deletedAt && forceDelete !== "true") {
             logger.error("Delivery is already soft-deleted");
             return res.status(400).json({ error: "Delivery is already soft-deleted. Use forceDelete=true to permanently delete it." });
         }
 
         if (forceDelete === "true") {
-            await Delivery.destroy({ force: true });
+            await DeliveryDelete.destroy({ force: true });
             logger.info("Delivery permanently deleted");
             return res.status(200).json({ message: "Delivery permanently deleted successfully" });
         }
 
-        await Delivery.destroy();
+        await DeliveryDelete.destroy();
         logger.info("Delivery soft-deleted");
         return res.status(200).json({ message: "Delivery soft deleted successfully" });
 });
