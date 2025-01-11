@@ -18,10 +18,7 @@ app.use(logger('dev'))
 // const swaggerFile = require('./swagger-output.json');
 // require("./models/index");
 
-
 // app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerFile));
-
-
 
 // Models 
 
@@ -55,9 +52,6 @@ const User = require("./Models/User");
 const WalletReport = require("./Models/WalletReport");
 const Zone = require("./Models/Zone");
 
-
-
-
 app.use(morgan("dev"));
 // Middlewares
 dotEnv.config();
@@ -68,7 +62,7 @@ app.use(express.urlencoded({ extended: true }));
 
 app.use(
   cors({
-    origin: ["http://localhost:3000"],
+    origin: ["http://localhost:3000","http://localhost:3001"],
     credentials: true,
   })
 );
@@ -92,18 +86,21 @@ sequelize
     console.error("Unable to create the database:", err);
   });
 
-
-
 app.use('/admin', require('./AdminRoutes/Auth_route'))
 app.use("/category",require("./AdminRoutes/Category.route"))
 app.use("/product-attribute",require("./AdminRoutes/ProductAttributes.route"))
 app.use("/product-images",require("./AdminRoutes/ProductImages.route"))
 app.use("/delivery",require("./AdminRoutes/Delivery.route"))
+// app.use("/couppon",require("./AdminRoutes/Couppon.route"))
+app.use("/rider",require("./AdminRoutes/Rider.route"))
+// app.use("/gallery",require("./AdminRoutes/Gallery.route"))
+app.use("/faq",require("./AdminRoutes/Faq.route"))
+
 app.get("/", (req, res) => {
     res.send("Server is Running");
   });
 
-  app.listen(PORT, () => {
-    console.log(`Server is Running on PORT http://localhost:${PORT}`);
-    console.log(`Swagger docs available at http://localhost:${PORT}/api-docs`);
-  });
+app.listen(PORT, () => {
+  console.log(`Server is Running on PORT http://localhost:${PORT}`);
+  console.log(`Swagger docs available at http://localhost:${PORT}/api-docs`);
+});

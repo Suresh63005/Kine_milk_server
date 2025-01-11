@@ -86,7 +86,6 @@ const upsertCategory = async (req, res) => {
     }
 };
 
-
 const getAllCategories=asynHandler(async(req,res,next)=>{
     const categories=await Category.findAll();
     logger.info("sucessfully get all categories");
