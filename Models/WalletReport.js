@@ -4,6 +4,7 @@ const sequelize = require('../config/db')
 
 
 
+
 const WalletReport = sequelize.define('WalletReport', {
   id: {
     type: DataTypes.INTEGER,
