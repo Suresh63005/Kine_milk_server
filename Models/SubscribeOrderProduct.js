@@ -2,8 +2,7 @@ const { DataTypes } = require('sequelize');
 
 const sequelize = require('../config/db')
 
-=======
-const sequelize = require('../config/db'); 
+
 
 const SubscribeOrderProduct = sequelize.define('SubscribeOrderProduct', {
   id: {

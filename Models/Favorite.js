@@ -27,9 +27,7 @@ const Favorite = sequelize.define('Favorite', {
 
   timestamps: true,
 
-=======
-  timestamps: false, 
-  charset: 'latin1',
+
 
 });
 
