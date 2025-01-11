@@ -5,86 +5,75 @@ const logger = require("../utils/logger");
 const { getCategoryByIdSchema, categoryDeleteSchema, categorySearchSchema, upsertCategorySchema } = require("../utils/validation");
 const { PutObjectCommand } = require("@aws-sdk/client-s3");
 const s3 = require("../config/awss3Config");
+const uploadToS3 = require("../config/fileUpload.aws");
 
 const upsertCategory = async (req, res) => {
     try {
-        const { id, title, status } = req.body;
-
-        console.log("Request body:", req.body);
-
-        // Validate file upload
-        if (!req.file) {
-            return res.status(400).json({
-                ResponseCode: "400",
-                Result: "false",
-                ResponseMsg: "No file uploaded!",
-            });
-        }
-
-        console.log("File received:", req.file);
-
-        // Prepare S3 upload parameters
-        const params = {
-            Bucket: process.env.S3_BUCKET_NAME,
-            Key: `uploads/${Date.now()}-${req.file.originalname}`,
-            Body: req.file.buffer,
-            ContentType: req.file.mimetype,
-            ACL: "public-read", // Ensure uploaded file is publicly accessible
-        };
-
-        console.log("Uploading to S3 with params:", params);
-
-        // Upload file to S3
-        const command = new PutObjectCommand(params);
-        await s3.send(command);
-
-        // Construct image URL
-        const imageUrl = `https://${params.Bucket}.s3.${process.env.AWS_REGION}.amazonaws.com/${params.Key}`;
-        console.log("Image uploaded to S3:", imageUrl);
-
-        // Handle category creation or update
-        let category;
-        if (id) {
-            // Update existing category
-            category = await Category.findByPk(id);
-            if (!category) {
-                logger.error("Category not found");
-                return res.status(404).json({ error: "Category not found" });
-            }
-
-            // Update category fields
-            category.title = title;
-            category.img = imageUrl || category.img;
-            category.status = status;
-
-            await category.save();
-            logger.info("Category updated successfully");
-            return res.status(200).json({ 
-                ResponseCode: "200", 
-                Result: "true", 
-                ResponseMsg: "Category updated successfully", 
-                category 
-            });
-        } else {
-            // Create new category
-            category = await Category.create({ title, img: imageUrl, status });
-            logger.info("Category created successfully");
-            return res.status(201).json({ 
-                ResponseCode: "201", 
-                Result: "true", 
-                ResponseMsg: "Category created successfully", 
-                category 
-            });
-        }
-    } catch (error) {
-        logger.error("Error processing request:", error.message, error.stack);
-        return res.status(500).json({
-            ResponseCode: "500",
-            Result: "false",
-            ResponseMsg: "Internal Server Error",
+      const { id, title, status, cover } = req.body;
+  
+      console.log("Request body:", req.body);
+  
+      // Validate required fields
+      if (!req.file || !title || !status || !cover) {
+        return res.status(400).json({
+          ResponseCode: "400",
+          Result: "false",
+          ResponseMsg: "Title, status, and file are required.",
         });
+      }
+  
+      // Upload image to S3
+      const imageUrl = await uploadToS3(req.file, "image");
+  
+      let category;
+      if (id) {
+        // Find category by ID
+        category = await Category.findByPk(id);
+        if (!category) {
+          return res.status(404).json({
+            ResponseCode: "404",
+            Result: "false",
+            ResponseMsg: "Category not found.",
+          });
+        }
+  
+        // Update category fields
+        await category.update({
+          title,
+          img: imageUrl || category.img,
+          status,
+          cover
+        });
+  
+        console.log("Category updated successfully:", category);
+        return res.status(200).json({
+          ResponseCode: "200",
+          Result: "true",
+          ResponseMsg: "Category updated successfully.",
+          category,
+        });
+      } else {
+        // Create new category
+        category = await Category.create({ title, img: imageUrl, status,cover });
+  
+        console.log("Category created successfully:", category);
+        return res.status(201).json({
+          ResponseCode: "201",
+          Result: "true",
+          ResponseMsg: "Category created successfully.",
+          category,
+        });
+      }
+    } catch (error) {
+      console.error("Error processing request:", error);
+      return res.status(500).json({
+        ResponseCode: "500",
+        Result: "false",
+        ResponseMsg: "Internal Server Error",
+      });
     }
-};
+  };
+  
 
 const getAllCategories=asynHandler(async(req,res,next)=>{
     const categories=await Category.findAll();
