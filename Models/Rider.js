@@ -18,7 +18,7 @@ const Rider = sequelize.define('Rider', {
     type: DataTypes.TEXT,
     allowNull: false,
   },
-  title: {
+  name: {
     type: DataTypes.TEXT,
     allowNull: false,
   },

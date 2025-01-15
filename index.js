@@ -96,6 +96,7 @@ app.use("/delivery",require("./AdminRoutes/Delivery.route"))
 app.use("/rider",require("./AdminRoutes/Rider.route"))
 // app.use("/gallery",require("./AdminRoutes/Gallery.route"))
 app.use("/faq",require("./AdminRoutes/Faq.route"))
+app.use("/time",require("./AdminRoutes/Time.route"))
 
 app.get("/", (req, res) => {
     res.send("Server is Running");

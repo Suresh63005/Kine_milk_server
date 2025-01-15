@@ -95,3 +95,7 @@
 {"level":"error","message":"Internal Server Error","service":"kine_milk_server","timestamp":"2025-01-08T12:20:11.693Z"}
 {"level":"error","message":"Internal Server Error","service":"kine_milk_server","timestamp":"2025-01-08T12:21:27.737Z"}
 
+{"level":"error","message":"Validation error: Store ID is required.","service":"kine_milk_server","timestamp":"2025-01-15T12:00:57.759Z"}
+{"level":"error","message":"Validation error: Store ID is required.","service":"kine_milk_server","timestamp":"2025-01-15T12:01:10.325Z"}
+{"level":"error","message":"Validation error: Store ID is required.","service":"kine_milk_server","timestamp":"2025-01-15T12:03:16.013Z"}
+{"level":"error","message":"Internal Server Error","service":"kine_milk_server","timestamp":"2025-01-15T12:24:56.117Z"}

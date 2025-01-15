@@ -12,7 +12,6 @@ const upsertCategory = async (req, res) => {
       const { id, title, status, cover } = req.body;
   
       console.log("Request body:", req.body);
-  
       // Validate required fields
       if (!req.file || !title || !status || !cover) {
         return res.status(400).json({

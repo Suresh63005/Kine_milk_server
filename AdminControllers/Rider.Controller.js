@@ -3,33 +3,54 @@ const {Op}=require("sequelize")
 const asynHandler = require("../middlewares/errorHandler");
 const logger = require("../utils/logger");
 const { getRiderIdBySchema, RiderDeleteSchema, RiderSearchSchema, upsertRiderSchema } = require("../utils/validation");
+const { PutObjectCommand } = require("@aws-sdk/client-s3");
+const s3 = require("../config/awss3Config");
+const uploadToS3 = require("../config/fileUpload.aws");
 
 const upsertRider = async (req, res) => {
-    console.log(req);
-    const { id, question, answer, status } = req.body;
-    console.log(req.body);
+    const { id, name, email, mobile,password,status } = req.body;
+    if (!req.file || !email || !status || !mobile || !name || !password) {
+        return res.status(400).json({
+          ResponseCode: "400",
+          Result: "false",
+          ResponseMsg: "name, status, file,email ,mobile and password are required.",
+        });
+      }
+      const imageUrl = await uploadToS3(req.file, "image");
+      let rider;
     try {
       if (id) {
         // Update Rider
-        const Rider = await Rider.findByPk(id);
-        if (!Rider) {
+        const rider = await Rider.findByPk(id);
+        if (!rider) {
           return res.status(404).json({ error: "Rider not found" });
         }
   
-        Rider.question = question;
-        Rider.answer = answer;
-        Rider.status = status;
+        await rider.update({
+            name,
+            email,
+            mobile,
+            password,
+            status,
+            img:imageUrl || rider.img
+        })
   
-        await Rider.save();
-        res.status(200).json({ message: "Rider updated successfully", Rider });
+        console.log("Rider updated successfully:", rider);
+        res.status(200).json({ message: "Rider updated successfully", rider });
       } else {
         // Create new Rider
-        const Rider = await Rider.create({
-          question,
-          answer,
-          status,
+        rider = await Rider.create({
+            name,
+            email,
+            mobile,
+            password,
+            status,
+            img:imageUrl,
+            store_id:1,
+            ccode:"text",
+            rdate:"11-01-2025"
         });
-        res.status(201).json({ message: "Rider created successfully", Rider });
+        res.status(201).json({ message: "Rider created successfully", rider });
       }
     } catch (error) {
       res
