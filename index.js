@@ -89,6 +89,7 @@ sequelize
 
 app.use('/admin', require('./AdminRoutes/Auth_route'))
 app.use("/category",require("./AdminRoutes/Category.route"))
+app.use("/product",require("./AdminRoutes/Product.route"))
 app.use("/product-attribute",require("./AdminRoutes/ProductAttributes.route"))
 app.use("/product-images",require("./AdminRoutes/ProductImages.route"))
 app.use("/delivery",require("./AdminRoutes/Delivery.route"))
@@ -97,6 +98,7 @@ app.use("/rider",require("./AdminRoutes/Rider.route"))
 // app.use("/gallery",require("./AdminRoutes/Gallery.route"))
 app.use("/faq",require("./AdminRoutes/Faq.route"))
 app.use("/time",require("./AdminRoutes/Time.route"))
+app.use("/normalorder",require("./AdminRoutes/NormalOrder.route"))
 
 app.get("/", (req, res) => {
     res.send("Server is Running");

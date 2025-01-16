@@ -35,11 +35,11 @@ const getDeliveryById=asynHandler(async(req,res)=>{
 });
 
 const deleteDelivery = asynHandler(async (req, res) => {
-    const {error}=DeliveryDeleteSchema.validate(...req.params,...req.body)
-    if (error) {
-        logger.error(error.details[0].message)
-        return res.status(400).json({ error: error.details[0].message });
-      }
+    // const {error}=DeliveryDeleteSchema.validate(...req.params,...req.body)
+    // if (error) {
+    //     logger.error(error.details[0].message)
+    //     return res.status(400).json({ error: error.details[0].message });
+    //   }
     const { id } = req.params;
     const { forceDelete } = req.body;
 
@@ -92,10 +92,38 @@ const searchDelivery=asynHandler(async(req,res)=>{
         res.status(200).json(Delivery)
 });
 
+const toggleDeliveryStatus = async (req, res) => {
+    console.log("Request received:", req.body);
+  
+    const { id, value } = req.body;
+  
+    try {
+      const delivery = await Delivery.findByPk(id);
+  
+      if (!delivery) {
+        console.log("product not found");
+        return res.status(404).json({ message: "product not found." });
+      }
+  
+      delivery.status = value;
+      await delivery.save();
+  
+      console.log("product updated successfully:", delivery);
+      res.status(200).json({
+        message: "product status updated successfully.",
+        updatedStatus: delivery.status,
+      });
+    } catch (error) {
+      console.error("Error updating product status:", error);
+      res.status(500).json({ message: "Internal server error." });
+    }
+  };
+
 module.exports={
     getAllDelivery,
     getDeliveryCount,
     getDeliveryById,
     deleteDelivery,
-    searchDelivery
+    searchDelivery,
+    toggleDeliveryStatus
 }

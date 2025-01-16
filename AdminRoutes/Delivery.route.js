@@ -8,5 +8,6 @@ router.get("/getbyid/:id",DeliveryController.getDeliveryById)
 router.delete("/delete/:id",DeliveryController.deleteDelivery)
 router.patch("/update/:id",DeliveryController.getDeliveryById)
 router.get("/count",DeliveryController.getDeliveryCount)
+router.patch("/toggle-status",DeliveryController.toggleDeliveryStatus)
 
 module.exports=router
