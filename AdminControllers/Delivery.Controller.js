@@ -4,6 +4,69 @@ const asynHandler = require("../middlewares/errorHandler");
 const logger = require("../utils/logger");
 const { getDeliveryByIdSchema, DeliveryDeleteSchema, DeliverySearchSchema } = require("../utils/validation");
 
+const upsertDelivery = async (req, res) => {
+    try {
+      const { id, title, status, de_digit } = req.body;
+      const store_id=1;
+      console.log("Request body:", req.body);
+  
+      // Validate required fields
+      if (!title || !status  || !de_digit) {
+        return res.status(400).json({
+          ResponseCode: "400",
+          Result: "false",
+          ResponseMsg: "Title, status are required.",
+        });
+      }
+  
+      let delivery;
+      if (id) {
+        delivery = await Delivery.findByPk(id);
+        if (!delivery) {
+          return res.status(404).json({
+            ResponseCode: "404",
+            Result: "false",
+            ResponseMsg: "delivery not found.",
+          });
+        }
+  
+        // Update delivery fields
+        await delivery.update({
+          title,
+          status,
+          de_digit,
+          store_id
+        });
+  
+        console.log("delivery updated successfully:", delivery);
+        return res.status(200).json({
+          ResponseCode: "200",
+          Result: "true",
+          ResponseMsg: "delivery updated successfully.",
+          delivery,
+        });
+      } else {
+          
+        delivery = await Delivery.create({ title, status, de_digit,store_id });
+  
+        console.log("delivery created successfully:", delivery);
+        return res.status(201).json({
+          ResponseCode: "201",
+          Result: "true",
+          ResponseMsg: "delivery created successfully.",
+          delivery,
+        });
+      }
+    } catch (error) {
+      console.error("Error processing request:", error);
+      return res.status(500).json({
+        ResponseCode: "500",
+        Result: "false",
+        ResponseMsg: "Internal Server Error",
+      });
+    }
+  };
+
 const getAllDelivery=asynHandler(async(req,res,next)=>{
     const DeliveryDetails=await Delivery.findAll();
     logger.info("sucessfully get all Delivery");
@@ -101,25 +164,26 @@ const toggleDeliveryStatus = async (req, res) => {
       const delivery = await Delivery.findByPk(id);
   
       if (!delivery) {
-        console.log("product not found");
-        return res.status(404).json({ message: "product not found." });
+        console.log("delivery not found");
+        return res.status(404).json({ message: "delivery not found." });
       }
   
       delivery.status = value;
       await delivery.save();
   
-      console.log("product updated successfully:", delivery);
+      console.log("delivery updated successfully:", delivery);
       res.status(200).json({
-        message: "product status updated successfully.",
+        message: "delivery status updated successfully.",
         updatedStatus: delivery.status,
       });
     } catch (error) {
-      console.error("Error updating product status:", error);
+      console.error("Error updating delivery status:", error);
       res.status(500).json({ message: "Internal server error." });
     }
   };
 
 module.exports={
+    upsertDelivery,
     getAllDelivery,
     getDeliveryCount,
     getDeliveryById,

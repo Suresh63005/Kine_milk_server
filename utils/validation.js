@@ -570,6 +570,92 @@ const TimeSearchSchema = Joi.object({
   }),
 });
 
+
+// for coupon
+const getCouponByIdSchema = Joi.object({
+  id: Joi.number().integer().required().messages({
+    "number.base": "ID must be a number.",
+    "number.integer": "ID must be an integer.",
+    "any.required": "ID is required.",
+  }),
+});
+
+const CouponDeleteSchema = Joi.object({
+  id: Joi.number().integer().required().messages({
+    "number.base": "ID must be a number.",
+    "number.integer": "ID must be an integer.",
+    "any.required": "ID is required.",
+  }),
+  forceDelete: Joi.string().valid("true", "false").optional()
+      .messages({
+        "any.only": "forceDelete must be either 'true' or 'false'",
+      }),
+});
+
+// const ProductSearchSchema = Joi.object({
+//   id: Joi.number().integer().optional().messages({
+//     "number.base": "ID must be a number.",
+//     "number.integer": "ID must be an integer.",
+//   }),
+//   title: Joi.string().trim().optional().messages({
+//     "string.base": "Title must be a string.",
+//   }),
+// });
+
+const upsertCouponSchema = Joi.object({
+  id: Joi.string().pattern(/^\d+$/).allow(null, '').optional().messages({
+    "string.pattern.base": "ID must be a number.",
+    "any.only": "ID cannot be empty."
+  }),
+
+  title: Joi.string().trim().required().messages({
+    "string.base": "Title must be a string.",
+    "any.required": "Title is required.",
+  }),
+
+  status: Joi.number().valid(0, 1).required().messages({
+    "number.base": "Status must be a number (0 or 1).",
+    "any.required": "Status is required.",
+  }),
+
+  coupon_img: Joi.string().trim().optional().messages({
+    "string.base": "Image URL must be a string.",
+  }),
+
+  coupon_code: Joi.string().trim().required().messages({
+  "string.base": "Coupon code must be a string.",
+  "any.required": "Coupon code is required.",
+}), 
+
+  subtitle: Joi.string().trim().required().messages({
+    "string.base": "Subtitle must be a string.",
+    "any.required": "Subtitle is required.",
+  }),
+
+  expire_date: Joi.string().trim().required().messages({
+    "string.base": "Expire date must be a string.",
+    "any.required": "Expire date is required.",
+  }),
+
+  min_amt: Joi.number().positive().required().messages({
+    "number.base": "Minimum amount must be a number.",
+    "number.positive": "Minimum amount must be greater than zero.",
+    "any.required": "Minimum amount is required.",
+  }),
+
+  coupon_val: Joi.number().positive().required().messages({
+    "number.base": "Coupon value must be a number.",
+    "number.positive": "Coupon value must be greater than zero.",
+    "any.required": "Coupon value is required.",
+  }),
+
+  description: Joi.string().trim().required().messages({
+    "string.base": "Description must be a string.",
+    "any.required": "Description is required.",
+  }),
+});
+
+
 module.exports={registerAdminSchema,loginAdminSchema,updateAdminSchema, deleteAdminSchema,getAdminbyIdSchema,searchAdminSchema,
     getCategoryByIdSchema,categoryDeleteSchema,categorySearchSchema,upsertCategorySchema,
     getProductByIdSchema,ProductDeleteSchema,ProductSearchSchema,upsertProductSchema,
@@ -578,5 +664,6 @@ module.exports={registerAdminSchema,loginAdminSchema,updateAdminSchema, deleteAd
     getDeliveryByIdSchema,DeliveryDeleteSchema,DeliverySearchSchema,
     upsertFaqSchema,getFaqIdBySchema,FaqDeleteSchema,FaqSearchSchema,
     RiderSearchSchema,RiderDeleteSchema,getRiderIdBySchema,upsertRiderSchema,
-    upsertTimeSchema,getTimeIdBySchema,DeleteTimeSchema,TimeSearchSchema
+    upsertTimeSchema,getTimeIdBySchema,DeleteTimeSchema,TimeSearchSchema,
+    upsertCouponSchema,CouponDeleteSchema,getCouponByIdSchema
 }

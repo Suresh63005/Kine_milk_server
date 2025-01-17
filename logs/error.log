@@ -117,3 +117,14 @@
 {"level":"error","message":"ProductAttribute not found","service":"kine_milk_server","timestamp":"2025-01-16T11:15:03.938Z"}
 {"level":"error","message":"Internal Server Error","service":"kine_milk_server","timestamp":"2025-01-16T12:36:42.222Z"}
 {"level":"error","message":"Internal Server Error","service":"kine_milk_server","timestamp":"2025-01-16T12:37:14.045Z"}
+{"level":"error","message":"Delivery not found","service":"kine_milk_server","timestamp":"2025-01-17T06:27:39.854Z"}
+{"level":"error","message":"Delivery not found","service":"kine_milk_server","timestamp":"2025-01-17T06:30:40.445Z"}
+{"level":"error","message":"Internal Server Error","service":"kine_milk_server","timestamp":"2025-01-17T10:38:04.862Z"}
+{"level":"error","message":"Internal Server Error","service":"kine_milk_server","timestamp":"2025-01-17T10:39:33.825Z"}
+{"level":"error","message":"Internal Server Error","service":"kine_milk_server","timestamp":"2025-01-17T11:17:59.536Z"}
+{"level":"error","message":"Internal Server Error","service":"kine_milk_server","timestamp":"2025-01-17T11:18:24.833Z"}
+{"level":"error","message":"Internal Server Error","service":"kine_milk_server","timestamp":"2025-01-17T11:18:38.277Z"}
+{"level":"error","message":"Internal Server Error","service":"kine_milk_server","timestamp":"2025-01-17T11:19:29.923Z"}
+{"level":"error","message":"Internal Server Error","service":"kine_milk_server","timestamp":"2025-01-17T11:21:15.036Z"}
+{"level":"error","message":"Internal Server Error","service":"kine_milk_server","timestamp":"2025-01-17T11:22:33.151Z"}
+{"level":"error","message":"Internal Server Error","service":"kine_milk_server","timestamp":"2025-01-17T11:23:49.740Z"}
