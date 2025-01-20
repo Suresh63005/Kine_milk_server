@@ -417,6 +417,22 @@ const FaqSearchSchema = Joi.object({
   }),
 });
 
+const FaqStatusSchema = Joi.object({
+  id: Joi.number().messages({
+    "string.pattern.base": "ID must be a number.",
+    "any.only": "ID cannot be empty."
+  }),  
+  value: Joi.number().valid(0, 1).required().messages({
+    "number.base": "Status must be a number (0 or 1).",
+    "any.required": "Status is required.",
+  }),
+  field: Joi.string().valid("status").required().messages({
+    "number.base": "field must be status.",
+    "any.required": "field is required.",
+  }),
+
+});
+
 // for Rider
 const upsertRiderSchema = Joi.object({
   id: Joi.number().integer().optional().allow(null, '').messages({
@@ -672,7 +688,7 @@ module.exports={registerAdminSchema,loginAdminSchema,updateAdminSchema, deleteAd
     getProductAttributeByIdSchema,ProductAttributeDeleteSchema,ProductAttributeSearchSchema,upsertProductAttributeSchema,
     ProductImagesByIdSchema,ProductImagesDeleteSchema,ProductImagesSearchSchema,ProductImagesUpsertSchema,
     getDeliveryByIdSchema,DeliveryDeleteSchema,DeliverySearchSchema,
-    upsertFaqSchema,getFaqIdBySchema,FaqDeleteSchema,FaqSearchSchema,
+    upsertFaqSchema,getFaqIdBySchema,FaqDeleteSchema,FaqSearchSchema,FaqStatusSchema,
     RiderSearchSchema,RiderDeleteSchema,getRiderIdBySchema,upsertRiderSchema,RiderStatusSchema,
     upsertTimeSchema,getTimeIdBySchema,DeleteTimeSchema,TimeSearchSchema,
     upsertCouponSchema,CouponDeleteSchema,getCouponByIdSchema

@@ -7,6 +7,6 @@ router.get("/all",faqController.getAllFaqs) //1
 router.get("/getbyid/:id",faqController.getFaqById) //1
 router.delete("/delete/:id",faqController.deleteFaq)
 router.get("/count",faqController.getFaqCount) //1
-// router.patch("/toggle-status",faqController.toggleFAQStatus);
+router.patch("/toggle-status",faqController.toggleFaqStatus);
 
 module.exports=router

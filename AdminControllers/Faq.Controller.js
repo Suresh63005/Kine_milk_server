@@ -2,7 +2,7 @@ const Faq=require("../Models/Faq");
 const {Op}=require("sequelize")
 const asynHandler = require("../middlewares/errorHandler");
 const logger = require("../utils/logger");
-const { getFaqIdBySchema, FaqDeleteSchema, FaqSearchSchema, upsertFaqSchema } = require("../utils/validation");
+const { getFaqIdBySchema, FaqDeleteSchema, FaqSearchSchema, upsertFaqSchema, FaqStatusSchema } = require("../utils/validation");
 
 const upsertFaq = async (req, res) => {
    
@@ -142,11 +142,47 @@ const searchFaq=asynHandler(async(req,res)=>{
         res.status(200).json(Faq)
 });
 
+const toggleFaqStatus = async (req, res) => {
+    console.log("Request received:", req.body);
+    const { error } = FaqStatusSchema.validate(req.body, { abortEarly: false });
+    if (error) {
+      return res.status(400).json({
+        ResponseCode: "400",
+        Result: "false",
+        ResponseMsg: error.details.map((detail) => detail.message).join(", "),
+      });
+    }
+  
+    const { id, value } = req.body;
+  
+    try {
+      const faq = await Faq .findByPk(id);
+  
+      if (!faq) {
+        console.log("faq not found");
+        return res.status(404).json({ message: "faq not found." });
+      }
+  
+      faq.status = value;
+      await faq.save();
+  
+      console.log("faq updated successfully:", faq);
+      res.status(200).json({
+        message: "faq status updated successfully.",
+        updatedStatus: faq.status,
+      });
+    } catch (error) {
+      console.error("Error updating faq status:", error);
+      res.status(500).json({ message: "Internal server error." });
+    }
+};
+
 module.exports={
     upsertFaq,
     getAllFaqs,
     getFaqCount,
     getFaqById,
     deleteFaq,
-    searchFaq
+    searchFaq,
+    toggleFaqStatus
 }
