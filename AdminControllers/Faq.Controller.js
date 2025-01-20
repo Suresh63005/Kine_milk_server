@@ -5,22 +5,36 @@ const logger = require("../utils/logger");
 const { getFaqIdBySchema, FaqDeleteSchema, FaqSearchSchema, upsertFaqSchema } = require("../utils/validation");
 
 const upsertFaq = async (req, res) => {
-    console.log(req);
-    const { id, question, answer, status } = req.body;
-    console.log(req.body);
+   
+    const { error, value } = upsertFaqSchema.validate(req.body, { abortEarly: false });
+    if (error) {
+      return res.status(400).json({
+        ResponseCode: "400",
+        Result: "false",
+        ResponseMsg: error.details.map((detail) => detail.message).join(", "),
+      });
+    }
+  
+    const { id, question, answer, status } = value;
+
     try {
       if (id) {
         // Update FAQ
         const faq = await Faq.findByPk(id);
         if (!faq) {
-          return res.status(404).json({ error: "FAQ not found" });
+        return res.status(404).json({
+          ResponseCode: "404",
+          Result: "false",
+          ResponseMsg: "FAQ not found",
+        });
         }
   
-        faq.question = question;
-        faq.answer = answer;
-        faq.status = status;
+        await faq.update({
+            question,
+            answer,
+            status,
+          });
   
-        await faq.save();
         res.status(200).json({ message: "FAQ updated successfully", faq });
       } else {
         // Create new FAQ
