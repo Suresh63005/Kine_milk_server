@@ -344,22 +344,22 @@ const DeliverySearchSchema = Joi.object({
 
 // for faq
 const upsertFaqSchema = Joi.object({
-  id: Joi.string().pattern(/^\d+$/).allow(null, '').optional().messages({
+  id: Joi.number().optional().messages({
     "string.pattern.base": "ID must be a number.",
     "any.only": "ID cannot be empty."
   }),
   question: Joi.string().trim().required().messages({
-    "string.base": "question must be a string.",
-    "any.required": "question is required.",
+    "string.base": "Question must be a string.",
+    "any.required": "Question is required.",
   }),
   answer: Joi.string().trim().required().messages({
-    "string.base": "answer must be a string.",
-    "any.required": "answer is required.",
+    "string.base": "Answer must be a string.",
+    "any.required": "Answer is required.",
   }),
   status: Joi.number().valid(0, 1).required().messages({
     "number.base": "Status must be a number (0 or 1).",
     "any.required": "Status is required.",
-  })
+  }),
 });
 
 const getFaqIdBySchema = Joi.object({
@@ -417,48 +417,63 @@ const FaqSearchSchema = Joi.object({
   }),
 });
 
+const FaqStatusSchema = Joi.object({
+  id: Joi.number().messages({
+    "string.pattern.base": "ID must be a number.",
+    "any.only": "ID cannot be empty."
+  }),  
+  value: Joi.number().valid(0, 1).required().messages({
+    "number.base": "Status must be a number (0 or 1).",
+    "any.required": "Status is required.",
+  }),
+  field: Joi.string().valid("status").required().messages({
+    "number.base": "field must be status.",
+    "any.required": "field is required.",
+  }),
+
+});
+
 // for Rider
 const upsertRiderSchema = Joi.object({
   id: Joi.number().integer().optional().allow(null, '').messages({
     "number.base": "ID must be a number.",
-    "any.only": "ID cannot be empty."
+    "any.only": "ID cannot be empty.",
   }),
   store_id: Joi.number().integer().required().messages({
     "number.base": "Store ID must be a number.",
-    "any.required": "Store ID is required."
+    "any.required": "Store ID is required.",
   }),
-  img: Joi.string().uri().required().messages({
+  img: Joi.string().uri().optional().allow(null, '').messages({
     "string.base": "Image must be a valid URI.",
-    "any.required": "Image is required."
   }),
-  title: Joi.string().trim().required().messages({
-    "string.base": "Title must be a string.",
-    "any.required": "Title is required."
+  name: Joi.string().trim().required().messages({
+    "string.base": "Name must be a string.",
+    "any.required": "Name is required.",
   }),
   email: Joi.string().email().required().messages({
     "string.email": "Email must be a valid email address.",
-    "any.required": "Email is required."
+    "any.required": "Email is required.",
   }),
   ccode: Joi.string().trim().required().messages({
     "string.base": "Country code must be a string.",
-    "any.required": "Country code is required."
+    "any.required": "Country code is required.",
   }),
-  mobile: Joi.string().pattern(/^\d{10,15}$/).required().messages({
-    "string.pattern.base": "Mobile must be a valid number with 10 to 15 digits.",
-    "any.required": "Mobile is required."
+  mobile: Joi.string().pattern(/^\d{10,10}$/).required().messages({
+    "string.pattern.base": "Mobile must be a valid number with 10  digits.",
+    "any.required": "Mobile is required.",
   }),
   password: Joi.string().min(6).required().messages({
     "string.min": "Password must be at least 6 characters long.",
-    "any.required": "Password is required."
+    "any.required": "Password is required.",
   }),
   rdate: Joi.date().iso().required().messages({
     "date.base": "Registration date must be a valid ISO date.",
-    "any.required": "Registration date is required."
+    "any.required": "Registration date is required.",
   }),
   status: Joi.number().integer().valid(0, 1).required().messages({
     "number.base": "Status must be a number (0 or 1).",
-    "any.required": "Status is required."
-  })
+    "any.required": "Status is required.",
+  }),
 });
 
 const getRiderIdBySchema = Joi.object({
@@ -497,6 +512,17 @@ const RiderSearchSchema = Joi.object({
   }),
   
   status: Joi.number().valid(0, 1).required().messages({
+    "number.base": "Status must be a number (0 or 1).",
+    "any.required": "Status is required.",
+  }),
+});
+
+const RiderStatusSchema = Joi.object({
+  id: Joi.number().integer().required().messages({
+    "number.base": "ID must be a number.",
+    "any.required": "ID is required.",
+  }),
+  value: Joi.number().valid(0, 1).required().messages({
     "number.base": "Status must be a number (0 or 1).",
     "any.required": "Status is required.",
   }),
@@ -662,8 +688,8 @@ module.exports={registerAdminSchema,loginAdminSchema,updateAdminSchema, deleteAd
     getProductAttributeByIdSchema,ProductAttributeDeleteSchema,ProductAttributeSearchSchema,upsertProductAttributeSchema,
     ProductImagesByIdSchema,ProductImagesDeleteSchema,ProductImagesSearchSchema,ProductImagesUpsertSchema,
     getDeliveryByIdSchema,DeliveryDeleteSchema,DeliverySearchSchema,
-    upsertFaqSchema,getFaqIdBySchema,FaqDeleteSchema,FaqSearchSchema,
-    RiderSearchSchema,RiderDeleteSchema,getRiderIdBySchema,upsertRiderSchema,
+    upsertFaqSchema,getFaqIdBySchema,FaqDeleteSchema,FaqSearchSchema,FaqStatusSchema,
+    RiderSearchSchema,RiderDeleteSchema,getRiderIdBySchema,upsertRiderSchema,RiderStatusSchema,
     upsertTimeSchema,getTimeIdBySchema,DeleteTimeSchema,TimeSearchSchema,
     upsertCouponSchema,CouponDeleteSchema,getCouponByIdSchema
 }
