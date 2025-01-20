@@ -1,6 +1,7 @@
 const { DataTypes } = require('sequelize');
 
-const sequelize = require('../config/db')
+const sequelize = require('../config/db');
+const Product = require('./Product');
 
 
 const NormalOrder = sequelize.define('NormalOrder', {
@@ -13,6 +14,10 @@ const NormalOrder = sequelize.define('NormalOrder', {
   store_id: {
     type: DataTypes.INTEGER,
     allowNull: false,
+  },
+  product_id: {
+    type: DataTypes.INTEGER,
+    allowNull:false,
   },
   uid: {
     type: DataTypes.INTEGER,
