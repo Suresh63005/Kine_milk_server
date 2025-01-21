@@ -128,3 +128,46 @@
 {"level":"error","message":"Internal Server Error","service":"kine_milk_server","timestamp":"2025-01-17T11:21:15.036Z"}
 {"level":"error","message":"Internal Server Error","service":"kine_milk_server","timestamp":"2025-01-17T11:22:33.151Z"}
 {"level":"error","message":"Internal Server Error","service":"kine_milk_server","timestamp":"2025-01-17T11:23:49.740Z"}
+{"level":"error","message":"Internal Server Error","service":"kine_milk_server","timestamp":"2025-01-21T05:37:09.744Z"}
+{"level":"error","message":"Email is already in use.","service":"kine_milk_server","timestamp":"2025-01-21T06:48:05.962Z"}
+{"level":"error","message":"Email is already in use.","service":"kine_milk_server","timestamp":"2025-01-21T06:48:36.006Z"}
+{"level":"error","message":"Email is already in use.","service":"kine_milk_server","timestamp":"2025-01-21T06:51:43.155Z"}
+{"level":"error","message":"Email is already in use.","service":"kine_milk_server","timestamp":"2025-01-21T06:51:51.509Z"}
+{"level":"error","message":"Email is already in use.","service":"kine_milk_server","timestamp":"2025-01-21T06:52:27.751Z"}
+{"level":"error","message":"Email is already in use.","service":"kine_milk_server","timestamp":"2025-01-21T06:53:41.397Z"}
+{"level":"error","message":"Email is already in use.","service":"kine_milk_server","timestamp":"2025-01-21T06:53:48.554Z"}
+{"level":"error","message":"Email is already in use.","service":"kine_milk_server","timestamp":"2025-01-21T06:55:03.608Z"}
+{"level":"error","message":"Email is already in use.","service":"kine_milk_server","timestamp":"2025-01-21T06:55:05.254Z"}
+{"level":"error","message":"Email is already in use.","service":"kine_milk_server","timestamp":"2025-01-21T07:10:04.032Z"}
+{"level":"error","message":"Email is already in use.","service":"kine_milk_server","timestamp":"2025-01-21T07:10:05.778Z"}
+{"level":"error","message":"Email is already in use.","service":"kine_milk_server","timestamp":"2025-01-21T07:10:11.942Z"}
+{"level":"error","message":"Email is already in use.","service":"kine_milk_server","timestamp":"2025-01-21T07:10:12.972Z"}
+{"level":"error","message":"Email is already in use.","service":"kine_milk_server","timestamp":"2025-01-21T07:10:20.719Z"}
+{"level":"error","message":"Email is already in use.","service":"kine_milk_server","timestamp":"2025-01-21T07:11:11.307Z"}
+{"level":"error","message":"Email is already in use.","service":"kine_milk_server","timestamp":"2025-01-21T07:11:12.873Z"}
+{"level":"error","message":"Email is already in use.","service":"kine_milk_server","timestamp":"2025-01-21T07:11:18.901Z"}
+{"level":"error","message":"Email is already in use.","service":"kine_milk_server","timestamp":"2025-01-21T07:11:25.138Z"}
+{"level":"error","message":"Email is already in use.","service":"kine_milk_server","timestamp":"2025-01-21T07:11:32.730Z"}
+{"level":"error","message":"Email is already in use.","service":"kine_milk_server","timestamp":"2025-01-21T07:19:21.562Z"}
+{"level":"error","message":"Email is already in use.","service":"kine_milk_server","timestamp":"2025-01-21T07:19:31.621Z"}
+{"level":"error","message":"mobile is already in use.","service":"kine_milk_server","timestamp":"2025-01-21T07:19:31.673Z"}
+{"level":"error","message":"Email is already in use.","service":"kine_milk_server","timestamp":"2025-01-21T07:19:37.720Z"}
+{"level":"error","message":"mobile is already in use.","service":"kine_milk_server","timestamp":"2025-01-21T07:19:37.808Z"}
+{"level":"error","message":"Email is already in use.","service":"kine_milk_server","timestamp":"2025-01-21T07:21:48.218Z"}
+{"level":"error","message":"Email is already in use.","service":"kine_milk_server","timestamp":"2025-01-21T07:21:53.307Z"}
+{"level":"error","message":"Email is already in use.","service":"kine_milk_server","timestamp":"2025-01-21T07:21:54.092Z"}
+{"level":"error","message":"Email is already in use.","service":"kine_milk_server","timestamp":"2025-01-21T07:21:54.422Z"}
+{"level":"error","message":"Email is already in use.","service":"kine_milk_server","timestamp":"2025-01-21T07:21:54.789Z"}
+{"level":"error","message":"Email is already in use.","service":"kine_milk_server","timestamp":"2025-01-21T07:21:55.059Z"}
+{"level":"error","message":"Email is already in use.","service":"kine_milk_server","timestamp":"2025-01-21T07:21:55.293Z"}
+{"level":"error","message":"Email is already in use.","service":"kine_milk_server","timestamp":"2025-01-21T07:21:55.578Z"}
+{"level":"error","message":"Email is already in use.","service":"kine_milk_server","timestamp":"2025-01-21T07:23:17.154Z"}
+{"level":"error","message":"Email is already in use.","service":"kine_milk_server","timestamp":"2025-01-21T07:23:45.311Z"}
+{"level":"error","message":"mobile is already in use.","service":"kine_milk_server","timestamp":"2025-01-21T07:23:45.368Z"}
+{"level":"error","message":"Email is already in use.","service":"kine_milk_server","timestamp":"2025-01-21T07:24:36.943Z"}
+{"level":"error","message":"mobile is already in use.","service":"kine_milk_server","timestamp":"2025-01-21T07:24:36.999Z"}
+{"level":"error","message":"Time Record not found.","service":"kine_milk_server","timestamp":"2025-01-21T09:37:12.639Z"}
+{"level":"error","message":"Time Record not found.","service":"kine_milk_server","timestamp":"2025-01-21T09:37:12.800Z"}
+{"level":"error","message":"Time Record not found.","service":"kine_milk_server","timestamp":"2025-01-21T09:37:12.970Z"}
+{"level":"error","message":"Time Record not found.","service":"kine_milk_server","timestamp":"2025-01-21T09:37:55.578Z"}
+{"level":"error","message":"Time Record not found.","service":"kine_milk_server","timestamp":"2025-01-21T09:37:55.795Z"}
