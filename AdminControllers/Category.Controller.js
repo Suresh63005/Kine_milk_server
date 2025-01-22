@@ -6,7 +6,6 @@ const { getCategoryByIdSchema, categoryDeleteSchema, categorySearchSchema, upser
 const { PutObjectCommand } = require("@aws-sdk/client-s3");
 const s3 = require("../config/awss3Config");
 const uploadToS3 = require("../config/fileUpload.aws");
-const { error } = require("winston");
 
 const upsertCategory = asynHandler(async (req, res) => {
   const { error } = upsertCategorySchema.validate(req.body);
@@ -37,13 +36,12 @@ const upsertCategory = asynHandler(async (req, res) => {
       });
     }
 
-    // Update category
     category.title = title;
-    category.img = imageUrl || category.img; // Use existing image if not updating
+    category.img = imageUrl || category.img;
     category.status = status;
     category.cover = cover;
 
-    await category.save(); // Save the updated category
+    await category.save();
 
     logger.info("Category updated successfully:", category);
     return res.status(200).json({
