@@ -655,6 +655,30 @@ const upsertCouponSchema = Joi.object({
   }),
 });
 
+const bannerUpsertSchema = Joi.object({
+  id: Joi.number().integer().positive().optional(),
+  status: Joi.number().integer().valid(0, 1).required().messages({
+    'number.base': 'Status must be a number.',
+    'any.required': 'Status is required.',
+    'any.only': 'Status must be either 0 (inactive) or 1 (active).'
+  })
+});
+
+const bannerListSchema = Joi.object({
+  page: Joi.number().integer().positive().default(1).messages({
+    'number.base': 'Page must be a number.',
+    'number.positive': 'Page must be greater than 0.'
+  }),
+  limit: Joi.number().integer().positive().default(10).messages({
+    'number.base': 'Limit must be a number.',
+    'number.positive': 'Limit must be greater than 0.'
+  }),
+  status: Joi.number().integer().valid(0, 1).optional().messages({
+    'number.base': 'Status must be a number.',
+    'any.only': 'Status must be either 0 (inactive) or 1 (active).'
+  })
+});
+
 
 module.exports={registerAdminSchema,loginAdminSchema,updateAdminSchema, deleteAdminSchema,getAdminbyIdSchema,searchAdminSchema,
     getCategoryByIdSchema,categoryDeleteSchema,categorySearchSchema,upsertCategorySchema,
@@ -665,5 +689,5 @@ module.exports={registerAdminSchema,loginAdminSchema,updateAdminSchema, deleteAd
     upsertFaqSchema,getFaqIdBySchema,FaqDeleteSchema,FaqSearchSchema,
     RiderSearchSchema,RiderDeleteSchema,getRiderIdBySchema,upsertRiderSchema,
     upsertTimeSchema,getTimeIdBySchema,DeleteTimeSchema,TimeSearchSchema,
-    upsertCouponSchema,CouponDeleteSchema,getCouponByIdSchema
+    upsertCouponSchema,CouponDeleteSchema,getCouponByIdSchema, bannerUpsertSchema,bannerListSchema
 }

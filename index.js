@@ -65,6 +65,7 @@ app.use(
   cors({
     origin: ["http://localhost:3000","http://localhost:3001"],
     credentials: true,
+    allowedHeaders: ["Content-Type", "Authorization"]
   })
 );
 
@@ -99,6 +100,7 @@ app.use("/rider",require("./AdminRoutes/Rider.route"))
 app.use("/faq",require("./AdminRoutes/Faq.route"))
 app.use("/time",require("./AdminRoutes/Time.route"))
 app.use("/normalorder",require("./AdminRoutes/NormalOrder.route"))
+app.use("/banner",require('./AdminRoutes/Banner.route'))
 
 app.get("/", (req, res) => {
     res.send("Server is Running");
