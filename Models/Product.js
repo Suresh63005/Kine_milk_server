@@ -1,5 +1,4 @@
 const { DataTypes } = require('sequelize');
-
 const sequelize = require('../config/db')
 
 const Product = sequelize.define('Product', {
@@ -25,6 +24,30 @@ const Product = sequelize.define('Product', {
     type: DataTypes.TEXT,
     allowNull: false,
   },
+  discount: {
+    type: DataTypes.FLOAT,
+    allowNull: false,
+  },
+  subscribe_price: {
+    type: DataTypes.FLOAT,
+    allowNull: false,
+  },
+  normal_price: {
+    type: DataTypes.FLOAT,
+    allowNull: false,
+  },
+  out_of_stock: {
+    type: DataTypes.INTEGER,
+    allowNull: false,
+  },
+  subscription_required: {
+    type: DataTypes.INTEGER,
+    allowNull: false,
+  },
+  ext_img: {
+    type: DataTypes.TEXT,
+    allowNull: true,
+  },
   description: {
     type: DataTypes.TEXT,
     allowNull: false,
@@ -35,7 +58,7 @@ const Product = sequelize.define('Product', {
   },
 }, {
 
-  tableName: 'tbl_product', // Match the table name in the database
+  tableName: 'tbl_product',
   timestamps: true,
 
 });

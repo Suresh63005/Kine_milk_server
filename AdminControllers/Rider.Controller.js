@@ -21,12 +21,11 @@ const upsertRider = async (req, res) => {
 
   const { id, store_id,  name, email, mobile, password, rdate, status } = req.body;
   console.log(req.body);  
+  const img = req.file;
   try {
     let imageUrl; 
-
-    if (req.file) {
-      imageUrl = await uploadToS3(req.file, "image");
-    }
+    const uploadedFile = await uploadToS3([img],"image");
+    imageUrl = uploadedFile[0]
 
     const storeId = store_id || 1; 
     const riderDate = rdate || new Date().toISOString().split('T')[0]; 

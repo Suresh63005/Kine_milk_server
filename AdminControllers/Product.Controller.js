@@ -5,86 +5,118 @@ const logger = require("../utils/logger");
 const { PutObjectCommand } = require("@aws-sdk/client-s3");
 const s3 = require("../config/awss3Config");
 const uploadToS3 = require("../config/fileUpload.aws");
+const { upsertProductSchema } = require("../utils/validation");
 
 const upsertProduct = async (req, res) => {
-    try {
-      const { id, title, status, cat_id,description } = req.body;
-      const store_id=1;
-      console.log("Request body:", req.body);
-  
-      // Validate required fields
-      if (!title || !status  || !cat_id || !description) {
-        return res.status(400).json({
-          ResponseCode: "400",
-          Result: "false",
-          ResponseMsg: "Title, status are required.",
-        });
-      }
-  
-      let imageUrl;
-      if (req.file) {
-        // Upload image to S3 if provided
-        imageUrl = await uploadToS3(req.file, "image");
-      }
-  
-      let product;
-      if (id) {
-        // Find Product by ID
-        product = await Product.findByPk(id);
-        if (!product) {
-          return res.status(404).json({
-            ResponseCode: "404",
-            Result: "false",
-            ResponseMsg: "Product not found.",
-          });
-        }
-  
-        // Update Product fields
-        await product.update({
-          title,
-          img: imageUrl || product.img, // Use the existing image if no new image is provided
-          status,
-          cat_id,
-          description,
-          store_id
-        });
-  
-        console.log("Product updated successfully:", Product);
-        return res.status(200).json({
-          ResponseCode: "200",
-          Result: "true",
-          ResponseMsg: "Product updated successfully.",
-          Product,
-        });
-      } else {
-        // Create new Product
-        if (!req.file) {
-          return res.status(400).json({
-            ResponseCode: "400",
-            Result: "false",
-            ResponseMsg: "Image is required for a new Product.",
-          });
-        }
-  
-        product = await Product.create({ title, img: imageUrl, status, cat_id,description,store_id });
-  
-        console.log("Product created successfully:", product);
-        return res.status(201).json({
-          ResponseCode: "201",
-          Result: "true",
-          ResponseMsg: "Product created successfully.",
-          product,
-        });
-      }
-    } catch (error) {
-      console.error("Error processing request:", error);
-      return res.status(500).json({
-        ResponseCode: "500",
+  try {
+    const {
+      id,
+      title,
+      status,
+      cat_id,
+      discount,
+      normal_price,
+      subscribe_price,
+      subscription_required,
+      out_of_stock,
+      description,
+    } = req.body;
+
+    console.log("Request Body:", req.body);
+    console.log("Uploaded Files:", req.files); // Log the files to debug
+
+    const store_id = 1;
+
+    const files = req.files;
+    const img = files?.img?.[0] || null;  // Get the first image file (ensure it's the right format)
+    const ext_img = Array.isArray(files?.ext_img) ? files.ext_img : [];  // Ensure ext_img is always an array
+
+    if (!img) {
+      return res.status(400).json({
+        ResponseCode: "400",
         Result: "false",
-        ResponseMsg: "Internal Server Error",
+        ResponseMsg: "Main image (img) is required for a new product.",
       });
     }
-  };
+
+    // Log to check how many external images are there
+    console.log("External Images (ext_img):", ext_img);
+
+    // Upload to S3
+    const imgURL = await uploadToS3([img], "product-images"); // Upload main image (always an array)
+    console.log("Main Image URL:", imgURL);
+
+    // Upload external images if they exist
+    const ext_imgURLs = ext_img.length ? await uploadToS3(ext_img, "product-images") : []; // Upload external images
+    console.log("External Image URLs:", ext_imgURLs);
+
+    // If product ID exists, update existing product
+    let product;
+    if (id) {
+      product = await Product.findByPk(id);
+      if (!product) {
+        return res.status(404).json({
+          ResponseCode: "404",
+          Result: "false",
+          ResponseMsg: "Product not found.",
+        });
+      }
+
+      await product.update({
+        title,
+        img: imgURL[0],  // Use the first URL from the uploaded image array
+        ext_img: JSON.stringify(ext_imgURLs),  // Convert external images array to JSON string
+        status,
+        cat_id,
+        discount,
+        normal_price,
+        subscribe_price,
+        subscription_required,
+        out_of_stock,
+        description,
+        store_id,
+      });
+
+      return res.status(200).json({
+        ResponseCode: "200",
+        Result: "true",
+        ResponseMsg: "Product updated successfully.",
+        product,
+      });
+    } else {
+      // Create new product if no ID is provided
+      product = await Product.create({
+        title,
+        img: imgURL[0],  // Use the first URL from the uploaded image array
+        ext_img: JSON.stringify(ext_imgURLs),  // Convert external images array to JSON string
+        status,
+        cat_id,
+        discount,
+        normal_price,
+        subscribe_price,
+        subscription_required,
+        out_of_stock,
+        description,
+        store_id,
+      });
+
+      return res.status(201).json({
+        ResponseCode: "201",
+        Result: "true",
+        ResponseMsg: "Product created successfully.",
+        product,
+      });
+    }
+  } catch (error) {
+    console.error("Error processing request:", error);
+    return res.status(500).json({
+      ResponseCode: "500",
+      Result: "false",
+      ResponseMsg: "Internal Server Error",
+    });
+  }
+};
+
 
 const getAllProducts=asyncHandler(async(req,res,next)=>{
     const Products=await Product.findAll();
