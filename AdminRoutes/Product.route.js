@@ -1,14 +1,15 @@
 const express=require("express")
 const router=express.Router();
-const productController=require("../AdminControllers/product.Controller");
-const upload = require("../utils/multerConfig");
 
-router.post("/upsert",upload.single("img"),productController.upsertProduct);
-router.get("/all",productController.getAllProducts)
-router.get("/getbyid/:id",productController.getProductById)
-router.delete("/delete/:id",productController.getAllProducts)
-router.patch("/update/:id",productController.getAllProducts)
-router.get("/count",productController.getProductCount)
-router.patch("/toggle-status",productController.toggleproductStatus)
+const upload = require("../utils/multerConfig");
+const { upsertProduct, getAllProducts, getProductById, getProductCount, toggleproductStatus } = require("../AdminControllers/product.Controller");
+
+router.post("/upsert",upload.single("img"),upsertProduct);
+router.get("/all",getAllProducts)
+router.get("/getbyid/:id",getProductById)
+router.delete("/delete/:id",getAllProducts)
+router.patch("/update/:id",getAllProducts)
+router.get("/count",getProductCount)
+router.patch("/toggle-status",toggleproductStatus)
 
 module.exports=router
