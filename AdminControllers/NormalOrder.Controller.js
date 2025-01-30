@@ -4,11 +4,44 @@ const asynHandler = require("../middlewares/errorHandler");
 const logger = require("../utils/logger");
 const { getNorOrderIdBySchema, NorOrderDeleteSchema, NorOrderSearchSchema } = require("../utils/validation");
 
-const getAllNorOrders=asynHandler(async(req,res,next)=>{
-    const NorOrders=await NorOrder.findAll();
-    logger.info("sucessfully get all NormalOrder's");
-    res.status(200).json(NorOrders);
+const getAllNorOrders = asynHandler(async (req, res, next) => {
+  const { status } = req.params;
+
+  // Define the valid statuses
+  const validStatuses = ['Pending', 'Processing', 'Completed', 'Cancelled', 'On Route'];
+
+  try {
+    // Check if the provided status is valid
+    if (!status || !validStatuses.includes(status)) {
+      return res.status(400).json({
+        ResponseCode: "400",
+        Result: "false",
+        ResponseMsg: `Invalid status. Allowed statuses are: ${validStatuses.join(", ")}`,
+      });
+    }
+
+    // Fetch orders where the status matches the provided value
+    const NorOrders = await NorOrder.findAll({ where: { status } });
+
+    logger.info(`Successfully fetched orders with status: ${status}`);
+    res.status(200).json({
+      ResponseCode: "200",
+      Result: "true",
+      ResponseMsg: `Fetched orders with status: ${status}`,
+      data: NorOrders,
+    });
+  } catch (error) {
+    logger.error("Error fetching NormalOrders:", error);
+    res.status(500).json({
+      ResponseCode: "500",
+      Result: "false",
+      ResponseMsg: "Internal server error",
+      details: error.message,
+    });
+  }
 });
+
+
 
 const getNorOrderCount=asynHandler(async(req,res)=>{
     const NorOrderCount=await NorOrder.count();

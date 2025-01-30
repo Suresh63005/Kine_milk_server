@@ -26,10 +26,6 @@ const Rider = sequelize.define('Rider', {
     type: DataTypes.TEXT,
     allowNull: false,
   },
-  ccode: {
-    type: DataTypes.TEXT,
-    allowNull: false,
-  },
   mobile: {
     type: DataTypes.TEXT,
     allowNull: false,

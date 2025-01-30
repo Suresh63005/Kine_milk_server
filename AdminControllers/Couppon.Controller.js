@@ -21,7 +21,7 @@ const upsertCoupon = async (req, res) => {
       description,
     } = req.body;
     console.log(req.body)
-    // Validate the request body using Joi schema
+
     const { error } = upsertCouponSchema.validate({
       id,
       title,
@@ -35,6 +35,7 @@ const upsertCoupon = async (req, res) => {
     });
   
     if (error) {
+      logger.error(error)
       return res.status(400).json({
         ResponseCode: "400",
         Result: "false",
@@ -45,15 +46,14 @@ const upsertCoupon = async (req, res) => {
     try {
       let imageUrl;
       if (req.file) {
-        // Upload image to S3 if a file is provided
         imageUrl = await uploadToS3(req.file, "image");
       }
   
       let coupon;
       if (id) {
-        // Find the existing coupon by ID
         coupon = await Coupon.findByPk(id);
         if (!coupon) {
+          logger.error("coupon not found")
           return res.status(404).json({
             ResponseCode: "404",
             Result: "false",
@@ -61,7 +61,6 @@ const upsertCoupon = async (req, res) => {
           });
         }
   
-        // Update the existing coupon
         await coupon.update({
           title,
           coupon_img: imageUrl || coupon.coupon_img,
@@ -75,7 +74,7 @@ const upsertCoupon = async (req, res) => {
           store_id
         });
   
-        console.log("Coupon updated successfully:", coupon);
+        logger.info("Coupon updated successfully:", coupon);
         return res.status(200).json({
           ResponseCode: "200",
           Result: "true",
@@ -85,6 +84,7 @@ const upsertCoupon = async (req, res) => {
       } else {
         // Create a new coupon
         if (!req.file) {
+          logger.error('Image is required for a new coupon.')
           return res.status(400).json({
             ResponseCode: "400",
             Result: "false",
@@ -105,7 +105,7 @@ const upsertCoupon = async (req, res) => {
           store_id
         });
   
-        console.log("Coupon created successfully:", coupon);
+        logger.info("Coupon created successfully:", coupon);
         return res.status(201).json({
           ResponseCode: "201",
           Result: "true",
@@ -114,7 +114,7 @@ const upsertCoupon = async (req, res) => {
         });
       }
     } catch (error) {
-      console.error("Error processing request:", error);
+      logger.error("Error processing request:", error);
       return res.status(500).json({
         ResponseCode: "500",
         Result: "false",
@@ -154,7 +154,6 @@ const getCouponById=asynHandler(async(req,res)=>{
 });
 
 const deleteCoupon = asynHandler(async (req, res) => {
-    // Validate request parameters and body
     const { error } = CouponDeleteSchema.validate({ ...req.params, ...req.body });
     if (error) {
       logger.error(`Validation Error: ${error.details[0].message}`);
@@ -165,7 +164,6 @@ const deleteCoupon = asynHandler(async (req, res) => {
     const { forceDelete } = req.body;
   
     try {
-      // Find the coupon, including soft-deleted ones
       const couponToDelete = await Coupon.findOne({ where: { id }, paranoid: false });
   
       if (!couponToDelete) {
@@ -173,7 +171,6 @@ const deleteCoupon = asynHandler(async (req, res) => {
         return res.status(404).json({ error: "Coupon not found" });
       }
   
-      // Handle already soft-deleted coupon
       if (couponToDelete.deletedAt && forceDelete !== "true") {
         logger.error("Coupon is already soft-deleted");
         return res.status(400).json({
@@ -181,14 +178,12 @@ const deleteCoupon = asynHandler(async (req, res) => {
         });
       }
   
-      // Force delete the coupon
       if (forceDelete === "true") {
         await Coupon.destroy({ where: { id }, force: true });
         logger.info(`Coupon with ID ${id} permanently deleted`);
         return res.status(200).json({ message: "Coupon permanently deleted successfully" });
       }
   
-      // Soft delete the coupon
       await Coupon.destroy({ where: { id } });
       logger.info(`Coupon with ID ${id} soft-deleted`);
       return res.status(200).json({ message: "Coupon soft deleted successfully" });
@@ -224,32 +219,31 @@ const searchDelivery=asynHandler(async(req,res)=>{
         res.status(200).json(Delivery)
 });
 
-const toggleCouponStatus = async (req, res) => {
+const toggleCouponStatus = asynHandler(async (req, res) => {
     console.log("Request received:", req.body);
-  
     const { id, value } = req.body;
   
     try {
       const delivery = await Coupon.findByPk(id);
   
       if (!delivery) {
-        console.log("Coupon not found");
+        logger.error("Coupon not found");
         return res.status(404).json({ message: "Coupon not found." });
       }
   
       delivery.status = value;
       await delivery.save();
   
-      console.log("Coupon updated successfully:", delivery);
+      logger.info("Coupon updated successfully:", delivery);
       res.status(200).json({
         message: "delivery status updated successfully.",
         updatedStatus: delivery.status,
       });
     } catch (error) {
-      console.error("Error updating delivery status:", error);
+      logger.error("Error updating delivery status:", error);
       res.status(500).json({ message: "Internal server error." });
     }
-};
+});
 
 module.exports={
     upsertCoupon,
