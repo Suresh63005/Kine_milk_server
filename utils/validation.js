@@ -847,6 +847,36 @@ const couponToggleStatus=Joi.object({
   }) 
 });
 
+const otpLoginSchema = Joi.object({
+  ccode:Joi.string().pattern(/^\+\d{1,3}$/).required()
+  .messages({
+    "string.pattern.base": "Country code must start with '+' followed by 1 to 3 digits.",
+    "any.required": "Country code is required.",
+  }),
+  mobile:Joi.string().pattern(/^[0-9]{10}$/).required()
+  .messages({
+    "string.pattern.base": "Mobile number must be exactly 10 digits.",
+    "any.required": "Mobile number is required.",
+  }),
+})
+
+const verifyOtpSchema = Joi.object({
+  ccode:Joi.string().pattern(/^\+\d{1,3}$/).required()
+  .messages({
+    "string.pattern.base": "Country code must start with '+' followed by 1 to 3 digits.",
+    "any.required": "Country code is required.",
+  }),
+  mobile:Joi.string().pattern(/^[0-9]{10}$/).required()
+  .messages({
+    "string.pattern.base": "Mobile number must be exactly 10 digits.",
+    "any.required": "Mobile number is required.",
+  }),
+  otp:Joi.string().length(6).pattern(/^[0-9]{6}$/).required()
+  .messages({
+    "string.pattern.base": "OTP must be a 6-digit numeric value.",
+    "any.required": "OTP is required.",
+  })
+})
 
 module.exports={registerAdminSchema,loginAdminSchema,updateAdminSchema, deleteAdminSchema,getAdminbyIdSchema,searchAdminSchema,
     getCategoryByIdSchema,categoryDeleteSchema,categorySearchSchema,upsertCategorySchema,
@@ -859,5 +889,7 @@ module.exports={registerAdminSchema,loginAdminSchema,updateAdminSchema, deleteAd
     upsertTimeSchema,getTimeIdBySchema,DeleteTimeSchema,TimeSearchSchema,
 
     upsertCouponSchema,CouponDeleteSchema,getCouponByIdSchema, bannerUpsertSchema,bannerListSchema,
-    storeValidationSchema,upsertStoreSchema
+    storeValidationSchema,upsertStoreSchema,
+
+    otpLoginSchema,verifyOtpSchema
 }

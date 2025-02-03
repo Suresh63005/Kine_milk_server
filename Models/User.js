@@ -12,11 +12,11 @@ const User = sequelize.define(
     },
     name: {
       type: DataTypes.TEXT,
-      allowNull: false,
+      allowNull: true,
     },
     email: {
       type: DataTypes.TEXT,
-      allowNull: false,
+      allowNull: true,
     },
     ccode: {
       type: DataTypes.TEXT,
@@ -26,9 +26,12 @@ const User = sequelize.define(
       type: DataTypes.TEXT,
       allowNull: false,
     },
+    otp:{
+      type:DataTypes.TEXT,
+    },
     refercode: {
       type: DataTypes.TEXT,
-      allowNull: false,
+      allowNull: true,
     },
     parentcode: {
       type: DataTypes.TEXT,
@@ -36,7 +39,7 @@ const User = sequelize.define(
     },
     password: {
       type: DataTypes.TEXT,
-      defaultValue: false,
+      defaultValue: true,
     },
     registartion_date: {
       type: DataTypes.DATE,
@@ -49,7 +52,7 @@ const User = sequelize.define(
     },
     wallet: {
       type: DataTypes.FLOAT,
-      allowNull: false,
+      allowNull: true,
       defaultValue: 0,
     },
   },

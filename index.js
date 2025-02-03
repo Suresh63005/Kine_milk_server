@@ -88,7 +88,7 @@ sequelize
   .catch((err) => {
     console.error("Unable to create the database:", err);
   });
-
+//Admin Routes
 app.use('/admin', require('./AdminRoutes/Auth_route'))
 app.use("/category",require("./AdminRoutes/Category.route"))
 app.use("/product",require("./AdminRoutes/Product.route"))
@@ -105,11 +105,11 @@ app.use("/banner",require('./AdminRoutes/Banner.route'))
 app.use("/store",require('./AdminRoutes/Store.route'))
 
 
-
-// user routes
-
+// User Routes
+app.use("/user",require('./UserRoutes/user_auth_route'))
 
 app.use("/home_data", require("./UserRoutes/Customer/home_data_route"));
+
 
 app.get("/", (req, res) => {
     res.send("Server is Running");
