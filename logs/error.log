@@ -187,3 +187,4 @@
 {"level":"error","message":"Category not found","service":"kine_milk_server","timestamp":"2025-01-28T08:41:47.226Z"}
 =======
 >>>>>>> 57456f153ecaf411b89d327397e547a81df584b1
+{"level":"error","message":"Internal Server Error","service":"kine_milk_server","timestamp":"2025-02-03T07:02:59.898Z"}
