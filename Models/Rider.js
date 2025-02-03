@@ -4,10 +4,10 @@ const { DataTypes } = require("sequelize");
 const Rider = sequelize.define(
   "Rider",
   {
-    id: {
-      type: DataTypes.INTEGER,
+   id: {
+      type: DataTypes.UUID,
       allowNull: false,
-      autoIncrement: true,
+      defaultValue: DataTypes.UUIDV4,
       primaryKey: true,
     },
     store_id: {

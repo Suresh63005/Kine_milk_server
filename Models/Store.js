@@ -4,10 +4,10 @@ const { DataTypes } = require("sequelize");
 const Store = sequelize.define(
   "Store",
   {
-    id: {
-      type: DataTypes.INTEGER,
+   id: {
+      type: DataTypes.UUID,
       primaryKey: true,
-      autoIncrement: true,
+      defaultValue: DataTypes.UUIDV4,
       allowNull: false,
     },
     // Store Details
