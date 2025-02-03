@@ -1265,6 +1265,7 @@
 {"level":"info","message":"sucessfully get all Rider's","service":"kine_milk_server","timestamp":"2025-01-17T12:40:33.993Z"}
 {"level":"info","message":"sucessfully get all Time's","service":"kine_milk_server","timestamp":"2025-01-17T12:42:48.282Z"}
 {"level":"info","message":"Times","service":"kine_milk_server","timestamp":"2025-01-17T12:43:11.445Z"}
+
 {"level":"info","message":"sucessfully get all categories","service":"kine_milk_server","timestamp":"2025-01-20T07:21:05.741Z"}
 {"level":"info","message":"sucessfully get all categories","service":"kine_milk_server","timestamp":"2025-01-20T07:21:05.822Z"}
 {"level":"info","message":"sucessfully get all categories","service":"kine_milk_server","timestamp":"2025-01-20T07:21:12.889Z"}
@@ -1346,6 +1347,7 @@
 {"level":"info","message":"Successfully fetch all Banners","service":"kine_milk_server","timestamp":"2025-01-21T10:51:29.670Z"}
 {"level":"info","message":"Successfully fetch all Banners","service":"kine_milk_server","timestamp":"2025-01-21T10:51:48.639Z"}
 {"level":"info","message":"Successfully fetch all Banners","service":"kine_milk_server","timestamp":"2025-01-21T10:51:48.709Z"}
+<<<<<<< HEAD
 {"level":"error","message":"\"role\" must be one of [admin, store]","service":"kine_milk_server","timestamp":"2025-01-22T11:42:01.389Z"}
 {"level":"info","message":"Admin signed in successfully","service":"kine_milk_server","timestamp":"2025-01-22T11:42:04.357Z"}
 {"level":"info","message":"Admin signed in successfully","service":"kine_milk_server","timestamp":"2025-01-22T11:42:28.192Z"}
@@ -1417,3 +1419,948 @@
 {"level":"error","message":"Category not found","service":"kine_milk_server","timestamp":"2025-01-28T08:41:32.226Z"}
 {"level":"error","message":"Category not found","service":"kine_milk_server","timestamp":"2025-01-28T08:41:47.226Z"}
 {"level":"info","message":"Category soft-deleted","service":"kine_milk_server","timestamp":"2025-01-28T08:42:14.788Z"}
+=======
+
+
+{"level":"info","message":"sucessfully get all categories","service":"kine_milk_server","timestamp":"2025-01-19T02:59:02.110Z"}
+{"level":"info","message":"sucessfully get all categories","service":"kine_milk_server","timestamp":"2025-01-19T02:59:02.272Z"}
+{"level":"info","message":"sucessfully get all categories","service":"kine_milk_server","timestamp":"2025-01-19T02:59:04.189Z"}
+{"level":"info","message":"sucessfully get all categories","service":"kine_milk_server","timestamp":"2025-01-19T02:59:04.286Z"}
+{"level":"info","message":"successfully get all products","service":"kine_milk_server","timestamp":"2025-01-19T02:59:14.057Z"}
+{"level":"info","message":"successfully get all products","service":"kine_milk_server","timestamp":"2025-01-19T02:59:14.156Z"}
+{"level":"info","message":"sucessfully get all categories","service":"kine_milk_server","timestamp":"2025-01-19T02:59:15.561Z"}
+{"level":"info","message":"sucessfully get all categories","service":"kine_milk_server","timestamp":"2025-01-19T02:59:15.716Z"}
+{"level":"info","message":"successfully get all products","service":"kine_milk_server","timestamp":"2025-01-19T02:59:19.025Z"}
+{"level":"info","message":"successfully get all products","service":"kine_milk_server","timestamp":"2025-01-19T02:59:19.160Z"}
+{"level":"info","message":"sucessfully get all categories","service":"kine_milk_server","timestamp":"2025-01-19T02:59:22.458Z"}
+{"level":"info","message":"sucessfully get all categories","service":"kine_milk_server","timestamp":"2025-01-19T02:59:22.627Z"}
+{"level":"info","message":"sucessfully get all ProductAttribute","service":"kine_milk_server","timestamp":"2025-01-19T02:59:35.084Z"}
+{"level":"info","message":"sucessfully get all ProductAttribute","service":"kine_milk_server","timestamp":"2025-01-19T02:59:35.197Z"}
+{"level":"info","message":"sucessfully get all Delivery","service":"kine_milk_server","timestamp":"2025-01-19T02:59:37.867Z"}
+{"level":"info","message":"sucessfully get all Delivery","service":"kine_milk_server","timestamp":"2025-01-19T02:59:38.003Z"}
+{"level":"info","message":"sucessfully get all Coupon","service":"kine_milk_server","timestamp":"2025-01-19T02:59:47.277Z"}
+{"level":"info","message":"sucessfully get all Coupon","service":"kine_milk_server","timestamp":"2025-01-19T02:59:47.363Z"}
+{"level":"info","message":"sucessfully get all Rider's","service":"kine_milk_server","timestamp":"2025-01-19T02:59:56.432Z"}
+{"level":"info","message":"sucessfully get all Rider's","service":"kine_milk_server","timestamp":"2025-01-19T02:59:56.515Z"}
+{"level":"info","message":"sucessfully get all Time's","service":"kine_milk_server","timestamp":"2025-01-19T03:00:00.351Z"}
+{"level":"info","message":"sucessfully get all Time's","service":"kine_milk_server","timestamp":"2025-01-19T03:00:00.439Z"}
+{"level":"info","message":"sucessfully get all categories","service":"kine_milk_server","timestamp":"2025-01-20T04:40:50.236Z"}
+{"level":"info","message":"sucessfully get all categories","service":"kine_milk_server","timestamp":"2025-01-20T04:40:50.317Z"}
+{"level":"info","message":"sucessfully get all categories","service":"kine_milk_server","timestamp":"2025-01-20T04:41:13.057Z"}
+{"level":"info","message":"sucessfully get all categories","service":"kine_milk_server","timestamp":"2025-01-20T04:41:13.126Z"}
+{"level":"info","message":"sucessfully get all categories","service":"kine_milk_server","timestamp":"2025-01-20T04:43:54.355Z"}
+{"level":"info","message":"sucessfully get all categories","service":"kine_milk_server","timestamp":"2025-01-20T04:43:54.422Z"}
+{"level":"info","message":"sucessfully get all categories","service":"kine_milk_server","timestamp":"2025-01-20T04:45:55.167Z"}
+{"level":"info","message":"sucessfully get all categories","service":"kine_milk_server","timestamp":"2025-01-20T04:45:55.188Z"}
+{"level":"info","message":"sucessfully get all categories","service":"kine_milk_server","timestamp":"2025-01-20T04:46:51.144Z"}
+{"level":"info","message":"sucessfully get all categories","service":"kine_milk_server","timestamp":"2025-01-20T04:46:51.194Z"}
+{"level":"info","message":"sucessfully get all categories","service":"kine_milk_server","timestamp":"2025-01-20T04:47:04.908Z"}
+{"level":"info","message":"sucessfully get all categories","service":"kine_milk_server","timestamp":"2025-01-20T04:47:04.937Z"}
+{"level":"info","message":"successfully get all products","service":"kine_milk_server","timestamp":"2025-01-20T04:47:13.979Z"}
+{"level":"info","message":"successfully get all products","service":"kine_milk_server","timestamp":"2025-01-20T04:47:14.007Z"}
+{"level":"info","message":"sucessfully get all ProductAttribute","service":"kine_milk_server","timestamp":"2025-01-20T04:47:24.656Z"}
+{"level":"info","message":"sucessfully get all ProductAttribute","service":"kine_milk_server","timestamp":"2025-01-20T04:47:24.696Z"}
+{"level":"info","message":"successfully get all products","service":"kine_milk_server","timestamp":"2025-01-20T04:47:45.105Z"}
+{"level":"info","message":"successfully get all products","service":"kine_milk_server","timestamp":"2025-01-20T04:47:45.132Z"}
+{"level":"info","message":"sucessfully get all Delivery","service":"kine_milk_server","timestamp":"2025-01-20T04:47:57.616Z"}
+{"level":"info","message":"sucessfully get all Delivery","service":"kine_milk_server","timestamp":"2025-01-20T04:47:57.629Z"}
+{"level":"info","message":"successfully get all products","service":"kine_milk_server","timestamp":"2025-01-20T04:48:17.257Z"}
+{"level":"info","message":"successfully get all products","service":"kine_milk_server","timestamp":"2025-01-20T04:48:17.307Z"}
+{"level":"info","message":"sucessfully get all categories","service":"kine_milk_server","timestamp":"2025-01-20T04:48:45.478Z"}
+{"level":"info","message":"sucessfully get all categories","service":"kine_milk_server","timestamp":"2025-01-20T04:48:45.495Z"}
+{"level":"info","message":"successfully get all products","service":"kine_milk_server","timestamp":"2025-01-20T04:48:47.014Z"}
+{"level":"info","message":"successfully get all products","service":"kine_milk_server","timestamp":"2025-01-20T04:48:47.036Z"}
+{"level":"info","message":"sucessfully get all categories","service":"kine_milk_server","timestamp":"2025-01-20T04:48:48.569Z"}
+{"level":"info","message":"sucessfully get all categories","service":"kine_milk_server","timestamp":"2025-01-20T04:48:48.594Z"}
+{"level":"info","message":"successfully get all products","service":"kine_milk_server","timestamp":"2025-01-20T04:49:08.524Z"}
+{"level":"info","message":"successfully get all products","service":"kine_milk_server","timestamp":"2025-01-20T04:49:08.558Z"}
+{"level":"info","message":"sucessfully get all categories","service":"kine_milk_server","timestamp":"2025-01-20T04:49:19.863Z"}
+{"level":"info","message":"sucessfully get all categories","service":"kine_milk_server","timestamp":"2025-01-20T04:49:19.887Z"}
+{"level":"info","message":"successfully get all products","service":"kine_milk_server","timestamp":"2025-01-20T04:49:26.067Z"}
+{"level":"info","message":"successfully get all products","service":"kine_milk_server","timestamp":"2025-01-20T04:49:26.090Z"}
+{"level":"info","message":"sucessfully get all ProductAttribute","service":"kine_milk_server","timestamp":"2025-01-20T04:49:46.597Z"}
+{"level":"info","message":"sucessfully get all ProductAttribute","service":"kine_milk_server","timestamp":"2025-01-20T04:49:46.620Z"}
+{"level":"info","message":"successfully get all products","service":"kine_milk_server","timestamp":"2025-01-20T04:49:51.449Z"}
+{"level":"info","message":"successfully get all products","service":"kine_milk_server","timestamp":"2025-01-20T04:49:51.464Z"}
+{"level":"info","message":"sucessfully get all Delivery","service":"kine_milk_server","timestamp":"2025-01-20T04:50:20.988Z"}
+{"level":"info","message":"sucessfully get all Delivery","service":"kine_milk_server","timestamp":"2025-01-20T04:50:21.000Z"}
+{"level":"info","message":"successfully get all products","service":"kine_milk_server","timestamp":"2025-01-20T04:50:53.180Z"}
+{"level":"info","message":"successfully get all products","service":"kine_milk_server","timestamp":"2025-01-20T04:50:53.193Z"}
+{"level":"info","message":"successfully get all products","service":"kine_milk_server","timestamp":"2025-01-20T04:51:32.240Z"}
+{"level":"info","message":"successfully get all products","service":"kine_milk_server","timestamp":"2025-01-20T04:51:32.249Z"}
+{"level":"info","message":"successfully get all products","service":"kine_milk_server","timestamp":"2025-01-20T04:51:43.313Z"}
+{"level":"info","message":"successfully get all products","service":"kine_milk_server","timestamp":"2025-01-20T04:51:43.328Z"}
+{"level":"info","message":"sucessfully get all Coupon","service":"kine_milk_server","timestamp":"2025-01-20T04:52:00.133Z"}
+{"level":"info","message":"sucessfully get all Coupon","service":"kine_milk_server","timestamp":"2025-01-20T04:52:00.149Z"}
+{"level":"info","message":"sucessfully get all Rider's","service":"kine_milk_server","timestamp":"2025-01-20T04:53:23.281Z"}
+{"level":"info","message":"sucessfully get all Rider's","service":"kine_milk_server","timestamp":"2025-01-20T04:53:23.305Z"}
+{"level":"info","message":"sucessfully get all NormalOrder's","service":"kine_milk_server","timestamp":"2025-01-20T05:02:56.828Z"}
+{"level":"info","message":"sucessfully get all NormalOrder's","service":"kine_milk_server","timestamp":"2025-01-20T07:12:33.395Z"}
+{"level":"info","message":"sucessfully get all NormalOrder's","service":"kine_milk_server","timestamp":"2025-01-20T07:12:33.512Z"}
+{"level":"info","message":"sucessfully get all categories","service":"kine_milk_server","timestamp":"2025-01-20T07:23:30.228Z"}
+{"level":"info","message":"sucessfully get all categories","service":"kine_milk_server","timestamp":"2025-01-20T07:23:30.284Z"}
+{"level":"info","message":"sucessfully get all categories","service":"kine_milk_server","timestamp":"2025-01-20T07:24:32.543Z"}
+{"level":"info","message":"sucessfully get all categories","service":"kine_milk_server","timestamp":"2025-01-20T07:24:32.607Z"}
+{"level":"info","message":"successfully get all products","service":"kine_milk_server","timestamp":"2025-01-20T07:24:33.303Z"}
+{"level":"info","message":"successfully get all products","service":"kine_milk_server","timestamp":"2025-01-20T07:24:33.362Z"}
+{"level":"info","message":"successfully get all products","service":"kine_milk_server","timestamp":"2025-01-20T07:25:30.103Z"}
+{"level":"info","message":"successfully get all products","service":"kine_milk_server","timestamp":"2025-01-20T07:25:30.173Z"}
+{"level":"info","message":"successfully get all products","service":"kine_milk_server","timestamp":"2025-01-20T07:25:43.966Z"}
+{"level":"info","message":"successfully get all products","service":"kine_milk_server","timestamp":"2025-01-20T07:25:44.038Z"}
+{"level":"info","message":"sucessfully get all categories","service":"kine_milk_server","timestamp":"2025-01-20T07:25:45.735Z"}
+{"level":"info","message":"sucessfully get all categories","service":"kine_milk_server","timestamp":"2025-01-20T07:25:45.792Z"}
+{"level":"info","message":"successfully get all products","service":"kine_milk_server","timestamp":"2025-01-20T07:26:06.814Z"}
+{"level":"info","message":"successfully get all products","service":"kine_milk_server","timestamp":"2025-01-20T07:26:06.870Z"}
+{"level":"info","message":"sucessfully get all categories","service":"kine_milk_server","timestamp":"2025-01-20T07:26:08.372Z"}
+{"level":"info","message":"sucessfully get all categories","service":"kine_milk_server","timestamp":"2025-01-20T07:26:08.463Z"}
+{"level":"info","message":"successfully get all products","service":"kine_milk_server","timestamp":"2025-01-20T07:26:12.390Z"}
+{"level":"info","message":"successfully get all products","service":"kine_milk_server","timestamp":"2025-01-20T07:26:12.443Z"}
+{"level":"info","message":"successfully get all products","service":"kine_milk_server","timestamp":"2025-01-20T07:26:16.577Z"}
+{"level":"info","message":"successfully get all products","service":"kine_milk_server","timestamp":"2025-01-20T07:26:16.629Z"}
+{"level":"info","message":"sucessfully get all categories","service":"kine_milk_server","timestamp":"2025-01-20T07:27:43.312Z"}
+{"level":"info","message":"sucessfully get all categories","service":"kine_milk_server","timestamp":"2025-01-20T07:27:43.376Z"}
+
+{"level":"info","message":"sucessfully get all categories","service":"kine_milk_server","timestamp":"2025-01-20T04:42:29.487Z"}
+{"level":"info","message":"sucessfully get all categories","service":"kine_milk_server","timestamp":"2025-01-20T04:42:29.563Z"}
+{"level":"info","message":"successfully get all products","service":"kine_milk_server","timestamp":"2025-01-20T04:42:37.286Z"}
+{"level":"info","message":"successfully get all products","service":"kine_milk_server","timestamp":"2025-01-20T04:42:37.364Z"}
+{"level":"info","message":"sucessfully get all ProductAttribute","service":"kine_milk_server","timestamp":"2025-01-20T04:42:44.489Z"}
+{"level":"info","message":"sucessfully get all ProductAttribute","service":"kine_milk_server","timestamp":"2025-01-20T04:42:44.553Z"}
+{"level":"info","message":"sucessfully get all Delivery","service":"kine_milk_server","timestamp":"2025-01-20T04:42:55.716Z"}
+{"level":"info","message":"sucessfully get all Delivery","service":"kine_milk_server","timestamp":"2025-01-20T04:42:55.776Z"}
+{"level":"info","message":"sucessfully get all Coupon","service":"kine_milk_server","timestamp":"2025-01-20T04:43:06.120Z"}
+{"level":"info","message":"sucessfully get all Coupon","service":"kine_milk_server","timestamp":"2025-01-20T04:43:06.181Z"}
+{"level":"info","message":"sucessfully get all Rider's","service":"kine_milk_server","timestamp":"2025-01-20T04:43:25.482Z"}
+{"level":"info","message":"sucessfully get all Rider's","service":"kine_milk_server","timestamp":"2025-01-20T04:43:25.544Z"}
+{"level":"info","message":"sucessfully get all Time's","service":"kine_milk_server","timestamp":"2025-01-20T04:43:32.096Z"}
+{"level":"info","message":"sucessfully get all Time's","service":"kine_milk_server","timestamp":"2025-01-20T04:43:32.157Z"}
+{"level":"info","message":"sucessfully get all categories","service":"kine_milk_server","timestamp":"2025-01-20T04:43:42.427Z"}
+{"level":"info","message":"sucessfully get all categories","service":"kine_milk_server","timestamp":"2025-01-20T04:43:42.488Z"}
+{"level":"info","message":"sucessfully get all categories","service":"kine_milk_server","timestamp":"2025-01-20T04:45:27.945Z"}
+{"level":"info","message":"sucessfully get all categories","service":"kine_milk_server","timestamp":"2025-01-20T04:45:28.018Z"}
+{"level":"info","message":"sucessfully get all categories","service":"kine_milk_server","timestamp":"2025-01-20T05:08:01.504Z"}
+{"level":"info","message":"sucessfully get all categories","service":"kine_milk_server","timestamp":"2025-01-20T05:08:01.578Z"}
+{"level":"info","message":"sucessfully get all categories","service":"kine_milk_server","timestamp":"2025-01-20T05:08:06.264Z"}
+{"level":"info","message":"sucessfully get all categories","service":"kine_milk_server","timestamp":"2025-01-20T05:08:06.325Z"}
+{"level":"info","message":"sucessfully get all categories","service":"kine_milk_server","timestamp":"2025-01-20T05:08:22.864Z"}
+{"level":"info","message":"sucessfully get all categories","service":"kine_milk_server","timestamp":"2025-01-20T05:08:22.920Z"}
+{"level":"info","message":"sucessfully get all categories","service":"kine_milk_server","timestamp":"2025-01-20T05:09:27.347Z"}
+{"level":"info","message":"sucessfully get all categories","service":"kine_milk_server","timestamp":"2025-01-20T05:09:27.418Z"}
+{"level":"info","message":"sucessfully get all Delivery","service":"kine_milk_server","timestamp":"2025-01-20T05:09:53.648Z"}
+{"level":"info","message":"sucessfully get all Delivery","service":"kine_milk_server","timestamp":"2025-01-20T05:09:53.705Z"}
+{"level":"info","message":"sucessfully get all categories","service":"kine_milk_server","timestamp":"2025-01-20T05:11:08.055Z"}
+{"level":"info","message":"sucessfully get all categories","service":"kine_milk_server","timestamp":"2025-01-20T05:11:08.128Z"}
+{"level":"info","message":"successfully get all products","service":"kine_milk_server","timestamp":"2025-01-20T05:26:58.335Z"}
+{"level":"info","message":"successfully get all products","service":"kine_milk_server","timestamp":"2025-01-20T05:26:58.408Z"}
+{"level":"info","message":"Riders","service":"kine_milk_server","timestamp":"2025-01-20T05:27:51.382Z"}
+{"level":"info","message":"successfully get all products","service":"kine_milk_server","timestamp":"2025-01-20T05:33:12.392Z"}
+{"level":"info","message":"successfully get all products","service":"kine_milk_server","timestamp":"2025-01-20T05:33:12.493Z"}
+{"level":"info","message":"sucessfully get all Rider's","service":"kine_milk_server","timestamp":"2025-01-20T05:43:38.731Z"}
+{"level":"info","message":"sucessfully get all Rider's","service":"kine_milk_server","timestamp":"2025-01-20T05:43:38.813Z"}
+{"level":"info","message":"Riders","service":"kine_milk_server","timestamp":"2025-01-20T05:54:51.958Z"}
+{"level":"info","message":"sucessfully get all Rider's","service":"kine_milk_server","timestamp":"2025-01-20T05:59:34.067Z"}
+{"level":"info","message":"Riders","service":"kine_milk_server","timestamp":"2025-01-20T05:59:40.789Z"}
+{"level":"info","message":"sucessfully get all Rider's","service":"kine_milk_server","timestamp":"2025-01-20T06:00:04.815Z"}
+{"level":"info","message":"sucessfully get all Rider's","service":"kine_milk_server","timestamp":"2025-01-20T06:00:04.886Z"}
+{"level":"info","message":"sucessfully get all Rider's","service":"kine_milk_server","timestamp":"2025-01-20T06:01:21.480Z"}
+{"level":"info","message":"sucessfully get all Rider's","service":"kine_milk_server","timestamp":"2025-01-20T06:01:21.538Z"}
+{"level":"info","message":"sucessfully get all Rider's","service":"kine_milk_server","timestamp":"2025-01-20T06:03:43.370Z"}
+{"level":"info","message":"sucessfully get all Rider's","service":"kine_milk_server","timestamp":"2025-01-20T06:03:44.152Z"}
+{"level":"info","message":"sucessfully get all Rider's","service":"kine_milk_server","timestamp":"2025-01-20T06:04:04.152Z"}
+{"level":"info","message":"sucessfully get all Rider's","service":"kine_milk_server","timestamp":"2025-01-20T06:04:04.205Z"}
+{"level":"info","message":"Rider soft-deleted","service":"kine_milk_server","timestamp":"2025-01-20T06:06:12.065Z"}
+{"level":"info","message":"Rider found","service":"kine_milk_server","timestamp":"2025-01-20T06:06:14.475Z"}
+{"level":"info","message":"Rider found","service":"kine_milk_server","timestamp":"2025-01-20T06:06:14.540Z"}
+{"level":"info","message":"sucessfully get all Rider's","service":"kine_milk_server","timestamp":"2025-01-20T06:06:27.988Z"}
+{"level":"info","message":"sucessfully get all Rider's","service":"kine_milk_server","timestamp":"2025-01-20T06:06:28.046Z"}
+{"level":"info","message":"sucessfully get all Rider's","service":"kine_milk_server","timestamp":"2025-01-20T06:10:47.788Z"}
+{"level":"info","message":"sucessfully get all Rider's","service":"kine_milk_server","timestamp":"2025-01-20T06:10:47.859Z"}
+{"level":"info","message":"sucessfully get all Rider's","service":"kine_milk_server","timestamp":"2025-01-20T06:10:57.234Z"}
+{"level":"info","message":"sucessfully get all Rider's","service":"kine_milk_server","timestamp":"2025-01-20T06:10:57.287Z"}
+{"level":"info","message":"sucessfully get all Rider's","service":"kine_milk_server","timestamp":"2025-01-20T06:11:04.250Z"}
+{"level":"info","message":"sucessfully get all Rider's","service":"kine_milk_server","timestamp":"2025-01-20T06:11:04.326Z"}
+{"level":"info","message":"sucessfully get all Rider's","service":"kine_milk_server","timestamp":"2025-01-20T06:12:14.114Z"}
+{"level":"info","message":"sucessfully get all Rider's","service":"kine_milk_server","timestamp":"2025-01-20T06:12:14.172Z"}
+{"level":"info","message":"sucessfully get all Rider's","service":"kine_milk_server","timestamp":"2025-01-20T06:12:25.824Z"}
+{"level":"info","message":"sucessfully get all Rider's","service":"kine_milk_server","timestamp":"2025-01-20T06:12:25.888Z"}
+{"level":"info","message":"sucessfully get all Rider's","service":"kine_milk_server","timestamp":"2025-01-20T06:18:06.906Z"}
+{"level":"info","message":"sucessfully get all Rider's","service":"kine_milk_server","timestamp":"2025-01-20T06:18:06.985Z"}
+{"level":"info","message":"sucessfully get all Rider's","service":"kine_milk_server","timestamp":"2025-01-20T06:18:21.790Z"}
+{"level":"info","message":"sucessfully get all Rider's","service":"kine_milk_server","timestamp":"2025-01-20T06:18:21.853Z"}
+{"level":"info","message":"sucessfully get all Rider's","service":"kine_milk_server","timestamp":"2025-01-20T06:18:24.268Z"}
+{"level":"info","message":"sucessfully get all Rider's","service":"kine_milk_server","timestamp":"2025-01-20T06:18:24.321Z"}
+{"level":"info","message":"sucessfully get all Rider's","service":"kine_milk_server","timestamp":"2025-01-20T06:21:52.189Z"}
+{"level":"info","message":"sucessfully get all Rider's","service":"kine_milk_server","timestamp":"2025-01-20T06:21:52.263Z"}
+{"level":"info","message":"sucessfully get all Rider's","service":"kine_milk_server","timestamp":"2025-01-20T06:22:12.088Z"}
+{"level":"info","message":"sucessfully get all Rider's","service":"kine_milk_server","timestamp":"2025-01-20T06:22:12.158Z"}
+{"level":"info","message":"sucessfully get all Rider's","service":"kine_milk_server","timestamp":"2025-01-20T06:22:30.230Z"}
+{"level":"info","message":"sucessfully get all Rider's","service":"kine_milk_server","timestamp":"2025-01-20T06:22:30.299Z"}
+{"level":"info","message":"sucessfully get all Rider's","service":"kine_milk_server","timestamp":"2025-01-20T06:22:44.186Z"}
+{"level":"info","message":"sucessfully get all Rider's","service":"kine_milk_server","timestamp":"2025-01-20T06:22:44.238Z"}
+{"level":"info","message":"successfully get all products","service":"kine_milk_server","timestamp":"2025-01-20T06:32:25.353Z"}
+{"level":"info","message":"successfully get all products","service":"kine_milk_server","timestamp":"2025-01-20T06:32:48.346Z"}
+{"level":"info","message":"successfully get all products","service":"kine_milk_server","timestamp":"2025-01-20T06:32:50.151Z"}
+{"level":"info","message":"successfully get all products","service":"kine_milk_server","timestamp":"2025-01-20T06:32:52.154Z"}
+{"level":"info","message":"sucessfully get all categories","service":"kine_milk_server","timestamp":"2025-01-20T06:32:52.205Z"}
+{"level":"info","message":"successfully get all products","service":"kine_milk_server","timestamp":"2025-01-20T06:33:15.743Z"}
+{"level":"info","message":"sucessfully get all categories","service":"kine_milk_server","timestamp":"2025-01-20T06:33:15.761Z"}
+{"level":"info","message":"successfully get all products","service":"kine_milk_server","timestamp":"2025-01-20T06:33:15.837Z"}
+{"level":"info","message":"sucessfully get all categories","service":"kine_milk_server","timestamp":"2025-01-20T06:33:15.846Z"}
+{"level":"info","message":"successfully get all products","service":"kine_milk_server","timestamp":"2025-01-20T06:33:39.353Z"}
+{"level":"info","message":"sucessfully get all categories","service":"kine_milk_server","timestamp":"2025-01-20T06:33:39.367Z"}
+{"level":"info","message":"successfully get all products","service":"kine_milk_server","timestamp":"2025-01-20T06:33:42.147Z"}
+{"level":"info","message":"sucessfully get all categories","service":"kine_milk_server","timestamp":"2025-01-20T06:33:42.158Z"}
+{"level":"info","message":"successfully get all products","service":"kine_milk_server","timestamp":"2025-01-20T06:33:48.139Z"}
+{"level":"info","message":"sucessfully get all categories","service":"kine_milk_server","timestamp":"2025-01-20T06:33:48.142Z"}
+{"level":"info","message":"successfully get all products","service":"kine_milk_server","timestamp":"2025-01-20T06:33:49.132Z"}
+{"level":"info","message":"sucessfully get all categories","service":"kine_milk_server","timestamp":"2025-01-20T06:33:49.135Z"}
+{"level":"info","message":"successfully get all products","service":"kine_milk_server","timestamp":"2025-01-20T06:33:51.147Z"}
+{"level":"info","message":"sucessfully get all categories","service":"kine_milk_server","timestamp":"2025-01-20T06:33:51.151Z"}
+{"level":"info","message":"successfully get all products","service":"kine_milk_server","timestamp":"2025-01-20T06:33:55.148Z"}
+{"level":"info","message":"sucessfully get all categories","service":"kine_milk_server","timestamp":"2025-01-20T06:33:55.150Z"}
+{"level":"info","message":"successfully get all products","service":"kine_milk_server","timestamp":"2025-01-20T06:34:03.145Z"}
+{"level":"info","message":"sucessfully get all categories","service":"kine_milk_server","timestamp":"2025-01-20T06:34:03.148Z"}
+{"level":"info","message":"successfully get all products","service":"kine_milk_server","timestamp":"2025-01-20T06:34:07.143Z"}
+{"level":"info","message":"sucessfully get all categories","service":"kine_milk_server","timestamp":"2025-01-20T06:34:07.146Z"}
+{"level":"info","message":"successfully get all products","service":"kine_milk_server","timestamp":"2025-01-20T06:34:08.270Z"}
+{"level":"info","message":"sucessfully get all categories","service":"kine_milk_server","timestamp":"2025-01-20T06:34:08.276Z"}
+{"level":"info","message":"successfully get all products","service":"kine_milk_server","timestamp":"2025-01-20T06:34:10.681Z"}
+{"level":"info","message":"sucessfully get all categories","service":"kine_milk_server","timestamp":"2025-01-20T06:34:10.685Z"}
+{"level":"info","message":"successfully get all products","service":"kine_milk_server","timestamp":"2025-01-20T06:34:10.739Z"}
+{"level":"info","message":"sucessfully get all categories","service":"kine_milk_server","timestamp":"2025-01-20T06:34:10.744Z"}
+{"level":"info","message":"sucessfully get all Faq's","service":"kine_milk_server","timestamp":"2025-01-20T07:04:12.996Z"}
+{"level":"info","message":"sucessfully get all Faq's","service":"kine_milk_server","timestamp":"2025-01-20T07:05:14.222Z"}
+{"level":"info","message":"sucessfully get all Faq's","service":"kine_milk_server","timestamp":"2025-01-20T07:24:59.966Z"}
+{"level":"info","message":"sucessfully get all Faq's","service":"kine_milk_server","timestamp":"2025-01-20T07:25:00.056Z"}
+{"level":"info","message":"sucessfully get all Faq's","service":"kine_milk_server","timestamp":"2025-01-20T07:26:27.412Z"}
+{"level":"info","message":"sucessfully get all Faq's","service":"kine_milk_server","timestamp":"2025-01-20T07:26:27.481Z"}
+{"level":"info","message":"sucessfully get all Faq's","service":"kine_milk_server","timestamp":"2025-01-20T07:26:32.171Z"}
+{"level":"info","message":"sucessfully get all Faq's","service":"kine_milk_server","timestamp":"2025-01-20T07:26:38.162Z"}
+{"level":"info","message":"sucessfully get all Faq's","service":"kine_milk_server","timestamp":"2025-01-20T07:26:41.167Z"}
+{"level":"info","message":"sucessfully get all Faq's","service":"kine_milk_server","timestamp":"2025-01-20T07:26:43.151Z"}
+{"level":"info","message":"sucessfully get all Faq's","service":"kine_milk_server","timestamp":"2025-01-20T07:26:45.154Z"}
+{"level":"info","message":"sucessfully get all Faq's","service":"kine_milk_server","timestamp":"2025-01-20T07:26:46.154Z"}
+{"level":"info","message":"sucessfully get all Faq's","service":"kine_milk_server","timestamp":"2025-01-20T07:26:47.172Z"}
+{"level":"info","message":"sucessfully get all Faq's","service":"kine_milk_server","timestamp":"2025-01-20T07:26:49.166Z"}
+{"level":"info","message":"sucessfully get all Faq's","service":"kine_milk_server","timestamp":"2025-01-20T07:26:50.152Z"}
+{"level":"info","message":"sucessfully get all Faq's","service":"kine_milk_server","timestamp":"2025-01-20T07:26:53.171Z"}
+{"level":"info","message":"sucessfully get all Faq's","service":"kine_milk_server","timestamp":"2025-01-20T07:26:55.277Z"}
+{"level":"info","message":"sucessfully get all Faq's","service":"kine_milk_server","timestamp":"2025-01-20T07:26:56.174Z"}
+{"level":"info","message":"sucessfully get all Faq's","service":"kine_milk_server","timestamp":"2025-01-20T07:26:59.272Z"}
+{"level":"info","message":"sucessfully get all Faq's","service":"kine_milk_server","timestamp":"2025-01-20T07:27:02.168Z"}
+{"level":"info","message":"sucessfully get all Faq's","service":"kine_milk_server","timestamp":"2025-01-20T07:27:06.153Z"}
+{"level":"info","message":"sucessfully get all Faq's","service":"kine_milk_server","timestamp":"2025-01-20T07:27:07.177Z"}
+{"level":"info","message":"sucessfully get all Faq's","service":"kine_milk_server","timestamp":"2025-01-20T07:27:11.164Z"}
+{"level":"info","message":"sucessfully get all Faq's","service":"kine_milk_server","timestamp":"2025-01-20T07:27:18.146Z"}
+{"level":"info","message":"sucessfully get all Faq's","service":"kine_milk_server","timestamp":"2025-01-20T07:27:23.165Z"}
+{"level":"info","message":"sucessfully get all Faq's","service":"kine_milk_server","timestamp":"2025-01-20T07:30:04.149Z"}
+{"level":"info","message":"sucessfully get all Faq's","service":"kine_milk_server","timestamp":"2025-01-20T07:30:04.223Z"}
+{"level":"info","message":"sucessfully get all Faq's","service":"kine_milk_server","timestamp":"2025-01-20T09:09:19.817Z"}
+{"level":"info","message":"sucessfully get all Faq's","service":"kine_milk_server","timestamp":"2025-01-20T09:19:00.437Z"}
+{"level":"info","message":"sucessfully get all Faq's","service":"kine_milk_server","timestamp":"2025-01-20T09:19:00.517Z"}
+{"level":"info","message":"sucessfully get all Faq's","service":"kine_milk_server","timestamp":"2025-01-20T09:19:21.906Z"}
+{"level":"info","message":"sucessfully get all Faq's","service":"kine_milk_server","timestamp":"2025-01-20T09:19:21.967Z"}
+{"level":"info","message":"sucessfully get all Faq's","service":"kine_milk_server","timestamp":"2025-01-20T09:21:34.774Z"}
+{"level":"info","message":"sucessfully get all Faq's","service":"kine_milk_server","timestamp":"2025-01-20T09:21:34.847Z"}
+{"level":"info","message":"sucessfully get all Faq's","service":"kine_milk_server","timestamp":"2025-01-20T09:21:53.075Z"}
+{"level":"info","message":"sucessfully get all Faq's","service":"kine_milk_server","timestamp":"2025-01-20T09:23:45.083Z"}
+{"level":"info","message":"sucessfully get all Faq's","service":"kine_milk_server","timestamp":"2025-01-20T09:23:45.159Z"}
+{"level":"info","message":"sucessfully get all categories","service":"kine_milk_server","timestamp":"2025-01-20T09:25:28.230Z"}
+{"level":"info","message":"sucessfully get all categories","service":"kine_milk_server","timestamp":"2025-01-20T09:25:28.305Z"}
+{"level":"info","message":"successfully get all products","service":"kine_milk_server","timestamp":"2025-01-20T09:26:17.593Z"}
+{"level":"info","message":"successfully get all products","service":"kine_milk_server","timestamp":"2025-01-20T09:26:17.666Z"}
+{"level":"info","message":"successfully get all products","service":"kine_milk_server","timestamp":"2025-01-20T09:26:53.006Z"}
+{"level":"info","message":"successfully get all products","service":"kine_milk_server","timestamp":"2025-01-20T09:26:53.082Z"}
+{"level":"info","message":"sucessfully get all ProductAttribute","service":"kine_milk_server","timestamp":"2025-01-20T09:27:04.797Z"}
+{"level":"info","message":"sucessfully get all ProductAttribute","service":"kine_milk_server","timestamp":"2025-01-20T09:27:04.865Z"}
+{"level":"info","message":"successfully get all products","service":"kine_milk_server","timestamp":"2025-01-20T09:27:06.392Z"}
+{"level":"info","message":"successfully get all products","service":"kine_milk_server","timestamp":"2025-01-20T09:27:06.449Z"}
+{"level":"info","message":"sucessfully get all ProductAttribute","service":"kine_milk_server","timestamp":"2025-01-20T09:27:51.044Z"}
+{"level":"info","message":"sucessfully get all ProductAttribute","service":"kine_milk_server","timestamp":"2025-01-20T09:27:51.105Z"}
+{"level":"info","message":"successfully get all products","service":"kine_milk_server","timestamp":"2025-01-20T09:27:52.097Z"}
+{"level":"info","message":"successfully get all products","service":"kine_milk_server","timestamp":"2025-01-20T09:27:52.153Z"}
+{"level":"info","message":"successfully get all products","service":"kine_milk_server","timestamp":"2025-01-20T09:28:11.897Z"}
+{"level":"info","message":"successfully get all products","service":"kine_milk_server","timestamp":"2025-01-20T09:28:11.964Z"}
+{"level":"info","message":"sucessfully get all Coupon","service":"kine_milk_server","timestamp":"2025-01-20T09:28:29.530Z"}
+{"level":"info","message":"sucessfully get all Coupon","service":"kine_milk_server","timestamp":"2025-01-20T09:28:29.604Z"}
+{"level":"info","message":"sucessfully get all categories","service":"kine_milk_server","timestamp":"2025-01-20T09:28:44.212Z"}
+{"level":"info","message":"successfully get all products","service":"kine_milk_server","timestamp":"2025-01-20T09:28:44.227Z"}
+{"level":"info","message":"sucessfully get all categories","service":"kine_milk_server","timestamp":"2025-01-20T09:28:44.292Z"}
+{"level":"info","message":"successfully get all products","service":"kine_milk_server","timestamp":"2025-01-20T09:28:44.297Z"}
+{"level":"info","message":"sucessfully get all Rider's","service":"kine_milk_server","timestamp":"2025-01-20T09:29:54.045Z"}
+{"level":"info","message":"sucessfully get all Rider's","service":"kine_milk_server","timestamp":"2025-01-20T09:29:54.112Z"}
+{"level":"info","message":"sucessfully get all Time's","service":"kine_milk_server","timestamp":"2025-01-20T09:30:09.868Z"}
+{"level":"info","message":"sucessfully get all Time's","service":"kine_milk_server","timestamp":"2025-01-20T09:30:09.933Z"}
+{"level":"info","message":"sucessfully get all NormalOrder's","service":"kine_milk_server","timestamp":"2025-01-20T09:30:19.042Z"}
+{"level":"info","message":"sucessfully get all NormalOrder's","service":"kine_milk_server","timestamp":"2025-01-20T09:30:19.104Z"}
+{"level":"info","message":"sucessfully get all Time's","service":"kine_milk_server","timestamp":"2025-01-20T09:30:54.737Z"}
+{"level":"info","message":"sucessfully get all Time's","service":"kine_milk_server","timestamp":"2025-01-20T09:30:54.816Z"}
+{"level":"info","message":"sucessfully get all NormalOrder's","service":"kine_milk_server","timestamp":"2025-01-20T09:31:04.357Z"}
+{"level":"info","message":"sucessfully get all NormalOrder's","service":"kine_milk_server","timestamp":"2025-01-20T09:31:04.416Z"}
+{"level":"info","message":"sucessfully get all Faq's","service":"kine_milk_server","timestamp":"2025-01-20T09:39:47.382Z"}
+{"level":"info","message":"sucessfully get all Faq's","service":"kine_milk_server","timestamp":"2025-01-20T09:39:47.520Z"}
+{"level":"info","message":"sucessfully get all Faq's","service":"kine_milk_server","timestamp":"2025-01-20T09:39:52.604Z"}
+{"level":"info","message":"sucessfully get all Faq's","service":"kine_milk_server","timestamp":"2025-01-20T09:39:52.656Z"}
+{"level":"info","message":"sucessfully get all Faq's","service":"kine_milk_server","timestamp":"2025-01-20T09:43:38.846Z"}
+{"level":"info","message":"sucessfully get all Faq's","service":"kine_milk_server","timestamp":"2025-01-20T09:43:38.909Z"}
+{"level":"info","message":"sucessfully get all Faq's","service":"kine_milk_server","timestamp":"2025-01-20T09:51:17.859Z"}
+{"level":"info","message":"sucessfully get all Faq's","service":"kine_milk_server","timestamp":"2025-01-20T09:51:17.931Z"}
+{"level":"info","message":"sucessfully get all Faq's","service":"kine_milk_server","timestamp":"2025-01-20T09:51:32.249Z"}
+{"level":"info","message":"sucessfully get all Faq's","service":"kine_milk_server","timestamp":"2025-01-20T09:51:32.306Z"}
+{"level":"info","message":"sucessfully get all Faq's","service":"kine_milk_server","timestamp":"2025-01-20T09:51:50.052Z"}
+{"level":"info","message":"sucessfully get all Faq's","service":"kine_milk_server","timestamp":"2025-01-20T09:52:25.467Z"}
+{"level":"info","message":"sucessfully get all Faq's","service":"kine_milk_server","timestamp":"2025-01-20T09:52:25.541Z"}
+{"level":"info","message":"sucessfully get all Faq's","service":"kine_milk_server","timestamp":"2025-01-20T09:52:49.977Z"}
+{"level":"info","message":"sucessfully get all Faq's","service":"kine_milk_server","timestamp":"2025-01-20T09:52:50.040Z"}
+{"level":"info","message":"sucessfully get all Faq's","service":"kine_milk_server","timestamp":"2025-01-20T09:53:24.356Z"}
+{"level":"info","message":"sucessfully get all Faq's","service":"kine_milk_server","timestamp":"2025-01-20T09:53:31.150Z"}
+{"level":"info","message":"sucessfully get all Faq's","service":"kine_milk_server","timestamp":"2025-01-20T09:53:41.155Z"}
+{"level":"info","message":"sucessfully get all Faq's","service":"kine_milk_server","timestamp":"2025-01-20T09:53:43.149Z"}
+{"level":"info","message":"sucessfully get all Faq's","service":"kine_milk_server","timestamp":"2025-01-20T09:53:45.147Z"}
+{"level":"info","message":"sucessfully get all Faq's","service":"kine_milk_server","timestamp":"2025-01-20T09:54:01.346Z"}
+{"level":"info","message":"sucessfully get all Faq's","service":"kine_milk_server","timestamp":"2025-01-20T09:54:03.144Z"}
+{"level":"info","message":"sucessfully get all Faq's","service":"kine_milk_server","timestamp":"2025-01-20T09:54:12.254Z"}
+{"level":"info","message":"sucessfully get all Faq's","service":"kine_milk_server","timestamp":"2025-01-20T09:54:14.176Z"}
+{"level":"info","message":"sucessfully get all Faq's","service":"kine_milk_server","timestamp":"2025-01-20T09:54:16.187Z"}
+{"level":"info","message":"sucessfully get all Faq's","service":"kine_milk_server","timestamp":"2025-01-20T09:54:20.165Z"}
+{"level":"info","message":"sucessfully get all Faq's","service":"kine_milk_server","timestamp":"2025-01-20T09:54:22.162Z"}
+{"level":"info","message":"sucessfully get all Faq's","service":"kine_milk_server","timestamp":"2025-01-20T09:54:25.154Z"}
+{"level":"info","message":"sucessfully get all Faq's","service":"kine_milk_server","timestamp":"2025-01-20T09:55:23.794Z"}
+{"level":"info","message":"sucessfully get all Faq's","service":"kine_milk_server","timestamp":"2025-01-20T09:55:23.869Z"}
+{"level":"info","message":"Faq soft-deleted","service":"kine_milk_server","timestamp":"2025-01-20T09:56:18.494Z"}
+{"level":"info","message":"sucessfully get all Faq's","service":"kine_milk_server","timestamp":"2025-01-20T09:57:12.350Z"}
+{"level":"info","message":"sucessfully get all Faq's","service":"kine_milk_server","timestamp":"2025-01-20T09:57:21.159Z"}
+{"level":"info","message":"sucessfully get all Faq's","service":"kine_milk_server","timestamp":"2025-01-20T09:57:22.155Z"}
+{"level":"info","message":"sucessfully get all Faq's","service":"kine_milk_server","timestamp":"2025-01-20T09:57:24.174Z"}
+{"level":"info","message":"sucessfully get all Faq's","service":"kine_milk_server","timestamp":"2025-01-20T09:57:27.162Z"}
+{"level":"info","message":"sucessfully get all Faq's","service":"kine_milk_server","timestamp":"2025-01-20T09:57:31.162Z"}
+{"level":"info","message":"sucessfully get all Faq's","service":"kine_milk_server","timestamp":"2025-01-20T09:57:57.369Z"}
+{"level":"info","message":"sucessfully get all Faq's","service":"kine_milk_server","timestamp":"2025-01-20T09:57:59.146Z"}
+{"level":"info","message":"sucessfully get all Faq's","service":"kine_milk_server","timestamp":"2025-01-20T09:58:29.366Z"}
+{"level":"info","message":"sucessfully get all Faq's","service":"kine_milk_server","timestamp":"2025-01-20T09:58:30.148Z"}
+{"level":"info","message":"sucessfully get all Faq's","service":"kine_milk_server","timestamp":"2025-01-20T09:58:31.157Z"}
+{"level":"info","message":"sucessfully get all Faq's","service":"kine_milk_server","timestamp":"2025-01-20T09:58:34.167Z"}
+{"level":"info","message":"sucessfully get all Faq's","service":"kine_milk_server","timestamp":"2025-01-20T09:58:42.184Z"}
+{"level":"info","message":"sucessfully get all Faq's","service":"kine_milk_server","timestamp":"2025-01-20T09:58:45.154Z"}
+{"level":"info","message":"sucessfully get all Faq's","service":"kine_milk_server","timestamp":"2025-01-20T09:58:47.145Z"}
+{"level":"info","message":"sucessfully get all Faq's","service":"kine_milk_server","timestamp":"2025-01-20T09:58:48.145Z"}
+{"level":"info","message":"sucessfully get all Faq's","service":"kine_milk_server","timestamp":"2025-01-20T09:58:52.159Z"}
+{"level":"info","message":"sucessfully get all Faq's","service":"kine_milk_server","timestamp":"2025-01-20T09:58:53.152Z"}
+{"level":"info","message":"Faq found","service":"kine_milk_server","timestamp":"2025-01-20T09:59:20.175Z"}
+{"level":"info","message":"Faq found","service":"kine_milk_server","timestamp":"2025-01-20T09:59:29.320Z"}
+{"level":"info","message":"Faq found","service":"kine_milk_server","timestamp":"2025-01-20T09:59:29.374Z"}
+{"level":"info","message":"sucessfully get all Faq's","service":"kine_milk_server","timestamp":"2025-01-20T09:59:39.352Z"}
+{"level":"info","message":"sucessfully get all Faq's","service":"kine_milk_server","timestamp":"2025-01-20T09:59:39.413Z"}
+{"level":"info","message":"Faq found","service":"kine_milk_server","timestamp":"2025-01-20T09:59:43.242Z"}
+{"level":"info","message":"Faq found","service":"kine_milk_server","timestamp":"2025-01-20T09:59:43.301Z"}
+{"level":"info","message":"Faq found","service":"kine_milk_server","timestamp":"2025-01-20T10:02:41.952Z"}
+{"level":"info","message":"Faq found","service":"kine_milk_server","timestamp":"2025-01-20T10:02:42.007Z"}
+{"level":"info","message":"Faq found","service":"kine_milk_server","timestamp":"2025-01-20T10:02:43.910Z"}
+{"level":"info","message":"Faq found","service":"kine_milk_server","timestamp":"2025-01-20T10:02:43.975Z"}
+{"level":"info","message":"sucessfully get all Faq's","service":"kine_milk_server","timestamp":"2025-01-20T10:02:48.847Z"}
+{"level":"info","message":"sucessfully get all Faq's","service":"kine_milk_server","timestamp":"2025-01-20T10:02:48.905Z"}
+{"level":"info","message":"sucessfully get all Faq's","service":"kine_milk_server","timestamp":"2025-01-20T10:02:51.201Z"}
+{"level":"info","message":"sucessfully get all Faq's","service":"kine_milk_server","timestamp":"2025-01-20T10:02:51.254Z"}
+{"level":"info","message":"Faq found","service":"kine_milk_server","timestamp":"2025-01-20T10:02:52.903Z"}
+{"level":"info","message":"Faq found","service":"kine_milk_server","timestamp":"2025-01-20T10:02:52.955Z"}
+{"level":"info","message":"sucessfully get all Faq's","service":"kine_milk_server","timestamp":"2025-01-20T10:02:55.860Z"}
+{"level":"info","message":"sucessfully get all Faq's","service":"kine_milk_server","timestamp":"2025-01-20T10:02:55.913Z"}
+{"level":"info","message":"sucessfully get all Faq's","service":"kine_milk_server","timestamp":"2025-01-20T10:03:07.270Z"}
+{"level":"info","message":"sucessfully get all Faq's","service":"kine_milk_server","timestamp":"2025-01-20T10:03:07.322Z"}
+{"level":"info","message":"Faq found","service":"kine_milk_server","timestamp":"2025-01-20T10:03:08.825Z"}
+{"level":"info","message":"Faq found","service":"kine_milk_server","timestamp":"2025-01-20T10:03:08.879Z"}
+{"level":"info","message":"sucessfully get all Faq's","service":"kine_milk_server","timestamp":"2025-01-20T10:04:08.109Z"}
+{"level":"info","message":"sucessfully get all Faq's","service":"kine_milk_server","timestamp":"2025-01-20T10:04:08.177Z"}
+{"level":"info","message":"Faq found","service":"kine_milk_server","timestamp":"2025-01-20T10:04:10.178Z"}
+{"level":"info","message":"Faq found","service":"kine_milk_server","timestamp":"2025-01-20T10:04:10.232Z"}
+{"level":"info","message":"sucessfully get all Faq's","service":"kine_milk_server","timestamp":"2025-01-20T10:04:16.573Z"}
+{"level":"info","message":"sucessfully get all Faq's","service":"kine_milk_server","timestamp":"2025-01-20T10:04:16.631Z"}
+{"level":"info","message":"successfully get all products","service":"kine_milk_server","timestamp":"2025-01-20T10:04:23.616Z"}
+{"level":"info","message":"successfully get all products","service":"kine_milk_server","timestamp":"2025-01-20T10:04:23.673Z"}
+{"level":"info","message":"sucessfully get all categories","service":"kine_milk_server","timestamp":"2025-01-20T10:04:26.099Z"}
+{"level":"info","message":"sucessfully get all categories","service":"kine_milk_server","timestamp":"2025-01-20T10:04:26.196Z"}
+{"level":"info","message":"sucessfully get all Faq's","service":"kine_milk_server","timestamp":"2025-01-20T10:04:39.698Z"}
+{"level":"info","message":"sucessfully get all Faq's","service":"kine_milk_server","timestamp":"2025-01-20T10:04:39.764Z"}
+{"level":"info","message":"Faq found","service":"kine_milk_server","timestamp":"2025-01-20T10:04:40.892Z"}
+{"level":"info","message":"Faq found","service":"kine_milk_server","timestamp":"2025-01-20T10:04:40.946Z"}
+{"level":"info","message":"sucessfully get all Faq's","service":"kine_milk_server","timestamp":"2025-01-20T10:04:42.369Z"}
+{"level":"info","message":"sucessfully get all Faq's","service":"kine_milk_server","timestamp":"2025-01-20T10:04:42.444Z"}
+{"level":"info","message":"Faq found","service":"kine_milk_server","timestamp":"2025-01-20T10:04:44.556Z"}
+{"level":"info","message":"Faq found","service":"kine_milk_server","timestamp":"2025-01-20T10:04:44.611Z"}
+{"level":"info","message":"sucessfully get all Faq's","service":"kine_milk_server","timestamp":"2025-01-20T10:04:50.510Z"}
+{"level":"info","message":"sucessfully get all Faq's","service":"kine_milk_server","timestamp":"2025-01-20T10:04:50.567Z"}
+{"level":"info","message":"Faq found","service":"kine_milk_server","timestamp":"2025-01-20T10:05:35.528Z"}
+{"level":"info","message":"Faq found","service":"kine_milk_server","timestamp":"2025-01-20T10:05:35.579Z"}
+{"level":"info","message":"sucessfully get all Faq's","service":"kine_milk_server","timestamp":"2025-01-20T10:05:38.464Z"}
+{"level":"info","message":"sucessfully get all Faq's","service":"kine_milk_server","timestamp":"2025-01-20T10:05:38.518Z"}
+{"level":"info","message":"sucessfully get all NormalOrder's","service":"kine_milk_server","timestamp":"2025-01-20T10:17:22.367Z"}
+{"level":"info","message":"sucessfully get all NormalOrder's","service":"kine_milk_server","timestamp":"2025-01-20T10:17:22.476Z"}
+{"level":"info","message":"successfully get all products","service":"kine_milk_server","timestamp":"2025-01-20T10:32:01.026Z"}
+{"level":"info","message":"sucessfully get all Coupon","service":"kine_milk_server","timestamp":"2025-01-20T10:34:57.826Z"}
+{"level":"info","message":"Successfully fetched all NormalOrder's","service":"kine_milk_server","timestamp":"2025-01-20T11:26:55.384Z"}
+{"level":"info","message":"Successfully fetched all NormalOrder's","service":"kine_milk_server","timestamp":"2025-01-20T11:27:06.792Z"}
+{"level":"info","message":"Successfully fetched all NormalOrder's","service":"kine_milk_server","timestamp":"2025-01-20T11:27:06.856Z"}
+{"level":"info","message":"Successfully fetched all NormalOrder's","service":"kine_milk_server","timestamp":"2025-01-20T11:29:34.415Z"}
+{"level":"info","message":"Successfully fetched all NormalOrder's","service":"kine_milk_server","timestamp":"2025-01-20T11:29:34.488Z"}
+{"level":"info","message":"Successfully fetched all NormalOrder's","service":"kine_milk_server","timestamp":"2025-01-20T11:30:50.330Z"}
+{"level":"info","message":"Successfully fetched all NormalOrder's","service":"kine_milk_server","timestamp":"2025-01-20T11:30:57.159Z"}
+{"level":"info","message":"Successfully fetched all NormalOrder's","service":"kine_milk_server","timestamp":"2025-01-20T11:30:57.234Z"}
+{"level":"info","message":"Successfully fetched all NormalOrder's","service":"kine_milk_server","timestamp":"2025-01-20T11:31:18.529Z"}
+{"level":"info","message":"Successfully fetched all NormalOrder's","service":"kine_milk_server","timestamp":"2025-01-20T11:31:18.603Z"}
+{"level":"info","message":"Successfully fetched all NormalOrder's","service":"kine_milk_server","timestamp":"2025-01-20T11:33:01.622Z"}
+{"level":"info","message":"Successfully fetched all NormalOrder's","service":"kine_milk_server","timestamp":"2025-01-20T11:33:01.708Z"}
+{"level":"info","message":"Successfully fetched all NormalOrder's","service":"kine_milk_server","timestamp":"2025-01-20T11:34:02.161Z"}
+{"level":"info","message":"Successfully fetched orders with status: Completed","service":"kine_milk_server","timestamp":"2025-01-20T11:38:57.111Z"}
+{"level":"info","message":"Successfully fetched orders with status: Pending","service":"kine_milk_server","timestamp":"2025-01-20T11:39:21.108Z"}
+{"level":"info","message":"Successfully fetched orders with status: Pending","service":"kine_milk_server","timestamp":"2025-01-20T11:44:24.378Z"}
+{"level":"info","message":"Successfully fetched orders with status: Pending","service":"kine_milk_server","timestamp":"2025-01-20T11:44:33.180Z"}
+{"level":"info","message":"Successfully fetched orders with status: Pending","service":"kine_milk_server","timestamp":"2025-01-20T11:44:33.236Z"}
+{"level":"info","message":"Successfully fetched orders with status: Pending","service":"kine_milk_server","timestamp":"2025-01-20T11:44:36.208Z"}
+{"level":"info","message":"Successfully fetched orders with status: Pending","service":"kine_milk_server","timestamp":"2025-01-20T11:44:36.269Z"}
+{"level":"info","message":"Successfully fetched orders with status: Pending","service":"kine_milk_server","timestamp":"2025-01-20T11:44:42.776Z"}
+{"level":"info","message":"Successfully fetched orders with status: Pending","service":"kine_milk_server","timestamp":"2025-01-20T11:44:42.838Z"}
+{"level":"info","message":"Successfully fetched orders with status: Completed","service":"kine_milk_server","timestamp":"2025-01-20T11:44:52.267Z"}
+{"level":"info","message":"Successfully fetched orders with status: Completed","service":"kine_milk_server","timestamp":"2025-01-20T11:44:53.875Z"}
+{"level":"info","message":"Successfully fetched orders with status: Completed","service":"kine_milk_server","timestamp":"2025-01-20T11:44:53.930Z"}
+{"level":"info","message":"Successfully fetched orders with status: Pending","service":"kine_milk_server","timestamp":"2025-01-20T11:48:38.348Z"}
+{"level":"info","message":"Successfully fetched orders with status: Completed","service":"kine_milk_server","timestamp":"2025-01-20T11:49:38.327Z"}
+{"level":"info","message":"Successfully fetched orders with status: Completed","service":"kine_milk_server","timestamp":"2025-01-20T11:49:38.393Z"}
+{"level":"info","message":"Successfully fetched orders with status: Completed","service":"kine_milk_server","timestamp":"2025-01-20T11:50:47.390Z"}
+{"level":"info","message":"Successfully fetched orders with status: Completed","service":"kine_milk_server","timestamp":"2025-01-20T11:50:47.450Z"}
+{"level":"info","message":"Successfully fetched orders with status: Completed","service":"kine_milk_server","timestamp":"2025-01-20T11:50:51.236Z"}
+{"level":"info","message":"Successfully fetched orders with status: Completed","service":"kine_milk_server","timestamp":"2025-01-20T11:50:51.290Z"}
+{"level":"info","message":"Successfully fetched orders with status: Completed","service":"kine_milk_server","timestamp":"2025-01-20T11:51:02.447Z"}
+{"level":"info","message":"Successfully fetched orders with status: Cancelled","service":"kine_milk_server","timestamp":"2025-01-20T11:51:56.339Z"}
+{"level":"info","message":"Successfully fetched orders with status: Cancelled","service":"kine_milk_server","timestamp":"2025-01-20T11:51:56.408Z"}
+{"level":"info","message":"Successfully fetched orders with status: Cancelled","service":"kine_milk_server","timestamp":"2025-01-20T11:52:23.378Z"}
+{"level":"info","message":"Successfully fetched orders with status: Cancelled","service":"kine_milk_server","timestamp":"2025-01-20T11:52:23.437Z"}
+{"level":"info","message":"Successfully fetched orders with status: Cancelled","service":"kine_milk_server","timestamp":"2025-01-20T11:52:26.181Z"}
+{"level":"info","message":"Successfully fetched orders with status: Cancelled","service":"kine_milk_server","timestamp":"2025-01-20T11:52:40.462Z"}
+{"level":"info","message":"Successfully fetched orders with status: Cancelled","service":"kine_milk_server","timestamp":"2025-01-20T11:52:56.737Z"}
+{"level":"info","message":"Successfully fetched orders with status: Cancelled","service":"kine_milk_server","timestamp":"2025-01-20T11:53:13.011Z"}
+{"level":"info","message":"Successfully fetched orders with status: Cancelled","service":"kine_milk_server","timestamp":"2025-01-20T11:53:28.531Z"}
+{"level":"info","message":"Successfully fetched orders with status: Cancelled","service":"kine_milk_server","timestamp":"2025-01-20T11:53:54.347Z"}
+{"level":"info","message":"Successfully fetched orders with status: Completed","service":"kine_milk_server","timestamp":"2025-01-20T11:54:38.889Z"}
+{"level":"info","message":"Successfully fetched orders with status: Completed","service":"kine_milk_server","timestamp":"2025-01-20T11:54:38.957Z"}
+{"level":"info","message":"Successfully fetched orders with status: Completed","service":"kine_milk_server","timestamp":"2025-01-20T11:54:52.309Z"}
+{"level":"info","message":"Successfully fetched orders with status: Completed","service":"kine_milk_server","timestamp":"2025-01-20T11:54:53.391Z"}
+{"level":"info","message":"Successfully fetched orders with status: Pending","service":"kine_milk_server","timestamp":"2025-01-20T11:55:41.358Z"}
+{"level":"info","message":"Successfully fetched orders with status: Pending","service":"kine_milk_server","timestamp":"2025-01-20T11:55:41.422Z"}
+{"level":"info","message":"Successfully fetched orders with status: Pending","service":"kine_milk_server","timestamp":"2025-01-20T11:57:31.369Z"}
+{"level":"info","message":"Successfully fetched orders with status: Pending","service":"kine_milk_server","timestamp":"2025-01-20T11:57:31.439Z"}
+{"level":"info","message":"Successfully fetched orders with status: Pending","service":"kine_milk_server","timestamp":"2025-01-20T11:57:33.215Z"}
+{"level":"info","message":"Successfully fetched orders with status: Pending","service":"kine_milk_server","timestamp":"2025-01-20T11:57:37.197Z"}
+{"level":"info","message":"Successfully fetched orders with status: Pending","service":"kine_milk_server","timestamp":"2025-01-20T11:57:37.257Z"}
+{"level":"info","message":"Successfully fetched orders with status: Pending","service":"kine_milk_server","timestamp":"2025-01-20T11:58:33.343Z"}
+{"level":"info","message":"Successfully fetched orders with status: Pending","service":"kine_milk_server","timestamp":"2025-01-20T11:58:50.595Z"}
+{"level":"info","message":"Successfully fetched orders with status: Pending","service":"kine_milk_server","timestamp":"2025-01-20T11:59:03.418Z"}
+{"level":"info","message":"Successfully fetched orders with status: Pending","service":"kine_milk_server","timestamp":"2025-01-20T11:59:03.485Z"}
+{"level":"info","message":"Successfully fetched orders with status: Pending","service":"kine_milk_server","timestamp":"2025-01-20T11:59:06.200Z"}
+{"level":"info","message":"Successfully fetched orders with status: Pending","service":"kine_milk_server","timestamp":"2025-01-20T11:59:15.278Z"}
+{"level":"info","message":"Successfully fetched orders with status: Pending","service":"kine_milk_server","timestamp":"2025-01-20T11:59:26.792Z"}
+{"level":"info","message":"Successfully fetched orders with status: Pending","service":"kine_milk_server","timestamp":"2025-01-20T11:59:26.848Z"}
+{"level":"info","message":"Successfully fetched orders with status: Pending","service":"kine_milk_server","timestamp":"2025-01-20T11:59:29.340Z"}
+{"level":"info","message":"Successfully fetched orders with status: Pending","service":"kine_milk_server","timestamp":"2025-01-20T11:59:29.396Z"}
+{"level":"info","message":"Successfully fetched orders with status: Pending","service":"kine_milk_server","timestamp":"2025-01-20T11:59:34.863Z"}
+{"level":"info","message":"Successfully fetched orders with status: Pending","service":"kine_milk_server","timestamp":"2025-01-20T11:59:40.699Z"}
+{"level":"info","message":"Successfully fetched orders with status: Pending","service":"kine_milk_server","timestamp":"2025-01-20T11:59:45.551Z"}
+{"level":"info","message":"Successfully fetched orders with status: Pending","service":"kine_milk_server","timestamp":"2025-01-20T11:59:52.407Z"}
+{"level":"info","message":"Successfully fetched orders with status: Pending","service":"kine_milk_server","timestamp":"2025-01-20T11:59:57.630Z"}
+{"level":"info","message":"Successfully fetched orders with status: Pending","service":"kine_milk_server","timestamp":"2025-01-20T12:00:19.500Z"}
+{"level":"info","message":"Successfully fetched orders with status: Pending","service":"kine_milk_server","timestamp":"2025-01-20T12:00:53.282Z"}
+{"level":"info","message":"Successfully fetched orders with status: Pending","service":"kine_milk_server","timestamp":"2025-01-20T12:01:03.756Z"}
+{"level":"info","message":"Successfully fetched orders with status: Pending","service":"kine_milk_server","timestamp":"2025-01-20T12:01:10.147Z"}
+{"level":"info","message":"sucessfully get all Coupon","service":"kine_milk_server","timestamp":"2025-01-20T12:02:56.169Z"}
+{"level":"info","message":"sucessfully get all Coupon","service":"kine_milk_server","timestamp":"2025-01-20T12:02:56.237Z"}
+{"level":"info","message":"sucessfully get all Coupon","service":"kine_milk_server","timestamp":"2025-01-20T12:03:40.362Z"}
+{"level":"info","message":"successfully get all products","service":"kine_milk_server","timestamp":"2025-01-20T12:15:12.628Z"}
+{"level":"info","message":"successfully get all products","service":"kine_milk_server","timestamp":"2025-01-20T12:15:12.685Z"}
+{"level":"info","message":"Successfully fetched orders with status: Pending","service":"kine_milk_server","timestamp":"2025-01-20T12:17:13.970Z"}
+{"level":"info","message":"Successfully fetched orders with status: Pending","service":"kine_milk_server","timestamp":"2025-01-20T12:17:14.040Z"}
+{"level":"info","message":"sucessfully get all categories","service":"kine_milk_server","timestamp":"2025-01-20T12:27:12.822Z"}
+{"level":"info","message":"sucessfully get all categories","service":"kine_milk_server","timestamp":"2025-01-20T12:27:12.883Z"}
+{"level":"info","message":"Category found","service":"kine_milk_server","timestamp":"2025-01-20T12:27:14.889Z"}
+{"level":"info","message":"Category found","service":"kine_milk_server","timestamp":"2025-01-20T12:27:14.949Z"}
+{"level":"info","message":"sucessfully get all categories","service":"kine_milk_server","timestamp":"2025-01-20T12:27:22.244Z"}
+{"level":"info","message":"sucessfully get all categories","service":"kine_milk_server","timestamp":"2025-01-20T12:27:22.300Z"}
+{"level":"info","message":"sucessfully get all categories","service":"kine_milk_server","timestamp":"2025-01-20T12:35:29.715Z"}
+{"level":"info","message":"sucessfully get all categories","service":"kine_milk_server","timestamp":"2025-01-20T12:35:29.788Z"}
+{"_changed":{},"_options":{"_schema":null,"_schemaDelimiter":"","isNewRecord":true},"_previousDataValues":{"cover":"cat cover","createdAt":"2025-01-20T12:40:52.594Z","id":18,"img":"https://harishs3bucketimages.s3.us-east-1.amazonaws.com/image/1737376851168-Curd-2.jpg","status":"1","title":"cat title","updatedAt":"2025-01-20T12:40:52.594Z"},"dataValues":{"cover":"cat cover","createdAt":"2025-01-20T12:40:52.594Z","id":18,"img":"https://harishs3bucketimages.s3.us-east-1.amazonaws.com/image/1737376851168-Curd-2.jpg","status":"1","title":"cat title","updatedAt":"2025-01-20T12:40:52.594Z"},"isNewRecord":false,"level":"info","message":"Category created successfully:","service":"kine_milk_server","timestamp":"2025-01-20T12:40:52.705Z","uniqno":1}
+{"level":"info","message":"sucessfully get all categories","service":"kine_milk_server","timestamp":"2025-01-20T12:40:59.310Z"}
+{"level":"info","message":"sucessfully get all categories","service":"kine_milk_server","timestamp":"2025-01-20T12:40:59.368Z"}
+{"_changed":{},"_options":{"_schema":null,"_schemaDelimiter":"","isNewRecord":true},"_previousDataValues":{"cover":"cat cover","createdAt":"2025-01-20T12:43:41.247Z","id":19,"img":"https://harishs3bucketimages.s3.us-east-1.amazonaws.com/image/1737377019786-Curd-2.jpg","status":"1","title":"cat title","updatedAt":"2025-01-20T12:43:41.247Z"},"dataValues":{"cover":"cat cover","createdAt":"2025-01-20T12:43:41.247Z","id":19,"img":"https://harishs3bucketimages.s3.us-east-1.amazonaws.com/image/1737377019786-Curd-2.jpg","status":"1","title":"cat title","updatedAt":"2025-01-20T12:43:41.247Z"},"isNewRecord":false,"level":"info","message":"Category created successfully:","service":"kine_milk_server","timestamp":"2025-01-20T12:43:41.362Z","uniqno":1}
+{"_changed":{},"_options":{"_schema":null,"_schemaDelimiter":"","isNewRecord":true},"_previousDataValues":{"cover":"cat cover","createdAt":"2025-01-20T12:44:09.096Z","id":20,"img":"https://harishs3bucketimages.s3.us-east-1.amazonaws.com/image/1737377025846-Curd-2.jpg","status":"1","title":"cat title","updatedAt":"2025-01-20T12:44:09.096Z"},"dataValues":{"cover":"cat cover","createdAt":"2025-01-20T12:44:09.096Z","id":20,"img":"https://harishs3bucketimages.s3.us-east-1.amazonaws.com/image/1737377025846-Curd-2.jpg","status":"1","title":"cat title","updatedAt":"2025-01-20T12:44:09.096Z"},"isNewRecord":false,"level":"info","message":"Category created successfully:","service":"kine_milk_server","timestamp":"2025-01-20T12:44:09.388Z","uniqno":1}
+{"level":"info","message":"sucessfully get all categories","service":"kine_milk_server","timestamp":"2025-01-20T12:46:31.889Z"}
+{"level":"info","message":"sucessfully get all categories","service":"kine_milk_server","timestamp":"2025-01-20T12:46:31.952Z"}
+{"level":"info","message":"sucessfully get all categories","service":"kine_milk_server","timestamp":"2025-01-21T04:56:50.207Z"}
+{"level":"info","message":"sucessfully get all categories","service":"kine_milk_server","timestamp":"2025-01-21T04:56:50.305Z"}
+{"level":"error","message":"Internal Server Error","service":"kine_milk_server","timestamp":"2025-01-21T05:37:09.744Z"}
+{"level":"info","message":"Riders","service":"kine_milk_server","timestamp":"2025-01-21T05:37:47.688Z"}
+{"level":"info","message":"sucessfully get all Rider's","service":"kine_milk_server","timestamp":"2025-01-21T05:38:04.520Z"}
+{"level":"info","message":"sucessfully get all Rider's","service":"kine_milk_server","timestamp":"2025-01-21T05:38:04.585Z"}
+{"level":"info","message":"Rider found","service":"kine_milk_server","timestamp":"2025-01-21T05:38:26.052Z"}
+{"level":"info","message":"Rider found","service":"kine_milk_server","timestamp":"2025-01-21T05:38:26.112Z"}
+{"level":"info","message":"Rider found","service":"kine_milk_server","timestamp":"2025-01-21T05:43:01.580Z"}
+{"level":"info","message":"Rider found","service":"kine_milk_server","timestamp":"2025-01-21T05:43:12.561Z"}
+{"level":"info","message":"Rider found","service":"kine_milk_server","timestamp":"2025-01-21T05:43:20.345Z"}
+{"level":"info","message":"Rider found","service":"kine_milk_server","timestamp":"2025-01-21T05:44:33.548Z"}
+{"level":"info","message":"Rider found","service":"kine_milk_server","timestamp":"2025-01-21T05:44:37.328Z"}
+{"level":"info","message":"Rider found","service":"kine_milk_server","timestamp":"2025-01-21T05:44:38.333Z"}
+{"level":"info","message":"Rider found","service":"kine_milk_server","timestamp":"2025-01-21T05:44:43.339Z"}
+{"level":"info","message":"Rider found","service":"kine_milk_server","timestamp":"2025-01-21T05:44:46.333Z"}
+{"level":"info","message":"Rider found","service":"kine_milk_server","timestamp":"2025-01-21T05:44:56.369Z"}
+{"level":"info","message":"Rider found","service":"kine_milk_server","timestamp":"2025-01-21T05:45:01.622Z"}
+{"level":"info","message":"Rider found","service":"kine_milk_server","timestamp":"2025-01-21T05:45:01.678Z"}
+{"level":"info","message":"sucessfully get all Rider's","service":"kine_milk_server","timestamp":"2025-01-21T05:49:46.834Z"}
+{"level":"info","message":"sucessfully get all Rider's","service":"kine_milk_server","timestamp":"2025-01-21T05:49:46.914Z"}
+{"level":"info","message":"sucessfully get all Rider's","service":"kine_milk_server","timestamp":"2025-01-21T05:50:05.889Z"}
+{"level":"info","message":"sucessfully get all Rider's","service":"kine_milk_server","timestamp":"2025-01-21T05:50:05.955Z"}
+{"level":"info","message":"Rider found","service":"kine_milk_server","timestamp":"2025-01-21T05:50:12.528Z"}
+{"level":"info","message":"Rider found","service":"kine_milk_server","timestamp":"2025-01-21T05:50:12.590Z"}
+{"level":"info","message":"sucessfully get all Rider's","service":"kine_milk_server","timestamp":"2025-01-21T05:59:04.583Z"}
+{"level":"info","message":"sucessfully get all Rider's","service":"kine_milk_server","timestamp":"2025-01-21T05:59:04.672Z"}
+{"level":"info","message":"Rider found","service":"kine_milk_server","timestamp":"2025-01-21T06:00:02.419Z"}
+{"level":"info","message":"Rider found","service":"kine_milk_server","timestamp":"2025-01-21T06:00:02.507Z"}
+{"level":"info","message":"Rider found","service":"kine_milk_server","timestamp":"2025-01-21T06:02:02.579Z"}
+{"level":"info","message":"Rider found","service":"kine_milk_server","timestamp":"2025-01-21T06:02:02.652Z"}
+{"level":"info","message":"Rider found","service":"kine_milk_server","timestamp":"2025-01-21T06:02:53.568Z"}
+{"level":"info","message":"Rider found","service":"kine_milk_server","timestamp":"2025-01-21T06:02:53.660Z"}
+{"level":"info","message":"Rider found","service":"kine_milk_server","timestamp":"2025-01-21T06:03:40.544Z"}
+{"level":"info","message":"Rider found","service":"kine_milk_server","timestamp":"2025-01-21T06:03:40.613Z"}
+{"level":"info","message":"Rider found","service":"kine_milk_server","timestamp":"2025-01-21T06:03:45.370Z"}
+{"level":"info","message":"Rider found","service":"kine_milk_server","timestamp":"2025-01-21T06:03:45.424Z"}
+{"level":"info","message":"Rider found","service":"kine_milk_server","timestamp":"2025-01-21T06:04:16.539Z"}
+{"level":"info","message":"Rider found","service":"kine_milk_server","timestamp":"2025-01-21T06:04:18.348Z"}
+{"level":"info","message":"Rider found","service":"kine_milk_server","timestamp":"2025-01-21T06:04:20.336Z"}
+{"level":"info","message":"Rider found","service":"kine_milk_server","timestamp":"2025-01-21T06:04:21.344Z"}
+{"level":"info","message":"Rider found","service":"kine_milk_server","timestamp":"2025-01-21T06:04:24.343Z"}
+{"level":"info","message":"Rider found","service":"kine_milk_server","timestamp":"2025-01-21T06:04:28.844Z"}
+{"level":"info","message":"Rider found","service":"kine_milk_server","timestamp":"2025-01-21T06:04:28.902Z"}
+{"level":"info","message":"sucessfully get all Rider's","service":"kine_milk_server","timestamp":"2025-01-21T06:04:33.042Z"}
+{"level":"info","message":"sucessfully get all Rider's","service":"kine_milk_server","timestamp":"2025-01-21T06:04:33.101Z"}
+{"level":"info","message":"Rider found","service":"kine_milk_server","timestamp":"2025-01-21T06:07:12.228Z"}
+{"level":"info","message":"Rider found","service":"kine_milk_server","timestamp":"2025-01-21T06:07:12.287Z"}
+{"level":"info","message":"sucessfully get all Rider's","service":"kine_milk_server","timestamp":"2025-01-21T06:07:14.321Z"}
+{"level":"info","message":"sucessfully get all Rider's","service":"kine_milk_server","timestamp":"2025-01-21T06:07:14.382Z"}
+{"level":"info","message":"Email is not available","service":"kine_milk_server","timestamp":"2025-01-21T06:29:51.343Z"}
+{"level":"info","message":"Email is not available","service":"kine_milk_server","timestamp":"2025-01-21T06:29:51.439Z"}
+{"level":"info","message":"Email is available","service":"kine_milk_server","timestamp":"2025-01-21T06:29:55.862Z"}
+{"level":"info","message":"Email is available","service":"kine_milk_server","timestamp":"2025-01-21T06:29:55.937Z"}
+{"level":"info","message":"Email is not available","service":"kine_milk_server","timestamp":"2025-01-21T06:29:59.524Z"}
+{"level":"info","message":"Email is not available","service":"kine_milk_server","timestamp":"2025-01-21T06:29:59.590Z"}
+{"level":"info","message":"Email is available","service":"kine_milk_server","timestamp":"2025-01-21T06:30:00.253Z"}
+{"level":"info","message":"Email is available","service":"kine_milk_server","timestamp":"2025-01-21T06:30:00.327Z"}
+{"level":"info","message":"Email is available","service":"kine_milk_server","timestamp":"2025-01-21T06:30:00.473Z"}
+{"level":"info","message":"Email is available","service":"kine_milk_server","timestamp":"2025-01-21T06:30:00.538Z"}
+{"level":"info","message":"Email is available","service":"kine_milk_server","timestamp":"2025-01-21T06:30:00.636Z"}
+{"level":"info","message":"Email is available","service":"kine_milk_server","timestamp":"2025-01-21T06:30:00.708Z"}
+{"level":"info","message":"Email is available","service":"kine_milk_server","timestamp":"2025-01-21T06:30:00.822Z"}
+{"level":"info","message":"Email is available","service":"kine_milk_server","timestamp":"2025-01-21T06:30:00.886Z"}
+{"level":"info","message":"Email is available","service":"kine_milk_server","timestamp":"2025-01-21T06:30:01.754Z"}
+{"level":"info","message":"Email is available","service":"kine_milk_server","timestamp":"2025-01-21T06:30:01.829Z"}
+{"level":"info","message":"Email is available","service":"kine_milk_server","timestamp":"2025-01-21T06:30:01.907Z"}
+{"level":"info","message":"Email is available","service":"kine_milk_server","timestamp":"2025-01-21T06:30:01.982Z"}
+{"level":"info","message":"Email is available","service":"kine_milk_server","timestamp":"2025-01-21T06:30:02.705Z"}
+{"level":"info","message":"Email is available","service":"kine_milk_server","timestamp":"2025-01-21T06:30:02.780Z"}
+{"level":"info","message":"Email is available","service":"kine_milk_server","timestamp":"2025-01-21T06:30:02.911Z"}
+{"level":"info","message":"Email is available","service":"kine_milk_server","timestamp":"2025-01-21T06:30:02.985Z"}
+{"level":"info","message":"Email is available","service":"kine_milk_server","timestamp":"2025-01-21T06:30:03.322Z"}
+{"level":"info","message":"Email is available","service":"kine_milk_server","timestamp":"2025-01-21T06:30:03.393Z"}
+{"level":"info","message":"Email is available","service":"kine_milk_server","timestamp":"2025-01-21T06:30:03.611Z"}
+{"level":"info","message":"Email is available","service":"kine_milk_server","timestamp":"2025-01-21T06:30:03.681Z"}
+{"level":"info","message":"Email is available","service":"kine_milk_server","timestamp":"2025-01-21T06:30:05.545Z"}
+{"level":"info","message":"Email is available","service":"kine_milk_server","timestamp":"2025-01-21T06:30:05.612Z"}
+{"level":"info","message":"Email is available","service":"kine_milk_server","timestamp":"2025-01-21T06:30:05.744Z"}
+{"level":"info","message":"Email is available","service":"kine_milk_server","timestamp":"2025-01-21T06:30:05.801Z"}
+{"level":"info","message":"Email is not available","service":"kine_milk_server","timestamp":"2025-01-21T06:30:06.058Z"}
+{"level":"info","message":"Email is not available","service":"kine_milk_server","timestamp":"2025-01-21T06:30:06.133Z"}
+{"level":"info","message":"Email is available","service":"kine_milk_server","timestamp":"2025-01-21T06:30:06.315Z"}
+{"level":"info","message":"Email is available","service":"kine_milk_server","timestamp":"2025-01-21T06:30:06.373Z"}
+{"level":"info","message":"Email is not available","service":"kine_milk_server","timestamp":"2025-01-21T06:30:07.865Z"}
+{"level":"info","message":"Email is not available","service":"kine_milk_server","timestamp":"2025-01-21T06:30:07.925Z"}
+{"level":"info","message":"Email is available","service":"kine_milk_server","timestamp":"2025-01-21T06:30:09.749Z"}
+{"level":"info","message":"Email is available","service":"kine_milk_server","timestamp":"2025-01-21T06:30:09.806Z"}
+{"level":"info","message":"Email is available","service":"kine_milk_server","timestamp":"2025-01-21T06:30:15.227Z"}
+{"level":"info","message":"sucessfully get all Rider's","service":"kine_milk_server","timestamp":"2025-01-21T06:30:39.143Z"}
+{"level":"info","message":"sucessfully get all Rider's","service":"kine_milk_server","timestamp":"2025-01-21T06:30:39.205Z"}
+{"level":"info","message":"Email is not available","service":"kine_milk_server","timestamp":"2025-01-21T06:31:10.446Z"}
+{"level":"info","message":"Email is not available","service":"kine_milk_server","timestamp":"2025-01-21T06:31:10.527Z"}
+{"level":"info","message":"Email is available","service":"kine_milk_server","timestamp":"2025-01-21T06:31:51.597Z"}
+{"level":"info","message":"Email is available","service":"kine_milk_server","timestamp":"2025-01-21T06:31:51.675Z"}
+{"level":"info","message":"Email is available","service":"kine_milk_server","timestamp":"2025-01-21T06:31:51.748Z"}
+{"level":"info","message":"Email is available","service":"kine_milk_server","timestamp":"2025-01-21T06:31:51.804Z"}
+{"level":"info","message":"Email rider@gmail.c is available","service":"kine_milk_server","timestamp":"2025-01-21T06:34:42.781Z"}
+{"level":"info","message":"Email rider@gmail.co is available","service":"kine_milk_server","timestamp":"2025-01-21T06:34:42.836Z"}
+{"level":"info","message":"Email rider@gmail.c is available","service":"kine_milk_server","timestamp":"2025-01-21T06:34:42.913Z"}
+{"level":"info","message":"Email rider@gmail.co is available","service":"kine_milk_server","timestamp":"2025-01-21T06:34:42.923Z"}
+{"level":"info","message":"Email rider@gmail.com is already taken","service":"kine_milk_server","timestamp":"2025-01-21T06:34:43.392Z"}
+{"level":"info","message":"Email rider@gmail.com is already taken","service":"kine_milk_server","timestamp":"2025-01-21T06:34:43.474Z"}
+{"level":"info","message":"Email rider1@gmail.com is available","service":"kine_milk_server","timestamp":"2025-01-21T06:34:50.442Z"}
+{"level":"info","message":"Email rider1@gmail.com is available","service":"kine_milk_server","timestamp":"2025-01-21T06:34:50.520Z"}
+{"level":"info","message":"Email rider12@gmail.com is available","service":"kine_milk_server","timestamp":"2025-01-21T06:34:50.826Z"}
+{"level":"info","message":"Email rider12@gmail.com is available","service":"kine_milk_server","timestamp":"2025-01-21T06:34:50.907Z"}
+{"level":"info","message":"Email rider1@gmail.com is available","service":"kine_milk_server","timestamp":"2025-01-21T06:34:52.109Z"}
+{"level":"info","message":"Email rider1@gmail.com is available","service":"kine_milk_server","timestamp":"2025-01-21T06:34:52.174Z"}
+{"level":"info","message":"Email rider@gmail.com is already taken","service":"kine_milk_server","timestamp":"2025-01-21T06:34:52.443Z"}
+{"level":"info","message":"Email rider@gmail.com is already taken","service":"kine_milk_server","timestamp":"2025-01-21T06:34:52.525Z"}
+{"level":"info","message":"Email ride@gmail.com is available","service":"kine_milk_server","timestamp":"2025-01-21T06:34:53.308Z"}
+{"level":"info","message":"Email ride@gmail.com is available","service":"kine_milk_server","timestamp":"2025-01-21T06:34:53.388Z"}
+{"level":"info","message":"Email rided@gmail.com is available","service":"kine_milk_server","timestamp":"2025-01-21T06:35:08.224Z"}
+{"level":"info","message":"Email ridedd@gmail.com is available","service":"kine_milk_server","timestamp":"2025-01-21T06:35:08.275Z"}
+{"level":"info","message":"Email rided@gmail.com is available","service":"kine_milk_server","timestamp":"2025-01-21T06:35:08.327Z"}
+{"level":"info","message":"Email ridedd@gmail.com is available","service":"kine_milk_server","timestamp":"2025-01-21T06:35:08.374Z"}
+{"level":"info","message":"Email rided@gmail.com is available","service":"kine_milk_server","timestamp":"2025-01-21T06:35:13.861Z"}
+{"level":"info","message":"Email rided@gmail.com is available","service":"kine_milk_server","timestamp":"2025-01-21T06:35:13.918Z"}
+{"level":"info","message":"Email ride@gmail.com is available","service":"kine_milk_server","timestamp":"2025-01-21T06:35:14.131Z"}
+{"level":"info","message":"Email ride@gmail.com is available","service":"kine_milk_server","timestamp":"2025-01-21T06:35:14.196Z"}
+{"level":"info","message":"Email rider@gmail.com is already taken","service":"kine_milk_server","timestamp":"2025-01-21T06:35:19.200Z"}
+{"level":"info","message":"Email rider@gmail.com is already taken","service":"kine_milk_server","timestamp":"2025-01-21T06:35:19.271Z"}
+{"level":"info","message":"Email ride@gmail.com is available","service":"kine_milk_server","timestamp":"2025-01-21T06:35:25.685Z"}
+{"level":"info","message":"Email ride@gmail.com is available","service":"kine_milk_server","timestamp":"2025-01-21T06:35:25.761Z"}
+{"level":"info","message":"Email rider@gmail.com is already taken","service":"kine_milk_server","timestamp":"2025-01-21T06:35:29.265Z"}
+{"level":"info","message":"Email rider@gmail.com is already taken","service":"kine_milk_server","timestamp":"2025-01-21T06:35:29.323Z"}
+{"level":"info","message":"Email ride@gmail.com is available","service":"kine_milk_server","timestamp":"2025-01-21T06:35:34.606Z"}
+{"level":"info","message":"Email ride@gmail.com is available","service":"kine_milk_server","timestamp":"2025-01-21T06:35:34.664Z"}
+{"level":"info","message":"Email rider@gmail.com is already taken","service":"kine_milk_server","timestamp":"2025-01-21T06:35:37.341Z"}
+{"level":"info","message":"Email rider@gmail.com is already taken","service":"kine_milk_server","timestamp":"2025-01-21T06:35:37.438Z"}
+{"level":"info","message":"Email rider@gmail.com is already taken","service":"kine_milk_server","timestamp":"2025-01-21T06:38:14.281Z"}
+{"level":"info","message":"Email rider@gmail.com is already taken","service":"kine_milk_server","timestamp":"2025-01-21T06:38:14.352Z"}
+{"level":"info","message":"Email rider1@gmail.com is available","service":"kine_milk_server","timestamp":"2025-01-21T06:38:17.874Z"}
+{"level":"info","message":"Email rider1@gmail.com is available","service":"kine_milk_server","timestamp":"2025-01-21T06:38:17.930Z"}
+{"level":"info","message":"Email rider1@gmail.com is available","service":"kine_milk_server","timestamp":"2025-01-21T06:38:47.519Z"}
+{"level":"info","message":"sucessfully get all Rider's","service":"kine_milk_server","timestamp":"2025-01-21T06:38:49.265Z"}
+{"level":"info","message":"sucessfully get all Rider's","service":"kine_milk_server","timestamp":"2025-01-21T06:38:49.338Z"}
+{"level":"error","message":"Email is already in use.","service":"kine_milk_server","timestamp":"2025-01-21T06:48:05.962Z"}
+{"level":"error","message":"Email is already in use.","service":"kine_milk_server","timestamp":"2025-01-21T06:48:36.006Z"}
+{"level":"error","message":"Email is already in use.","service":"kine_milk_server","timestamp":"2025-01-21T06:51:43.155Z"}
+{"level":"error","message":"Email is already in use.","service":"kine_milk_server","timestamp":"2025-01-21T06:51:51.509Z"}
+{"level":"error","message":"Email is already in use.","service":"kine_milk_server","timestamp":"2025-01-21T06:52:27.751Z"}
+{"level":"info","message":"sucessfully get all Rider's","service":"kine_milk_server","timestamp":"2025-01-21T06:52:52.639Z"}
+{"level":"info","message":"sucessfully get all Rider's","service":"kine_milk_server","timestamp":"2025-01-21T06:52:52.701Z"}
+{"level":"error","message":"Email is already in use.","service":"kine_milk_server","timestamp":"2025-01-21T06:53:41.397Z"}
+{"level":"error","message":"Email is already in use.","service":"kine_milk_server","timestamp":"2025-01-21T06:53:48.554Z"}
+{"level":"error","message":"Email is already in use.","service":"kine_milk_server","timestamp":"2025-01-21T06:55:03.608Z"}
+{"level":"error","message":"Email is already in use.","service":"kine_milk_server","timestamp":"2025-01-21T06:55:05.254Z"}
+{"level":"info","message":"sucessfully get all Rider's","service":"kine_milk_server","timestamp":"2025-01-21T06:55:08.912Z"}
+{"level":"info","message":"sucessfully get all Rider's","service":"kine_milk_server","timestamp":"2025-01-21T06:55:08.973Z"}
+{"level":"info","message":"sucessfully get all Rider's","service":"kine_milk_server","timestamp":"2025-01-21T06:55:29.409Z"}
+{"level":"info","message":"sucessfully get all Rider's","service":"kine_milk_server","timestamp":"2025-01-21T06:55:29.476Z"}
+{"level":"info","message":"sucessfully get all Rider's","service":"kine_milk_server","timestamp":"2025-01-21T06:56:13.290Z"}
+{"level":"info","message":"sucessfully get all Rider's","service":"kine_milk_server","timestamp":"2025-01-21T06:56:13.360Z"}
+{"level":"info","message":"successfully get all products","service":"kine_milk_server","timestamp":"2025-01-21T07:00:33.239Z"}
+{"level":"info","message":"successfully get all products","service":"kine_milk_server","timestamp":"2025-01-21T07:00:33.366Z"}
+{"level":"info","message":"sucessfully get all categories","service":"kine_milk_server","timestamp":"2025-01-21T07:00:36.320Z"}
+{"level":"info","message":"sucessfully get all categories","service":"kine_milk_server","timestamp":"2025-01-21T07:00:36.381Z"}
+{"level":"error","message":"Email is already in use.","service":"kine_milk_server","timestamp":"2025-01-21T07:10:04.032Z"}
+{"level":"error","message":"Email is already in use.","service":"kine_milk_server","timestamp":"2025-01-21T07:10:05.778Z"}
+{"level":"error","message":"Email is already in use.","service":"kine_milk_server","timestamp":"2025-01-21T07:10:11.942Z"}
+{"level":"error","message":"Email is already in use.","service":"kine_milk_server","timestamp":"2025-01-21T07:10:12.972Z"}
+{"level":"error","message":"Email is already in use.","service":"kine_milk_server","timestamp":"2025-01-21T07:10:20.719Z"}
+{"level":"info","message":"sucessfully get all Rider's","service":"kine_milk_server","timestamp":"2025-01-21T07:10:45.960Z"}
+{"level":"info","message":"sucessfully get all Rider's","service":"kine_milk_server","timestamp":"2025-01-21T07:10:46.022Z"}
+{"level":"error","message":"Email is already in use.","service":"kine_milk_server","timestamp":"2025-01-21T07:11:11.307Z"}
+{"level":"error","message":"Email is already in use.","service":"kine_milk_server","timestamp":"2025-01-21T07:11:12.873Z"}
+{"level":"error","message":"Email is already in use.","service":"kine_milk_server","timestamp":"2025-01-21T07:11:18.901Z"}
+{"level":"error","message":"Email is already in use.","service":"kine_milk_server","timestamp":"2025-01-21T07:11:25.138Z"}
+{"level":"error","message":"Email is already in use.","service":"kine_milk_server","timestamp":"2025-01-21T07:11:32.730Z"}
+{"level":"info","message":"sucessfully get all Faq's","service":"kine_milk_server","timestamp":"2025-01-21T07:15:18.990Z"}
+{"level":"info","message":"sucessfully get all Faq's","service":"kine_milk_server","timestamp":"2025-01-21T07:15:19.068Z"}
+{"level":"info","message":"sucessfully get all Rider's","service":"kine_milk_server","timestamp":"2025-01-21T07:15:54.522Z"}
+{"level":"info","message":"sucessfully get all Rider's","service":"kine_milk_server","timestamp":"2025-01-21T07:15:54.592Z"}
+{"level":"error","message":"Email is already in use.","service":"kine_milk_server","timestamp":"2025-01-21T07:19:21.562Z"}
+{"level":"error","message":"Email is already in use.","service":"kine_milk_server","timestamp":"2025-01-21T07:19:31.621Z"}
+{"level":"error","message":"mobile is already in use.","service":"kine_milk_server","timestamp":"2025-01-21T07:19:31.673Z"}
+{"level":"error","message":"Email is already in use.","service":"kine_milk_server","timestamp":"2025-01-21T07:19:37.720Z"}
+{"level":"error","message":"mobile is already in use.","service":"kine_milk_server","timestamp":"2025-01-21T07:19:37.808Z"}
+{"level":"info","message":"sucessfully get all Rider's","service":"kine_milk_server","timestamp":"2025-01-21T07:19:41.358Z"}
+{"level":"info","message":"sucessfully get all Rider's","service":"kine_milk_server","timestamp":"2025-01-21T07:19:41.423Z"}
+{"level":"info","message":"Rider soft-deleted","service":"kine_milk_server","timestamp":"2025-01-21T07:20:50.314Z"}
+{"level":"info","message":"Rider found","service":"kine_milk_server","timestamp":"2025-01-21T07:21:24.621Z"}
+{"level":"info","message":"Rider found","service":"kine_milk_server","timestamp":"2025-01-21T07:21:24.709Z"}
+{"level":"error","message":"Email is already in use.","service":"kine_milk_server","timestamp":"2025-01-21T07:21:48.218Z"}
+{"level":"error","message":"Email is already in use.","service":"kine_milk_server","timestamp":"2025-01-21T07:21:53.307Z"}
+{"level":"error","message":"Email is already in use.","service":"kine_milk_server","timestamp":"2025-01-21T07:21:54.092Z"}
+{"level":"error","message":"Email is already in use.","service":"kine_milk_server","timestamp":"2025-01-21T07:21:54.422Z"}
+{"level":"error","message":"Email is already in use.","service":"kine_milk_server","timestamp":"2025-01-21T07:21:54.789Z"}
+{"level":"error","message":"Email is already in use.","service":"kine_milk_server","timestamp":"2025-01-21T07:21:55.059Z"}
+{"level":"error","message":"Email is already in use.","service":"kine_milk_server","timestamp":"2025-01-21T07:21:55.293Z"}
+{"level":"error","message":"Email is already in use.","service":"kine_milk_server","timestamp":"2025-01-21T07:21:55.578Z"}
+{"level":"info","message":"sucessfully get all Rider's","service":"kine_milk_server","timestamp":"2025-01-21T07:22:40.033Z"}
+{"level":"info","message":"sucessfully get all Rider's","service":"kine_milk_server","timestamp":"2025-01-21T07:22:40.100Z"}
+{"level":"info","message":"Rider found","service":"kine_milk_server","timestamp":"2025-01-21T07:22:43.286Z"}
+{"level":"info","message":"Rider found","service":"kine_milk_server","timestamp":"2025-01-21T07:22:43.349Z"}
+{"level":"info","message":"sucessfully get all Rider's","service":"kine_milk_server","timestamp":"2025-01-21T07:22:48.256Z"}
+{"level":"info","message":"sucessfully get all Rider's","service":"kine_milk_server","timestamp":"2025-01-21T07:22:48.320Z"}
+{"level":"info","message":"Rider found","service":"kine_milk_server","timestamp":"2025-01-21T07:22:51.393Z"}
+{"level":"info","message":"Rider found","service":"kine_milk_server","timestamp":"2025-01-21T07:22:51.454Z"}
+{"level":"info","message":"sucessfully get all Rider's","service":"kine_milk_server","timestamp":"2025-01-21T07:22:58.476Z"}
+{"level":"info","message":"sucessfully get all Rider's","service":"kine_milk_server","timestamp":"2025-01-21T07:22:58.549Z"}
+{"level":"error","message":"Email is already in use.","service":"kine_milk_server","timestamp":"2025-01-21T07:23:17.154Z"}
+{"level":"error","message":"Email is already in use.","service":"kine_milk_server","timestamp":"2025-01-21T07:23:45.311Z"}
+{"level":"error","message":"mobile is already in use.","service":"kine_milk_server","timestamp":"2025-01-21T07:23:45.368Z"}
+{"level":"error","message":"Email is already in use.","service":"kine_milk_server","timestamp":"2025-01-21T07:24:36.943Z"}
+{"level":"error","message":"mobile is already in use.","service":"kine_milk_server","timestamp":"2025-01-21T07:24:36.999Z"}
+{"level":"info","message":"sucessfully get all Rider's","service":"kine_milk_server","timestamp":"2025-01-21T07:24:39.236Z"}
+{"level":"info","message":"sucessfully get all Rider's","service":"kine_milk_server","timestamp":"2025-01-21T07:24:39.297Z"}
+{"level":"info","message":"New Timerecord created with ID 2","service":"kine_milk_server","timestamp":"2025-01-21T09:02:47.714Z"}
+{"level":"info","message":"sucessfully get all Time's","service":"kine_milk_server","timestamp":"2025-01-21T09:02:47.830Z"}
+{"level":"info","message":"sucessfully get all Time's","service":"kine_milk_server","timestamp":"2025-01-21T09:02:47.889Z"}
+{"level":"info","message":"sucessfully get all Time's","service":"kine_milk_server","timestamp":"2025-01-21T09:03:26.476Z"}
+{"level":"info","message":"sucessfully get all Time's","service":"kine_milk_server","timestamp":"2025-01-21T09:03:26.528Z"}
+{"level":"info","message":"sucessfully get all Time's","service":"kine_milk_server","timestamp":"2025-01-21T09:04:31.923Z"}
+{"level":"info","message":"sucessfully get all Time's","service":"kine_milk_server","timestamp":"2025-01-21T09:04:31.974Z"}
+{"level":"info","message":"sucessfully get all Rider's","service":"kine_milk_server","timestamp":"2025-01-21T09:05:44.285Z"}
+{"level":"info","message":"sucessfully get all Rider's","service":"kine_milk_server","timestamp":"2025-01-21T09:05:44.339Z"}
+{"level":"info","message":"sucessfully get all Time's","service":"kine_milk_server","timestamp":"2025-01-21T09:06:01.586Z"}
+{"level":"info","message":"sucessfully get all Time's","service":"kine_milk_server","timestamp":"2025-01-21T09:06:01.639Z"}
+{"level":"info","message":"sucessfully get all Time's","service":"kine_milk_server","timestamp":"2025-01-21T09:06:33.306Z"}
+{"level":"info","message":"sucessfully get all Time's","service":"kine_milk_server","timestamp":"2025-01-21T09:06:33.365Z"}
+{"level":"info","message":"sucessfully get all Time's","service":"kine_milk_server","timestamp":"2025-01-21T09:07:14.283Z"}
+{"level":"info","message":"sucessfully get all Time's","service":"kine_milk_server","timestamp":"2025-01-21T09:07:14.336Z"}
+{"level":"info","message":"sucessfully get all Time's","service":"kine_milk_server","timestamp":"2025-01-21T09:07:47.614Z"}
+{"level":"info","message":"sucessfully get all Time's","service":"kine_milk_server","timestamp":"2025-01-21T09:07:47.668Z"}
+{"level":"info","message":"sucessfully get all Time's","service":"kine_milk_server","timestamp":"2025-01-21T09:18:26.727Z"}
+{"level":"info","message":"sucessfully get all Time's","service":"kine_milk_server","timestamp":"2025-01-21T09:18:26.780Z"}
+{"level":"info","message":"Time found","service":"kine_milk_server","timestamp":"2025-01-21T09:21:23.550Z"}
+{"level":"info","message":"sucessfully get all Time's","service":"kine_milk_server","timestamp":"2025-01-21T09:21:29.869Z"}
+{"level":"info","message":"sucessfully get all Time's","service":"kine_milk_server","timestamp":"2025-01-21T09:21:29.924Z"}
+{"level":"info","message":"Time found","service":"kine_milk_server","timestamp":"2025-01-21T09:21:31.388Z"}
+{"level":"info","message":"Time found","service":"kine_milk_server","timestamp":"2025-01-21T09:21:31.449Z"}
+{"level":"info","message":"Time found","service":"kine_milk_server","timestamp":"2025-01-21T09:23:14.555Z"}
+{"level":"info","message":"Time found","service":"kine_milk_server","timestamp":"2025-01-21T09:23:18.356Z"}
+{"level":"info","message":"Time found","service":"kine_milk_server","timestamp":"2025-01-21T09:23:26.534Z"}
+{"level":"info","message":"Time found","service":"kine_milk_server","timestamp":"2025-01-21T09:23:26.588Z"}
+{"level":"info","message":"sucessfully get all Time's","service":"kine_milk_server","timestamp":"2025-01-21T09:23:42.500Z"}
+{"level":"info","message":"sucessfully get all Time's","service":"kine_milk_server","timestamp":"2025-01-21T09:23:42.563Z"}
+{"level":"info","message":"sucessfully get all Time's","service":"kine_milk_server","timestamp":"2025-01-21T09:23:49.255Z"}
+{"level":"info","message":"sucessfully get all Time's","service":"kine_milk_server","timestamp":"2025-01-21T09:23:49.311Z"}
+{"level":"info","message":"Time found","service":"kine_milk_server","timestamp":"2025-01-21T09:23:53.009Z"}
+{"level":"info","message":"Time found","service":"kine_milk_server","timestamp":"2025-01-21T09:23:53.067Z"}
+{"level":"info","message":"TimeRecord with ID 2 updated successfully.","service":"kine_milk_server","timestamp":"2025-01-21T09:24:04.869Z"}
+{"level":"info","message":"TimeRecord with ID 2 updated successfully.","service":"kine_milk_server","timestamp":"2025-01-21T09:24:05.478Z"}
+{"level":"info","message":"sucessfully get all Time's","service":"kine_milk_server","timestamp":"2025-01-21T09:24:06.971Z"}
+{"level":"info","message":"sucessfully get all Time's","service":"kine_milk_server","timestamp":"2025-01-21T09:24:07.024Z"}
+{"level":"info","message":"Time found","service":"kine_milk_server","timestamp":"2025-01-21T09:24:12.144Z"}
+{"level":"info","message":"Time found","service":"kine_milk_server","timestamp":"2025-01-21T09:24:12.201Z"}
+{"level":"info","message":"TimeRecord with ID 2 updated successfully.","service":"kine_milk_server","timestamp":"2025-01-21T09:24:26.579Z"}
+{"level":"info","message":"TimeRecord with ID 2 updated successfully.","service":"kine_milk_server","timestamp":"2025-01-21T09:24:27.211Z"}
+{"level":"info","message":"sucessfully get all Time's","service":"kine_milk_server","timestamp":"2025-01-21T09:24:28.686Z"}
+{"level":"info","message":"sucessfully get all Time's","service":"kine_milk_server","timestamp":"2025-01-21T09:24:28.742Z"}
+{"level":"info","message":"sucessfully get all Time's","service":"kine_milk_server","timestamp":"2025-01-21T09:24:34.352Z"}
+{"level":"info","message":"sucessfully get all Time's","service":"kine_milk_server","timestamp":"2025-01-21T09:24:34.404Z"}
+{"level":"info","message":"successfully get all products","service":"kine_milk_server","timestamp":"2025-01-21T09:26:19.076Z"}
+{"level":"info","message":"successfully get all products","service":"kine_milk_server","timestamp":"2025-01-21T09:26:19.136Z"}
+{"level":"info","message":"successfully get all products","service":"kine_milk_server","timestamp":"2025-01-21T09:35:35.762Z"}
+{"level":"info","message":"successfully get all products","service":"kine_milk_server","timestamp":"2025-01-21T09:35:35.816Z"}
+{"level":"info","message":"New Timerecord created with ID 3","service":"kine_milk_server","timestamp":"2025-01-21T09:36:58.045Z"}
+{"level":"info","message":"sucessfully get all Time's","service":"kine_milk_server","timestamp":"2025-01-21T09:37:00.183Z"}
+{"level":"info","message":"sucessfully get all Time's","service":"kine_milk_server","timestamp":"2025-01-21T09:37:00.237Z"}
+{"level":"info","message":"Time found","service":"kine_milk_server","timestamp":"2025-01-21T09:37:03.144Z"}
+{"level":"info","message":"Time found","service":"kine_milk_server","timestamp":"2025-01-21T09:37:03.200Z"}
+{"level":"info","message":"TimeRecord with ID 3 updated successfully.","service":"kine_milk_server","timestamp":"2025-01-21T09:37:05.104Z"}
+{"level":"info","message":"sucessfully get all Time's","service":"kine_milk_server","timestamp":"2025-01-21T09:37:07.206Z"}
+{"level":"info","message":"sucessfully get all Time's","service":"kine_milk_server","timestamp":"2025-01-21T09:37:07.264Z"}
+{"level":"info","message":"Time found","service":"kine_milk_server","timestamp":"2025-01-21T09:37:09.799Z"}
+{"level":"info","message":"Time found","service":"kine_milk_server","timestamp":"2025-01-21T09:37:09.858Z"}
+{"level":"info","message":"TimeRecord with ID 3 updated successfully.","service":"kine_milk_server","timestamp":"2025-01-21T09:37:11.120Z"}
+{"level":"info","message":"TimeRecord with ID 3 updated successfully.","service":"kine_milk_server","timestamp":"2025-01-21T09:37:12.475Z"}
+{"level":"error","message":"Time Record not found.","service":"kine_milk_server","timestamp":"2025-01-21T09:37:12.639Z"}
+{"level":"error","message":"Time Record not found.","service":"kine_milk_server","timestamp":"2025-01-21T09:37:12.800Z"}
+{"level":"error","message":"Time Record not found.","service":"kine_milk_server","timestamp":"2025-01-21T09:37:12.970Z"}
+{"level":"info","message":"TimeRecord with ID 3 updated successfully.","service":"kine_milk_server","timestamp":"2025-01-21T09:37:13.119Z"}
+{"level":"info","message":"sucessfully get all Time's","service":"kine_milk_server","timestamp":"2025-01-21T09:37:13.230Z"}
+{"level":"info","message":"sucessfully get all Time's","service":"kine_milk_server","timestamp":"2025-01-21T09:37:13.284Z"}
+{"level":"info","message":"Time found","service":"kine_milk_server","timestamp":"2025-01-21T09:37:53.966Z"}
+{"level":"info","message":"Time found","service":"kine_milk_server","timestamp":"2025-01-21T09:37:54.024Z"}
+{"level":"info","message":"TimeRecord with ID 3 updated successfully.","service":"kine_milk_server","timestamp":"2025-01-21T09:37:55.126Z"}
+{"level":"error","message":"Time Record not found.","service":"kine_milk_server","timestamp":"2025-01-21T09:37:55.578Z"}
+{"level":"error","message":"Time Record not found.","service":"kine_milk_server","timestamp":"2025-01-21T09:37:55.795Z"}
+{"level":"info","message":"sucessfully get all Time's","service":"kine_milk_server","timestamp":"2025-01-21T09:37:57.236Z"}
+{"level":"info","message":"sucessfully get all Time's","service":"kine_milk_server","timestamp":"2025-01-21T09:37:57.291Z"}
+{"level":"info","message":"Time soft-deleted","service":"kine_milk_server","timestamp":"2025-01-21T09:38:10.114Z"}
+{"level":"info","message":"Successfully fetched orders with status: Pending","service":"kine_milk_server","timestamp":"2025-01-21T09:53:09.167Z"}
+{"level":"info","message":"Successfully fetched orders with status: Pending","service":"kine_milk_server","timestamp":"2025-01-21T09:53:09.252Z"}
+{"level":"info","message":"Successfully fetched orders with status: Completed","service":"kine_milk_server","timestamp":"2025-01-21T09:53:15.457Z"}
+{"level":"info","message":"Successfully fetched orders with status: Completed","service":"kine_milk_server","timestamp":"2025-01-21T09:53:15.510Z"}
+{"level":"info","message":"Successfully fetched orders with status: Cancelled","service":"kine_milk_server","timestamp":"2025-01-21T09:53:16.230Z"}
+{"level":"info","message":"Successfully fetched orders with status: Cancelled","service":"kine_milk_server","timestamp":"2025-01-21T09:53:16.286Z"}
+{"level":"info","message":"Successfully fetched orders with status: Cancelled","service":"kine_milk_server","timestamp":"2025-01-21T09:53:51.874Z"}
+{"level":"info","message":"Successfully fetched orders with status: Cancelled","service":"kine_milk_server","timestamp":"2025-01-21T09:53:51.928Z"}
+{"level":"info","message":"Successfully fetched orders with status: Cancelled","service":"kine_milk_server","timestamp":"2025-01-21T09:55:37.742Z"}
+{"level":"info","message":"Successfully fetched orders with status: Cancelled","service":"kine_milk_server","timestamp":"2025-01-21T09:55:37.801Z"}
+{"level":"info","message":"Successfully fetched orders with status: Cancelled","service":"kine_milk_server","timestamp":"2025-01-21T09:56:03.936Z"}
+{"level":"info","message":"Successfully fetched orders with status: Cancelled","service":"kine_milk_server","timestamp":"2025-01-21T09:56:03.989Z"}
+{"level":"info","message":"Successfully fetched orders with status: Pending","service":"kine_milk_server","timestamp":"2025-01-21T09:56:30.472Z"}
+{"level":"info","message":"Successfully fetched orders with status: Pending","service":"kine_milk_server","timestamp":"2025-01-21T09:56:30.525Z"}
+{"level":"info","message":"Successfully fetched orders with status: Completed","service":"kine_milk_server","timestamp":"2025-01-21T09:56:31.455Z"}
+{"level":"info","message":"Successfully fetched orders with status: Completed","service":"kine_milk_server","timestamp":"2025-01-21T09:56:31.506Z"}
+{"level":"info","message":"sucessfully get all Time's","service":"kine_milk_server","timestamp":"2025-01-21T10:01:43.762Z"}
+{"level":"info","message":"sucessfully get all Time's","service":"kine_milk_server","timestamp":"2025-01-21T10:01:43.821Z"}
+{"level":"info","message":"sucessfully get all Rider's","service":"kine_milk_server","timestamp":"2025-01-21T10:03:42.863Z"}
+{"level":"info","message":"sucessfully get all Rider's","service":"kine_milk_server","timestamp":"2025-01-21T10:03:42.929Z"}
+{"level":"info","message":"successfully get all products","service":"kine_milk_server","timestamp":"2025-01-21T10:05:18.025Z"}
+{"level":"info","message":"successfully get all products","service":"kine_milk_server","timestamp":"2025-01-21T10:05:18.079Z"}
+{"level":"info","message":"sucessfully get all Coupon","service":"kine_milk_server","timestamp":"2025-01-21T10:05:27.455Z"}
+{"level":"info","message":"sucessfully get all Coupon","service":"kine_milk_server","timestamp":"2025-01-21T10:05:27.509Z"}
+{"level":"info","message":"sucessfully get all Faq's","service":"kine_milk_server","timestamp":"2025-01-21T10:05:34.522Z"}
+{"level":"info","message":"sucessfully get all Faq's","service":"kine_milk_server","timestamp":"2025-01-21T10:05:34.577Z"}
+{"level":"info","message":"sucessfully get all Rider's","service":"kine_milk_server","timestamp":"2025-01-21T10:05:37.473Z"}
+{"level":"info","message":"sucessfully get all Rider's","service":"kine_milk_server","timestamp":"2025-01-21T10:05:37.527Z"}
+{"level":"info","message":"sucessfully get all Time's","service":"kine_milk_server","timestamp":"2025-01-21T10:05:40.153Z"}
+{"level":"info","message":"sucessfully get all Time's","service":"kine_milk_server","timestamp":"2025-01-21T10:05:40.208Z"}
+{"level":"info","message":"Successfully fetched orders with status: Pending","service":"kine_milk_server","timestamp":"2025-01-21T10:10:22.256Z"}
+{"level":"info","message":"Successfully fetched orders with status: Pending","service":"kine_milk_server","timestamp":"2025-01-21T10:10:22.312Z"}
+{"level":"info","message":"Successfully fetched orders with status: Pending","service":"kine_milk_server","timestamp":"2025-01-21T10:11:17.553Z"}
+{"level":"info","message":"Successfully fetched orders with status: Pending","service":"kine_milk_server","timestamp":"2025-01-21T10:11:17.607Z"}
+{"level":"info","message":"Successfully fetched orders with status: Pending","service":"kine_milk_server","timestamp":"2025-01-21T10:11:19.636Z"}
+{"level":"info","message":"Successfully fetched orders with status: Pending","service":"kine_milk_server","timestamp":"2025-01-21T10:12:05.758Z"}
+{"level":"info","message":"Successfully fetched orders with status: Pending","service":"kine_milk_server","timestamp":"2025-01-21T10:12:10.339Z"}
+{"level":"info","message":"Successfully fetched orders with status: Pending","service":"kine_milk_server","timestamp":"2025-01-21T10:12:14.375Z"}
+{"level":"info","message":"Successfully fetched orders with status: Pending","service":"kine_milk_server","timestamp":"2025-01-21T10:12:25.522Z"}
+{"level":"info","message":"Successfully fetched orders with status: Pending","service":"kine_milk_server","timestamp":"2025-01-21T10:12:27.332Z"}
+{"level":"info","message":"successfully get all products","service":"kine_milk_server","timestamp":"2025-01-21T10:13:02.337Z"}
+{"level":"info","message":"successfully get all products","service":"kine_milk_server","timestamp":"2025-01-21T10:13:02.395Z"}
+{"level":"info","message":"successfully get all products","service":"kine_milk_server","timestamp":"2025-01-21T10:13:35.537Z"}
+{"level":"info","message":"successfully get all products","service":"kine_milk_server","timestamp":"2025-01-21T10:13:37.273Z"}
+{"level":"info","message":"successfully get all products","service":"kine_milk_server","timestamp":"2025-01-21T10:13:58.456Z"}
+{"level":"info","message":"successfully get all products","service":"kine_milk_server","timestamp":"2025-01-21T10:14:10.356Z"}
+{"level":"info","message":"successfully get all products","service":"kine_milk_server","timestamp":"2025-01-21T10:15:38.858Z"}
+{"level":"info","message":"successfully get all products","service":"kine_milk_server","timestamp":"2025-01-21T10:15:56.469Z"}
+{"level":"info","message":"successfully get all products","service":"kine_milk_server","timestamp":"2025-01-21T10:16:57.025Z"}
+{"level":"info","message":"successfully get all products","service":"kine_milk_server","timestamp":"2025-01-21T10:21:57.564Z"}
+{"level":"info","message":"successfully get all products","service":"kine_milk_server","timestamp":"2025-01-21T10:22:02.332Z"}
+{"level":"info","message":"successfully get all products","service":"kine_milk_server","timestamp":"2025-01-21T10:22:07.348Z"}
+{"level":"info","message":"successfully get all products","service":"kine_milk_server","timestamp":"2025-01-21T10:22:09.388Z"}
+{"level":"info","message":"sucessfully get all Coupon","service":"kine_milk_server","timestamp":"2025-01-21T10:22:40.476Z"}
+{"level":"info","message":"sucessfully get all Coupon","service":"kine_milk_server","timestamp":"2025-01-21T10:22:40.545Z"}
+{"level":"info","message":"sucessfully get all Coupon","service":"kine_milk_server","timestamp":"2025-01-21T10:23:19.546Z"}
+{"level":"info","message":"sucessfully get all Coupon","service":"kine_milk_server","timestamp":"2025-01-21T10:23:36.579Z"}
+{"level":"info","message":"sucessfully get all Coupon","service":"kine_milk_server","timestamp":"2025-01-21T10:23:45.667Z"}
+{"level":"info","message":"sucessfully get all Coupon","service":"kine_milk_server","timestamp":"2025-01-21T10:23:51.344Z"}
+{"level":"info","message":"sucessfully get all Coupon","service":"kine_milk_server","timestamp":"2025-01-21T10:23:54.448Z"}
+{"level":"info","message":"sucessfully get all Coupon","service":"kine_milk_server","timestamp":"2025-01-21T10:24:15.590Z"}
+{"level":"info","message":"sucessfully get all Coupon","service":"kine_milk_server","timestamp":"2025-01-21T10:24:17.361Z"}
+{"level":"info","message":"sucessfully get all Coupon","service":"kine_milk_server","timestamp":"2025-01-21T10:24:23.359Z"}
+{"level":"info","message":"sucessfully get all Coupon","service":"kine_milk_server","timestamp":"2025-01-21T10:24:25.343Z"}
+{"level":"info","message":"sucessfully get all Coupon","service":"kine_milk_server","timestamp":"2025-01-21T10:24:27.311Z"}
+{"level":"info","message":"sucessfully get all Coupon","service":"kine_milk_server","timestamp":"2025-01-21T10:24:39.537Z"}
+{"level":"info","message":"sucessfully get all Coupon","service":"kine_milk_server","timestamp":"2025-01-21T10:28:34.259Z"}
+{"level":"info","message":"sucessfully get all Coupon","service":"kine_milk_server","timestamp":"2025-01-21T10:28:34.314Z"}
+{"level":"info","message":"Delivery found","service":"kine_milk_server","timestamp":"2025-01-21T10:28:37.120Z"}
+{"level":"info","message":"Delivery found","service":"kine_milk_server","timestamp":"2025-01-21T10:28:37.179Z"}
+{"level":"info","message":"sucessfully get all Coupon","service":"kine_milk_server","timestamp":"2025-01-21T10:28:46.233Z"}
+{"level":"info","message":"sucessfully get all Coupon","service":"kine_milk_server","timestamp":"2025-01-21T10:28:46.287Z"}
+{"level":"info","message":"sucessfully get all Faq's","service":"kine_milk_server","timestamp":"2025-01-21T10:29:42.665Z"}
+{"level":"info","message":"sucessfully get all Faq's","service":"kine_milk_server","timestamp":"2025-01-21T10:29:42.718Z"}
+{"level":"info","message":"sucessfully get all Faq's","service":"kine_milk_server","timestamp":"2025-01-21T10:31:08.538Z"}
+{"level":"info","message":"sucessfully get all Faq's","service":"kine_milk_server","timestamp":"2025-01-21T10:31:15.037Z"}
+{"level":"info","message":"sucessfully get all Faq's","service":"kine_milk_server","timestamp":"2025-01-21T10:31:30.990Z"}
+{"level":"info","message":"sucessfully get all Faq's","service":"kine_milk_server","timestamp":"2025-01-21T10:31:35.357Z"}
+{"level":"info","message":"sucessfully get all Faq's","service":"kine_milk_server","timestamp":"2025-01-21T10:31:41.549Z"}
+{"level":"info","message":"sucessfully get all Faq's","service":"kine_milk_server","timestamp":"2025-01-21T10:31:57.523Z"}
+{"level":"info","message":"sucessfully get all Faq's","service":"kine_milk_server","timestamp":"2025-01-21T10:32:14.532Z"}
+{"level":"info","message":"sucessfully get all Faq's","service":"kine_milk_server","timestamp":"2025-01-21T10:32:16.041Z"}
+{"level":"info","message":"sucessfully get all Faq's","service":"kine_milk_server","timestamp":"2025-01-21T10:32:50.312Z"}
+{"level":"info","message":"sucessfully get all Coupon","service":"kine_milk_server","timestamp":"2025-01-21T10:33:01.010Z"}
+{"level":"info","message":"sucessfully get all Coupon","service":"kine_milk_server","timestamp":"2025-01-21T10:33:01.064Z"}
+{"level":"info","message":"sucessfully get all Faq's","service":"kine_milk_server","timestamp":"2025-01-21T10:33:07.282Z"}
+{"level":"info","message":"sucessfully get all Faq's","service":"kine_milk_server","timestamp":"2025-01-21T10:33:07.335Z"}
+{"level":"info","message":"sucessfully get all Rider's","service":"kine_milk_server","timestamp":"2025-01-21T10:34:05.541Z"}
+{"level":"info","message":"sucessfully get all Rider's","service":"kine_milk_server","timestamp":"2025-01-21T10:34:05.615Z"}
+{"level":"info","message":"sucessfully get all Rider's","service":"kine_milk_server","timestamp":"2025-01-21T10:34:39.548Z"}
+{"level":"info","message":"sucessfully get all Rider's","service":"kine_milk_server","timestamp":"2025-01-21T10:34:43.069Z"}
+{"level":"info","message":"sucessfully get all Rider's","service":"kine_milk_server","timestamp":"2025-01-21T10:34:48.350Z"}
+{"level":"info","message":"sucessfully get all Rider's","service":"kine_milk_server","timestamp":"2025-01-21T10:34:55.544Z"}
+{"level":"info","message":"sucessfully get all Rider's","service":"kine_milk_server","timestamp":"2025-01-21T10:35:09.563Z"}
+{"level":"info","message":"sucessfully get all Rider's","service":"kine_milk_server","timestamp":"2025-01-21T10:35:12.355Z"}
+{"level":"info","message":"sucessfully get all Time's","service":"kine_milk_server","timestamp":"2025-01-21T10:35:33.298Z"}
+{"level":"info","message":"sucessfully get all Time's","service":"kine_milk_server","timestamp":"2025-01-21T10:35:33.360Z"}
+{"level":"info","message":"sucessfully get all Time's","service":"kine_milk_server","timestamp":"2025-01-21T10:36:36.530Z"}
+{"level":"info","message":"sucessfully get all Time's","service":"kine_milk_server","timestamp":"2025-01-21T10:36:43.328Z"}
+{"level":"info","message":"sucessfully get all Time's","service":"kine_milk_server","timestamp":"2025-01-21T10:36:46.716Z"}
+{"level":"info","message":"Successfully fetched orders with status: Pending","service":"kine_milk_server","timestamp":"2025-01-21T10:37:27.536Z"}
+{"level":"info","message":"Successfully fetched orders with status: Pending","service":"kine_milk_server","timestamp":"2025-01-21T10:37:27.603Z"}
+{"level":"info","message":"Successfully fetched orders with status: Cancelled","service":"kine_milk_server","timestamp":"2025-01-21T10:37:56.323Z"}
+{"level":"info","message":"Successfully fetched orders with status: Cancelled","service":"kine_milk_server","timestamp":"2025-01-21T10:37:56.376Z"}
+{"level":"info","message":"Successfully fetched orders with status: Pending","service":"kine_milk_server","timestamp":"2025-01-21T10:38:31.628Z"}
+{"level":"info","message":"Successfully fetched orders with status: Pending","service":"kine_milk_server","timestamp":"2025-01-21T10:38:31.683Z"}
+{"level":"info","message":"Successfully fetched orders with status: Pending","service":"kine_milk_server","timestamp":"2025-01-21T10:39:31.170Z"}
+{"level":"info","message":"Successfully fetched orders with status: Pending","service":"kine_milk_server","timestamp":"2025-01-21T10:39:31.222Z"}
+{"level":"info","message":"Successfully fetched orders with status: Pending","service":"kine_milk_server","timestamp":"2025-01-21T10:39:48.918Z"}
+{"level":"info","message":"sucessfully get all Coupon","service":"kine_milk_server","timestamp":"2025-01-21T10:42:12.003Z"}
+{"level":"info","message":"sucessfully get all Coupon","service":"kine_milk_server","timestamp":"2025-01-21T10:42:12.069Z"}
+{"level":"info","message":"successfully get all products","service":"kine_milk_server","timestamp":"2025-01-21T10:44:43.781Z"}
+{"level":"info","message":"sucessfully get all Coupon","service":"kine_milk_server","timestamp":"2025-01-21T11:24:59.983Z"}
+{"level":"info","message":"sucessfully get all Coupon","service":"kine_milk_server","timestamp":"2025-01-21T11:25:00.046Z"}
+{"level":"info","message":"sucessfully get all Coupon","service":"kine_milk_server","timestamp":"2025-01-21T12:13:09.441Z"}
+{"level":"info","message":"sucessfully get all Coupon","service":"kine_milk_server","timestamp":"2025-01-21T12:13:09.581Z"}
+
+{"level":"info","message":"sucessfully get all Delivery","service":"kine_milk_server","timestamp":"2025-01-20T10:23:17.494Z"}
+{"level":"info","message":"sucessfully get all Delivery","service":"kine_milk_server","timestamp":"2025-01-20T10:23:17.603Z"}
+{"level":"info","message":"successfully get all products","service":"kine_milk_server","timestamp":"2025-01-20T10:31:44.591Z"}
+{"level":"info","message":"successfully get all products","service":"kine_milk_server","timestamp":"2025-01-20T10:31:44.648Z"}
+{"level":"info","message":"sucessfully get all categories","service":"kine_milk_server","timestamp":"2025-01-20T10:31:48.262Z"}
+{"level":"info","message":"sucessfully get all categories","service":"kine_milk_server","timestamp":"2025-01-20T10:31:48.360Z"}
+{"level":"info","message":"successfully get all products","service":"kine_milk_server","timestamp":"2025-01-20T10:33:12.882Z"}
+{"level":"info","message":"successfully get all products","service":"kine_milk_server","timestamp":"2025-01-20T10:33:12.942Z"}
+{"level":"info","message":"sucessfully get all categories","service":"kine_milk_server","timestamp":"2025-01-20T10:33:20.997Z"}
+{"level":"info","message":"sucessfully get all categories","service":"kine_milk_server","timestamp":"2025-01-20T10:33:21.097Z"}
+{"level":"info","message":"successfully get all products","service":"kine_milk_server","timestamp":"2025-01-20T10:33:29.803Z"}
+{"level":"info","message":"successfully get all products","service":"kine_milk_server","timestamp":"2025-01-20T10:33:29.864Z"}
+{"level":"info","message":"sucessfully get all categories","service":"kine_milk_server","timestamp":"2025-01-20T10:33:37.436Z"}
+{"level":"info","message":"sucessfully get all categories","service":"kine_milk_server","timestamp":"2025-01-20T10:33:37.534Z"}
+{"level":"info","message":"successfully get all products","service":"kine_milk_server","timestamp":"2025-01-20T10:33:44.448Z"}
+{"level":"info","message":"successfully get all products","service":"kine_milk_server","timestamp":"2025-01-20T10:33:44.511Z"}
+{"level":"info","message":"sucessfully get all categories","service":"kine_milk_server","timestamp":"2025-01-20T10:33:53.215Z"}
+{"level":"info","message":"sucessfully get all categories","service":"kine_milk_server","timestamp":"2025-01-20T10:33:53.312Z"}
+{"level":"info","message":"successfully get all products","service":"kine_milk_server","timestamp":"2025-01-20T10:34:51.428Z"}
+{"level":"info","message":"successfully get all products","service":"kine_milk_server","timestamp":"2025-01-20T10:34:51.486Z"}
+{"level":"info","message":"sucessfully get all ProductAttribute","service":"kine_milk_server","timestamp":"2025-01-20T11:49:22.701Z"}
+{"level":"info","message":"sucessfully get all ProductAttribute","service":"kine_milk_server","timestamp":"2025-01-20T11:49:22.759Z"}
+{"level":"info","message":"successfully get all products","service":"kine_milk_server","timestamp":"2025-01-20T11:49:25.963Z"}
+{"level":"info","message":"successfully get all products","service":"kine_milk_server","timestamp":"2025-01-20T11:49:26.023Z"}
+{"level":"info","message":"successfully get all products","service":"kine_milk_server","timestamp":"2025-01-20T11:49:32.132Z"}
+{"level":"info","message":"successfully get all products","service":"kine_milk_server","timestamp":"2025-01-20T11:49:32.188Z"}
+{"level":"info","message":"sucessfully get all Delivery","service":"kine_milk_server","timestamp":"2025-01-20T11:50:06.363Z"}
+{"level":"info","message":"sucessfully get all Delivery","service":"kine_milk_server","timestamp":"2025-01-20T11:50:06.428Z"}
+{"level":"info","message":"sucessfully get all NormalOrder's","service":"kine_milk_server","timestamp":"2025-01-20T11:51:15.468Z"}
+{"level":"info","message":"sucessfully get all NormalOrder's","service":"kine_milk_server","timestamp":"2025-01-20T11:51:15.534Z"}
+{"level":"info","message":"sucessfully get all NormalOrder's","service":"kine_milk_server","timestamp":"2025-01-20T11:51:33.149Z"}
+{"level":"info","message":"sucessfully get all NormalOrder's","service":"kine_milk_server","timestamp":"2025-01-20T11:51:33.222Z"}
+{"level":"info","message":"successfully get all products","service":"kine_milk_server","timestamp":"2025-01-20T11:51:40.203Z"}
+{"level":"info","message":"successfully get all products","service":"kine_milk_server","timestamp":"2025-01-20T11:51:40.260Z"}
+{"level":"info","message":"sucessfully get all NormalOrder's","service":"kine_milk_server","timestamp":"2025-01-20T11:51:46.875Z"}
+{"level":"info","message":"sucessfully get all NormalOrder's","service":"kine_milk_server","timestamp":"2025-01-20T11:51:46.932Z"}
+{"level":"info","message":"successfully get all products","service":"kine_milk_server","timestamp":"2025-01-20T11:54:18.886Z"}
+{"level":"info","message":"successfully get all products","service":"kine_milk_server","timestamp":"2025-01-20T11:54:18.953Z"}
+{"level":"info","message":"sucessfully get all NormalOrder's","service":"kine_milk_server","timestamp":"2025-01-20T11:54:20.023Z"}
+{"level":"info","message":"sucessfully get all NormalOrder's","service":"kine_milk_server","timestamp":"2025-01-20T11:54:20.082Z"}
+{"level":"info","message":"sucessfully get all categories","service":"kine_milk_server","timestamp":"2025-01-20T11:55:24.428Z"}
+{"level":"info","message":"sucessfully get all categories","service":"kine_milk_server","timestamp":"2025-01-20T11:55:24.496Z"}
+{"level":"info","message":"sucessfully get all categories","service":"kine_milk_server","timestamp":"2025-01-21T07:09:53.616Z"}
+{"level":"info","message":"sucessfully get all categories","service":"kine_milk_server","timestamp":"2025-01-21T07:09:53.690Z"}
+{"level":"info","message":"successfully get all products","service":"kine_milk_server","timestamp":"2025-01-21T07:13:38.878Z"}
+{"level":"info","message":"successfully get all products","service":"kine_milk_server","timestamp":"2025-01-21T07:13:38.951Z"}
+{"level":"info","message":"sucessfully get all categories","service":"kine_milk_server","timestamp":"2025-01-21T07:13:42.019Z"}
+{"level":"info","message":"sucessfully get all categories","service":"kine_milk_server","timestamp":"2025-01-21T07:13:42.077Z"}
+{"level":"info","message":"successfully get all products","service":"kine_milk_server","timestamp":"2025-01-21T07:14:31.679Z"}
+{"level":"info","message":"successfully get all products","service":"kine_milk_server","timestamp":"2025-01-21T07:14:31.728Z"}
+{"level":"info","message":"sucessfully get all NormalOrder's","service":"kine_milk_server","timestamp":"2025-01-21T10:16:15.948Z"}
+{"level":"info","message":"sucessfully get all NormalOrder's","service":"kine_milk_server","timestamp":"2025-01-21T10:16:16.024Z"}
+{"level":"info","message":"sucessfully get all Delivery","service":"kine_milk_server","timestamp":"2025-01-21T10:21:37.936Z"}
+{"level":"info","message":"sucessfully get all Delivery","service":"kine_milk_server","timestamp":"2025-01-21T10:21:38.002Z"}
+{"level":"info","message":"sucessfully get all categories","service":"kine_milk_server","timestamp":"2025-01-30T05:26:52.195Z"}
+{"level":"info","message":"sucessfully get all categories","service":"kine_milk_server","timestamp":"2025-01-30T05:26:52.277Z"}
+{"level":"info","message":"successfully get all products","service":"kine_milk_server","timestamp":"2025-01-30T05:27:02.011Z"}
+{"level":"info","message":"successfully get all products","service":"kine_milk_server","timestamp":"2025-01-30T05:27:02.072Z"}
+{"level":"info","message":"sucessfully get all ProductAttribute","service":"kine_milk_server","timestamp":"2025-01-30T05:27:07.041Z"}
+{"level":"info","message":"sucessfully get all ProductAttribute","service":"kine_milk_server","timestamp":"2025-01-30T05:27:07.110Z"}
+{"level":"info","message":"sucessfully get all Delivery","service":"kine_milk_server","timestamp":"2025-01-30T05:27:15.414Z"}
+{"level":"info","message":"sucessfully get all Delivery","service":"kine_milk_server","timestamp":"2025-01-30T05:27:15.471Z"}
+{"level":"info","message":"sucessfully get all Coupon","service":"kine_milk_server","timestamp":"2025-01-30T05:27:22.885Z"}
+{"level":"info","message":"sucessfully get all Coupon","service":"kine_milk_server","timestamp":"2025-01-30T05:27:22.946Z"}
+{"level":"error","message":"Internal Server Error","service":"kine_milk_server","timestamp":"2025-01-30T05:27:34.250Z"}
+{"level":"error","message":"Internal Server Error","service":"kine_milk_server","timestamp":"2025-01-30T05:27:34.321Z"}
+{"level":"info","message":"sucessfully get all Time's","service":"kine_milk_server","timestamp":"2025-01-30T05:28:14.443Z"}
+{"level":"info","message":"sucessfully get all Time's","service":"kine_milk_server","timestamp":"2025-01-30T05:28:14.499Z"}
+>>>>>>> 57456f153ecaf411b89d327397e547a81df584b1

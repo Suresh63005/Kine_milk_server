@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 {"level":"error","message":"Role is not match","service":"kine_milk_server","timestamp":"2025-01-03T05:02:48.827Z"}
 {"level":"error","message":"Invalid role. Role must be 'admin' or 'store'.","service":"kine_milk_server","timestamp":"2025-01-03T05:17:54.879Z"}
 {"level":"error","message":"Invalid role. Role must be 'admin' or 'store'.","service":"kine_milk_server","timestamp":"2025-01-03T05:17:58.491Z"}
@@ -184,3 +185,5 @@
 {"level":"error","message":"Category not found","service":"kine_milk_server","timestamp":"2025-01-28T08:38:32.440Z"}
 {"level":"error","message":"Category not found","service":"kine_milk_server","timestamp":"2025-01-28T08:41:32.226Z"}
 {"level":"error","message":"Category not found","service":"kine_milk_server","timestamp":"2025-01-28T08:41:47.226Z"}
+=======
+>>>>>>> 57456f153ecaf411b89d327397e547a81df584b1

@@ -138,5 +138,3 @@ const NormalOrder = sequelize.define(
   },
   { tableName: "tbl_normal_order", timestamps: true, paranoid: true }
 );
-
-module.exports = NormalOrder;
