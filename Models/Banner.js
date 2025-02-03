@@ -4,10 +4,10 @@ const { DataTypes } = require("sequelize");
 const Banner = sequelize.define(
   "Banner",
   {
-    id: {
-      type: DataTypes.INTEGER,
+   id: {
+      type: DataTypes.UUID,
       primaryKey: true,
-      autoIncrement: true,
+      defaultValue: DataTypes.UUIDV4,
       allowNull: false,
     },
     img: {

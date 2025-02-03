@@ -4,10 +4,10 @@ const { DataTypes } = require("sequelize");
 const PayoutSetting = sequelize.define(
   "PayoutSetting",
   {
-    id: {
-      type: DataTypes.INTEGER,
+   id: {
+      type: DataTypes.UUID,
       primaryKey: true,
-      autoIncrement: true,
+      defaultValue: DataTypes.UUIDV4,
       allowNull: false,
     },
     owner_id: {

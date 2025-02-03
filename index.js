@@ -104,8 +104,12 @@ app.use("/normalorder",require("./AdminRoutes/NormalOrder.route"))
 app.use("/banner",require('./AdminRoutes/Banner.route'))
 app.use("/store",require('./AdminRoutes/Store.route'))
 
+
 // User Routes
 app.use("/user",require('./UserRoutes/user_auth_route'))
+
+app.use("/home_data", require("./UserRoutes/Customer/home_data_route"));
+
 
 app.get("/", (req, res) => {
     res.send("Server is Running");

@@ -4,11 +4,11 @@ const { DataTypes } = require("sequelize");
 const ServiceDetails = sequelize.define(
   "ServiceDetails",
   {
-    id: {
-      type: DataTypes.INTEGER,
+   id: {
+      type: DataTypes.UUID,
       primaryKey: true,
       allowNull: false,
-      autoIncrement: true,
+      defaultValue: DataTypes.UUIDV4,
     },
     title: {
       type: DataTypes.STRING,

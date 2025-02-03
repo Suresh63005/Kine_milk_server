@@ -4,10 +4,10 @@ const { DataTypes } = require("sequelize");
 const NormalOrderProduct = sequelize.define(
   "NormalOrderProduct",
   {
-    id: {
-      type: DataTypes.INTEGER,
+   id: {
+      type: DataTypes.UUID,
       allowNull: false,
-      autoIncrement: true,
+      defaultValue: DataTypes.UUIDV4,
       primaryKey: true,
     },
     oid: {
