@@ -1,139 +1,132 @@
-const { DataTypes } = require('sequelize');
+const sequelize = require("../config/db");
+const { DataTypes } = require("sequelize");
 
-const sequelize = require('../config/db')
-
-
-const SubscribeOrder = sequelize.define('SubscribeOrder', {
-  id: {
-    type: DataTypes.INTEGER,
-    primaryKey: true,
-    autoIncrement: true,
-    allowNull: false,
+const SubscribeOrder = sequelize.define(
+  "SubscribeOrder",
+  {
+    id: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+      autoIncrement: true,
+      primaryKey: true,
+    },
+    store_id: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+    },
+    uid: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+    },
+    odate: {
+      type: DataTypes.DATE,
+      allowNull: false,
+    },
+    p_method_id: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+    },
+    address: {
+      type: DataTypes.TEXT,
+      allowNull: false,
+    },
+    landmark: {
+      type: DataTypes.TEXT,
+      allowNull: false,
+    },
+    d_charge: {
+      type: DataTypes.FLOAT,
+      allowNull: false,
+    },
+    cou_id: {
+      type: DataTypes.FLOAT,
+      allowNull: false,
+    },
+    cou_amt: {
+      type: DataTypes.FLOAT,
+      allowNull: false,
+    },
+    o_total: {
+      type: DataTypes.FLOAT,
+      allowNull: false,
+    },
+    subtotal: {
+      type: DataTypes.FLOAT,
+      allowNull: false,
+    },
+    trans_id: {
+      type: DataTypes.TEXT,
+      defaultValue: null,
+    },
+    a_note: {
+      type: DataTypes.TEXT,
+      defaultValue: null,
+    },
+    a_status: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+      defaultValue: 0,
+    },
+    rid: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+      defaultValue: 0,
+    },
+    wall_amt: {
+      type: DataTypes.FLOAT,
+      allowNull: false,
+    },
+    name: {
+      type: DataTypes.TEXT,
+      allowNull: false,
+    },
+    mobile: {
+      type: DataTypes.DOUBLE,
+      allowNull: false,
+    },
+    status: {
+      type: DataTypes.ENUM("Pending", "Processing", "Completed", "Cancelled"),
+      allowNull: false,
+    },
+    is_rate: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+      dialectTypes: 0,
+    },
+    review_date: {
+      type: DataTypes.DATE,
+      defaultValue: null,
+    },
+    total_rate: {
+      type: DataTypes.INTEGER,
+      defaultValue: 0,
+    },
+    rate_text: {
+      type: DataTypes.TEXT,
+      defaultValue: null,
+    },
+    commission: {
+      type: DataTypes.INTEGER,
+      defaultValue: 0,
+    },
+    store_charge: {
+      type: DataTypes.FLOAT,
+      allowNull: false,
+    },
+    order_status: {
+      type: DataTypes.INTEGER,
+      defaultValue: 0,
+    },
+    sign: {
+      type: DataTypes.TEXT,
+      defaultValue: null,
+    },
+    comment_reject: {
+      type: DataTypes.TEXT,
+      defaultValue: null,
+    },
   },
-  store_id: {
-    type: DataTypes.INTEGER,
-    allowNull: false,
-  },
-  uid: {
-    type: DataTypes.INTEGER,
-    allowNull: false,
-  },
-  odate: {
-    type: DataTypes.DATEONLY,
-    allowNull: true,
-  },
-  p_method_id: {
-    type: DataTypes.INTEGER,
-    allowNull: false,
-  },
-  address: {
-    type: DataTypes.TEXT,
-    allowNull: false,
-  },
-  landmark: {
-    type: DataTypes.TEXT,
-    allowNull: true,
-  },
-  d_charge: {
-    type: DataTypes.FLOAT,
-    allowNull: false,
-  },
-  cou_id: {
-    type: DataTypes.FLOAT,
-    allowNull: false,
-  },
-  cou_amt: {
-    type: DataTypes.FLOAT,
-    allowNull: false,
-  },
-  o_total: {
-    type: DataTypes.FLOAT,
-    allowNull: false,
-  },
-  subtotal: {
-    type: DataTypes.FLOAT,
-    allowNull: false,
-  },
-  trans_id: {
-    type: DataTypes.TEXT,
-    allowNull: true,
-  },
-  a_note: {
-    type: DataTypes.TEXT,
-    allowNull: true,
-  },
-  a_status: {
-    type: DataTypes.INTEGER,
-    allowNull: false,
-    defaultValue: 0,
-  },
-  rid: {
-    type: DataTypes.INTEGER,
-    allowNull: false,
-    defaultValue: 0,
-  },
-  wall_amt: {
-    type: DataTypes.FLOAT,
-    allowNull: false,
-  },
-  name: {
-    type: DataTypes.TEXT,
-    allowNull: false,
-  },
-  mobile: {
-    type: DataTypes.DOUBLE,
-    allowNull: false,
-  },
-  status: {
-    type: DataTypes.ENUM('Pending', 'Processing', 'Completed', 'Cancelled'),
-    allowNull: false,
-  },
-  is_rate: {
-    type: DataTypes.INTEGER,
-    allowNull: false,
-    defaultValue: 0,
-  },
-  review_date: {
-    type: DataTypes.DATEONLY,
-    allowNull: true,
-  },
-  total_rate: {
-    type: DataTypes.INTEGER,
-    allowNull: false,
-    defaultValue: 0,
-  },
-  rate_text: {
-    type: DataTypes.TEXT,
-    allowNull: true,
-  },
-  commission: {
-    type: DataTypes.INTEGER,
-    allowNull: false,
-    defaultValue: 0,
-  },
-  store_charge: {
-    type: DataTypes.FLOAT,
-    allowNull: false,
-  },
-  order_status: {
-    type: DataTypes.INTEGER,
-    allowNull: false,
-    defaultValue: 0,
-  },
-  sign: {
-    type: DataTypes.TEXT,
-    allowNull: true,
-  },
-  comment_reject: {
-    type: DataTypes.TEXT,
-    allowNull: true,
-  },
-}, {
-
-  tableName: 'tbl_subscribe_order', 
-  timestamps: true
-
-
-});
+  { tableName: "tbl_subscribe_order", timestamps: true, paranoid: true }
+);
 
 module.exports = SubscribeOrder;
