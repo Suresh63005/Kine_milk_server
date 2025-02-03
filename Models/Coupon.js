@@ -1,60 +1,50 @@
-const { DataTypes } = require('sequelize');
+const sequelize = require("../config/db");
+const { DataTypes } = require("sequelize");
 
-const sequelize = require('../config/db')
-
-
-const Coupon = sequelize.define('Coupon', {
-  id: {
-    type: DataTypes.INTEGER,
-    primaryKey: true,
-    autoIncrement: true,
-    allowNull: false,
+const Coupon = sequelize.define(
+  "Coupon",
+  {
+    id: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+      primaryKey: true,
+      autoIncrement: true,
+    },
+    store_id: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+    },
+    coupon_img: {
+      type: DataTypes.TEXT("long"),
+      allowNull: false,
+    },
+    subtitle: {
+      type: DataTypes.TEXT("long"),
+      allowNull: false,
+    },
+    expire_date: {
+      type: DataTypes.DATE,
+      allowNull: false,
+    },
+    min_amt: {
+      type: DataTypes.FLOAT,
+      allowNull: false,
+    },
+    coupon_val: {
+      type: DataTypes.FLOAT,
+      allowNull: false,
+    },
+    description: {
+      type: DataTypes.TEXT,
+      allowNull: false,
+    },
+    status: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+      defaultValue: 1,
+    },
   },
-  store_id: {
-    type: DataTypes.INTEGER,
-    allowNull: false,
-  },
-  coupon_img: {
-    type: DataTypes.TEXT,
-    allowNull: false,
-  },
-  title: {
-    type: DataTypes.TEXT,
-    allowNull: false,
-  },
-  coupon_code: {
-    type: DataTypes.TEXT,
-    allowNull: false,
-  },
-  subtitle: {
-    type: DataTypes.TEXT,
-    allowNull: false,
-  },
-  expire_date: {
-    type: DataTypes.DATEONLY, 
-    allowNull: false,
-  },
-  min_amt: {
-    type: DataTypes.FLOAT,
-    allowNull: false,
-  },
-  coupon_val: {
-    type: DataTypes.FLOAT,
-    allowNull: false,
-  },
-  description: {
-    type: DataTypes.TEXT,
-    allowNull: false,
-  },
-  status: {
-    type: DataTypes.INTEGER,
-    allowNull: false,
-    defaultValue: 1,
-  },
-}, {
-  tableName: 'tbl_coupon',
-  timestamps: true,
-  
-});
+  { tableName: "tbl_coupon", timestamps: true, paranoid: true }
+);
 
 module.exports = Coupon;

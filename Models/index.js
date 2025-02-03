@@ -55,9 +55,3 @@ Product.hasMany(ProductAttribute, {as:"attributes", foreignKey:"product_id"});
 ProductAttribute.belongsTo(Admin, {as:"store", foreignKey:"store_id"});
 Admin.hasMany(ProductAttribute, {as:"attributes", foreignKey:"store_id"});
 
-
-
-
-
-
-

@@ -1,40 +1,33 @@
-const { DataTypes } = require('sequelize');
+const sequelize = require("../config/db");
+const { DataTypes } = require("sequelize");
 
-const sequelize = require('../config/db')
-
-
-
-const Zone = sequelize.define('zones', {
-  id: {
-    type: DataTypes.INTEGER,
-    primaryKey: true,
-    allowNull: false,
-
-    autoIncrement: true, 
-
-
+const Zone = sequelize.define(
+  "Zone",
+  {
+    id: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+      autoIncrement: true,
+      primaryKey: true,
+    },
+    title: {
+      type: DataTypes.TEXT,
+      allowNull: false,
+    },
+    status: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+    },
+    coordinates: {
+      type: DataTypes.TEXT,
+      allowNull: false,
+    },
+    alias: {
+      type: DataTypes.TEXT,
+      allowNull: false,
+    },
   },
-  title: {
-    type: DataTypes.TEXT,
-    allowNull: false,
-  },
-  status: {
-    type: DataTypes.INTEGER,
-    allowNull: false,
-  },
-  coordinates: {
-    type: DataTypes.GEOMETRY('POLYGON'),
-    allowNull: false,
-  },
-  alias: {
-    type: DataTypes.TEXT,
-    allowNull: false,
-  }
-}, {
-  tableName: 'zones',
-
-  timestamps: true,
-
-});
+  { tableName: "zones", timestamps: true, paranoid: true }
+);
 
 module.exports = Zone;

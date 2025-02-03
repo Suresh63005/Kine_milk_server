@@ -1,8 +1,8 @@
 const sequelize = require("../config/db");
 const { DataTypes } = require("sequelize");
 
-const Notification = sequelize.define(
-  "Notification",
+const MilkCategory = sequelize.define(
+  "MilkCategory",
   {
     id: {
       type: DataTypes.INTEGER,
@@ -10,24 +10,24 @@ const Notification = sequelize.define(
       autoIncrement: true,
       primaryKey: true,
     },
-    uid: {
+    store_id: {
       type: DataTypes.INTEGER,
-      allowNull: false,
-    },
-    datetime: {
-      type: DataTypes.DATE,
       allowNull: false,
     },
     title: {
       type: DataTypes.TEXT,
       allowNull: false,
     },
-    description: {
+    status: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+    },
+    img: {
       type: DataTypes.TEXT,
       allowNull: false,
     },
   },
-  { tableName: "tbl_notification", timestamps: true, paranoid: true }
+  { tableName: "tbl_mcat", timestamps: true, paranoid: true }
 );
 
-module.exports = Notification;
+module.exports = MilkCategory;

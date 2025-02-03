@@ -30,7 +30,7 @@ const Category = require("./Models/Category");
 const Coupon = require("./Models/Coupon");
 const Delivery = require("./Models/Delivery");
 const Favorite = require("./Models/Favorite");
-const Mcat = require("./Models/Mcat");
+const MilkCategory = require("./Models/MilkCategory");
 const Milk = require("./Models/Milk");
 const NormalOrder = require("./Models/NormalOrder");
 const NormalOrderProduct = require("./Models/NormalOrderProduct");
@@ -42,15 +42,16 @@ const Photo = require("./Models/Photo");
 const Product = require("./Models/Product");
 const ProductAttribute = require("./Models/ProductAttribute");
 const Rider = require("./Models/Rider");
-const Rnoti = require("./Models/Rnoti");
+const RiderNotification = require("./Models/RiderNotification");
 const ServiceDetails = require("./Models/ServiceDetails");
-const Snoti = require("./Models/Snoti");
+const StoreNotification = require("./Models/StoreNotification");
 const SubscribeOrder = require("./Models/SubscribeOrder");
 const SubscribeOrderProduct = require("./Models/SubscribeOrderProduct");
 const Time = require("./Models/Time");
 const User = require("./Models/User");
 const WalletReport = require("./Models/WalletReport");
 const Zone = require("./Models/Zone");
+const Store = require('./Models/Store');
 const index = require("./Models/index");
 
 app.use(morgan("dev"));
@@ -101,6 +102,7 @@ app.use("/faq",require("./AdminRoutes/Faq.route"))
 app.use("/time",require("./AdminRoutes/Time.route"))
 app.use("/normalorder",require("./AdminRoutes/NormalOrder.route"))
 app.use("/banner",require('./AdminRoutes/Banner.route'))
+app.use("/store",require('./AdminRoutes/Store.route'))
 
 app.get("/", (req, res) => {
     res.send("Server is Running");
