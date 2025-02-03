@@ -4,8 +4,8 @@ const { DataTypes } = require("sequelize");
 const Delivery = sequelize.define(
   "Delivery",
   {
-    id: {
-      type: DataTypes.INTEGER,
+   id: {
+      type: DataTypes.UUID,
       allowNull: false,
       autoIncrement: false,
       primaryKey: true,

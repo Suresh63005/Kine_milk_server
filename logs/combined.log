@@ -2364,3 +2364,9 @@
 {"level":"info","message":"sucessfully get all Time's","service":"kine_milk_server","timestamp":"2025-01-30T05:28:14.443Z"}
 {"level":"info","message":"sucessfully get all Time's","service":"kine_milk_server","timestamp":"2025-01-30T05:28:14.499Z"}
 >>>>>>> 57456f153ecaf411b89d327397e547a81df584b1
+{"level":"info","message":"sucessfully get all Delivery","service":"kine_milk_server","timestamp":"2025-02-03T06:26:38.867Z"}
+{"level":"info","message":"sucessfully get all Delivery","service":"kine_milk_server","timestamp":"2025-02-03T06:26:38.946Z"}
+{"level":"info","message":"sucessfully get all Delivery","service":"kine_milk_server","timestamp":"2025-02-03T06:26:54.989Z"}
+{"level":"info","message":"sucessfully get all Delivery","service":"kine_milk_server","timestamp":"2025-02-03T06:26:55.033Z"}
+{"level":"info","message":"sucessfully get all Delivery","service":"kine_milk_server","timestamp":"2025-02-03T06:27:01.027Z"}
+{"level":"info","message":"sucessfully get all Delivery","service":"kine_milk_server","timestamp":"2025-02-03T06:27:01.057Z"}

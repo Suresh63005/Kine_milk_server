@@ -4,10 +4,10 @@ const { DataTypes } = require("sequelize");
 const NormalOrder = sequelize.define(
   "NormalOrder",
   {
-    id: {
-      type: DataTypes.INTEGER,
+   id: {
+      type: DataTypes.UUID,
       allowNull: false,
-      autoIncrement: true,
+      defaultValue: DataTypes.UUIDV4,
       primaryKey: true,
     },
     store_id: {
@@ -138,3 +138,5 @@ const NormalOrder = sequelize.define(
   },
   { tableName: "tbl_normal_order", timestamps: true, paranoid: true }
 );
+
+module.exports = NormalOrder;

@@ -4,10 +4,10 @@ const { DataTypes } = require("sequelize");
 const WalletReport = sequelize.define(
   "WalletReport",
   {
-    id: {
-      type: DataTypes.INTEGER,
+   id: {
+      type: DataTypes.UUID,
       allowNull: false,
-      autoIncrement: true,
+      defaultValue: DataTypes.UUIDV4,
       primaryKey: true,
     },
     uid: {

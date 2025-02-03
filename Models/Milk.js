@@ -2,12 +2,12 @@ const sequelize = require("../config/db");
 const { DataTypes } = require("sequelize");
 
 const Milk = sequelize.define(
-  "Milm",
+  "Milk",
   {
-    id: {
-      type: DataTypes.INTEGER,
+   id: {
+      type: DataTypes.UUID,
       allowNull: false,
-      autoIncrement: true,
+      defaultValue: DataTypes.UUIDV4,
       primaryKey: true,
     },
     data: {

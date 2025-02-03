@@ -4,11 +4,11 @@ const { DataTypes } = require("sequelize");
 const Coupon = sequelize.define(
   "Coupon",
   {
-    id: {
-      type: DataTypes.INTEGER,
+   id: {
+      type: DataTypes.UUID,
       allowNull: false,
       primaryKey: true,
-      autoIncrement: true,
+      defaultValue: DataTypes.UUIDV4,
     },
     store_id: {
       type: DataTypes.INTEGER,

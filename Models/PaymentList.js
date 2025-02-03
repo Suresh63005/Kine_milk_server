@@ -4,10 +4,10 @@ const { DataTypes } = require("sequelize");
 const PaymentList = sequelize.define(
   "PaymentList",
   {
-    id: {
-      type: DataTypes.INTEGER,
+   id: {
+      type: DataTypes.UUID,
       allowNull: false,
-      autoIncrement: true,
+      defaultValue: DataTypes.UUIDV4,
       primaryKey: true,
     },
     title: {
