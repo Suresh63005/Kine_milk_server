@@ -5,31 +5,46 @@ const logger = require("../utils/logger");
 const { PutObjectCommand } = require("@aws-sdk/client-s3");
 const s3 = require("../config/awss3Config");
 const uploadToS3 = require("../config/fileUpload.aws");
+const Store = require("../Models/Store");
 
 const upsertProduct = async (req, res) => {
     try {
-      const { id, title, status, cat_id,description } = req.body;
-      const store_id=1;
+      const { id, title, status, cat_id,description,subscribe_price,normal_price,mrp_price,discount,out_of_stock,subscription_required } = req.body;
+      
+      const store_id = req.user.id;
+
       console.log("Request body:", req.body);
   
       // Validate required fields
-      if (!title || !status  || !cat_id || !description) {
+      if (!title || !status  || !cat_id || !description || !subscribe_price|| !normal_price|| !mrp_price|| !discount|| !out_of_stock|| !subscription_required) {
         return res.status(400).json({
           ResponseCode: "400",
           Result: "false",
-          ResponseMsg: "Title, status are required.",
+          ResponseMsg: "All fields are required.",
         });
       }
+
+      const store = await Store.findOne({ where: { id: store_id } });
   
-      let imageUrl;
-      if (req.file) {
-        // Upload image to S3 if provided
-        imageUrl = await uploadToS3(req.file, "image");
-      }
+      let imageUrl =null;
+      let extraImageUrls =[];
+
+      if (req.files["img"]) {
+        imageUrl = await uploadToS3(req.files["img"][0], "images");
+    }
+
+    if (req.files["extraImages"]) {
+      extraImageUrls = await Promise.all(
+          req.files["extraImages"].map(file => uploadToS3(file, "extra-images"))
+      );
+  }
+
+
+     
   
       let product;
       if (id) {
-        // Find Product by ID
+        
         product = await Product.findByPk(id);
         if (!product) {
           return res.status(404).json({
