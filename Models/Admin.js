@@ -3,12 +3,12 @@ const { DataTypes } = require('sequelize');
 
 const Admin = sequelize.define('Admin',{
     id:{
-        type: DataTypes.INTEGER,
+        type: DataTypes.UUID,
         primaryKey: true,
         defaultValue: DataTypes.UUIDV4,
         allowNull:false
     },
-    username:{
+    username:{ 
         type: DataTypes.STRING,
         allowNull: false
     },

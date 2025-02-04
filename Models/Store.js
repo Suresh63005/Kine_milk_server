@@ -7,78 +7,97 @@ const Store = sequelize.define(
    id: {
       type: DataTypes.UUID,
       primaryKey: true,
-      defaultValue: DataTypes.UUIDV4,
       allowNull: false,
+      defaultValue: DataTypes.UUIDV4,
     },
-    // Store Details
-    store_name: {
+    title: {
       type: DataTypes.STRING,
       allowNull: false,
     },
-    store_logo: {
-      type: DataTypes.TEXT("long"),
-      allowNull: false,
-    },
-    store_cover_image: {
-      type: DataTypes.TEXT("long"),
+    rimg: {
+      type: DataTypes.TEXT,
       allowNull: false,
     },
     status: {
       type: DataTypes.INTEGER,
       allowNull: false,
     },
-    rating: {
+    rate: {
       type: DataTypes.FLOAT,
-      allowNull: true,
-    },
-    c_license_code: {
-      type: DataTypes.TEXT,
-      allowNull: false,
-    },
-    mobile: {
-      type: DataTypes.BIGINT,
       allowNull: false,
     },
     slogan: {
       type: DataTypes.TEXT,
       allowNull: false,
     },
-    slogan_subtitle: {
-      type: DataTypes.TEXT,
-      allowNull: true,
+    lcode: {
+      type: DataTypes.STRING,
+      defaultValue: null,
     },
-    s_open_time: {
-      type: DataTypes.TIME,
-      allowNull: false,
-    },
-    s_close_time: {
-      type: DataTypes.TIME,
-      allowNull: false,
-    },
-    s_pickup_status: {
+    catid: {
       type: DataTypes.INTEGER,
-      allowNull: true,
-    },
-    tags: {
-      type: DataTypes.TEXT,
       allowNull: false,
-      get() {
-        const rawValue = this.getDataValue("tags");
-        return rawValue ? rawValue.split(",") : [];
-      },
-      set(value) {
-        this.setDataValue("tags", Array.isArray(value) ? value.join(",") : value);
-      },
     },
-    short_desc: {
+    full_address: {
       type: DataTypes.TEXT,
       allowNull: false,
     },
-    cancel_policy: {
+    pincode: {
+      type: DataTypes.STRING,
+      allowNull: false,
+    },
+    landmark: {
       type: DataTypes.TEXT,
       allowNull: false,
     },
-    // Store Login Information
+    lats: {
+      type: DataTypes.STRING,
+      allowNull: false,
+    },
+    longs: {
+      type: DataTypes.STRING,
+      allowNull: false,
+    },
+    store_charge: {
+      type: DataTypes.FLOAT,
+      allowNull: false,
+    },
+    dcharge: {
+      type: DataTypes.FLOAT,
+      allowNull: false,
+    },
+    morder: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+    },
+    commission: {
+      type: DataTypes.FLOAT,
+      allowNull: false,
+    },
+    bank_name: {
+      type: DataTypes.TEXT,
+      allowNull: false,
+    },
+    ifsc: {
+      type: DataTypes.TEXT,
+      allowNull: false,
+    },
+    receipt_name: {
+      type: DataTypes.TEXT,
+      allowNull: false,
+    },
+    acc_number: {
+      type: DataTypes.TEXT,
+      allowNull: false,
+    },
+    paypal_id: {
+      type: DataTypes.TEXT,
+      allowNull: false,
+    },
+    upi_id: {
+      type: DataTypes.TEXT,
+      allowNull: false,
+    },
     email: {
       type: DataTypes.TEXT,
       allowNull: false,
@@ -87,81 +106,69 @@ const Store = sequelize.define(
       type: DataTypes.TEXT,
       allowNull: false,
     },
-    // Store Category
-    s_type: {
+    rstatus: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+      defaultValue: 1,
+    },
+    mobile: {
+      type: DataTypes.STRING,
+      allowNull: false,
+    },
+    sdesc: {
+      type: DataTypes.TEXT,
+      allowNull: false,
+    },
+    charge_type: {
       type: DataTypes.INTEGER,
       allowNull: false,
     },
-    // Store Address
-    full_address: {
-      type: DataTypes.TEXT,
-      allowNull: false,
+    ukm: {
+      type: DataTypes.INTEGER,
+      defaultValue: null,
     },
-    pincode: {
+    uprice: {
+      type: DataTypes.INTEGER,
+      defaultValue: null,
+    },
+    aprice: {
+      type: DataTypes.INTEGER,
+      defaultValue: null,
+    },
+    zone_id: {
       type: DataTypes.INTEGER,
       allowNull: false,
     },
-    select_zone: {
-      type: DataTypes.TEXT,
-      allowNull: true,
-    },
-    latitude: {
+    cover_img: {
       type: DataTypes.TEXT,
       allowNull: false,
     },
-    longitude: {
+    slogan_title: {
       type: DataTypes.TEXT,
       allowNull: false,
     },
-    // Service Charges type
-    service_charge_type: {
-      type: DataTypes.ENUM("Fixed Charges", "Dynamic Charges"),
+    cdesc: {
+      type: DataTypes.TEXT("long"),
       allowNull: false,
     },
-    // Store Service
-    s_charge: {
-      type: DataTypes.FLOAT,
+    opentime: {
+      type: DataTypes.TIME,
       allowNull: false,
     },
-    min_order_price: {
-      type: DataTypes.FLOAT,
+    closetime: {
+      type: DataTypes.TIME,
       allowNull: false,
     },
-    // Store Admin Commission
-    commission_rate: {
+    cancle_policy: {
       type: DataTypes.TEXT,
-      allowNull: true,
-    },
-    bank_name: {
-      type: DataTypes.STRING,
       allowNull: false,
     },
-    recipient_name: {
-      type: DataTypes.STRING,
+    is_pickup: {
+      type: DataTypes.INTEGER,
       allowNull: false,
-    },
-    paypal_id: {
-      type: DataTypes.STRING,
-      allowNull: true,
-    },
-    bank_ifsc: {
-      type: DataTypes.TEXT,
-      allowNull: true,
-    },
-    acc_number: {
-      type: DataTypes.TEXT,
-      allowNull: true,
-    },
-    upi_id: {
-      type: DataTypes.TEXT,
-      allowNull: true,
     },
   },
-  {
-    tableName: "tbl_store",
-    paranoid: true,
-    timestamps: true,
-  }
+  { tableName: "tbl_store", timestamps: true, paranoid: true }
 );
 
 module.exports = Store;

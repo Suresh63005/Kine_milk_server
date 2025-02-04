@@ -45,6 +45,10 @@ const User = sequelize.define(
       type: DataTypes.DATE,
       allowNull: false,
     },
+    store_id:{
+      type:DataTypes.INTEGER,
+      allowNull:true
+    },
     status: {
       type: DataTypes.INTEGER,
       allowNull: false,

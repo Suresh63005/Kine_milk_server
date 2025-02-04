@@ -2,6 +2,7 @@ const User = require('../Models/User');
 const asyncHandler = require('../middlewares/errorHandler');
 const { otpLoginSchema, verifyOtpSchema } = require('../utils/validation');
 const jwt = require('jsonwebtoken');
+const admin = require('../config/firebase-config');
 
 const otpLogin = asyncHandler(async(req,res)=>{
     const {error}=otpLoginSchema.validate(req.body);
@@ -76,4 +77,54 @@ const verifyOtp = asyncHandler(async(req,res)=>{
     }
 })
 
-module.exports = {otpLogin,verifyOtp}
+const verifyMobile = asyncHandler(async(req,res)=>{
+    const {mobile}=req.body;
+    if(!mobile){
+        return res.status(400).json({ message: "Mobile number is required!" });
+    }
+    try {
+        const userRecord = await admin.auth().getUserByPhoneNumber(mobile)
+        if (!userRecord) {
+            return res.status(404).json({ message: "Mobile number not found!" });
+        }
+        const token = jwt.sign({uid:userRecord.uid,mobile:userRecord.phoneNumber},process.env.JWT_SECRET)
+        return res.status(200).json({
+            message: "Mobile number verified successfully!",
+            mobile: userRecord.phoneNumber,
+            token
+        });
+    } catch (error) {
+        console.error("Error verifying mobile number:", error.message);
+        if (error.code === "auth/user-not-found") {
+            return res.status(404).json({ message: "Mobile number not found!" });
+        }
+        return res.status(500).json({ message: "Error verifying mobile number: " + error.message });
+    }
+})
+
+const verifyEmail = asyncHandler(async(req,res)=>{
+    const {email}=req.body;
+    if(!email){
+        return res.status(400).json({message:"Email Id required."})
+    }
+    try {
+        const userRecord = await admin.auth().getUserByEmail(email);
+        if(!userRecord){
+            return res.status(404).json({message:"Email is not found!"});
+        }
+        const token = jwt.sign({uid:userRecord.uid,email:userRecord.email},process.env.JWT_SECRET)
+        return res.status(200).json({
+            message: "Email id verified successfully!",
+            mobile: userRecord.email,
+            token
+        });
+    } catch (error) {
+        console.error("Error verifying email:", error.message);
+        if (error.code === "auth/user-not-found") {
+            return res.status(404).json({ message: "Email not found!" });
+        }
+        return res.status(500).json({ message: "Error verifying email: " + error.message });
+    }
+})
+
+module.exports = {otpLogin,verifyOtp,verifyMobile,verifyEmail}

@@ -34,6 +34,14 @@ const NormalOrder = sequelize.define(
       type: DataTypes.TEXT,
       defaultValue: null,
     },
+    lattitude:{
+      type:DataTypes.TEXT,
+      allowNull:true
+    },
+    longtitude:{
+      type:DataTypes.TEXT,
+      allowNull:true
+    },
     d_charge: {
       type: DataTypes.FLOAT,
       allowNull: false,
