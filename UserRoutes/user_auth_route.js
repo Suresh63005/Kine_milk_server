@@ -5,5 +5,6 @@ const userAuthMiddleware = require('../middlewares/authMiddleware');
 
 router.post("/otpLogin",userAuthController.otpLogin);
 router.post("/verifyOtp",userAuthController.verifyOtp);
+router.post("/verifyMobile",userAuthController.verifyMobile)
 
 module.exports = router;

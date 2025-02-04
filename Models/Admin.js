@@ -8,7 +8,7 @@ const Admin = sequelize.define('Admin',{
         defaultValue: DataTypes.UUIDV4,
         allowNull:false
     },
-    username:{
+    username:{ 
         type: DataTypes.STRING,
         allowNull: false
     },

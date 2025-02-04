@@ -34,6 +34,18 @@ const SubscribeOrder = sequelize.define(
       type: DataTypes.TEXT,
       allowNull: false,
     },
+    lattitude:{
+      type:DataTypes.TEXT,
+      allowNull:true
+    },
+    longtitude:{
+      type:DataTypes.TEXT,
+      allowNull:true
+    },
+    o_type: {
+      type: DataTypes.ENUM("Delivery", "Self Pickup"),
+      allowNull: false,
+    },
     d_charge: {
       type: DataTypes.FLOAT,
       allowNull: false,

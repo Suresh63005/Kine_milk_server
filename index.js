@@ -40,10 +40,10 @@ const PaymentList = require("./Models/PaymentList");
 const PayoutSetting = require("./Models/PayoutSetting");
 const Photo = require("./Models/Photo");
 const Product = require("./Models/Product");
-const ProductAttribute = require("./Models/ProductAttribute");
+// const ProductAttribute = require("./Models/ProductAttribute");
 const Rider = require("./Models/Rider");
 const RiderNotification = require("./Models/RiderNotification");
-const ServiceDetails = require("./Models/ServiceDetails");
+const Store = require("./Models/Store");
 const StoreNotification = require("./Models/StoreNotification");
 const SubscribeOrder = require("./Models/SubscribeOrder");
 const SubscribeOrderProduct = require("./Models/SubscribeOrderProduct");
@@ -51,7 +51,6 @@ const Time = require("./Models/Time");
 const User = require("./Models/User");
 const WalletReport = require("./Models/WalletReport");
 const Zone = require("./Models/Zone");
-const Store = require('./Models/Store');
 const index = require("./Models/index");
 
 app.use(morgan("dev"));
@@ -108,7 +107,11 @@ app.use("/store",require('./AdminRoutes/Store.route'))
 // User Routes
 app.use("/user",require('./UserRoutes/user_auth_route'))
 
+
+app.use("/store_data",require('./UserRoutes/Store/store_dashboard_routes'));
+
 app.use("/home_data", require("./UserRoutes/home_data_route"));
+
 
 
 app.get("/", (req, res) => {

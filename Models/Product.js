@@ -54,10 +54,12 @@ const Product = sequelize.define(
       type: DataTypes.INTEGER,
       allowNull: false,
     },
+
     mrp_price:{
       type: DataTypes.FLOAT,
       allowNull: false,
     }
+
   },
   { tableName: "tbl_product", timestamps: true, paranoid: true }
 );
