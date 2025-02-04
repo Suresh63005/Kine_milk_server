@@ -1,9 +1,9 @@
 const express = require("express");
 const router = express.Router();
-const User = require("../../Models/User");
-const Banner = require("../../Models/Banner");
-const Category = require("../../Models/Category");
-const Product = require("../../Models/Product");
+const User = require("../Models/User");
+const Banner = require("../Models/Banner");
+const Category = require("../Models/Category");
+const Product = require("../Models/Product");
 
 
 // Function to calculate distance
@@ -22,54 +22,55 @@ const Product = require("../../Models/Product");
 // Home API
 const homeAPI = async (req, res) => {
     try {
-        const uid = req.user?.id || 0;
+        // const uid = req.user?.id || 0;
 
-        if (!uid ) {
-            return res.status(400).json({
-                ResponseCode: "401",
-                Result: "false",
-                ResponseMsg: "Something Went Wrong!"
-            });
-        }
+        // if (!uid) {
+        //     return res.status(400).json({
+        //         ResponseCode: "401",
+        //         Result: "false",
+        //         ResponseMsg: "Something Went Wrong!"
+        //     });
+        // }
 
-        const userlist = await User.findOne({
-            attributes: ["name"],
-            where: {
-                id: uid, 
-                status: 1,
-              },
-        });
+        
+        // const userlist = await User.findOne({
+        //     attributes: ["name"],
+        //     where: { id: uid, status: 1 }
+        // });
 
-
-if (!userlist ) {
-            return res.status(400).json({
-                ResponseCode: "402",
-                Result: "false",
-                ResponseMsg: "User Not found!"
-            });
-        }
-
+        // if (!userlist) {
+        //     return res.status(400).json({
+        //         ResponseCode: "402",
+        //         Result: "false",
+        //         ResponseMsg: "User Not Found!"
+        //     });
+        // }
 
         
         const banners = await Banner.findAll({ where: { status: 1 } });
         const categories = await Category.findAll({ where: { status: 1 } });
 
-        const products = await Product.findAll({where: { status: 1 } });
-       
+        
+        let categoryProducts = {};
+        for (const category of categories) {
+            const products = await Product.findAll({
+                where: { status: 1, category_id: category.id },
+                order: [["createdAt", "DESC"]], 
+                limit: 5
+            });
 
-       
+            categoryProducts[category.name] = products; 
+        }
 
         return res.json({
             ResponseCode: "200",
             Result: "true",
             ResponseMsg: "Home Data Get Successfully!",
             HomeData: {
-                User:userlist,
                 Banlist: banners,
                 Catlist: categories,
-                Product: products,
+                CategoryProducts: categoryProducts,
                 currency: "INR",
-                
             }
         });
     } catch (error) {
@@ -80,6 +81,7 @@ if (!userlist ) {
             ResponseMsg: "Internal Server Error"
         });
     }
-}
+};
+
 
 module.exports = {homeAPI};

@@ -34,6 +34,30 @@ const Product = sequelize.define(
       type: DataTypes.INTEGER,
       allowNull: false,
     },
+    subscribe_price: {
+      type: DataTypes.FLOAT,
+      allowNull: false,
+    },
+    normal_price: {
+      type: DataTypes.FLOAT,
+      allowNull: false,
+    },
+    discount: {
+      type: DataTypes.FLOAT,
+      allowNull: false,
+    },
+    out_of_stock: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+    },
+    subscription_required: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+    },
+    mrp_price:{
+      type: DataTypes.FLOAT,
+      allowNull: false,
+    }
   },
   { tableName: "tbl_product", timestamps: true, paranoid: true }
 );

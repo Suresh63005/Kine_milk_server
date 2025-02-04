@@ -392,6 +392,10 @@ const upsertFaqSchema = Joi.object({
     "number.base": "Status must be a number (0 or 1).",
     "any.required": "Status is required.",
   }),
+  store_id: Joi.number().optional().messages({
+    "string.pattern.base": "ID must be a number.",
+    "any.only": "ID cannot be empty."
+  }),
 });
 
 const getFaqIdBySchema = Joi.object({
