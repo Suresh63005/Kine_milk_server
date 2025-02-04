@@ -92,7 +92,7 @@ sequelize
 app.use('/admin', require('./AdminRoutes/Auth_route'))
 app.use("/category",require("./AdminRoutes/Category.route"))
 app.use("/product",require("./AdminRoutes/Product.route"))
-app.use("/product-attribute",require("./AdminRoutes/ProductAttributes.route"))
+// app.use("/product-attribute",require("./AdminRoutes/ProductAttributes.route"))
 app.use("/product-images",require("./AdminRoutes/ProductImages.route"))
 app.use("/delivery",require("./AdminRoutes/Delivery.route"))
 app.use("/coupon",require("./AdminRoutes/Couppon.route"))
@@ -108,7 +108,7 @@ app.use("/store",require('./AdminRoutes/Store.route'))
 // User Routes
 app.use("/user",require('./UserRoutes/user_auth_route'))
 
-app.use("/home_data", require("./UserRoutes/Customer/home_data_route"));
+app.use("/home_data", require("./UserRoutes/home_data_route"));
 
 
 app.get("/", (req, res) => {

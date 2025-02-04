@@ -5,17 +5,17 @@ const logger = require("../utils/logger");
 const { getFaqIdBySchema, FaqDeleteSchema, FaqSearchSchema, upsertFaqSchema, FaqStatusSchema } = require("../utils/validation");
 
 const upsertFaq = asynHandler(async (req, res) => {
-    const { error, value } = upsertFaqSchema.validate(req.body, { abortEarly: false });
-    if (error) {
-      logger.error(error)
-      return res.status(400).json({
-        ResponseCode: "400",
-        Result: "false",
-        ResponseMsg: error.details.map((detail) => detail.message).join(", "),
-      });
-    }
+    // const { error, value } = upsertFaqSchema.validate(req.body, { abortEarly: false });
+    // if (error) {
+    //   logger.error(error)
+    //   return res.status(400).json({
+    //     ResponseCode: "400",
+    //     Result: "false",
+    //     ResponseMsg: error.details.map((detail) => detail.message).join(", "),
+    //   });
+    // }
   
-    const { id, question, answer, status } = value;
+    const { id, question, answer, status, store_id } = req.body;
 
       if (id) {
         const faq = await Faq.findByPk(id);
@@ -32,6 +32,7 @@ const upsertFaq = asynHandler(async (req, res) => {
             question,
             answer,
             status,
+            store_id
           });
   
         res.status(200).json({ message: "FAQ updated successfully", faq });
@@ -40,6 +41,7 @@ const upsertFaq = asynHandler(async (req, res) => {
           question,
           answer,
           status,
+          store_id
         });
         logger.info('FAQ created successfully')
         res.status(201).json({ message: "FAQ created successfully", faq });
