@@ -7,16 +7,16 @@ const asyncHandler = require("../../middlewares/errorHandler");
 
 const StoreDashboardAPI = asyncHandler(async (req, res) => {
   try {
-    const mobile = req.user.mobile; // Extract mobile number from JWT token
+    // const mobile = req.user.mobile; 
 
-    if (!mobile) {
-      return res
-        .status(400)
-        .json({ message: "Unauthorized! Mobile number is missing." });
-    }
+    // if (!mobile) {
+    //   return res
+    //     .status(400)
+    //     .json({ message: "Unauthorized! Mobile number is missing." });
+    // }
 
     // Find the store associated with the mobile number
-    const store = await Store.findOne({ where: { mobile } });
+    const store = await Store.findOne();
 
     if (!store) {
       return res.status(404).json({ message: "No store found for this user!" });
