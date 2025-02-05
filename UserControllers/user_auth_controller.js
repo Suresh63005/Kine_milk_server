@@ -36,71 +36,94 @@ const otpLogin = asyncHandler(async(req,res)=>{
     }
 });
 
-const verifyOtp = asyncHandler(async(req,res)=>{
-    const {error}=verifyOtpSchema.validate(req.body);
-    if(error) res.status(400).json({error:error.details[0].message})
-    const {ccode,mobile,otp}=req.body;
-    if(!ccode || !mobile || !otp){
-        return res.status(403).json({message:"All Fields Required!"})
-    }
-    try {
-        const user = await User.findOne({where:{mobile,ccode}})
-        if(!user){
-            res.status(401).json({
-            ResponseCode:"401",
-            message: "User not foud!",
-            success:false,
-            })
-        }
-        if(user.otp !== otp || new Date() > (user.otpExpiresIn)){
-            return res.status(401).json({message:"Invalid or Expired OTP."})
-        }
-        const token = jwt.sign({userId:user.id,mobile:user.mobile},process.env.JWT_SECRET)
-        await user.update({status:1,otp:null,otpExpiresIn:null})
-        const formattedDate = user.registartion_date 
-        ? new Date(user.registartion_date).toISOString().replace("T", " ").split(".")[0] 
-        : null;
-        
-            res.status(200).json({message:"OTP Verified Successfully!",
-            token,
-            user:{
-            id:user.id,
-            mobile:user.mobile,
-            email:user.email,
-            ccode:user.ccode,
-            registartion_date:formattedDate
-            }
-        })
-    } catch (error) {
-        console.log("Error Verifying Otp.",error.message);
-        res.status(500).json({message:"Error Verifying OTP: "+ error.message})
-    }
-})
+const verifyOtp = asyncHandler(async (req, res) => {
+    const { error } = verifyOtpSchema.validate(req.body);
+    if (error) return res.status(400).json({ error: error.details[0].message });
 
-const verifyMobile = asyncHandler(async(req,res)=>{
-    const {mobile}=req.body;
-    if(!mobile){
+    const { ccode, mobile, otp } = req.body;
+    if (!ccode || !mobile || !otp) {
+        return res.status(403).json({ message: "All Fields Required!" });
+    }
+
+    try {
+        const user = await User.findOne({ where: { mobile, ccode } });
+
+        if (!user) {
+            return res.status(401).json({
+                ResponseCode: "401",
+                message: "User not found!",
+                success: false,
+            });
+        }
+
+        // Debugging step to check what is actually stored in DB
+        console.log("Stored OTP:", user.otp);
+        console.log("User OTP Expiry:", user.otpExpiresIn);
+
+        if (String(user.otp) !== String(otp) || new Date() > new Date(user.otpExpiresIn)) {
+            return res.status(401).json({ message: "Invalid or Expired OTP." });
+        }
+
+        const token = jwt.sign({ userId: user.id, mobile: user.mobile }, process.env.JWT_SECRET);
+        await user.update({ status: 1, otp: null, otpExpiresIn: null });
+
+        const formattedDate = user.registartion_date
+            ? new Date(user.registartion_date).toISOString().replace("T", " ").split(".")[0]
+            : null;
+
+        return res.status(200).json({
+            message: "OTP Verified Successfully!",
+            token,
+            user: {
+                id: user.id,
+                mobile: user.mobile,
+                email: user.email,
+                ccode: user.ccode,
+                registartion_date: formattedDate,
+            },
+        });
+    } catch (error) {
+        console.log("Error Verifying OTP.", error.message);
+        res.status(500).json({ message: "Error Verifying OTP: " + error.message });
+    }
+});
+
+
+const verifyMobile = asyncHandler(async (req, res) => {
+    const { mobile } = req.body;
+
+    if (!mobile) {
         return res.status(400).json({ message: "Mobile number is required!" });
     }
+
     try {
-        const userRecord = await admin.auth().getUserByPhoneNumber(mobile)
+        const userRecord = await admin.auth().getUserByPhoneNumber(mobile);
         if (!userRecord) {
             return res.status(404).json({ message: "Mobile number not found!" });
         }
-        const token = jwt.sign({uid:userRecord.uid,mobile:userRecord.phoneNumber},process.env.JWT_SECRET)
+
+        const token = jwt.sign(
+            { userId: userRecord.uid, mobile: userRecord.phoneNumber },
+            process.env.JWT_SECRET,
+            { expiresIn: "7d" }
+        );
+
         return res.status(200).json({
             message: "Mobile number verified successfully!",
             mobile: userRecord.phoneNumber,
-            token
+            token,
         });
     } catch (error) {
         console.error("Error verifying mobile number:", error.message);
+
         if (error.code === "auth/user-not-found") {
             return res.status(404).json({ message: "Mobile number not found!" });
         }
+
         return res.status(500).json({ message: "Error verifying mobile number: " + error.message });
     }
-})
+});
+
 
 const verifyEmail = asyncHandler(async(req,res)=>{
     const {email}=req.body;

@@ -1,8 +1,8 @@
-const express = require('express');
+const express = require("express");
 const router = express.Router();
-const StoreHomeData = require('../../UserControllers/Store/store_dashboard_controller');
-const authMiddleware = require('../../middlewares/authMiddleware');
+const StoreHomeData = require("../../UserControllers/Store/store_dashboard_controller");
+const authMiddleware = require("../../middlewares/authMiddleware");
 
-router.get("/store-data",authMiddleware.isAuthenticated,StoreHomeData.StoreAPI);
+router.get("/store-data", authMiddleware.isAuthenticated, StoreHomeData.StoreDashboardAPI);
 
-module.exports=router
+module.exports = router;

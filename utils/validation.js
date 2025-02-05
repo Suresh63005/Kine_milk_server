@@ -3,13 +3,13 @@ const Joi = require("joi");
 const registerAdminSchema = Joi.object({
   username: Joi.string().min(3).max(50).required(),
   password: Joi.string().min(6).required(),
-  role: Joi.string().valid("admin", "store").required(),
+  // role: Joi.string().valid("admin", "store").required(),
 })
 
 const loginAdminSchema = Joi.object({
   username: Joi.string().min(3).max(50).required(),
   password: Joi.string().min(6).required(),
-  role: Joi.string().valid("admin", "store").required(),
+  // role: Joi.string().valid("admin", "store").required(),
 })
 
 const updateAdminSchema = Joi.object({
@@ -54,11 +54,7 @@ const searchAdminSchema = Joi.object({
 
 // for category
 const getCategoryByIdSchema = Joi.object({
-  id: Joi.number().integer().required().messages({
-    "number.base": "ID must be a number.",
-    "number.integer": "ID must be an integer.",
-    "any.required": "ID is required.",
-  }),
+  id: Joi.string().uuid().optional(),
 });
 
 const categoryDeleteSchema = Joi.object({
@@ -84,10 +80,7 @@ const categorySearchSchema = Joi.object({
 });
 
 const upsertCategorySchema = Joi.object({
-  id: Joi.string().pattern(/^\d+$/).allow(null, '').optional().messages({
-    "string.pattern.base": "ID must be a number.",
-    "any.only": "ID cannot be empty."
-  }),
+  id: Joi.string().uuid().optional(),
   title: Joi.string().trim().required().messages({
     "string.base": "Title must be a string.",
     "any.required": "Title is required.",
@@ -745,100 +738,107 @@ const bannerListSchema = Joi.object({
 
 
 const storeValidationSchema = Joi.object({
-  id: Joi.number().integer().optional(),
-  store_name: Joi.string().required(),
-  store_logo: Joi.string().required(),
-  store_cover_image: Joi.string().required(),
+  id: Joi.string().uuid().optional(),
+  title: Joi.string().required(),
+  rimg: Joi.string().required(),
   status: Joi.number().integer().required(),
-  rating: Joi.number().precision(2).optional(),
-  c_license_code: Joi.string().required(),
-  mobile: Joi.number().integer().required(),
+  rate: Joi.number().precision(2).required(),
   slogan: Joi.string().required(),
-  slogan_subtitle: Joi.string().allow(null, ""),
-  s_open_time: Joi.string().regex(/^([0-1]?[0-9]|2[0-3]):[0-5][0-9]$/).required(),
-  s_close_time: Joi.string().regex(/^([0-1]?[0-9]|2[0-3]):[0-5][0-9]$/).required(),
-  s_pickup_status: Joi.number().integer().allow(null),
-  tags: Joi.array()
-    .items(Joi.string())
-    .required()
-    .custom((value, helpers) => {
-      if (new Set(value).size !== value.length) {
-        return helpers.message("Tags must be unique.");
-      }
-      return value;
-    }),
-  short_desc: Joi.string().required(),
-  cancel_policy: Joi.string().required(),
+  lcode: Joi.string().allow(null, ""),
+  catid: Joi.number().integer().required(),
+  full_address: Joi.string().required(),
+  pincode: Joi.string().required(),
+  landmark: Joi.string().required(),
+  lats: Joi.string().required(),
+  longs: Joi.string().required(),
+  store_charge: Joi.number().precision(2).required(),
+  dcharge: Joi.number().precision(2).required(),
+  morder: Joi.number().integer().required(),
+  commission: Joi.number().precision(2).required(),
+  bank_name: Joi.string().required(),
+  ifsc: Joi.string().required(),
+  receipt_name: Joi.string().required(),
+  acc_number: Joi.string().required(),
+  paypal_id: Joi.string().allow(null, ""),
+  upi_id: Joi.string().allow(null, ""),
   email: Joi.string().email().required(),
   password: Joi.string().min(6).required(),
-  s_type: Joi.number().integer().required(),
-  full_address: Joi.string().required(),
-  pincode: Joi.number().integer().required(),
-  select_zone: Joi.string().allow(null, ""),
-  latitude: Joi.string().required(),
-  longitude: Joi.string().required(),
-  service_charge_type: Joi.string()
-    .valid("Fixed Charges", "Dynamic Charges")
-    .required(),
-  s_charge: Joi.number().precision(2).required(),
-  min_order_price: Joi.number().precision(2).required(),
-  commission_rate: Joi.string().allow(null, ""),
-  bank_name: Joi.string().required(),
-  recipient_name: Joi.string().required(),
-  paypal_id: Joi.string().allow(null, ""),
-  bank_code: Joi.string().allow(null, ""),
-  account_number: Joi.string().allow(null, ""),
-  upi_id: Joi.string().allow(null, ""),
+  rstatus: Joi.number().integer().default(1),
+  mobile: Joi.string().required(),
+  sdesc: Joi.string().required(),
+  charge_type: Joi.number().integer().required(),
+  ukm: Joi.number().integer().allow(null),
+  uprice: Joi.number().integer().allow(null),
+  aprice: Joi.number().integer().allow(null),
+  zone_id: Joi.number().integer().required(),
+  cover_img: Joi.string().required(),
+  slogan_title: Joi.string().required(),
+  cdesc: Joi.string().required(),
+  opentime: Joi.string().regex(/^([0-1]?[0-9]|2[0-3]):[0-5][0-9]$/).required(),
+  closetime: Joi.string().regex(/^([0-1]?[0-9]|2[0-3]):[0-5][0-9]$/).required(),
+  cancle_policy: Joi.string().required(),
+  is_pickup: Joi.number().integer().required(),
 });
 
 const upsertStoreSchema = Joi.object({
-  id: Joi.number().integer().optional(), // Required for update, optional for add
-  store_name: Joi.string().min(3).max(255).required(),
-  store_logo: Joi.string().uri().optional(),
-  store_cover_image: Joi.string().uri().optional(),
-  status: Joi.number().integer().valid(0, 1).required(),
-  rating: Joi.number().min(0).max(5).optional(),
-  c_license_code: Joi.string().required(),
-  mobile: Joi.string().pattern(/^[6-9]\d{9}$/).required().messages({
-    "string.pattern.base": "Mobile number must be a valid 10-digit Indian number.",
-  }),
+  id: Joi.string().uuid().optional(),
+  title: Joi.string().required(),
+  rimg: Joi.string().allow(null, "").optional(),
+  status: Joi.number().integer().required(),
+  rate: Joi.number().precision(2).required(),
   slogan: Joi.string().required(),
-  slogan_subtitle: Joi.string().optional().allow(""),
-  s_open_time: Joi.string()
-  .trim()  // This will remove leading and trailing whitespace
-  .pattern(/^([01]?[0-9]|2[0-3]):([0-5][0-9])$/)
-  .required()
-  .messages({
-    "string.pattern.base": "Open time must be in HH:mm format.",
-  }),
-
-  s_close_time: Joi.string().pattern(/^([01]\d|2[0-3]):([0-5]\d)$/).required().messages({
-    "string.pattern.base": "Close time must be in HH:mm format.",
-  }),
-  s_pickup_status: Joi.number().integer().valid(0, 1).optional(),
-  tags: Joi.array().items(Joi.string().min(1)).unique().required(),
-  short_desc: Joi.string().required(),
-  cancel_policy: Joi.string().required(),
+  lcode: Joi.string().allow(null, ""),
+  catid: Joi.number().integer().required(),
+  full_address: Joi.string().required(),
+  pincode: Joi.string().required(),
+  landmark: Joi.string().required(),
+  lats: Joi.string().required(),
+  longs: Joi.string().required(),
+  store_charge: Joi.number().precision(2).required(),
+  dcharge: Joi.number().precision(2).required(),
+  morder: Joi.number().integer().required(),
+  commission: Joi.number().precision(2).required(),
+  bank_name: Joi.string().required(),
+  ifsc: Joi.string().required(),
+  receipt_name: Joi.string().required(),
+  acc_number: Joi.string().required(),
+  paypal_id: Joi.string().allow(null, ""),
+  upi_id: Joi.string().allow(null, ""),
   email: Joi.string().email().required(),
   password: Joi.string().min(6).required(),
-  s_type: Joi.number().integer().required(),
-  full_address: Joi.string().required(),
-  pincode: Joi.number().integer().min(100000).max(999999).required(),
-  select_zone: Joi.string().optional().allow(""),
-  latitude: Joi.string().required(),
-  longitude: Joi.string().required(),
-  service_charge_type: Joi.string().valid("Fixed Charges", "Dynamic Charges").required(),
-  s_charge: Joi.number().positive().required(),
-  min_order_price: Joi.number().positive().required(),
-  commission_rate: Joi.string().optional().allow(""),
-  bank_name: Joi.string().required(),
-  recipient_name: Joi.string().required(),
-  paypal_id: Joi.string().email().optional().allow(""),
-  bank_code: Joi.string().optional().allow(""),
-  acc_number: Joi.string().optional().allow(""),
-  upi_id: Joi.string().optional().allow(""),
-  bank_ifsc: Joi.string().optional().allow(""),
-})
+  rstatus: Joi.number().integer().default(1),
+  mobile: Joi.string().required(),
+  sdesc: Joi.string().required(),
+  charge_type: Joi.number().integer().required(),
+  ukm: Joi.number().integer().allow(null),
+  uprice: Joi.number().integer().allow(null),
+  aprice: Joi.number().integer().allow(null),
+  zone_id: Joi.number().integer().required(),
+  cover_img: Joi.string().optional(),
+  slogan_title: Joi.string().required(),
+  cdesc: Joi.string().required(),
+  opentime: Joi.string()
+    .trim()  // Removes leading and trailing spaces
+    .regex(/^([0-1]?[0-9]|2[0-3]):[0-5][0-9]$/)
+    .required(),
+  closetime: Joi.string()
+    .trim()
+    .regex(/^([0-1]?[0-9]|2[0-3]):[0-5][0-9]$/)
+    .required(),
+  cancle_policy: Joi.string().required(),
+  is_pickup: Joi.number().integer().required().messages({
+    "number.base": `"is_pickup" must be a number`
+}),
+});
+
+const storeDeleteSchema = Joi.object({
+  id: Joi.number().integer().required().messages({
+    "number.base": "ID must be a number",
+    "number.integer": "ID must be an integer",
+    "any.required": "ID is required"
+  })
+});
+
 
 const couponToggleStatus=Joi.object({
   id:Joi.number().integer().required().messages({
@@ -893,7 +893,7 @@ module.exports={registerAdminSchema,loginAdminSchema,updateAdminSchema, deleteAd
     upsertTimeSchema,getTimeIdBySchema,DeleteTimeSchema,TimeSearchSchema,
 
     upsertCouponSchema,CouponDeleteSchema,getCouponByIdSchema, bannerUpsertSchema,bannerListSchema,
-    storeValidationSchema,upsertStoreSchema,
+    storeValidationSchema,upsertStoreSchema,storeDeleteSchema,
 
     otpLoginSchema,verifyOtpSchema
 }

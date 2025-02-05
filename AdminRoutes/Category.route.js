@@ -4,12 +4,12 @@ const categoryController=require("../AdminControllers/Category.Controller");
 const upload = require("../utils/multerConfig");
 const adminMiddleware = require('../middlewares/adminMiddleware');
 
-router.post("/upsert",adminMiddleware.authMiddleware, upload.single("img"),categoryController.upsertCategory);
-router.get("/all",categoryController.getAllCategories)
+router.post("/upsert",adminMiddleware.isAdmin, upload.single("img"),categoryController.upsertCategory);
+router.get("/all",adminMiddleware.isAdmin,categoryController.getAllCategories)
 router.get("/getbyid/:id",categoryController.getCategoryById)
-router.delete("/delete/:id",adminMiddleware.authMiddleware,categoryController.deleteCategory)
-router.patch("/update/:id",adminMiddleware.authMiddleware,categoryController.upsertCategory)
-router.get("/count",adminMiddleware.authMiddleware,categoryController.getCategoryCount)
-router.patch("/toggle-status",adminMiddleware.authMiddleware,categoryController.toggleCategoryStatus)
+router.delete("/delete/:id",adminMiddleware.isAdmin,categoryController.deleteCategory)
+router.patch("/update/:id",adminMiddleware.isAdmin,categoryController.upsertCategory)
+router.get("/count",adminMiddleware.isAdmin,categoryController.getCategoryCount)
+router.patch("/toggle-status",adminMiddleware.isAdmin,categoryController.toggleCategoryStatus)
 
 module.exports=router
