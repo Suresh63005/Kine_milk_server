@@ -2,96 +2,76 @@ const Product = require("../../Models/Product");
 const NormalOrder = require("../../Models/NormalOrder");
 const SubscribeOrder = require("../../Models/SubscribeOrder");
 const Rider = require("../../Models/Rider");
-const User = require("../../Models/User");
-const Store = require('../../Models/Store');
+const Store = require("../../Models/Store");
 const asyncHandler = require("../../middlewares/errorHandler");
 
-const StoreAPI = asyncHandler(async (req, res) => {
+const StoreDashboardAPI = asyncHandler(async (req, res) => {
   try {
-    const uid = req.user.id;
-    if (!uid) {
-      res.status(401).json({
-        ResponseCode: "401",
-        success: false,
-        message: "User Not Found!",
-      });
+    // const mobile = req.user.mobile; 
+
+    // if (!mobile) {
+    //   return res
+    //     .status(400)
+    //     .json({ message: "Unauthorized! Mobile number is missing." });
+    // }
+
+    // Find the store associated with the mobile number
+    const store = await Store.findOne();
+
+    if (!store) {
+      return res.status(404).json({ message: "No store found for this user!" });
     }
-    const user = await User.findOne({
-      where: { id: uid, status: 1 },
-      attributes: ["name","store_id"],
-      include:[{model:Store,as:"store",attributes:["id","name"]}]
+
+    const storeId = store.id;
+
+    // Fetch store-related data
+    const totalOrders = await NormalOrder.count({
+      where: { store_id: storeId, status: "On Route" },
     });
-    if (!user || !user.store) {
-      res.status(401).json({
-        ResponseCode: "401",
-        success: false,
-        message: "Store Not Found for User!",
-      });
-    }
+    const openOrders = await NormalOrder.count({
+      where: { store_id: storeId, status: "Processing" },
+    });
+    const closedOrders = await NormalOrder.count({
+      where: { store_id: storeId, status: "Completed" },
+    });
 
-    const storeId = user.store.id
-    // Todays Summery
-    const totalOrders = await NormalOrder.findAll({where:{store_id:storeId}});
-    const openOrders = await NormalOrder.findAll({ where: { store_id: storeId, status: "Processing" } });
-    const closedOrders = await NormalOrder.findAll({ where: { store_id: storeId, status: "Completed" } });
+    const products = await Product.findAll({ where: { store_id: storeId } });
+    const deliveryBoys = await Rider.findAll({ where: { store_id: storeId } });
+    const instantOrders = await NormalOrder.count({
+      where: { store_id: storeId },
+    });
+    const subscriptionOrders = await SubscribeOrder.count({
+      where: { store_id: storeId },
+    });
 
-    // Inventory
-    const products = await Product.findAll({ where: { status: 1, store_id: storeId } });
-    const subscriptionOrders = await SubscribeOrder.findAll({
-        where: { store_id: storeId },
-        attributes: ["id", "uid", "o_type", "lattitude", "longtitude"],
-        include: [
-          {
-            model: User,
-            as: "customer",
-            attributes: ["name", "address"],
-          },
-        ],
-      });    
-      const instantOrders = await NormalOrder.findAll({
-        where: { store_id: storeId },
-        attributes: ["id", "uid", "o_type", "lattitude", "longtitude"],
-        include: [
-          {
-            model: User,
-            as: "customer",
-            attributes: ["name", "address"],
-          },
-        ],
-      });
-      const deliveryBoys = await Rider.findAll({
-        where: { store_id: storeId },
-        attributes: ["id", "name", "phone"],
-      })
-      return res.status(200).json({
-        ResponseCode: "200",
-        success: true,
-        message: "Store Data Fetched Successfully.",
-        user_details: {
-          name: user.name,
-          store_name: user.store.name,
-        },
-        todays_summary: {
-          total_orders: totalOrders.length,
-          open_orders: openOrders.length,
-          closed_orders: closedOrders.length,
-        },
-        inventory: {
-          products: products.length,
-          delivery_boys: deliveryBoys.length,
-          instant_orders: instantOrders.length,
-          subscription_orders: subscriptionOrders.length,
-        },
-      });
-
+    return res.status(200).json({
+      success: true,
+      message: "Store dashboard data fetched successfully.",
+      store_details: {
+        id: store.id,
+        title: store.title,
+        address: store.full_address,
+        mobile: store.mobile,
+        status: store.status,
+      },
+      todays_summary: {
+        total_orders: totalOrders,
+        open_orders: openOrders,
+        closed_orders: closedOrders,
+      },
+      inventory: {
+        products,
+        deliveryBoys,
+        instantOrders,
+        subscriptionOrders,
+      },
+    });
   } catch (error) {
-    console.error("Error fetching Store Data:", error);
-    return res.status(500).json({
-        ResponseCode: "500",
-        Result: "false",
-        ResponseMsg: "Internal Server Error"
-    });
+    console.error("Error fetching store dashboard data:", error);
+    return res
+      .status(500)
+      .json({ message: "Internal Server Error", error: error.message });
   }
 });
 
-module.exports = {StoreAPI}
+module.exports = { StoreDashboardAPI };

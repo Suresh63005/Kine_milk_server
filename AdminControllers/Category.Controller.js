@@ -1,6 +1,6 @@
 const Category = require("../Models/Category");
 const { Op } = require("sequelize");
-const asynHandler = require("../middlewares/errorHandler");
+const asyncHandler = require("../middlewares/errorHandler");
 const logger = require("../utils/logger");
 const {
   getCategoryByIdSchema,
@@ -12,10 +12,9 @@ const { PutObjectCommand } = require("@aws-sdk/client-s3");
 const s3 = require("../config/awss3Config");
 const uploadToS3 = require("../config/fileUpload.aws");
 
-const upsertCategory = asynHandler(async (req, res) => {
+const upsertCategory = asyncHandler(async (req, res) => {
   const { error } = upsertCategorySchema.validate(req.body);
   if (error) {
-    logger.error(error.details[0].message);
     return res.status(400).json({
       ResponseCode: "400",
       Result: "false",
@@ -24,7 +23,7 @@ const upsertCategory = asynHandler(async (req, res) => {
   }
 
   const { id, title, status, cover } = req.body;
-  let imageUrl;
+  let imageUrl = null;
 
   if (req.file) {
     imageUrl = await uploadToS3(req.file, "image");
@@ -33,7 +32,6 @@ const upsertCategory = asynHandler(async (req, res) => {
   if (id) {
     const category = await Category.findByPk(id);
     if (!category) {
-      logger.error("Category not found");
       return res.status(404).json({
         ResponseCode: "404",
         Result: "false",
@@ -48,57 +46,54 @@ const upsertCategory = asynHandler(async (req, res) => {
 
     await category.save();
 
-    logger.info("Category updated successfully:", category);
     return res.status(200).json({
       ResponseCode: "200",
       Result: "true",
       ResponseMsg: "Category updated successfully.",
       category,
     });
-  } else {
-    if (!req.file) {
-      logger.error("No image provided");
-      return res.status(400).json({
-        ResponseCode: "400",
-        Result: "false",
-        ResponseMsg: "Image is required for a new category.",
-      });
-    }
+  }
 
-    const category = await Category.create({
-      title,
-      img: imageUrl,
-      status,
-      cover,
-    });
-
-    logger.info("Category created successfully:", category);
-    return res.status(201).json({
-      ResponseCode: "201",
-      Result: "true",
-      ResponseMsg: "Category created successfully.",
-      category,
+  if (!req.file) {
+    return res.status(400).json({
+      ResponseCode: "400",
+      Result: "false",
+      ResponseMsg: "Image is required for a new category.",
     });
   }
+
+  const newCategory = await Category.create({
+    title,
+    img: imageUrl,
+    status,
+    cover,
+  });
+
+  return res.status(201).json({
+    ResponseCode: "201",
+    Result: "true",
+    ResponseMsg: "Category created successfully.",
+    category: newCategory,
+  });
 });
 
 
 
-const getAllCategories = asynHandler(async (req, res, next) => {
+const getAllCategories = asyncHandler(async (req, res, next) => {
   const categories = await Category.findAll();
   logger.info("sucessfully get all categories");
   res.status(200).json(categories);
 
 });
 
-const getCategoryCount = asynHandler(async (req, res) => {
+const getCategoryCount = asyncHandler(async (req, res) => {
   const categoryCount = await Category.count();
   const categories = await Category.findAll();
   logger.info("categories", categoryCount);
   res.status(200).json({ categories, category: categoryCount });
 });
 
-const getCategoryById = asynHandler(async (req, res) => {
+const getCategoryById = asyncHandler(async (req, res) => {
   const { error } = getCategoryByIdSchema.validate(req.params);
   if (error) {
     logger.error(error.details[0].message);
@@ -116,7 +111,7 @@ const getCategoryById = asynHandler(async (req, res) => {
   res.status(200).json(category);
 });
 
-const deleteCategory = asynHandler(async (req, res) => {
+const deleteCategory = asyncHandler(async (req, res) => {
   const dataToValidate = { ...req.params, ...req.body };
   const { error } = categoryDeleteSchema.validate(dataToValidate);
   if (error) {
@@ -158,7 +153,7 @@ const deleteCategory = asynHandler(async (req, res) => {
     .json({ message: "Category soft deleted successfully" });
 });
 
-const searchCategory = asynHandler(async (req, res) => {
+const searchCategory = asyncHandler(async (req, res) => {
   const { error } = categorySearchSchema.validate(req.body);
   if (error) {
     logger.error(error.details[0].message);
@@ -184,7 +179,7 @@ const searchCategory = asynHandler(async (req, res) => {
   res.status(200).json(category);
 });
 
-const toggleCategoryStatus = asynHandler(async (req, res) => {
+const toggleCategoryStatus = asyncHandler(async (req, res) => {
   const { id, value } = req.body;
 
   const category = await Category.findByPk(id);
