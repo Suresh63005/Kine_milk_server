@@ -11,7 +11,7 @@ const FAQ = sequelize.define(
       defaultValue: DataTypes.UUIDV4,
     },
     store_id: {
-      type: DataTypes.INTEGER,
+      type: DataTypes.UUID,
       allowNull: false,
     },
     question: {

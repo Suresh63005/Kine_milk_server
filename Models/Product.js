@@ -4,18 +4,18 @@ const { DataTypes } = require("sequelize");
 const Product = sequelize.define(
   "Product",
   {
-   id: {
+    id: {
       type: DataTypes.UUID,
       allowNull: false,
       defaultValue: DataTypes.UUIDV4,
       primaryKey: true,
     },
     store_id: {
-      type: DataTypes.INTEGER,
+      type: DataTypes.UUID,
       allowNull: false,
     },
     cat_id: {
-      type: DataTypes.INTEGER,
+      type: DataTypes.UUID,
       allowNull: false,
     },
     title: {
@@ -23,7 +23,7 @@ const Product = sequelize.define(
       allowNull: false,
     },
     img: {
-      type: DataTypes.TEXT("long"),
+      type: DataTypes.TEXT, // "long" is not needed in Sequelize
       allowNull: false,
     },
     description: {
@@ -54,14 +54,16 @@ const Product = sequelize.define(
       type: DataTypes.INTEGER,
       allowNull: false,
     },
-
-    mrp_price:{
+    mrp_price: {
       type: DataTypes.FLOAT,
       allowNull: false,
-    }
-
+    },
   },
-  { tableName: "tbl_product", timestamps: true, paranoid: true }
+  {
+    tableName: "tbl_product",
+    timestamps: true,
+    paranoid: true,
+  }
 );
 
 module.exports = Product;

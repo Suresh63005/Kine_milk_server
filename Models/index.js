@@ -8,10 +8,15 @@ const Coupon = require('./Coupon');
 const Rider = require('./Rider');
 const SubscribeOrder = require('./SubscribeOrder');
 const ProductAttribute = require("./ProductAttribute");
+const ProductImage = require("./productImages");
 
 
 Product.belongsTo(Category, { as: "category", foreignKey: "cat_id" });
 Category.hasMany(Product, { as: "products", foreignKey: "cat_id" });
+
+
+ProductImage.belongsTo(Product, { as: "extraImages", foreignKey: "product_id" });
+Product.hasMany(ProductImage, { as: "extraImages", foreignKey: "product_id" });
 
 NormalOrder.belongsTo(Admin, { as: "admin", foreignKey: "store_id" });
 Admin.hasMany(NormalOrder, { as: "orders", foreignKey: "store_id"});

@@ -11,7 +11,7 @@ const Address = sequelize.define(
       primaryKey: true,
     },
     uid: {
-      type: DataTypes.INTEGER,
+      type: DataTypes.UUID,
       allowNull: false,
     },
     address: {

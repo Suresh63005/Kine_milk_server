@@ -11,7 +11,7 @@ const Cash = sequelize.define(
       primaryKey: true,
     },
     rid: {
-      type: DataTypes.INTEGER,
+      type: DataTypes.UUID,
       allowNull: false,
     },
     amt: {
