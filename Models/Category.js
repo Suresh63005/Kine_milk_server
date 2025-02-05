@@ -15,7 +15,7 @@ const Category = sequelize.define(
       allowNull: false,
     },
     img: {
-      type: DataTypes.TEXT("long"),
+      type: DataTypes.TEXT,
       allowNull: false,
     },
     status: {
@@ -23,7 +23,7 @@ const Category = sequelize.define(
       allowNull: false,
     },
     cover: {
-      type: DataTypes.TEXT("long"),
+      type: DataTypes.TEXT,
       allowNull: false,
     },
   },

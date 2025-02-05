@@ -11,11 +11,11 @@ const NormalOrder = sequelize.define(
       primaryKey: true,
     },
     store_id: {
-      type: DataTypes.INTEGER,
+      type: DataTypes.UUID,
       allowNull: false,
     },
     uid: {
-      type: DataTypes.INTEGER,
+      type: DataTypes.UUID,
       allowNull: false,
     },
     odate: {
@@ -23,7 +23,7 @@ const NormalOrder = sequelize.define(
       allowNull: false,
     },
     p_method_id: {
-      type: DataTypes.INTEGER,
+      type: DataTypes.UUID,
       allowNull: false,
     },
     address: {
@@ -47,7 +47,7 @@ const NormalOrder = sequelize.define(
       allowNull: false,
     },
     cou_id: {
-      type: DataTypes.FLOAT,
+      type: DataTypes.UUID,
       allowNull: false,
     },
     cou_amt: {
@@ -59,7 +59,7 @@ const NormalOrder = sequelize.define(
       allowNull: false,
     },
     trans_id: {
-      type: DataTypes.FLOAT,
+      type: DataTypes.UUID,
       allowNull: false,
     },
     a_note: {
@@ -72,7 +72,7 @@ const NormalOrder = sequelize.define(
       defaultValue: 0,
     },
     rid: {
-      type: DataTypes.INTEGER,
+      type: DataTypes.UUID,
       allowNull: false,
       defaultValue: 0,
     },

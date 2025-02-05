@@ -11,7 +11,7 @@ const NormalOrderProduct = sequelize.define(
       primaryKey: true,
     },
     oid: {
-      type: DataTypes.INTEGER,
+      type: DataTypes.UUID,
       allowNull: false,
     },
     pquantity: {

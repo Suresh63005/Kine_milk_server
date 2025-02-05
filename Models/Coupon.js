@@ -11,15 +11,15 @@ const Coupon = sequelize.define(
       defaultValue: DataTypes.UUIDV4,
     },
     store_id: {
-      type: DataTypes.INTEGER,
+      type: DataTypes.UUID,
       allowNull: false,
     },
     coupon_img: {
-      type: DataTypes.TEXT("long"),
+      type: DataTypes.TEXT,
       allowNull: false,
     },
     subtitle: {
-      type: DataTypes.TEXT("long"),
+      type: DataTypes.TEXT,
       allowNull: false,
     },
     expire_date: {

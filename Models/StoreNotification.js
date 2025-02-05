@@ -11,7 +11,7 @@ const StoreNotification = sequelize.define(
       primaryKey: true,
     },
     sid: {
-      type: DataTypes.INTEGER,
+      type: DataTypes.UUID,
       allowNull: false,
     },
     datetime: {

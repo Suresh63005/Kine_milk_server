@@ -111,6 +111,7 @@ app.use("/user",require('./UserRoutes/user_auth_route'))
 app.use("/stores",require('./UserRoutes/Store/store_dashboard_routes'));
 
 app.use("/home_data", require("./UserRoutes/home_data_route"));
+app.use("/u_product", require("./UserRoutes/customer/product_route"));
 
 
 

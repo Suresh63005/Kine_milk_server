@@ -11,7 +11,7 @@ const PayoutSetting = sequelize.define(
       allowNull: false,
     },
     owner_id: {
-      type: DataTypes.INTEGER,
+      type: DataTypes.UUID,
       allowNull: false,
     },
     amt: {
