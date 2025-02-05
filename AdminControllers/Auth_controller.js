@@ -17,7 +17,7 @@ const { log } = require("winston");
 // Generate JWT
 const generateToken = (admin) => {
   return jwt.sign(
-    { id: admin.id, username: admin.username, userType: admin.role },
+    { id: admin.id, username: admin.username },
     process.env.JWT_SECRET,
     { expiresIn: "24h" }
   );
@@ -29,20 +29,20 @@ const registerAdmin = asynHandler(async (req, res) => {
     logger.error(error.details[0].message);
     return res.status(400).json({ error: error.details[0].message });
   }
-  const { username, password, role } = req.body;
+  const { username, password } = req.body;
   console.log(req.body);
 
-  if (!role || !username || !password) {
+  if (!username || !password) {
     logger.error("All fields are required");
     return res.status(400).json({ error: "All fields are required" });
   }
-  const validateRoles = ["admin", "store"];
-  if (!validateRoles.includes(role)) {
-    logger.error("Invalid role. Role must be 'admin' or 'store'.");
-    return res
-      .status(400)
-      .json({ error: "Invalid role. Role must be 'admin' or 'store'." });
-  }
+  // const validateRoles = ["admin", "store"];
+  // if (!validateRoles.includes(role)) {
+  //   logger.error("Invalid role. Role must be 'admin' or 'store'.");
+  //   return res
+  //     .status(400)
+  //     .json({ error: "Invalid role. Role must be 'admin' or 'store'." });
+  // }
 
   const existingAdmin = await Admin.findOne({ where: { username } });
 
@@ -56,7 +56,6 @@ const registerAdmin = asynHandler(async (req, res) => {
   const admin = await Admin.create({
     username,
     password: hashedPassword,
-    role,
   });
 
   const token = generateToken(admin);
@@ -75,9 +74,9 @@ const loginAdmin = asynHandler(async (req, res) => {
     logger.error(error.details[0].message);
     return res.status(400).json({ error: error.details[0].message });
   }
-  const { username, password, role } = req.body;
+  const { username, password } = req.body;
 
-  if (!username || !password || !role) {
+  if (!username || !password) {
     logger.error('All fields are required')
     return res.status(400).json({ error: "All fields are required" });
   }
@@ -95,10 +94,10 @@ const loginAdmin = asynHandler(async (req, res) => {
     return res.status(401).json({ error: "Invalid username or password" });
   }
 
-  if (admin.role !== role) {
-    logger.error("Role is not match");
-    return res.status(401).json({ error: "Role is not match" });
-  }
+  // if (admin.role !== role) {
+  //   logger.error("Role is not match");
+  //   return res.status(401).json({ error: "Role is not match" });
+  // }
 
   const token = generateToken(admin);
 
@@ -110,7 +109,6 @@ const loginAdmin = asynHandler(async (req, res) => {
     message: "Admin signed in successfully",
     admin,
     token,
-    role: admin.role,
   });
 });
 

@@ -59,6 +59,12 @@ const User = sequelize.define(
       allowNull: true,
       defaultValue: 0,
     },
+    otp:{
+      type:DataTypes.INTEGER,
+    },
+    otpExpiresIn:{
+      type:DataTypes.TIME
+    }
   },
   { tableName: "tbl_user", timestamps: true, paranoid: true }
 );

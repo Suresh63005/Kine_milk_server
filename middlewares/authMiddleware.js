@@ -1,21 +1,19 @@
-const User = require('../Models/User');
-const jwt = require('jsonwebtoken');
-const asyncHandler = require('./errorHandler');
+const jwt = require("jsonwebtoken");
 
-exports.isAuthenticated = asyncHandler(async(req,res,next)=>{
-    const token = req.headers.authorization?.split("")[1];
-    if(token){
-        try {
-            const decoded = jwt.verify(token,process.env.JWT_SECRET);
-            const user = await User.findByPk(decoded.userId);
-            if(!user){
-                return res.status(401).json({error:"Unauthorized: User not found!"})
-            }
-            req.user = user;
-            next();
-        } catch (error) {
-            console.error("Authentication error:", err.message);
-            return res.status(401).json({ error: "Unauthorized: Authentication failed" });
-        }
+const isAuthenticated = (req, res, next) => {
+    const token = req.headers.authorization?.split(" ")[1];
+
+    if (!token) {
+        return res.status(401).json({ message: "Unauthorized: No token provided" });
     }
-})
+
+    try {
+        const decoded = jwt.verify(token, process.env.JWT_SECRET);
+        req.user = decoded;
+        next();
+    } catch (error) {
+        return res.status(401).json({ message: "Unauthorized: Invalid token" });
+    }
+};
+
+module.exports = { isAuthenticated };
