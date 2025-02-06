@@ -7,13 +7,13 @@ const asyncHandler = require("../../middlewares/errorHandler");
 
 const StoreDashboardAPI = asyncHandler(async (req, res) => {
   try {
-    // const mobile = req.user.mobile; 
+    const uid = req.user.userId; 
 
-    // if (!mobile) {
-    //   return res
-    //     .status(400)
-    //     .json({ message: "Unauthorized! Mobile number is missing." });
-    // }
+    if (!uid) {
+      return res
+        .status(400)
+        .json({ message: "Unauthorized! user not found." });
+    }
 
     // Find the store associated with the mobile number
     const store = await Store.findOne();

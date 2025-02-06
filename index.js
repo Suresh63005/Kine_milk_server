@@ -112,8 +112,9 @@ app.use("/stores",require('./UserRoutes/Store/store_dashboard_routes'));
 
 app.use("/home_data", require("./UserRoutes/home_data_route"));
 app.use("/u_product", require("./UserRoutes/customer/product_route"));
-
-
+app.use("/store-products",require('./UserRoutes/Store/store_product_routes'))
+app.use("/store-rider",require('./UserRoutes/Store/store_rider_routes'));
+app.use("/store-owner",require('./UserRoutes/Store/store_user_routes'))
 
 app.get("/", (req, res) => {
     res.send("Server is Running");
