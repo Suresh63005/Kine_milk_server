@@ -4,7 +4,7 @@ const couponController=require("../AdminControllers/Couppon.Controller");
 const upload = require("../utils/multerConfig");
 const adminMiddleware = require('../middlewares/adminMiddleware');
 
-router.post("/upsert",adminMiddleware.authMiddleware, upload.single("coupon_img"),couponController.upsertCoupon);
+router.post("/upsert",upload.single("coupon_img"),couponController.upsertCoupon);
 router.get("/all",couponController.getAllCoupon)
 router.get("/getbyid/:id",couponController.getCouponById)
 router.delete("/delete/:id",adminMiddleware.authMiddleware,couponController.deleteCoupon)
