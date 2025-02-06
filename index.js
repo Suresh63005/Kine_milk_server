@@ -118,11 +118,13 @@ app.use("/u_address", require("./UserRoutes/customer/address_route"));
 
 app.use("/u_cart", require("./UserRoutes/customer/cart_route"));
 app.use("/u_sub_order", require("./UserRoutes/customer/subscribeOrder_route"));
+app.use("/u_instant_order", require("./UserRoutes/customer/instantOrder_route"));
+app.use("/u_fav", require("./UserRoutes/customer/fav_route"));
 
 
 app.use("/store-products",require('./UserRoutes/Store/store_product_routes'))
 app.use("/store-rider",require('./UserRoutes/Store/store_rider_routes'));
-app.use("/store-owner",require('./UserRoutes/Store/store_user_routes'))
+app.use("/store-owner",require('./UserRoutes/Store/store_user_routes'));
 
 
 app.get("/", (req, res) => {
