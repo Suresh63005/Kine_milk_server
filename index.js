@@ -117,6 +117,8 @@ app.use("/u_address", require("./UserRoutes/customer/address_route"));
 
 app.use("/u_cart", require("./UserRoutes/customer/cart_route"));
 app.use("/u_sub_order", require("./UserRoutes/customer/subscribeOrder_route"));
+app.use("/u_instant_order", require("./UserRoutes/customer/instantOrder_route"));
+app.use("/u_fav", require("./UserRoutes/customer/fav_route"));
 
 
 app.use("/stores",require('./UserRoutes/Store/store_dashboard_routes'));
@@ -126,6 +128,7 @@ app.use("/store-owner",require('./UserRoutes/Store/store_user_routes'))
 app.use("/store-instant",require('./UserRoutes/Store/store_instant_orders_route'))
 app.use("/store-inventory",require('./UserRoutes/Store/store_inventory_routes'))
 app.use("/instant-orders",require('./UserRoutes/Store/instant_order_history_routes'))
+
 
 
 app.get("/", (req, res) => {

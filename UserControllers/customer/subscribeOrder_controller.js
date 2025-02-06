@@ -2,6 +2,7 @@ const { Sequelize } = require("sequelize");
 const SubscribeOrder = require("../../Models/SubscribeOrder");
 const Product = require("../../Models/Product");
 const SubscribeOrderProduct = require("../../Models/SubscribeOrderProduct");
+const Notification = require("../../Models/Notification");
 
 
 const subscribeOrder =  async (req, res) => {
@@ -72,7 +73,7 @@ const subscribeOrder =  async (req, res) => {
           const product = await Product.findByPk(item.product_id);
           if (!product) throw new Error(`Product with ID ${item.product_id} not found`);
   
-          const itemPrice = product.price * item.quantity;
+          const itemPrice = product.subscribe_price * item.quantity;
   
           return SubscribeOrderProduct.create(
             {
@@ -85,6 +86,17 @@ const subscribeOrder =  async (req, res) => {
           );
         })
       );
+
+      await Notification.create(
+{
+    uid, 
+    datetime: new Date(),
+        title: "Order Confirmed",
+        description: `Your order created  Order ID ${order.id} .`,
+}
+      )
+
+     
   
      
   
@@ -109,4 +121,40 @@ const subscribeOrder =  async (req, res) => {
   }
 
 
-  module.exports = subscribeOrder;
+  const getOrdersByStatus = async (req, res) => {
+    try {
+      const { uid, status } = req.body;
+
+      console.log()
+  
+      
+      const validStatuses = ["Pending", "Processing", "Completed", "Cancelled", "On Route"];
+      if (!validStatuses.includes(status)) {
+        return res.status(400).json({ success: false, message: "Invalid order status" });
+      }
+  
+      
+      const orders = await SubscribeOrder.findAll({
+        where: { uid, status },
+        order: [["createdAt", "DESC"]],
+      });
+  
+      res.status(201).json({
+        ResponseCode: "201",
+        Result: "true",
+        ResponseMsg: "Subscribe Order fetched successfully!",
+        orders
+      });
+    } catch (error) {
+      console.error("Error fetching orders:", error);
+      res.status(500).json({
+        ResponseCode: "500",
+        Result: "false",
+        ResponseMsg: "Server Error",
+        error: error.message,
+      });
+    }
+  };
+
+
+  module.exports = {subscribeOrder,getOrdersByStatus};
