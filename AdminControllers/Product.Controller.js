@@ -8,6 +8,7 @@ const Store = require("../Models/Store");
 const ProductImage = require("../Models/productImages");
 
 const upsertProduct = async (req, res) => {
+  const { storeId } = req.params;
   try {
     const {
       id,
@@ -22,8 +23,6 @@ const upsertProduct = async (req, res) => {
       out_of_stock,
       subscription_required,
     } = req.body;
-
-    const store_id = "17baa262-d189-41db-9bef-0c44bb3fcf58";
 
     console.log("Request body:", req.body);
 
@@ -47,15 +46,15 @@ const upsertProduct = async (req, res) => {
       });
     }
 
-    // const store = await Store.findOne({ where: { id: store_id } });
+    const store = await Store.findOne({ where: { id: storeId } });
 
-    // if (!store) {
-    //   return res.status(400).json({
-    //     ResponseCode: "401",
-    //     Result: "false",
-    //     ResponseMsg: "Store not found.",
-    //   });
-    // }
+    if (!store) {
+      return res.status(404).json({
+        ResponseCode: "404",
+        Result: "false",
+        ResponseMsg: "Store not found.",
+      });
+    }
 
     let imageUrl = null;
     let extraImageUrls = [];
@@ -81,16 +80,16 @@ const upsertProduct = async (req, res) => {
         });
       }
 
-      console.log("imagesssss", imageUrl, extraImageUrls);
+      console.log("Images:", imageUrl, extraImageUrls);
 
-      // Update Product fields
-      await Product.update({
+      // Update Product fields using the instance method
+      await product.update({
         title,
         img: imageUrl || product.img,
         status,
         cat_id,
         description,
-        store_id,
+        store_id: storeId,
         subscribe_price,
         normal_price,
         mrp_price,
@@ -99,8 +98,10 @@ const upsertProduct = async (req, res) => {
         subscription_required,
       });
 
+      // Clear existing images
       await ProductImage.destroy({ where: { product_id: id } });
 
+      // Add new images if any
       if (extraImageUrls.length > 0) {
         const newImages = extraImageUrls.map((img) => ({
           product_id: id,
@@ -109,23 +110,22 @@ const upsertProduct = async (req, res) => {
         await ProductImage.bulkCreate(newImages);
       }
 
-      console.log("Product updated successfully:", Product);
+      console.log("Product updated successfully:", product);
       return res.status(200).json({
         ResponseCode: "200",
         Result: "true",
         ResponseMsg: "Product updated successfully.",
-        Product,
+        product, // Return the updated product instance
       });
     } else {
-     
-
+      // Create new product
       product = await Product.create({
         title,
         img: imageUrl,
         status,
         cat_id,
         description,
-        store_id,
+        store_id: storeId,
         subscribe_price,
         normal_price,
         mrp_price,
@@ -134,6 +134,7 @@ const upsertProduct = async (req, res) => {
         subscription_required,
       });
 
+      // Add extra images if any
       if (extraImageUrls.length > 0) {
         const newImages = extraImageUrls.map((img) => ({
           product_id: product.id,

@@ -26,8 +26,8 @@ const NormalOrder = sequelize.define(
       type: DataTypes.UUID,
       allowNull: false,
     },
-    address: {
-      type: DataTypes.TEXT,
+    address_id: {
+      type: DataTypes.UUID,
       allowNull: false,
     },
     landmark: {
