@@ -113,6 +113,11 @@ app.use("/stores",require('./UserRoutes/Store/store_dashboard_routes'));
 app.use("/home_data", require("./UserRoutes/home_data_route"));
 app.use("/u_product", require("./UserRoutes/customer/product_route"));
 
+app.use("/u_address", require("./UserRoutes/customer/address_route"));
+
+app.use("/u_cart", require("./UserRoutes/customer/cart_route"));
+app.use("/u_sub_order", require("./UserRoutes/customer/subscribeOrder_route"));
+
 
 
 app.get("/", (req, res) => {

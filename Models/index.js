@@ -55,8 +55,8 @@ PaymentList.hasMany(SubscribeOrder, { as: "suborders", foreignKey: "p_method_id"
 SubscribeOrder.belongsTo(Coupon, { as: "coupon", foreignKey: "cou_id" });
 Coupon.hasMany(SubscribeOrder, { as: "suborders", foreignKey: "cou_id"});
 
-SubscribeOrder.belongsTo(Rider, { as: "rider", foreignKey: "rid" });
-Rider.hasMany(SubscribeOrder, { as: "suborders", foreignKey: "rid"});
+// SubscribeOrder.belongsTo(Rider, { as: "rider", foreignKey: "rid" });
+// Rider.hasMany(SubscribeOrder, { as: "suborders", foreignKey: "rid"});
 
 ProductAttribute.belongsTo(Product, {as:"products", foreignKey:"product_id"});
 Product.hasMany(ProductAttribute, {as:"attributes", foreignKey:"product_id"});
