@@ -106,9 +106,8 @@ app.use("/store",require('./AdminRoutes/Store.route'))
 
 // User Routes
 app.use("/user",require('./UserRoutes/user_auth_route'))
+app.use("/customer",require('./UserRoutes/customer/customer_auth_routes'))
 
-
-app.use("/stores",require('./UserRoutes/Store/store_dashboard_routes'));
 
 app.use("/home_data", require("./UserRoutes/home_data_route"));
 app.use("/u_product", require("./UserRoutes/customer/product_route"));
@@ -122,9 +121,14 @@ app.use("/u_instant_order", require("./UserRoutes/customer/instantOrder_route"))
 app.use("/u_fav", require("./UserRoutes/customer/fav_route"));
 
 
+app.use("/stores",require('./UserRoutes/Store/store_dashboard_routes'));
 app.use("/store-products",require('./UserRoutes/Store/store_product_routes'))
 app.use("/store-rider",require('./UserRoutes/Store/store_rider_routes'));
-app.use("/store-owner",require('./UserRoutes/Store/store_user_routes'));
+app.use("/store-owner",require('./UserRoutes/Store/store_user_routes'))
+app.use("/store-instant",require('./UserRoutes/Store/store_instant_orders_route'))
+app.use("/store-inventory",require('./UserRoutes/Store/store_inventory_routes'))
+app.use("/instant-orders",require('./UserRoutes/Store/instant_order_history_routes'))
+
 
 
 app.get("/", (req, res) => {

@@ -138,4 +138,3 @@ const NormalOrder = sequelize.define(
 );
 
 module.exports = NormalOrder
-

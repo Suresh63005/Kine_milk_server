@@ -58,6 +58,14 @@ const Product = sequelize.define(
       type: DataTypes.FLOAT,
       allowNull: false,
     },
+    quantity:{
+      type:DataTypes.BIGINT,
+      defaultValue:0
+    },
+    date:{
+      type:DataTypes.DATEONLY,
+      allowNull:false
+    }
   },
   {
     tableName: "tbl_product",

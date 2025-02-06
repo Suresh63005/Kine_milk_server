@@ -20,14 +20,11 @@ const User = sequelize.define(
     },
     ccode: {
       type: DataTypes.TEXT,
-      allowNull: false,
+      allowNull: true,
     },
     mobile: {
       type: DataTypes.TEXT,
       allowNull: false,
-    },
-    otp:{
-      type:DataTypes.TEXT,
     },
     refercode: {
       type: DataTypes.TEXT,
@@ -59,12 +56,6 @@ const User = sequelize.define(
       allowNull: true,
       defaultValue: 0,
     },
-    otp:{
-      type:DataTypes.INTEGER,
-    },
-    otpExpiresIn:{
-      type:DataTypes.TIME
-    }
   },
   { tableName: "tbl_user", timestamps: true, paranoid: true }
 );
