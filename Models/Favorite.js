@@ -14,14 +14,15 @@ const Favorite = sequelize.define(
       type: DataTypes.UUID,
       allowNull: false,
     },
+    pid:{
+      type: DataTypes.UUID,
+      allowNull: false,
+    },
     store_id: {
       type: DataTypes.UUID,
       allowNull: false,
     },
-    zone_id: {
-      type: DataTypes.UUID,
-      allowNull: false,
-    },
+    
   },
   { tableName: "tbl_fav", timestamps: true, paranoid: true }
 );

@@ -24,23 +24,19 @@ const NormalOrder = sequelize.define(
     },
     p_method_id: {
       type: DataTypes.UUID,
+      allowNull: true,
+    },
+    address_id: {
+      type: DataTypes.UUID,
+      allowNull: true,
+    },
+    timeslot_id: {
+      type: DataTypes.UUID,
       allowNull: false,
     },
-    address: {
-      type: DataTypes.TEXT,
-      allowNull: false,
-    },
-    landmark: {
-      type: DataTypes.TEXT,
-      defaultValue: null,
-    },
-    lattitude:{
-      type:DataTypes.TEXT,
-      allowNull:true
-    },
-    longtitude:{
-      type:DataTypes.TEXT,
-      allowNull:true
+    tax: {
+      type: DataTypes.FLOAT,
+      defaultValue: 0,
     },
     d_charge: {
       type: DataTypes.FLOAT,
@@ -48,9 +44,13 @@ const NormalOrder = sequelize.define(
     },
     cou_id: {
       type: DataTypes.UUID,
-      allowNull: false,
+      allowNull: true,
     },
     cou_amt: {
+      type: DataTypes.FLOAT,
+      allowNull: true,
+    },
+    o_total: {
       type: DataTypes.FLOAT,
       allowNull: false,
     },
@@ -60,7 +60,7 @@ const NormalOrder = sequelize.define(
     },
     trans_id: {
       type: DataTypes.UUID,
-      allowNull: false,
+      allowNull: true,
     },
     a_note: {
       type: DataTypes.TEXT,
@@ -78,16 +78,9 @@ const NormalOrder = sequelize.define(
     },
     wall_amt: {
       type: DataTypes.FLOAT,
-      allowNull: false,
+      allowNull: true,
     },
-    name: {
-      type: DataTypes.TEXT,
-      allowNull: false,
-    },
-    mobile: {
-      type: DataTypes.DOUBLE,
-      allowNull: false,
-    },
+    
     status: {
       type: DataTypes.ENUM(
         "Pending",
@@ -97,14 +90,11 @@ const NormalOrder = sequelize.define(
         "On Route"
       ),
       allowNull: false,
+      defaultValue: "Pending",
     },
     comment_reject: {
       type: DataTypes.TEXT,
       defaultValue: null,
-    },
-    tslot: {
-      type: DataTypes.TEXT,
-      allowNull: false,
     },
     o_type: {
       type: DataTypes.ENUM("Delivery", "Self Pickup"),
