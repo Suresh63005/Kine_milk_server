@@ -4,7 +4,7 @@ const { DataTypes } = require("sequelize");
 const Rider = sequelize.define(
   "Rider",
   {
-   id: {
+    id: {
       type: DataTypes.UUID,
       allowNull: false,
       defaultValue: DataTypes.UUIDV4,
@@ -32,6 +32,10 @@ const Rider = sequelize.define(
     },
     password: {
       type: DataTypes.TEXT,
+      allowNull: false,
+    },
+    img: {
+      type: DataTypes.TEXT("long"),
       allowNull: false,
     },
     rdate: {

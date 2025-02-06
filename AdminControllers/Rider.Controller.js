@@ -19,7 +19,7 @@ const upsertRider = async (req, res) => {
   //   });
   // }
 
-  const { id, store_id,  name, email, mobile, password, rdate, status } = req.body;
+  const { id, store_id,  title, email, mobile, password, rdate, status,ccode } = req.body;
   console.log(req.body);  
   try {
     let imageUrl; 
@@ -43,7 +43,7 @@ const upsertRider = async (req, res) => {
       }
 
       await rider.update({
-        name,
+        title,
         email,
         mobile,
         password,
@@ -51,6 +51,7 @@ const upsertRider = async (req, res) => {
         img: imageUrl || rider.img, 
         store_id: storeId,
         rdate: riderDate,
+        ccode
       });
 
       console.log("Rider updated successfully:", rider);
@@ -91,14 +92,15 @@ const upsertRider = async (req, res) => {
     }
       // Create new rider if ID is not provided
       const newRider = await Rider.create({
-        name,
+        title,
         email,
         mobile,
         password,
         status,
         img: imageUrl, 
         store_id: storeId,
-        rdate: riderDate, 
+        rdate: riderDate,
+        ccode
       });
 
       return res.status(201).json({
