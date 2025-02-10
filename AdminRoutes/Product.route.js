@@ -1,6 +1,6 @@
 const express=require("express")
 const router=express.Router();
-const { upsertProduct, getAllProducts, getProductById, getProductCount, toggleproductStatus } = require("../AdminControllers/product.Controller");
+const { upsertProduct, getAllProducts, getProductById, getProductCount, toggleproductStatus } = require("../AdminControllers/Product.Controller");
 const upload = require("../utils/multerConfig");
 
 router.post("/upsert/:storeId", upload.fields([

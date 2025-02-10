@@ -2,3 +2,4 @@
 {"level":"info","message":"successfully get all products","service":"kine_milk_server","timestamp":"2025-02-06T05:59:41.404Z"}
 {"level":"error","message":"Internal Server Error","service":"kine_milk_server","timestamp":"2025-02-06T11:56:40.891Z"}
 {"level":"info","message":"successfully get all products","service":"kine_milk_server","timestamp":"2025-02-06T17:24:17.762Z"}
+{"level":"info","message":"successfully get all products","service":"kine_milk_server","timestamp":"2025-02-10T05:40:38.441Z"}
