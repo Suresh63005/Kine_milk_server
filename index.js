@@ -106,19 +106,19 @@ app.use("/store",require('./AdminRoutes/Store.route'))
 
 // User Routes
 app.use("/user",require('./UserRoutes/user_auth_route'))
-app.use("/customer",require('./UserRoutes/customer/customer_auth_routes'))
+app.use("/customer",require('./UserRoutes/Customer/customer_auth_routes'))
 
 
 app.use("/home_data", require("./UserRoutes/home_data_route"));
-app.use("/u_product", require("./UserRoutes/customer/product_route"));
+app.use("/u_product", require("./UserRoutes/Customer/product_route"));
 
 
-app.use("/u_address", require("./UserRoutes/customer/address_route"));
+app.use("/u_address", require("./UserRoutes/Customer/address_route"));
 
-app.use("/u_cart", require("./UserRoutes/customer/cart_route"));
-app.use("/u_sub_order", require("./UserRoutes/customer/subscribeOrder_route"));
-app.use("/u_instant_order", require("./UserRoutes/customer/instantOrder_route"));
-app.use("/u_fav", require("./UserRoutes/customer/fav_route"));
+app.use("/u_cart", require("./UserRoutes/Customer/cart_route"));
+app.use("/u_sub_order", require("./UserRoutes/Customer/subscribeOrder_route"));
+app.use("/u_instant_order", require("./UserRoutes/Customer/instantOrder_route"));
+app.use("/u_fav", require("./UserRoutes/Customer/fav_route"));
 
 
 app.use("/stores",require('./UserRoutes/Store/store_dashboard_routes'));
