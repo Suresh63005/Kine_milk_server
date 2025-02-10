@@ -1,5 +1,5 @@
 const express = require('express');
-const { upsertCart, getCartByUser } = require('../../UserControllers/Customer/cart_controller');
+const { upsertCart, getCartByUser } = require('../../UserControllers/customer/cart_controller');
 
 const router = express.Router();
 
