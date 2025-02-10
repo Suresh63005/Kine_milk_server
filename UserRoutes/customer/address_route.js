@@ -1,5 +1,5 @@
 const express = require("express");
-const { upSertAddress, getAddress } = require("../../UserControllers/Customer/address_controller");
+const { upSertAddress, getAddress } = require("../../UserControllers/customer/address_controller");
 
 const router = express.Router();
 
