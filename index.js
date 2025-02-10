@@ -106,7 +106,7 @@ app.use("/store",require('./AdminRoutes/Store.route'))
 
 // User Routes
 app.use("/user",require('./UserRoutes/user_auth_route'))
-app.use("/customer",require('./UserRoutes/customer/customer_auth_routes'))
+app.use("/customer",require('./UserRoutes/customer_auth_routes'))
 
 
 app.use("/home_data", require("./UserControllers/Customer/home_date_controller"));

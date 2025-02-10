@@ -1,6 +1,6 @@
-const User = require("../../Models/User");
-const asyncHandler = require("../../middlewares/errorHandler");
-const admin = require('../../config/firebase-config');
+const User = require("../Models/User");
+const asyncHandler = require("../middlewares/errorHandler");
+const admin = require('../config/firebase-config');
 const jwt = require('jsonwebtoken');
 
 const VerifyCustomerMobile = asyncHandler(async (req, res) => {
