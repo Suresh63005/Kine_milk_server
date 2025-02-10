@@ -103,7 +103,7 @@ const EditRider = asyncHandler(async (req, res) => {
     }
 });
 
-const GetStoreRiders = asyncHandler(async (req, res) => {
+const GetStoreRiderById = asyncHandler(async (req, res) => {
     console.log("Decoded User:", req.user);
   
     const uid = req.user.userId;
@@ -189,6 +189,43 @@ const SearchRiderByTitle = asyncHandler(async (req, res) => {
     }
   });
 
+  const GetAllStoreRiders = asyncHandler(async(req,res)=>{
+    console.log("Decoded User:", req.user);
+    const uid = req.user.userId;
+    if (!uid) {
+      return res.status(400).json({
+        ResponseCode: "401",
+        Result: "false",
+        ResponseMsg: "User ID not provided",
+      });
+    }
+    console.log("Fetching products for user ID:", uid);
+const {storeId}=req.params;
+    try {
+      const riders = await Rider.findAll({where:{store_id:storeId}});
+      if(!riders){
+        return res.status(404).json({message:"Riders not found!"})
+      }
+      if(riders.length===0){
+        return res.status(404).json({message:"No Riders found!"})
+        
+      }
+      return res.status(200).json({
+        ResponseCode: "200",
+        Result: "true",
+        message: "Riders fetched successfully",
+        riders: riders,
+    });
+    } catch (error) {
+      console.error("Error Fetching for rider:", error);
+      return res.status(500).json({
+        ResponseCode: "500",
+        Result: "false",
+        ResponseMsg: "Internal Server Error",
+        Error: error.message,
+      });
+    }
+  })
 
 
-module.exports = { AddRider, EditRider,GetStoreRiders,SearchRiderByTitle };
+module.exports = { AddRider, EditRider,GetStoreRiderById,SearchRiderByTitle,GetAllStoreRiders };

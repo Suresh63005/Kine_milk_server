@@ -18,6 +18,10 @@ const NormalOrder = sequelize.define(
       type: DataTypes.UUID,
       allowNull: false,
     },
+    product_id: {
+      type: DataTypes.UUID,
+      allowNull: false,
+    },
     odate: {
       type: DataTypes.DATE,
       allowNull: false,

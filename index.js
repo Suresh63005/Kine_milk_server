@@ -128,6 +128,7 @@ app.use("/store-owner",require('./UserRoutes/Store/store_user_routes'))
 app.use("/store-instant",require('./UserRoutes/Store/store_instant_orders_route'))
 app.use("/store-inventory",require('./UserRoutes/Store/store_inventory_routes'))
 app.use("/instant-orders",require('./UserRoutes/Store/instant_order_history_routes'))
+app.use("/subscribe-orders",require('./UserRoutes/Store/subscribe_orders_routes'))
 
 
 

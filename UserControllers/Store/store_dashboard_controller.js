@@ -4,6 +4,8 @@ const SubscribeOrder = require("../../Models/SubscribeOrder");
 const Rider = require("../../Models/Rider");
 const Store = require("../../Models/Store");
 const asyncHandler = require("../../middlewares/errorHandler");
+const moment = require('moment');
+const { Op } = require("sequelize");
 
 const StoreDashboardAPI = asyncHandler(async (req, res) => {
   try {
@@ -24,15 +26,18 @@ const StoreDashboardAPI = asyncHandler(async (req, res) => {
 
     const storeId = store.id;
 
-    // Fetch store-related data
+    const startOfDay=moment().startOf("day").toDate();
+    const endOfDay=moment().endOf("day").toDate();
+
+    // Today Summery
     const totalOrders = await NormalOrder.count({
-      where: { store_id: storeId, status: "On Route" },
+      where: { store_id: storeId, status: "On Route",createdAt: { [Op.between]: [startOfDay, endOfDay] } },
     });
     const openOrders = await NormalOrder.count({
-      where: { store_id: storeId, status: "Processing" },
+      where: { store_id: storeId, status: "Processing",createdAt: { [Op.between]: [startOfDay, endOfDay] } },
     });
     const closedOrders = await NormalOrder.count({
-      where: { store_id: storeId, status: "Completed" },
+      where: { store_id: storeId, status: "Completed",createdAt: { [Op.between]: [startOfDay, endOfDay] } },
     });
 
     const products = await Product.findAll({ where: { store_id: storeId } });

@@ -4,6 +4,5 @@ const instantOrdersController = require('../../UserControllers/Store/instant_ord
 const authMiddleware = require('../../middlewares/authMiddleware');
 
 router.get("/all/:storeId",authMiddleware.isAuthenticated,instantOrdersController.FetchInstantOrders);
-router.post("/order-status",authMiddleware.isAuthenticated,instantOrdersController.FetchInstantOrdersByStatus);
 
 module.exports = router;

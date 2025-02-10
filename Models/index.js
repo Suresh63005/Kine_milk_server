@@ -2,6 +2,7 @@
 // const Category = require("./Category");
 // const Product = require("./Product");
 const NormalOrder = require("./NormalOrder");
+const Product = require("./Product");
 // const User = require("./User");
 // const PaymentList = require("./PaymentList");
 // const Coupon = require('./Coupon');
@@ -10,6 +11,7 @@ const NormalOrder = require("./NormalOrder");
 // const ProductAttribute = require("./ProductAttribute");
 
 const Store = require("./Store");
+const User = require("./User");
 
 // const ProductImage = require("./productImages");
 
@@ -27,11 +29,11 @@ const Store = require("./Store");
 NormalOrder.belongsTo(Store, { as: "store", foreignKey: "store_id" });
 Store.hasMany(NormalOrder, { as: "store", foreignKey: "store_id"});
 
-// NormalOrder.belongsTo(Product, { as: "product", foreignKey: "product_id" });
-// Product.hasMany(NormalOrder, { as: "orders", foreignKey: "product_id"});
+NormalOrder.belongsTo(Product, { as: "product", foreignKey: "product_id" });
+Product.hasMany(NormalOrder, { as: "orders", foreignKey: "product_id"});
 
-// NormalOrder.belongsTo(User, { as: "user", foreignKey: "uid" });
-// User.hasMany(NormalOrder, { as: "orders", foreignKey: "uid"});
+NormalOrder.belongsTo(User, { as: "user", foreignKey: "uid" });
+User.hasMany(NormalOrder, { as: "orders", foreignKey: "uid"});
 
 // NormalOrder.belongsTo(PaymentList, { as: "paymentmethod", foreignKey: "p_method_id" });
 // PaymentList.hasMany(NormalOrder, { as: "orders", foreignKey: "p_method_id"});
