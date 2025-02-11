@@ -27,7 +27,6 @@ const SubscribeOrder = sequelize.define(
       allowNull: false,
       references: { model: User, key: "id" },
     },
-   
     odate: {
       type: DataTypes.DATE,
       allowNull: false,

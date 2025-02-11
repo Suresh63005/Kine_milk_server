@@ -50,6 +50,7 @@ const upsertStore = asyncHandler(async (req, res) => {
       opentime,
       closetime,
       is_pickup,
+      owner_name
     } = req.body;
 
     let rimg, cover_img;
@@ -112,6 +113,7 @@ const upsertStore = asyncHandler(async (req, res) => {
         is_pickup,
         rimg: rimg || store.rimg,
         cover_img: cover_img || store.cover_img,
+        owner_name
       });
 
       return res.status(201).json({ message: "Store updated successfully!", store });
@@ -157,6 +159,7 @@ const upsertStore = asyncHandler(async (req, res) => {
         is_pickup,
         rimg,
         cover_img,
+        owner_name
       });
 
       // **Check if the mobile number already exists in Firebase Authentication**

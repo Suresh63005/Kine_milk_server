@@ -6,6 +6,6 @@ const upload = require('../../utils/multerConfig');
 
 router.get("/profile",authMiddleware.isAuthenticated,storeUserControllers.StoreProfile);
 router.patch("/edit-profile/:storeId",authMiddleware.isAuthenticated,upload.single('rimg'),storeUserControllers.EditStoreProfile);
-router.post("/+918688468369",storeUserControllers.verifyMobile)
+router.post("/verify-mobile",storeUserControllers.verifyMobile)
 
 module.exports = router;

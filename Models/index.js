@@ -1,6 +1,7 @@
 // const Admin = require("./Admin");
 // const Category = require("./Category");
 // const Product = require("./Product");
+const Category = require("./Category");
 const NormalOrder = require("./NormalOrder");
 const Product = require("./Product");
 // const User = require("./User");
@@ -19,8 +20,8 @@ const User = require("./User");
 
 
 
-// Product.belongsTo(Category, { as: "category", foreignKey: "cat_id" });
-// Category.hasMany(Product, { as: "products", foreignKey: "cat_id" });
+Product.belongsTo(Category, { as: "category", foreignKey: "cat_id" });
+Category.hasMany(Product, { as: "products", foreignKey: "cat_id" });
 
 
 // ProductImage.belongsTo(Product, { as: "extraImages", foreignKey: "product_id" });
@@ -33,6 +34,10 @@ Store.hasMany(NormalOrder, { as: "store", foreignKey: "store_id"});
 
 NormalOrder.belongsTo(User, { as: "user", foreignKey: "uid" });
 User.hasMany(NormalOrder, { as: "orders", foreignKey: "uid"});
+
+Product.hasMany(NormalOrder, { foreignKey: "product_id", as: "product_orders" }); 
+NormalOrder.belongsTo(Product, { foreignKey: "product_id", as: "ordered_product" }); // Change alias to "ordered_product"
+
 
 // NormalOrder.belongsTo(PaymentList, { as: "paymentmethod", foreignKey: "p_method_id" });
 // PaymentList.hasMany(NormalOrder, { as: "orders", foreignKey: "p_method_id"});

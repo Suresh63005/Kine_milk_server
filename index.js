@@ -119,6 +119,7 @@ app.use("/u_cart", require("./UserRoutes/customer/cart_route"));
 app.use("/u_sub_order", require("./UserRoutes/customer/subscribeOrder_route"));
 app.use("/u_instant_order", require("./UserRoutes/customer/instantOrder_route"));
 app.use("/u_fav", require("./UserRoutes/customer/fav_route"));
+app.use("/reviews",require('./UserRoutes/customer/customer_review_routes'))
 
 
 app.use("/stores",require('./UserRoutes/Store/store_dashboard_routes'));
