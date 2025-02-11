@@ -30,8 +30,7 @@ Category.hasMany(Product, { as: "products", foreignKey: "cat_id" });
 NormalOrder.belongsTo(Store, { as: "store", foreignKey: "store_id" });
 Store.hasMany(NormalOrder, { as: "store", foreignKey: "store_id"});
 
-NormalOrder.belongsTo(Product, { as: "product", foreignKey: "product_id" });
-Product.hasMany(NormalOrder, { as: "orders", foreignKey: "product_id"});
+
 
 NormalOrder.belongsTo(User, { as: "user", foreignKey: "uid" });
 User.hasMany(NormalOrder, { as: "orders", foreignKey: "uid"});

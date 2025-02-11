@@ -106,10 +106,10 @@ app.use("/store",require('./AdminRoutes/Store.route'))
 
 // User Routes
 app.use("/user",require('./UserRoutes/user_auth_route'))
-app.use("/customer",require('./UserRoutes/customer/customer_auth_routes'))
+app.use("/customer",require('./UserRoutes/customer_auth_routes'))
 
 
-app.use("/home_data", require("./UserRoutes/home_data_route"));
+app.use("/home_data", require("./UserRoutes/customer/home_data_route"));
 app.use("/u_product", require("./UserRoutes/customer/product_route"));
 
 
