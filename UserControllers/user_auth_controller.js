@@ -98,6 +98,7 @@ const verifyMobile = asyncHandler(async (req, res) => {
 
     try {
         const userRecord = await admin.auth().getUserByPhoneNumber(mobile);
+        
         if (!userRecord) {
             return res.status(404).json({ message: "Mobile number not found!" });
         }

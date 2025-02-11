@@ -3,6 +3,7 @@ const User = require("../../Models/User");
 const Banner = require("../../Models/Banner");
 const Category = require("../../Models/Category");
 const Product = require("../../Models/Product");
+const Store = require("../../Models/Store");
 
 
 // Function to calculate distance
@@ -20,22 +21,34 @@ const Product = require("../../Models/Product");
 
 // Home API
 const homeAPI = async (req, res) => {
-    try {
-        
 
+    const  {pincode}  = req.params;
+    console.log(pincode);
+
+
+    try {
+    
         const banners = await Banner.findAll({ where: { status: 1 } });
         const categories = await Category.findAll({ where: { status: 1 } });
+        const store = await Store.findOne({ where: { status: 1, pincode:pincode } });
+
+        if(!store){
+        return res.json({
+            ResponseCode: "400",
+            Result: "false",
+            ResponseMsg: "No store for your pincode!",
+        });}
 
         
         let categoryProducts = {};
         for (const category of categories) {
             const products = await Product.findAll({
-                where: { status: 1, category_id: category?.id },
+                where: { status: 1, cat_id: category?.id,store_id:store?.id },
                 order: [["createdAt", "DESC"]], 
                 limit: 5
             });
-
-            categoryProducts[category?.name] = products; 
+            
+            categoryProducts[category?.title] = products; 
         }
 
         return res.json({
