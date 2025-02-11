@@ -167,6 +167,10 @@ const Store = sequelize.define(
       type: DataTypes.INTEGER,
       allowNull: false,
     },
+    owner_name:{
+      type:DataTypes.TEXT,
+      allowNull:false
+    }
   },
   { tableName: "tbl_store", timestamps: true, paranoid: true }
 );

@@ -40,8 +40,8 @@ const StoreDashboardAPI = asyncHandler(async (req, res) => {
       where: { store_id: storeId, status: "Completed",createdAt: { [Op.between]: [startOfDay, endOfDay] } },
     });
 
-    const products = await Product.findAll({ where: { store_id: storeId } });
-    const deliveryBoys = await Rider.findAll({ where: { store_id: storeId } });
+    const products = await Product.count({ where: { store_id: storeId } });
+    const deliveryBoys = await Rider.count({ where: { store_id: storeId } });
     const instantOrders = await NormalOrder.count({
       where: { store_id: storeId },
     });
@@ -64,7 +64,7 @@ const StoreDashboardAPI = asyncHandler(async (req, res) => {
         open_orders: openOrders,
         closed_orders: closedOrders,
       },
-      inventory: {
+      report_data: {
         products,
         deliveryBoys,
         instantOrders,

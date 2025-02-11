@@ -4,6 +4,7 @@ const { Op } = require("sequelize");
 const Store = require("../../Models/Store");
 const uploadToS3 = require("../../config/fileUpload.aws");
 const admin = require('../../config/firebase-config');
+const jwt = require('jsonwebtoken');
 
 const StoreProfile = asyncHandler(async (req, res) => {
   console.log("Decoded User:", req.user);
@@ -20,7 +21,7 @@ const StoreProfile = asyncHandler(async (req, res) => {
   console.log("Fetching store details for user ID:", uid);
   try {
     const userDetails = await Store.findOne({
-      attributes: ["rimg","mobile", "title", "email"],
+      attributes: ["rimg","mobile", "owner_name", "email"],
    });
 
     if (!userDetails) {
@@ -52,7 +53,7 @@ const EditStoreProfile = asyncHandler(async (req, res) => {
   }
 
   const { storeId } = req.params;
-  const { email, title } = req.body; 
+  const { email, owner_name } = req.body; 
 
   try {
       const store = await Store.findByPk(storeId);
@@ -67,10 +68,10 @@ const EditStoreProfile = asyncHandler(async (req, res) => {
           imageUrl = await uploadToS3(req.file, "store-logos");
       }
 
-      console.log("Incoming Data:", { email, title, rimg: imageUrl });
+      console.log("Incoming Data:", { email, owner_name, rimg: imageUrl });
 
       store.email = email || store.email;
-      store.title = title || store.title;
+      store.owner_name = owner_name || store.owner_name;
       store.rimg = imageUrl;
 
       await store.save();
@@ -92,6 +93,44 @@ const EditStoreProfile = asyncHandler(async (req, res) => {
   }
 });
 
+// const verifyMobile = asyncHandler(async (req, res) => {
+//   const { mobile } = req.body;
+
+//   if (!mobile) {
+//       return res.status(400).json({ message: "Mobile number is required!" });
+//   }
+
+//   try {
+//       const userRecord = await admin.auth().getUserByPhoneNumber(mobile);
+//       if (!userRecord) {
+//           return res.status(404).json({ message: "Mobile number not found!" });
+//       }
+
+//       const store = await Store.findOne({where:{mobile:mobile}})
+
+//       const token = jwt.sign(
+//           { userId: userRecord.uid, mobile: userRecord.phoneNumber },
+//           process.env.JWT_SECRET,
+//           { expiresIn: "7d" }
+//       );
+
+//       return res.status(200).json({
+//           message: "Mobile number verified successfully!",
+//           mobile: userRecord.phoneNumber,
+//           token,
+//           store
+//       });
+//   } catch (error) {
+//       console.error("Error verifying mobile number:", error.message);
+
+//       if (error.code === "auth/user-not-found") {
+//           return res.status(404).json({ message: "Mobile number not found!" });
+//       }
+
+//       return res.status(500).json({ message: "Error verifying mobile number: " + error.message });
+//   }
+// });
+
 const verifyMobile = asyncHandler(async (req, res) => {
   const { mobile } = req.body;
 
@@ -105,6 +144,19 @@ const verifyMobile = asyncHandler(async (req, res) => {
           return res.status(404).json({ message: "Mobile number not found!" });
       }
 
+      // Normalize mobile format
+      const formattedMobile = mobile.startsWith("+91") ? mobile.slice(3) : mobile;
+
+      console.log("Checking store for mobile:", formattedMobile);
+
+      const store = await Store.findOne({ where: { mobile: formattedMobile } });
+
+      if (!store) {
+          console.log("No store found for mobile:", formattedMobile);
+      } else {
+          console.log("Store found:", store);
+      }
+
       const token = jwt.sign(
           { userId: userRecord.uid, mobile: userRecord.phoneNumber },
           process.env.JWT_SECRET,
@@ -113,18 +165,19 @@ const verifyMobile = asyncHandler(async (req, res) => {
 
       return res.status(200).json({
           message: "Mobile number verified successfully!",
-          mobile: userRecord.phoneNumber,
-          token,
+          user_details:{
+            mobile: userRecord.phoneNumber,
+            owner_name: store.owner_name,  
+            email: store.email,  
+            token
+          },
+          store
       });
   } catch (error) {
       console.error("Error verifying mobile number:", error.message);
-
-      if (error.code === "auth/user-not-found") {
-          return res.status(404).json({ message: "Mobile number not found!" });
-      }
-
       return res.status(500).json({ message: "Error verifying mobile number: " + error.message });
   }
 });
+
 
 module.exports = { StoreProfile, EditStoreProfile,verifyMobile };
