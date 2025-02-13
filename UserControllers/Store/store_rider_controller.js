@@ -3,52 +3,121 @@ const asyncHandler = require('../../middlewares/errorHandler');
 const uploadToS3 = require("../../config/fileUpload.aws");
 const logger = require("../../utils/logger");
 const { Op } = require('sequelize');
+const {deliveryFirebase} = require('../../config/firebase-config');
+
+// const AddRider = asyncHandler(async (req, res) => {
+//     console.log("Decoded User:", req.user);
+  
+//     const uid = req.user.userId;
+//     if (!uid) {
+//       return res.status(400).json({
+//         ResponseCode: "401",
+//         Result: "false",
+//         ResponseMsg: "User ID not provided",
+//       });
+//     }
+  
+//     console.log("Fetching products for user ID:", uid);
+//     console.log(req.body, "************************** BODY CHECK");
+
+//     const { store_id, title, email, mobile, password, ccode, status,rdate } = req.body;
+
+//     if (!store_id || !title || !email || !mobile || !password || !ccode || !status || !rdate) {
+//         return res.status(400).json({ success: false, message: "All fields are required" });
+//     }
+
+//     try {
+//         let imageUrl = null;
+//         if (req.file) {
+//             console.log("File detected:", req.file);
+//             imageUrl = await uploadToS3(req.file, "rider-images");
+//         }
+
+//         const newRider = await Rider.create({
+//             store_id,
+//             title,
+//             email,
+//             mobile,
+//             password,
+//             ccode,
+//             status,
+//             img: imageUrl,
+//             rdate: new Date(),
+//         });
+
+//         res.status(201).json({ success: true, message: "Rider added successfully", rider: newRider });
+//     } catch (error) {
+//         console.error("Error adding rider:", error);
+//         res.status(500).json({ success: false, message: "Error adding rider", error: error.message });
+//     }
+// });
 
 const AddRider = asyncHandler(async (req, res) => {
-    console.log("Decoded User:", req.user);
-  
-    const uid = req.user.userId;
-    if (!uid) {
+  console.log("Decoded User:", req.user);
+
+  const uid = req.user?.userId;
+  if (!uid) {
       return res.status(400).json({
-        ResponseCode: "401",
-        Result: "false",
-        ResponseMsg: "User ID not provided",
+          ResponseCode: "401",
+          Result: "false",
+          ResponseMsg: "User ID not provided",
       });
-    }
-  
-    console.log("Fetching products for user ID:", uid);
-    console.log(req.body, "************************** BODY CHECK");
+  }
 
-    const { store_id, title, email, mobile, password, ccode, status,rdate } = req.body;
+  console.log("Fetching products for user ID:", uid);
+  console.log(req.body, "************************** BODY CHECK");
 
-    if (!store_id || !title || !email || !mobile || !password || !ccode || !status || !rdate) {
-        return res.status(400).json({ success: false, message: "All fields are required" });
-    }
+  const { store_id, title, email, mobile, password, ccode, status, rdate } = req.body;
 
-    try {
-        let imageUrl = null;
-        if (req.file) {
-            console.log("File detected:", req.file);
-            imageUrl = await uploadToS3(req.file, "rider-images");
-        }
+  if (!store_id || !title || !email || !mobile || !password || !ccode || !status || !rdate) {
+      return res.status(400).json({ success: false, message: "All fields are required" });
+  }
 
-        const newRider = await Rider.create({
-            store_id,
-            title,
-            email,
-            mobile,
-            password,
-            ccode,
-            status,
-            img: imageUrl,
-            rdate: new Date(),
-        });
+  try {
+      let imageUrl = null;
+      if (req.file) {
+          console.log("File detected:", req.file);
+          imageUrl = await uploadToS3(req.file, "rider-images");
+      }
 
-        res.status(201).json({ success: true, message: "Rider added successfully", rider: newRider });
-    } catch (error) {
-        console.error("Error adding rider:", error);
-        res.status(500).json({ success: false, message: "Error adding rider", error: error.message });
-    }
+      const formattedPhone = `+${ccode}${mobile}`;
+      console.log("Formatted phone number:", formattedPhone);
+
+      try {
+          const userRecord = await deliveryFirebase.auth().getUserByPhoneNumber(formattedPhone);
+          console.log("User already exists in Firebase:", userRecord.uid);
+      } catch (firebaseError) {
+          if (firebaseError.code === "auth/user-not-found") {
+              try {
+                  const newUser = await deliveryFirebase.auth().createUser({ phoneNumber: formattedPhone });
+                  console.log("New Firebase user created:", newUser.uid);
+              } catch (createError) {
+                  console.error("Error creating Firebase user:", JSON.stringify(createError, null, 2));
+                  return res.status(500).json({ success: false, message: "Error creating Firebase user", error: createError.message });
+              }
+          } else {
+              console.error("Error fetching Firebase user:", JSON.stringify(firebaseError, null, 2));
+              return res.status(500).json({ success: false, message: "Error checking Firebase user", error: firebaseError.message });
+          }
+      }
+
+      const newRider = await Rider.create({
+          store_id,
+          title,
+          email,
+          mobile,
+          password,
+          ccode,
+          status,
+          img: imageUrl,
+          rdate: new Date(),
+      });
+
+      res.status(201).json({ success: true, message: "Rider added successfully", rider: newRider });
+  } catch (error) {
+      console.error("Error adding rider:", JSON.stringify(error, null, 2));
+      res.status(500).json({ success: false, message: "Error adding rider", error: error.message });
+  }
 });
 
 

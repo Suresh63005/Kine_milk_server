@@ -5,3 +5,6 @@
 {"level":"info","message":"successfully get all products","service":"kine_milk_server","timestamp":"2025-02-10T05:40:38.441Z"}
 {"level":"info","message":"Admin signed in successfully","service":"kine_milk_server","timestamp":"2025-02-10T08:44:13.963Z"}
 {"level":"info","message":"successfully get all products","service":"kine_milk_server","timestamp":"2025-02-10T17:23:58.543Z"}
+{"level":"error","message":"Internal Server Error","service":"kine_milk_server","timestamp":"2025-02-12T13:15:47.439Z"}
+{"level":"error","message":"Internal Server Error","service":"kine_milk_server","timestamp":"2025-02-12T13:18:11.663Z"}
+{"level":"info","message":"Admin signed in successfully","service":"kine_milk_server","timestamp":"2025-02-13T05:28:42.240Z"}

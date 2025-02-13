@@ -16,15 +16,15 @@ const Rider = sequelize.define(
     },
     title: {
       type: DataTypes.TEXT,
-      allowNull: false,
+      allowNull: true,
     },
     email: {
       type: DataTypes.TEXT,
-      allowNull: false,
+      allowNull: true,
     },
     ccode: {
       type: DataTypes.TEXT,
-      allowNull: false,
+      allowNull: true,
     },
     mobile: {
       type: DataTypes.TEXT,
@@ -32,11 +32,11 @@ const Rider = sequelize.define(
     },
     password: {
       type: DataTypes.TEXT,
-      allowNull: false,
+      allowNull: true,
     },
     img: {
       type: DataTypes.TEXT("long"),
-      allowNull: false,
+      allowNull: true,
     },
     rdate: {
       type: DataTypes.DATE,

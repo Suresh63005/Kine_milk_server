@@ -35,8 +35,8 @@ Store.hasMany(NormalOrder, { as: "store", foreignKey: "store_id"});
 NormalOrder.belongsTo(User, { as: "user", foreignKey: "uid" });
 User.hasMany(NormalOrder, { as: "orders", foreignKey: "uid"});
 
-Product.hasMany(NormalOrder, { foreignKey: "product_id", as: "product_orders" }); 
-NormalOrder.belongsTo(Product, { foreignKey: "product_id", as: "ordered_product" }); // Change alias to "ordered_product"
+// Product.hasMany(NormalOrder, { foreignKey: "product_id", as: "product_orders" }); 
+// NormalOrder.belongsTo(Product, { foreignKey: "product_id", as: "ordered_product" }); // Change alias to "ordered_product"
 
 
 // NormalOrder.belongsTo(PaymentList, { as: "paymentmethod", foreignKey: "p_method_id" });
