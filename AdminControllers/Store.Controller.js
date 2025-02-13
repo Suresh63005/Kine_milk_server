@@ -3,7 +3,7 @@ const asyncHandler = require("../middlewares/errorHandler");
 const logger = require("../utils/logger");
 const uploadToS3 = require("../config/fileUpload.aws");
 const { upsertStoreSchema, storeDeleteSchema } = require("../utils/validation");
-const admin = require("../config/firebase-config");
+const {storeFirebase} = require("../config/firebase-config");
 
 const upsertStore = asyncHandler(async (req, res) => {
   try {
@@ -164,13 +164,13 @@ const upsertStore = asyncHandler(async (req, res) => {
 
       // **Check if the mobile number already exists in Firebase Authentication**
       try {
-        const userRecord = await admin.auth().getUserByPhoneNumber(`+${mobile}`);
+        const userRecord = await storeFirebase.auth().getUserByPhoneNumber(`+${mobile}`);
         console.log("User already exists in Firebase:", userRecord.uid);
       } catch (firebaseError) {
         if (firebaseError.code === "auth/user-not-found") {
           // **Create a new Firebase Authentication user with only the mobile number**
           try {
-            const newUser = await admin.auth().createUser({
+            const newUser = await storeFirebase.auth().createUser({
               phoneNumber: `+${mobile}`,
             });
 

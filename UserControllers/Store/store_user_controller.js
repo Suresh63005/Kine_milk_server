@@ -3,7 +3,7 @@ const asyncHandler = require("../../middlewares/errorHandler");
 const { Op } = require("sequelize");
 const Store = require("../../Models/Store");
 const uploadToS3 = require("../../config/fileUpload.aws");
-const admin = require('../../config/firebase-config');
+const {storeFirebase} = require('../../config/firebase-config');
 const jwt = require('jsonwebtoken');
 
 const StoreProfile = asyncHandler(async (req, res) => {
@@ -101,7 +101,7 @@ const EditStoreProfile = asyncHandler(async (req, res) => {
 //   }
 
 //   try {
-//       const userRecord = await admin.auth().getUserByPhoneNumber(mobile);
+//       const userRecord = await storeFirebase.auth().getUserByPhoneNumber(mobile);
 //       if (!userRecord) {
 //           return res.status(404).json({ message: "Mobile number not found!" });
 //       }
@@ -139,7 +139,7 @@ const verifyMobile = asyncHandler(async (req, res) => {
   }
 
   try {
-      const userRecord = await admin.auth().getUserByPhoneNumber(mobile);
+      const userRecord = await storeFirebase.auth().getUserByPhoneNumber(mobile);
       if (!userRecord) {
           return res.status(404).json({ message: "Mobile number not found!" });
       }

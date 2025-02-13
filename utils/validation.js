@@ -783,6 +783,7 @@ const storeValidationSchema = Joi.object({
 const upsertStoreSchema = Joi.object({
   id: Joi.string().uuid().optional(),
   title: Joi.string().required(),
+  owner_name:Joi.string().required(),
   rimg: Joi.string().allow(null, "").optional(),
   status: Joi.number().integer().required(),
   rate: Joi.number().precision(2).required(),

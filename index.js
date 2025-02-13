@@ -131,7 +131,8 @@ app.use("/store-inventory",require('./UserRoutes/Store/store_inventory_routes'))
 app.use("/instant-orders",require('./UserRoutes/Store/instant_order_history_routes'))
 app.use("/subscribe-orders",require('./UserRoutes/Store/subscribe_orders_routes'))
 
-
+app.use("/delivery",require('./UserRoutes/Delivery/rider_auth_routes'))
+app.use("/deliveries",require('./UserRoutes/Delivery/delivery_dashboard_routes'))
 
 app.get("/", (req, res) => {
     res.send("Server is Running");
