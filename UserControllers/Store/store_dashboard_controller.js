@@ -9,16 +9,21 @@ const { Op } = require("sequelize");
 
 const StoreDashboardAPI = asyncHandler(async (req, res) => {
   try {
-    const uid = req.user.userId; 
+    const uid = req.user.userId;
 
     if (!uid) {
-      return res
-        .status(400)
-        .json({ message: "Unauthorized! user not found." });
+      return res.status(400).json({ message: "Unauthorized! user not found." });
     }
 
+    // Normalize the mobile format (remove country code if present)
+    const formattedMobile = req.user.mobile.startsWith("+91")
+      ? req.user.mobile.slice(3) // Remove +91
+      : req.user.mobile;
+
+    console.log("User mobile:", formattedMobile);
+
     // Find the store associated with the mobile number
-    const store = await Store.findOne();
+    const store = await Store.findOne({ where: { mobile: formattedMobile } });
 
     if (!store) {
       return res.status(404).json({ message: "No store found for this user!" });
@@ -26,18 +31,18 @@ const StoreDashboardAPI = asyncHandler(async (req, res) => {
 
     const storeId = store.id;
 
-    const startOfDay=moment().startOf("day").toDate();
-    const endOfDay=moment().endOf("day").toDate();
+    const startOfDay = moment().startOf("day").toDate();
+    const endOfDay = moment().endOf("day").toDate();
 
-    // Today Summery
+    // Today Summary
     const totalOrders = await NormalOrder.count({
-      where: { store_id: storeId, status: "On Route",createdAt: { [Op.between]: [startOfDay, endOfDay] } },
+      where: { store_id: storeId, status: "On Route", createdAt: { [Op.between]: [startOfDay, endOfDay] } },
     });
     const openOrders = await NormalOrder.count({
-      where: { store_id: storeId, status: "Processing",createdAt: { [Op.between]: [startOfDay, endOfDay] } },
+      where: { store_id: storeId, status: "Processing", createdAt: { [Op.between]: [startOfDay, endOfDay] } },
     });
     const closedOrders = await NormalOrder.count({
-      where: { store_id: storeId, status: "Completed",createdAt: { [Op.between]: [startOfDay, endOfDay] } },
+      where: { store_id: storeId, status: "Completed", createdAt: { [Op.between]: [startOfDay, endOfDay] } },
     });
 
     const products = await Product.count({ where: { store_id: storeId } });
@@ -73,9 +78,7 @@ const StoreDashboardAPI = asyncHandler(async (req, res) => {
     });
   } catch (error) {
     console.error("Error fetching store dashboard data:", error);
-    return res
-      .status(500)
-      .json({ message: "Internal Server Error", error: error.message });
+    return res.status(500).json({ message: "Internal Server Error", error: error.message });
   }
 });
 
