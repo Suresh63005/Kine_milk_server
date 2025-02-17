@@ -133,6 +133,8 @@ app.use("/subscribe-orders",require('./UserRoutes/Store/subscribe_orders_routes'
 
 app.use("/delivery",require('./UserRoutes/Delivery/rider_auth_routes'))
 app.use("/deliveries",require('./UserRoutes/Delivery/delivery_dashboard_routes'))
+app.use("/instant-delivery",require('./UserRoutes/Delivery/instant_delivery_order_routes'))
+app.use("/subscribe-delivery",require('./UserRoutes/Delivery/subcribe_delivery_order_routes'))
 
 app.get("/", (req, res) => {
     res.send("Server is Running");

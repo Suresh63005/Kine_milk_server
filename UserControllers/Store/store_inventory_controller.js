@@ -37,7 +37,7 @@ const ListInventory = asyncHandler(async(req,res)=>{
 const ViewProductInventoryById = asyncHandler(async (req, res) => {
     console.log("Decoded User:", req.user);
 
-    const uid = req.user.userId;
+    const uid = req.user?.userId;
     if (!uid) {
         return res.status(400).json({
             ResponseCode: "401",
@@ -46,21 +46,26 @@ const ViewProductInventoryById = asyncHandler(async (req, res) => {
         });
     }
 
-    console.log("Fetching orders for user ID:", uid);
+    console.log("Fetching product inventory for user ID:", uid);
 
-    const { productId } = req.params;
+    const { storeId, productId } = req.body; // Ensure productId is included in the request
+    if (!storeId) {
+        return res.status(400).json({ message: "Store ID is required" });
+    }
+    
     if (!productId) {
-        return res.status(401).json({ message: "Store ID is required" });
+        return res.status(400).json({ message: "Product ID is required" });
     }
 
     try {
+        // Find a specific product by its ID and store ID
         const product = await Product.findOne({
-            where: { id: productId },
-            attributes: ["id", "title", "date", "quantity", "normal_price", "mrp_price"],
+            where: { id: productId, store_id: storeId },
+            // attributes: ["id", "title", "date", "quantity", "normal_price", "mrp_price"],
         });
 
         if (!product) {
-            return res.status(404).json({ message: "Product not found." });
+            return res.status(404).json({ message: "Product not found in the given store." });
         }
 
         return res.status(200).json({
@@ -76,6 +81,7 @@ const ViewProductInventoryById = asyncHandler(async (req, res) => {
             ResponseCode: "500",
             Result: "false",
             ResponseMsg: "Internal Server Error",
+            error: error.message, // Provide detailed error message
         });
     }
 });

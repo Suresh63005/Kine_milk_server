@@ -61,6 +61,13 @@ const EditStoreProfile = asyncHandler(async (req, res) => {
           return res.status(404).json({ success: false, message: "Store not found" });
       }
 
+      // if(store.userId !== uid){
+      //   return res.status(403).json({
+      //     success: false,
+      //     message: "Unauthorized: You can only edit your own store profile",
+      //   });
+      // }
+
       console.log("Existing Store Data:", store);
 
       let imageUrl = store.rimg;

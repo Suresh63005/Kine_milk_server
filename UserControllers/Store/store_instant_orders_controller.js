@@ -6,6 +6,7 @@ const uploadToS3 = require("../../config/fileUpload.aws");
 const Store = require("../../Models/Store");
 const NormalOrder = require("../../Models/NormalOrder");
 const Rider = require("../../Models/Rider");
+const NormalOrderProduct = require("../../Models/NormalOrderProduct");
 
 const ListAllInstantOrders = asyncHandler(async (req, res) => {
     console.log("Decoded User:", req.user);
@@ -140,7 +141,22 @@ const ViewInstantOrderById = asyncHandler(async(req,res)=>{
         return res.status(400).json({ message: "Store ID is required!" });
     }
     try {
-        const instantOrder = await NormalOrder.findOne({where: { id: orderId, store_id: storeId } });
+        const instantOrder = await NormalOrder.findOne({
+            where: { id: orderId, store_id: storeId },
+            include:[
+                {
+                    model:NormalOrderProduct,
+                    as:"orderProducts",
+                    include:[
+                        {
+                            model:Product,
+                            as:"productDetails",
+                            attributes: ["id", "title", "description", "normal_price", "mrp_price", "img"],
+                        }
+                    ]
+                }
+            ]
+        });
         if(!instantOrder){
             return res.status(404).json({message:"Instant Order not found!"})
         }
