@@ -201,62 +201,72 @@ const GetStoreRiderById = asyncHandler(async (req, res) => {
 });
 
 const SearchRiderByTitle = asyncHandler(async (req, res) => {
-    console.log("Decoded User:", req.user);
-  
-    const uid = req.user.userId;
-    if (!uid) {
+  console.log("Decoded User:", req.user);
+
+  const uid = req.user?.userId;
+  if (!uid) {
       return res.status(400).json({
-        ResponseCode: "401",
-        Result: "false",
-        ResponseMsg: "User ID not provided",
-      });
-    }
-  
-    console.log("Fetching products for user ID:", uid);
-    const { title } = req.body;
-  
-    if (!title) {
-      return res.status(400).json({
-        ResponseCode: "400",
-        Result: "false",
-        ResponseMsg: "rider name is required",
-      });
-    }
-  
-    try {
-      const riders = await Rider.findAll({
-        where: {
-          title: {
-            [Op.like]: `%${title}%`,
-          },
-        },
-      });
-  
-      if (riders.length === 0) {
-        return res.status(404).json({
-          ResponseCode: "404",
+          ResponseCode: "401",
           Result: "false",
-          ResponseMsg: "No matching rider found",
-        });
-      }
-  
-      return res.status(200).json({
-        ResponseCode: "200",
-        Result: "true",
-        ResponseMsg: "Rider fetched successfully",
-        Data: riders,
+          ResponseMsg: "User ID not provided",
       });
-  
-    } catch (error) {
+  }
+
+  console.log("Fetching riders for user ID:", uid);
+
+  const { title, storeId } = req.query; // Use query parameters
+
+  if (!title) {
+      return res.status(400).json({
+          ResponseCode: "400",
+          Result: "false",
+          ResponseMsg: "Rider name is required",
+      });
+  }
+
+  if (!storeId) {
+      return res.status(400).json({
+          ResponseCode: "400",
+          Result: "false",
+          ResponseMsg: "Store ID is required",
+      });
+  }
+
+  try {
+      const riders = await Rider.findAll({
+          where: {
+              store_id: storeId,
+              title: {
+                  [Op.like]: `%${title}%`,
+              },
+          },
+      });
+
+      if (!riders.length) {
+          return res.status(404).json({
+              ResponseCode: "404",
+              Result: "false",
+              ResponseMsg: "No matching rider found",
+          });
+      }
+
+      return res.status(200).json({
+          ResponseCode: "200",
+          Result: "true",
+          ResponseMsg: "Rider fetched successfully",
+          Data: riders,
+      });
+
+  } catch (error) {
       console.error("Error searching for rider:", error);
       return res.status(500).json({
-        ResponseCode: "500",
-        Result: "false",
-        ResponseMsg: "Internal Server Error",
-        Error: error.message,
+          ResponseCode: "500",
+          Result: "false",
+          ResponseMsg: "Internal Server Error",
+          Error: error.message,
       });
-    }
-  });
+  }
+});
 
   const GetAllStoreRiders = asyncHandler(async(req,res)=>{
     console.log("Decoded User:", req.user);

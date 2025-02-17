@@ -1,6 +1,6 @@
 const User = require("../../Models/User");
 const asyncHandler = require("../../middlewares/errorHandler");
-const admin = require('../../config/firebase-config');
+const {customerFirebase} = require('../../config/firebase-config');
 const jwt = require('jsonwebtoken');
 
 const VerifyCustomerMobile = asyncHandler(async (req, res) => {
@@ -17,7 +17,7 @@ const VerifyCustomerMobile = asyncHandler(async (req, res) => {
 
     try {
         console.log("Checking mobile number in Firebase:", mobile);
-        const userRecord = await admin.auth().getUserByPhoneNumber(mobile);
+        const userRecord = await customerFirebase.auth().getUserByPhoneNumber(mobile);
         
         if (!userRecord) {
             return res.status(404).json({ message: "Mobile number not found in Firebase." });

@@ -36,27 +36,37 @@ const DeliveryDashboard = asyncHandler(async (req, res) => {
         const { store_id } = rider;
         console.log("Fetching orders for Store ID:", store_id);
         
-        const activeInstantOrders = await NormalOrder.count({ where: { store_id, rid: riderId,status:"On Route" } })
-        const completedInstantOrders = await NormalOrder.count({ where: { store_id, rid: riderId,status:"Completed" } })
-        const activeSubscribeOrders = await SubscribeOrder.count({ where: { store_id, rid: riderId, [Op.or]:{status:["Pending","Processing"]} } });
-        const completedSubscribeOrders = await SubscribeOrder.count({ where: { store_id, rid: riderId, status: "Completed" } });
-        const orderDetails = await NormalOrder
+        const [
+            activeInstantOrders,
+            completedInstantOrders,
+            activeSubscribeOrders,
+            completedSubscribeOrders,
+            assignedInstantOrders,
+            assignedSubscribeOrders
+        ] = await Promise.all([
+            NormalOrder.count({ where: { store_id, rid: riderId, status: "On Route" } }),
+            NormalOrder.count({ where: { store_id, rid: riderId, status: "Completed" } }),
+            SubscribeOrder.count({ where: { store_id, rid: riderId, status: "On Route" } }),
+            SubscribeOrder.count({ where: { store_id, rid: riderId, status: "Completed" } }),
+            NormalOrder.findAll({ where: { store_id, rid: riderId, status: "On Route" } }),  // Fetch assigned normal orders
+            SubscribeOrder.findAll({ where: { store_id, rid: riderId, status: "On Route" } }) // Fetch assigned subscription orders
+        ]);
+        const orderDetails = [...assignedInstantOrders, ...assignedSubscribeOrders];
+
         return res.status(200).json({
             ResponseCode: "200",
             Result: "true",
             ResponseMsg: "Delivery Dashboard Fetched Successfully",
             rider,
-            instant_orders:{
+            instant_orders: {
                 activeInstantOrders,
                 completedInstantOrders
             },
-            subscription_orders:{
+            subscription_orders: {
                 activeSubscribeOrders,
                 completedSubscribeOrders
             },
-            order_details:{
-                orderDetails
-            }
+            order_details: orderDetails
         });
     } catch (error) {
         console.error("Error Fetching Delivery Dashboard:", error);

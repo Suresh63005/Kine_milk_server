@@ -56,4 +56,53 @@ const VerifyRiderMobile = asyncHandler(async (req, res) => {
     }
 });
 
-module.exports = { VerifyRiderMobile };
+const EditRiderProfile = asyncHandler(async (req, res) => {
+    console.log("Decoded User: ", req.user);
+    const riderId = req.user?.riderId;
+    
+    if (!riderId) {
+      return res.status(401).json({
+        ResponseCode: "401",
+        Result: "false",
+        ResponseMsg: "Rider ID not provided",
+      });
+    }
+  
+    const { rider_id } = req.params;
+    const { title, email } = req.body;
+  
+    try {
+      console.log("Fetching rider details for ID:", rider_id);
+      const rider = await Rider.findByPk(rider_id);
+  
+      if (!rider) {
+        return res.status(404).json({
+          ResponseCode: "404",
+          Result: "false",
+          ResponseMsg: "Rider not found",
+        });
+      }
+  
+      rider.title = title || rider.title;
+      rider.email = email || rider.email;
+  
+      await rider.save();
+  
+      return res.status(200).json({
+        ResponseCode: "200",
+        Result: "true",
+        ResponseMsg: "Rider updated successfully",
+        rider,
+      });
+  
+    } catch (error) {
+      console.error("Error updating rider:", error.message);
+      return res.status(500).json({
+        ResponseCode: "500",
+        Result: "false",
+        ResponseMsg: "Internal Server Error: " + error.message,
+      });
+    }
+  });
+
+module.exports = { VerifyRiderMobile,EditRiderProfile };

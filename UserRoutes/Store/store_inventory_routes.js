@@ -5,6 +5,6 @@ const authMiddleware = require('../../middlewares/authMiddleware');
 
 router.get("/all/:storeId",authMiddleware.isAuthenticated,storeInventoryController.ListInventory);
 router.patch("/edit/:storeId",authMiddleware.isAuthenticated,storeInventoryController.AddInventory);
-router.get("/:productId",authMiddleware.isAuthenticated,storeInventoryController.ViewProductInventoryById);
+router.post("/view-inventory-product",authMiddleware.isAuthenticated,storeInventoryController.ViewProductInventoryById);
 
 module.exports = router;
