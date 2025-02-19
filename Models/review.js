@@ -1,8 +1,9 @@
 const sequelize = require("../config/db");
 const { DataTypes } = require("sequelize");
 
-const Cart = sequelize.define(
-  "Cart",
+
+const Review = sequelize.define(
+  "Tbl_reviews",
   {
     id: {
       type: DataTypes.UUID,
@@ -10,25 +11,32 @@ const Cart = sequelize.define(
       defaultValue: DataTypes.UUIDV4,
       primaryKey: true,
     },
-    uid: {
+    user_id:{
+        type: DataTypes.UUID,
+        allowNull: false,
+    },
+    rider_id:{
       type: DataTypes.UUID,
       allowNull: false,
     },
-    product_id: {
-      type: DataTypes.UUID,
-      allowNull: false,
-    },
-    quantity: { 
+    rating: {
       type: DataTypes.INTEGER,
-      allowNull: true,
+      allowNull: false,
+    },
+    review: {
+        type: DataTypes.TEXT,
+    },
+    status: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
       defaultValue: 1,
     },
-    orderType:{
-      type: DataTypes.ENUM("Normal", "Subscription"),
-      allowNull: false,
-    }
   },
-  { tableName: "tbl_cart", timestamps: true, paranoid: true }
+  {
+    tableName: "Tbl_reviews",
+    timestamps: true,
+    paranoid: true,
+  }
 );
 
-module.exports = Cart;
+module.exports = Review;

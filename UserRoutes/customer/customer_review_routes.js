@@ -4,5 +4,7 @@ const ProductReviewController = require('../../UserControllers/customer/customer
 const authMiddleware = require('../../middlewares/authMiddleware');
 
 router.post("/post-review",authMiddleware.isAuthenticated,ProductReviewController.PostProductReview);
+router.post("/post-delivery-review",authMiddleware.isAuthenticated,ProductReviewController.PostDeliveryBoyReview);
+
 
 module.exports = router;

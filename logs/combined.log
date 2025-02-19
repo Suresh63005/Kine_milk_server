@@ -13,3 +13,5 @@
 {"level":"info","message":"sucessfully get all categories","service":"kine_milk_server","timestamp":"2025-02-13T07:34:15.940Z"}
 {"level":"info","message":"sucessfully get all categories","service":"kine_milk_server","timestamp":"2025-02-13T07:36:23.483Z"}
 {"level":"info","message":"sucessfully get all categories","service":"kine_milk_server","timestamp":"2025-02-13T07:36:38.583Z"}
+{"level":"error","message":"Internal Server Error","service":"kine_milk_server","timestamp":"2025-02-17T05:50:49.087Z"}
+{"level":"error","message":"Internal Server Error","service":"kine_milk_server","timestamp":"2025-02-17T05:51:32.135Z"}
