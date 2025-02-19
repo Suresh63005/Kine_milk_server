@@ -1,6 +1,8 @@
 const NormalOrder = require('../../Models/NormalOrder');
 const Product = require('../../Models/Product');
+const Rider = require('../../Models/Rider');
 const User = require('../../Models/User');
+const Review = require('../../Models/review');
 const asyncHandler = require('../../middlewares/errorHandler');
 
 const PostProductReview = asyncHandler(async (req, res) => {
@@ -88,4 +90,90 @@ const PostProductReview = asyncHandler(async (req, res) => {
     }
 });
 
-module.exports = { PostProductReview };
+const PostDeliveryBoyReview = asyncHandler (async (req, res) => {
+    
+    const user_id = req.user.userId; 
+
+    if (!user_id) {
+        return res.status(401).json({ message: "Unauthorized! User not found." });
+    }
+
+    const{rider_id,rating,review} = req.body;
+
+    if (!rider_id || !rating || !review) {
+        return res.status(400).json({ message: "All Fields Required!" });
+    }
+    try {
+       
+        const deliveryBoy = await Rider.findByPk(rider_id);
+
+        if(!deliveryBoy){
+            return res.status(404).json({ message: "Delivery Boy Not Found!" });
+        }
+
+        const createreview = await Review.create({
+            user_id: user_id,
+            rider_id: rider_id,
+            rating: rating,
+            review: review
+        });
+
+        return res.status(200).json({ 
+            ResponseCode: "200",
+        Result: "true",
+        ResponseMsg: "Review submitted successfully!",
+        review: createreview,
+        });
+
+
+    } catch (error) {
+        
+        console.error("Error fetching orders:", error);
+        res.status(500).json({
+          ResponseCode: "500",
+          Result: "false",
+          ResponseMsg: "Server Error",
+          error: error.message,
+        });
+
+    }
+
+});
+
+const gteDeliveryBoyReview = asyncHandler (async (req, res) => {
+
+    const rider_id = req.body;
+
+    try {
+
+        const deliveryBoy = await Rider.findByPk(rider_id);
+
+        if(!deliveryBoy){
+            return res.status(404).json({ ResponseCode: "404",
+                Result: "false",
+                ResponseMsg: "Rider not Found!",
+                 });
+        }
+
+        const reviews = await Review.findAll({
+            where: {rider_id,status:1}
+        });
+
+        return res.status(200).json({
+            ResponseCode: "200",
+        Result: "true",
+        ResponseMsg: "Review Retrived successfully!",
+        review: reviews,
+        })
+        
+    } catch (error) {
+        res.status(500).json({
+            ResponseCode: "500",
+            Result: "false",
+            ResponseMsg: "Server Error",
+            error: error.message,
+          });
+    }
+})
+
+module.exports = { PostProductReview,PostDeliveryBoyReview };
