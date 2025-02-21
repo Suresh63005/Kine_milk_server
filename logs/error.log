@@ -247,3 +247,5 @@
 {"level":"error","message":"Internal Server Error","service":"kine_milk_server","timestamp":"2025-02-06T11:56:40.891Z"}
 {"level":"error","message":"Internal Server Error","service":"kine_milk_server","timestamp":"2025-02-12T13:15:47.439Z"}
 {"level":"error","message":"Internal Server Error","service":"kine_milk_server","timestamp":"2025-02-12T13:18:11.663Z"}
+{"level":"error","message":"Internal Server Error","service":"kine_milk_server","timestamp":"2025-02-17T05:50:49.087Z"}
+{"level":"error","message":"Internal Server Error","service":"kine_milk_server","timestamp":"2025-02-17T05:51:32.135Z"}

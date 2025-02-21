@@ -21,34 +21,34 @@ const Store = require("../../Models/Store");
 
 // Home API
 const homeAPI = async (req, res) => {
-
-    const  {pincode}  = req.params;
+    const { pincode } = req.params;
     console.log(pincode);
 
-
     try {
-    
         const banners = await Banner.findAll({ where: { status: 1 } });
         const categories = await Category.findAll({ where: { status: 1 } });
-        const store = await Store.findOne({ where: { status: 1, pincode:pincode } });
+        const store = await Store.findOne({ where: { status: 1, pincode: pincode } });
 
-        if(!store){
-        return res.json({
-            ResponseCode: "400",
-            Result: "false",
-            ResponseMsg: "No store for your pincode!",
-        });}
+        if (!store) {
+            return res.json({
+                ResponseCode: "400",
+                Result: "false",
+                ResponseMsg: "No store for your pincode!",
+            });
+        }
 
-        
-        let categoryProducts = {};
+        let categoryProducts = [];
         for (const category of categories) {
             const products = await Product.findAll({
-                where: { status: 1, cat_id: category?.id,store_id:store?.id },
-                order: [["createdAt", "DESC"]], 
+                where: { status: 1, cat_id: category.id, store_id: store.id },
+                order: [["createdAt", "DESC"]],
                 limit: 5
             });
-            
-            categoryProducts[category?.title] = products; 
+
+            categoryProducts.push({
+                name: category.title,
+                items: products
+            });
         }
 
         return res.json({
@@ -58,7 +58,7 @@ const homeAPI = async (req, res) => {
             HomeData: {
                 Banlist: banners,
                 Catlist: categories,
-                CategoryProducts: categoryProducts,
+                CategoryProducts: categoryProducts,  // Now an array
                 currency: "INR",
             }
         });
@@ -71,6 +71,7 @@ const homeAPI = async (req, res) => {
         });
     }
 };
+
 
 
 module.exports = {homeAPI};
