@@ -75,7 +75,7 @@ const upsertCart = async (req, res) => {
         include: [
           {
               model: Product,
-              attributes: ["id", "title", "img", "description"],
+              attributes: ["id", "title", "img","normal_price","subscribe_price", "description"],
               as: "CartproductDetails" 
           }
       ]
