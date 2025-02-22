@@ -6,6 +6,7 @@ const Category = require("./Category");
 const NormalOrder = require("./NormalOrder");
 const NormalOrderProduct = require("./NormalOrderProduct");
 const Product = require("./Product");
+const Review = require("./review");
 // const User = require("./User");
 // const PaymentList = require("./PaymentList");
 // const Coupon = require('./Coupon');
@@ -47,10 +48,15 @@ SubscribeOrder.hasMany(SubscribeOrderProduct, { foreignKey: "oid", as: "orderPro
 SubscribeOrderProduct.belongsTo(Product, { foreignKey: "product_id", as: "productDetails" });
 
 
+
 Cart.belongsTo(Product,{foreignKey:"product_id", as:"CartproductDetails"});
 Product.hasMany(Cart,{foreignKey:"product_id", });
 
 
+
+
+Review.belongsTo(User,{foreignKey:'user_id',as:'user'});
+User.hasMany(Review,{foreignKey:'user_id',as:'reviews'})
 
 // Product.hasMany(NormalOrder, { foreignKey: "product_id", as: "product_orders" }); 
 // NormalOrder.belongsTo(Product, { foreignKey: "product_id", as: "ordered_product" }); // Change alias to "ordered_product"

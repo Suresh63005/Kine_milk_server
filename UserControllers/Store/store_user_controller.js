@@ -167,7 +167,7 @@ const verifyMobile = asyncHandler(async (req, res) => {
       const token = jwt.sign(
           { userId: userRecord.uid, mobile: userRecord.phoneNumber },
           process.env.JWT_SECRET,
-          { expiresIn: "7d" }
+          // { expiresIn: "7d" }
       );
 
       return res.status(200).json({
