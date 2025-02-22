@@ -1,6 +1,7 @@
 // const Admin = require("./Admin");
 // const Category = require("./Category");
 // const Product = require("./Product");
+const Cart = require("./Cart");
 const Category = require("./Category");
 const NormalOrder = require("./NormalOrder");
 const NormalOrderProduct = require("./NormalOrderProduct");
@@ -44,6 +45,10 @@ NormalOrderProduct.belongsTo(Product, { foreignKey: "product_id", as: "productDe
 
 SubscribeOrder.hasMany(SubscribeOrderProduct, { foreignKey: "oid", as: "orderProducts" });
 SubscribeOrderProduct.belongsTo(Product, { foreignKey: "product_id", as: "productDetails" });
+
+
+Cart.belongsTo(Product,{foreignKey:"product_id", as:"CartproductDetails"});
+Product.hasMany(Cart,{foreignKey:"product_id", });
 
 
 

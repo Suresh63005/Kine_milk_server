@@ -22,12 +22,22 @@ const Store = require("../../Models/Store");
 // Home API
 const homeAPI = async (req, res) => {
     const { pincode } = req.params;
-    console.log(pincode);
 
     try {
-        const banners = await Banner.findAll({ where: { status: 1 } });
-        const categories = await Category.findAll({ where: { status: 1 } });
-        const store = await Store.findOne({ where: { status: 1, pincode: pincode } });
+        const banners = await Banner.findAll({
+            where: { status: 1 },
+            attributes: ["id", "img"] 
+        });
+
+        const categories = await Category.findAll({
+            where: { status: 1 },
+            attributes: ["id", "title","img"] 
+        });
+
+        const store = await Store.findOne({
+            where: { status: 1, pincode: pincode },
+            attributes: ["id", "title", "rimg","full_address"] 
+        });
 
         if (!store) {
             return res.json({
@@ -40,7 +50,7 @@ const homeAPI = async (req, res) => {
         let categoryProducts = [];
         for (const category of categories) {
             const products = await Product.findAll({
-                where: { status: 1, cat_id: category.id, store_id: store.id },
+                where: { status: 1, cat_id: category.id, store_id: store.id }, 
                 order: [["createdAt", "DESC"]],
                 limit: 5
             });
@@ -56,9 +66,10 @@ const homeAPI = async (req, res) => {
             Result: "true",
             ResponseMsg: "Home Data Get Successfully!",
             HomeData: {
+                store:store,
                 Banlist: banners,
                 Catlist: categories,
-                CategoryProducts: categoryProducts,  // Now an array
+                CategoryProducts: categoryProducts,
                 currency: "INR",
             }
         });
@@ -71,6 +82,7 @@ const homeAPI = async (req, res) => {
         });
     }
 };
+
 
 
 

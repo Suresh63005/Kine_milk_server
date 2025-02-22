@@ -15,3 +15,6 @@
 {"level":"info","message":"sucessfully get all categories","service":"kine_milk_server","timestamp":"2025-02-13T07:36:38.583Z"}
 {"level":"error","message":"Internal Server Error","service":"kine_milk_server","timestamp":"2025-02-17T05:50:49.087Z"}
 {"level":"error","message":"Internal Server Error","service":"kine_milk_server","timestamp":"2025-02-17T05:51:32.135Z"}
+{"level":"info","message":"sucessfully get all Time's","service":"kine_milk_server","timestamp":"2025-02-22T06:27:44.954Z"}
+{"level":"info","message":"New Timerecord created with ID 45501025-8df9-4ec7-940e-6da5c46e4793","service":"kine_milk_server","timestamp":"2025-02-22T06:49:42.214Z"}
+{"level":"info","message":"New Timerecord created with ID 1782ffd8-853b-4c86-98dd-a0d4b36e3e34","service":"kine_milk_server","timestamp":"2025-02-22T06:50:52.333Z"}
