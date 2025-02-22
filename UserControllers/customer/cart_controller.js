@@ -1,10 +1,9 @@
 const Cart = require("../../Models/Cart");
+const Product = require("../../Models/Product");
 
 const upsertCart = async (req, res) => {
     try {
       const { uid, product_id, quantity,orderType } = req.body;
-
-      console.log(req.body,"from fhgjkl");
 
       if (!uid || !product_id || !orderType ) {
         return res.status(400).json({
@@ -15,7 +14,7 @@ const upsertCart = async (req, res) => {
       }
   
       const existingCartItem = await Cart.findOne({
-        where: { uid, product_id },
+        where: { uid, product_id,orderType },
       });
   
       if (existingCartItem) {
@@ -60,7 +59,6 @@ const upsertCart = async (req, res) => {
       const uid  = req.user.userId;
       const {orderType} = req.params;
 
-      console.log(orderType,"typeeeeeeeeeeee");
 
     
 
@@ -72,7 +70,16 @@ const upsertCart = async (req, res) => {
         });
       }
   
-      const cartItems = await Cart.findAll({ where: { uid, orderType } });
+      const cartItems = await Cart.findAll({ 
+        where: { uid, orderType },
+        include: [
+          {
+              model: Product,
+              attributes: ["id", "title", "img", "description"],
+              as: "CartproductDetails" 
+          }
+      ]
+      });
   
       return res.status(200).json({
         ResponseCode: "200",

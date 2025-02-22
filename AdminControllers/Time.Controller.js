@@ -12,20 +12,30 @@ const upsertTime = async (req, res) => {
     // }
     const { id,mintime,maxtime,status,store_id } = req.body;
     console.log(req.body)
-    // const { mintime,maxtime,status,store_id } = req.body;
-    if(id){
-        const [rowsUpdated]=await Time.update({mintime,maxtime,status,store_id},{where:{id}}) 
-        if(rowsUpdated ===0){
-            logger.error("Time Record not found.")
-            return res.status(404).json({ success: false, message: 'Record not found.' });
+    try {
+        if(id){
+            const [rowsUpdated]=await Time.update({mintime,maxtime,status,store_id},{where:{id}}) 
+            if(rowsUpdated ===0){
+                logger.error("Time Record not found.")
+                return res.status(404).json({ success: false, message: 'Record not found.' });
+            }
+            logger.info(`TimeRecord with ID ${id} updated successfully.`);
+            return res.status(200).json({ success: true, message: 'TimeRecord updated successfully.' });
+        }else{
+            const newTime=await Time.create({mintime,maxtime,status,store_id});
+            logger.info(`New Timerecord created with ID ${newTime.id}`);
+            return res.status(201).json({ success: true, message: 'Timerecord created successfully.', data: newTime });
         }
-        logger.info(`TimeRecord with ID ${id} updated successfully.`);
-        return res.status(200).json({ success: true, message: 'TimeRecord updated successfully.' });
-    }else{
-        const newTime=await Time.create({mintime,maxtime,status,store_id});
-        logger.info(`New Timerecord created with ID ${newTime.id}`);
-        return res.status(201).json({ success: true, message: 'Timerecord created successfully.', data: newTime });
+    } catch (error) {
+        console.error("Error fetching time slot:", error);
+        return res.status(500).json({
+            ResponseCode: "500",
+            Result: "false",
+            ResponseMsg: "Internal Server Error"
+        }); 
     }
+
+    
 };
 
 const getAllTimes=asynHandler(async(req,res,next)=>{
