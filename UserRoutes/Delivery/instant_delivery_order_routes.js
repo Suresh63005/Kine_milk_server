@@ -4,6 +4,7 @@ const instantOrdersController = require('../../UserControllers/Delivery/instant_
 const authMiddleware = require('../../middlewares/authMiddleware');
 
 router.get("/instant-orders",authMiddleware.isAuthenticated,instantOrdersController.FetchAllInstantDeliveryOrders)
+router.post("/rider-accept",authMiddleware.isAuthenticated,instantOrdersController.AcceptInstantOrders)
 router.get("/view-orderDetails",authMiddleware.isAuthenticated,instantOrdersController.ViewOrderDetails)
 
 module.exports = router
