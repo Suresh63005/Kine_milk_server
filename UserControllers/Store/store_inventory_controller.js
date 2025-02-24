@@ -102,10 +102,10 @@ const AddInventory = asyncHandler(async (req, res) => {
     console.log("Fetching orders for user ID:", uid);
 
     const { storeId } = req.params;
-    const { productId, date, quantity, normal_price, mrp_price } = req.body;
+    const { productId, date, quantity} = req.body;
 
     // Check if all fields are provided
-    if (!productId || !date || !quantity || !normal_price || !mrp_price) {
+    if (!productId || !date || !quantity) {
         return res.status(400).json({ message: "All fields are required." });
     }
 
@@ -128,7 +128,7 @@ const AddInventory = asyncHandler(async (req, res) => {
         }
 
         // Update only the specified fields (excluding title)
-        await product.update({ date, quantity, normal_price, mrp_price });
+        await product.update({ date, quantity });
 
         console.log("Inventory updated successfully:", product);
 
@@ -142,7 +142,7 @@ const AddInventory = asyncHandler(async (req, res) => {
                 date: product.date,
                 quantity: product.quantity,
                 unit_price: product.normal_price,
-                total_price: product.mrp_price,
+                total_price: product.mrp_price
             },
         });
 

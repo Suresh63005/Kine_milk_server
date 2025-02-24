@@ -13,11 +13,19 @@ const {
   searchAdminSchema,
 } = require("../utils/validation");
 const { log } = require("winston");
+const Store = require("../Models/Store");
 
 // Generate JWT
 const generateToken = (admin) => {
   return jwt.sign(
     { id: admin.id, username: admin.username },
+    process.env.JWT_SECRET,
+    { expiresIn: "24h" }
+  );
+};
+const generateTokenforstore = (store) => {
+  return jwt.sign(
+    { id: store.id, email: store.email },
     process.env.JWT_SECRET,
     { expiresIn: "24h" }
   );
@@ -74,42 +82,70 @@ const loginAdmin = asynHandler(async (req, res) => {
     logger.error(error.details[0].message);
     return res.status(400).json({ error: error.details[0].message });
   }
-  const { username, password } = req.body;
+  const { email, password, role } = req.body;
 
-  if (!username || !password) {
+  console.log(req.body);
+
+  if (!email || !password || !role) {
     logger.error('All fields are required')
     return res.status(400).json({ error: "All fields are required" });
   }
 
-  const admin = await Admin.findOne({ where: { username } });
+  
+  if(role === 'admin'){
+   const admin = await Admin.findOne({ where: { email } });
 
-  if (!admin) {
-    logger.error("Invalid username or password");
-    return res.status(401).json({ error: "Invalid username or password" });
+
+     if (!admin) {
+      logger.error("Invalid Email");
+      return res.status(401).json({ error: "Invalid Email " });
+    }
+  
+    const isMatch = await bcrypt.compare(password, admin.password);
+    if (!isMatch) {
+      logger.error("Invalid password");
+      return res.status(401).json({ error: "Invalid  password" });
+    }
+  
+  
+    const token = generateToken(admin);
+  
+    res.cookie("token", token, { httpOnly: true });
+  
+    req.session.admin = admin;
+    logger.info("Admin signed in successfully");
+    res.status(200).json({
+      message: "Admin signed in successfully",
+      admin,
+      role:"admin",
+      token,
+    });
   }
+  else if(role === "store"){
 
-  const isMatch = await bcrypt.compare(password, admin.password);
-  if (!isMatch) {
-    logger.error("Invalid username or password");
-    return res.status(401).json({ error: "Invalid username or password" });
+    const store = await Store.findOne({ where: { email } });
+
+    if (!store) {
+      logger.error("Invalid Email ");
+      return res.status(401).json({ error: "Invalid Email" });
+    }
+
+
+     if(store.password !== password) {
+      logger.error("Invalid  password");
+      return res.status(401).json({ error: "Invalid  password" });
+     }
+     const token = generateTokenforstore(store);
+     res.cookie("token", token, { httpOnly: true });
+     req.session.store = store;
+     logger.info("Store signed in successfully");
+     res.status(200).json({
+       message: "Store signed in successfully",
+       store,
+       role:"store",
+       token,
+     });
   }
-
-  // if (admin.role !== role) {
-  //   logger.error("Role is not match");
-  //   return res.status(401).json({ error: "Role is not match" });
-  // }
-
-  const token = generateToken(admin);
-
-  res.cookie("token", token, { httpOnly: true });
-
-  req.session.admin = admin;
-  logger.info("Admin signed in successfully");
-  res.status(200).json({
-    message: "Admin signed in successfully",
-    admin,
-    token,
-  });
 });
 
 // Update Admin Controller

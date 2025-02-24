@@ -99,14 +99,20 @@ const AssignOrderToRider = asyncHandler(async (req, res) => {
             return res.status(404).json({ message: "Pending order not found!" });
         }
 
-        const rider = await Rider.findOne({ where: { id: rider_id, status: 1 } });
+        const storeId = order.store_id;
+
+        if (!storeId) {
+            return res.status(404).json({ message: "Store ID not found for this order!" });
+        }
+                
+        const rider = await Rider.findOne({ where: { id: rider_id, status: 1, store_id:storeId } });
         console.log(rider, "Rider******************************");
         if (!rider) {
             return res.status(404).json({ message: "Rider not found OR inactive!" });
         }
 
         await NormalOrder.update(
-            { rid: rider_id, status: "On Route" }, 
+            { rid: rider_id, status: "Processing" },
             { where: { id: order_id } }
         );
 
