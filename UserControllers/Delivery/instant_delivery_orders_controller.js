@@ -69,45 +69,50 @@ const FetchAllInstantDeliveryOrders = asyncHandler(async (req, res) => {
     }
 });
 
-const AcceptInstantOrders = asyncHandler(async(req,res)=>{
-    console.log("Decoded User", req.user);
-    const riderId = req.user?.riderId;
-    if(!riderId){
-        return res.status(500).json({
-            success:false,
-            message:"Rider not found"
-        })
-    }
-
-    const {order_id}=req.body;
-    if(!order_id){
-
-    }
+const AcceptInstantOrders = asyncHandler(async (req, res) => {
+    console.log("Decoded User:", req.user);
     
+    const riderId = req.user?.riderId; 
+    if (!riderId) {
+        return res.status(400).json({
+            success: false,
+            message: "Rider ID not found in token",
+        });
+    }
+
+    const { order_id } = req.body;
+    if (!order_id) {
+        return res.status(400).json({
+            success: false,
+            message: "Order ID is required!",
+        });
+    }
+
     try {
-        const order = await NormalOrder.findOne({
-            where:{
-                id:order_id,
-                rid:riderId,
-                status:'Processing'
-            }
-        })
-        if(!order){
+        const order = await NormalOrder.findOne({ 
+            where: { id: order_id, rid: riderId, status: "Processing" } 
+        });
+
+        if (!order) {
             return res.status(404).json({
-                success:false,
-                message:"Order not found! OR already processed!"
-            })
+                success: false,
+                message: "Order not found or already processed!",
+            });
         }
+
         await NormalOrder.update(
-            {status:'On Route'},
-            {where:{id:order_id}}
-        )
-        const updatedOrder = await NormalOrder.findOne({where:{id:order_id}})
-        return res.status({
-            success:true,
-            message:"Order accepted successfully! Status updated to 'On Route'.",
-            order:updatedOrder
-        })
+            { status: "On Route" },
+            { where: { id: order_id } }
+        );
+
+        const updatedOrder = await NormalOrder.findOne({ where: { id: order_id } });
+
+        return res.status(200).json({
+            success: true,
+            message: "Order accepted successfully! Status updated to 'On Route'.",
+            order: updatedOrder,
+        });
+
     } catch (error) {
         console.error("Error accepting order:", error.message);
         return res.status(500).json({ 
@@ -115,8 +120,8 @@ const AcceptInstantOrders = asyncHandler(async(req,res)=>{
             message: "Internal server error: " + error.message 
         });
     }
-    
-})
+});
+
 
 const ViewOrderDetails = asyncHandler(async (req, res) => {
     console.log("Decoded User:", req.user);
