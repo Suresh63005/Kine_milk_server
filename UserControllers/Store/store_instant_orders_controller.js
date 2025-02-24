@@ -106,7 +106,7 @@ const AssignOrderToRider = asyncHandler(async (req, res) => {
         }
 
         await NormalOrder.update(
-            { rid: rider_id, status: "On Route" }, 
+            { rid: rider_id, status: "Processing" },
             { where: { id: order_id } }
         );
 
