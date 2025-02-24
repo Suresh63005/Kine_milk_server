@@ -249,3 +249,17 @@
 {"level":"error","message":"Internal Server Error","service":"kine_milk_server","timestamp":"2025-02-12T13:18:11.663Z"}
 {"level":"error","message":"Internal Server Error","service":"kine_milk_server","timestamp":"2025-02-17T05:50:49.087Z"}
 {"level":"error","message":"Internal Server Error","service":"kine_milk_server","timestamp":"2025-02-17T05:51:32.135Z"}
+{"level":"error","message":"\"role\" is not allowed","service":"kine_milk_server","timestamp":"2025-02-24T04:53:18.889Z"}
+{"level":"error","message":"\"role\" is not allowed","service":"kine_milk_server","timestamp":"2025-02-24T04:53:33.059Z"}
+{"level":"error","message":"Internal Server Error","service":"kine_milk_server","timestamp":"2025-02-24T04:55:47.767Z"}
+{"level":"error","message":"Internal Server Error","service":"kine_milk_server","timestamp":"2025-02-24T04:55:52.276Z"}
+{"level":"error","message":"Internal Server Error","service":"kine_milk_server","timestamp":"2025-02-24T05:21:09.416Z"}
+{"level":"error","message":"All fields are required","service":"kine_milk_server","timestamp":"2025-02-24T06:55:52.622Z"}
+{"level":"error","message":"\"username\" is required","service":"kine_milk_server","timestamp":"2025-02-24T06:58:27.038Z"}
+{"level":"error","message":"Invalid username or password","service":"kine_milk_server","timestamp":"2025-02-24T06:58:54.943Z"}
+{"level":"error","message":"Admin Invalid username or password","service":"kine_milk_server","timestamp":"2025-02-24T06:59:31.847Z"}
+{"level":"error","message":"Admin Invalid username or password","service":"kine_milk_server","timestamp":"2025-02-24T06:59:38.630Z"}
+{"level":"error","message":"Invalid username or password","service":"kine_milk_server","timestamp":"2025-02-24T06:59:48.429Z"}
+{"level":"error","message":"Invalid Email","service":"kine_milk_server","timestamp":"2025-02-24T07:04:28.358Z"}
+{"level":"error","message":"Invalid Email","service":"kine_milk_server","timestamp":"2025-02-24T07:31:30.869Z"}
+{"level":"error","message":"Invalid Email","service":"kine_milk_server","timestamp":"2025-02-24T09:58:57.155Z"}
