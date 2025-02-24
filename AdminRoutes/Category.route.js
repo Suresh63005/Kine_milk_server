@@ -25,7 +25,7 @@ const allowAdminOrAuthenticated = (req, res, next) => {
 };
 
 router.post("/upsert",adminMiddleware.isAdmin, upload.single("img"),categoryController.upsertCategory);
-router.get("/all", allowAdminOrAuthenticated, categoryController.getAllCategories);
+router.get("/all", categoryController.getAllCategories);
 router.get("/getbyid/:id",categoryController.getCategoryById)
 router.delete("/delete/:id",adminMiddleware.isAdmin,categoryController.deleteCategory)
 router.patch("/update/:id",adminMiddleware.isAdmin,categoryController.upsertCategory)
