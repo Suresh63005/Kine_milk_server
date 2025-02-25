@@ -21,8 +21,11 @@ const upsertProduct = async (req, res) => {
       mrp_price,
       discount,
       out_of_stock,
+      quantity,
       subscription_required,
     } = req.body;
+
+
 
     console.log("Request body:", req.body);
 
@@ -31,7 +34,6 @@ const upsertProduct = async (req, res) => {
       !title ||
       !status ||
       !cat_id ||
-      !description ||
       !subscribe_price ||
       !normal_price ||
       !mrp_price ||
@@ -59,15 +61,19 @@ const upsertProduct = async (req, res) => {
     let imageUrl = null;
     let extraImageUrls = [];
 
-    if (req.files["img"]) {
-      imageUrl = await uploadToS3(req.files["img"][0], "images");
+      
+
+    if (req.files.img) {
+      imageUrl = await uploadToS3(req.files.img[0], "images");
     }
 
     if (req.files["extraImages"]) {
       extraImageUrls = await Promise.all(
         req.files["extraImages"].map((file) => uploadToS3(file, "extra-images"))
-      );
+    );
     }
+
+
 
     let product;
     if (id) {
@@ -80,11 +86,8 @@ const upsertProduct = async (req, res) => {
         });
       }
 
-      console.log("Images:", imageUrl, extraImageUrls);
-
-      // Update Product fields using the instance method
       await product.update({
-        title,
+      title,
         img: imageUrl || product.img,
         status,
         cat_id,
