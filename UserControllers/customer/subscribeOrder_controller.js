@@ -3,6 +3,7 @@ const SubscribeOrder = require("../../Models/SubscribeOrder");
 const Product = require("../../Models/Product");
 const SubscribeOrderProduct = require("../../Models/SubscribeOrderProduct");
 const Notification = require("../../Models/Notification");
+const NormalOrder = require("../../Models/NormalOrder");
 
 
 const subscribeOrder =  async (req, res) => {
@@ -156,5 +157,48 @@ const subscribeOrder =  async (req, res) => {
     }
   };
 
+  const getOrderDetails = async (req, res) => {
+    const {id} = req.params;
 
-  module.exports = {subscribeOrder,getOrdersByStatus};
+
+    try {
+
+      const orderDetails  = await SubscribeOrder.findByPk(id);
+
+      if(!orderDetails){
+        console.error("Error fetching order details:", error);
+  
+        res.status(404).json({
+          ResponseCode: "404",
+          Result: "false",
+          ResponseMsg: "Order Not Found",
+          error: error.message,
+        });
+      }
+
+      return res.status(201).json({
+        ResponseCode: "201",
+        Result: "true",
+        ResponseMsg: "Instant Order fetched successfully!",
+        orderDetails
+      });
+      
+    } catch (error) {
+      console.error("Error  order:", error);
+  
+      res.status(500).json({
+        ResponseCode: "500",
+        Result: "false",
+        ResponseMsg: "Server Error",
+        error: error.message,
+      });
+    }
+
+  }
+
+
+  module.exports = {
+    subscribeOrder,
+    getOrdersByStatus,
+    getOrderDetails
+  };

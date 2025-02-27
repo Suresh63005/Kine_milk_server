@@ -6,6 +6,7 @@ const Category = require("./Category");
 const NormalOrder = require("./NormalOrder");
 const NormalOrderProduct = require("./NormalOrderProduct");
 const Product = require("./Product");
+const ProductInventory = require("./ProductInventory");
 // const User = require("./User");
 // const PaymentList = require("./PaymentList");
 // const Coupon = require('./Coupon');
@@ -91,5 +92,9 @@ Product.hasMany(Cart,{foreignKey:"product_id", });
 
 // User.belongsTo(Store, { foreignKey: "store_id", as: "store" });
 // Store.hasMany(User, { foreignKey: "store_id", as: "users" });
+
+
+ProductInventory.belongsTo(Product, { foreignKey: "product_id", as: "inventoryProducts" });
+Product.hasMany(ProductInventory, { foreignKey: "product_id", as: "inventoryProducts" });
 
 
