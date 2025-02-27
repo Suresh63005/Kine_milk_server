@@ -1,15 +1,25 @@
+const { Model } = require("firebase-admin/machine-learning");
 const Favorite = require("../../Models/Favorite");
+const Product = require("../../Models/Product");
 
 const addFavorite = async (req, res) => {
     try {
       const { pid, store_id } = req.body;
 
       const uid = req.user.userId;
+
+      const existingFav = await Favorite.findOne({where:{uid,pid, store_id}});
+
+      if(existingFav){
+        return res.status(400).json({
+          ResponseCode: "200",
+          ResponseMsg: "You already have this product in your favorites"});
+      }
   
       const favorite = await Favorite.create({ uid,pid, store_id });
 
-      res.status(201).json({
-        ResponseCode: "201",
+      res.status(200).json({
+        ResponseCode: "200",
         Result: "true",
         ResponseMsg: "Favorite added successfully!",
         favorite
@@ -28,12 +38,17 @@ const addFavorite = async (req, res) => {
 
       const uid = req.user.userId;
   
-      const favorites = await Favorite.findAll({ where: { uid ,store_id} });
+      const favorites = await Favorite.findAll({ where: { uid ,store_id},
+        include:[{
+          model: Product,
+          as: "favproducts",
+        },]
+      });
   
       res.status(200).json({
-        ResponseCode: "201",
+        ResponseCode: "200",
         Result: "true",
-        ResponseMsg: "Favorite added successfully!",
+        ResponseMsg: "Favorites fetched  successfully!",
         favorites
       });
     } catch (error) {
@@ -59,7 +74,7 @@ const addFavorite = async (req, res) => {
   
 
       res.status(200).json({
-        ResponseCode: "201",
+        ResponseCode: "200",
         Result: "true",
         ResponseMsg: "Favorite Deleted successfully!",
       });

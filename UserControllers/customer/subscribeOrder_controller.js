@@ -28,7 +28,7 @@ const subscribeOrder =  async (req, res) => {
 
     console.log(req.body);
 
-    const uid = "2dfd7d77-e6f6-43f9-8cc1-c7f29fbd91b6";
+    const uid =req.user.userId;
   
     if (!uid || !products || !products.length || !start_date || !days || !timeslot_id || !o_type || !store_id || !subtotal || !o_total) {
       return res.status(400).json({
@@ -101,8 +101,8 @@ const subscribeOrder =  async (req, res) => {
   
      
   
-      res.status(201).json({
-        ResponseCode: "201",
+      res.status(200).json({
+        ResponseCode: "200",
         Result: "true",
         ResponseMsg: "Order created successfully!",
         order_id: order.id,
@@ -156,8 +156,8 @@ const subscribeOrder =  async (req, res) => {
       });
       
   
-      res.status(201).json({
-        ResponseCode: "201",
+      res.status(200).json({
+        ResponseCode: "200",
         Result: "true",
         ResponseMsg: "Subscribe Order fetched successfully!",
         orders
@@ -175,8 +175,6 @@ const subscribeOrder =  async (req, res) => {
 
   const getOrderDetails = async (req, res) => {
     const {id} = req.params;
-
-
     try {
 
       const orderDetails  = await SubscribeOrder.findOne({
@@ -188,15 +186,15 @@ const subscribeOrder =  async (req, res) => {
             include: [
               {
                 model: Product,
-                as: "productDetails", // Ensure 'productDetails' alias is correct in the model associations
-                attributes: ["id", "title","img","subscribe_price", "description"] // Specify the fields you need
+                as: "productDetails", 
+                
               }
             ],
-            attributes:["pquantity",]
+            
           }
         ],
         order: [["createdAt", "DESC"]], 
-        attributes: ["id", "uid", "status", "createdAt"],
+        
       });
 
       if(!orderDetails){
@@ -210,8 +208,8 @@ const subscribeOrder =  async (req, res) => {
         });
       }
 
-      return res.status(201).json({
-        ResponseCode: "201",
+      return res.status(200).json({
+        ResponseCode: "200",
         Result: "true",
         ResponseMsg: "Instant Order fetched successfully!",
         orderDetails
@@ -259,7 +257,7 @@ const subscribeOrder =  async (req, res) => {
       await order.save();
   
       res.status(200).json({
-        ResponseCode: "201",
+        ResponseCode: "200",
         Result: "true",
         ResponseMsg: "Order cancelled successfully!",
         order

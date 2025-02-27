@@ -93,8 +93,8 @@ const instantOrder =  async (req, res) => {
         }
               )
   
-      res.status(201).json({
-        ResponseCode: "201",
+      res.status(200).json({
+        ResponseCode: "200",
         Result: "true",
         ResponseMsg: "Instant Order created successfully!",
         order_id: order.id,
@@ -132,8 +132,8 @@ const instantOrder =  async (req, res) => {
         order: [["createdAt", "DESC"]],
       });
   
-      res.status(201).json({
-        ResponseCode: "201",
+      res.status(200).json({
+        ResponseCode: "200",
         Result: "true",
         ResponseMsg: "Instant Order fetched successfully!",
         orders
@@ -155,16 +155,35 @@ const instantOrder =  async (req, res) => {
   
       
       const order = await NormalOrder.findOne({ where: { id } });
+
+      const orderDetails  = await NormalOrder.findOne({
+        where: { id },
+        include: [
+          {
+            model: NormalOrderProduct,
+            as: "NormalProducts", 
+            include: [
+              {
+                model: Product,
+                as: "ProductDetails", 
+              }
+            ],
+            
+          }
+        ],
+        order: [["createdAt", "DESC"]], 
+        
+      });
   
       if (!order) {
         return res.status(404).json({ success: false, message: "Order not found" });
       }
   
-      res.status(201).json({
-        ResponseCode: "201",
+      res.status(200).json({
+        ResponseCode: "200",
         Result: "true",
         ResponseMsg: "Instant Order details fetched successfully!",
-        order
+        orderDetails
       });
     } catch (error) {
       console.error("Error fetching order details:", error);
@@ -208,7 +227,7 @@ const instantOrder =  async (req, res) => {
   
      
       res.status(200).json({
-        ResponseCode: "201",
+        ResponseCode: "200",
         Result: "true",
         ResponseMsg: "Order cancelled successfully!",
         order

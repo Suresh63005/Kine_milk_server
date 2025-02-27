@@ -36,8 +36,8 @@ const upsertCart = async (req, res) => {
           orderType
         });
   
-        return res.status(201).json({
-          ResponseCode: "201",
+        return res.status(200).json({
+          ResponseCode: "200",
           Result: "true",
           ResponseMsg: "Item added to cart!",
           data: newCartItem,

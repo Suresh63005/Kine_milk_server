@@ -72,7 +72,7 @@ const registerAdmin = asynHandler(async (req, res) => {
 
   req.session.admin = admin;
   logger.error("Admin created successfully");
-  res.status(201).json({ message: "Admin created successfully", admin });
+  res.status(200).json({ message: "Admin created successfully", admin });
 });
 
 // Signin Controller

@@ -45,7 +45,7 @@ const {deliveryFirebase} = require('../../config/firebase-config');
 //             rdate: new Date(),
 //         });
 
-//         res.status(201).json({ success: true, message: "Rider added successfully", rider: newRider });
+//         res.status(200).json({ success: true, message: "Rider added successfully", rider: newRider });
 //     } catch (error) {
 //         console.error("Error adding rider:", error);
 //         res.status(500).json({ success: false, message: "Error adding rider", error: error.message });
@@ -113,7 +113,7 @@ const AddRider = asyncHandler(async (req, res) => {
           rdate: new Date(),
       });
 
-      res.status(201).json({ success: true, message: "Rider added successfully", rider: newRider });
+      res.status(200).json({ success: true, message: "Rider added successfully", rider: newRider });
   } catch (error) {
       console.error("Error adding rider:", JSON.stringify(error, null, 2));
       res.status(500).json({ success: false, message: "Error adding rider", error: error.message });

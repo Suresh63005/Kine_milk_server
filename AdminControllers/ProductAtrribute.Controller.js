@@ -85,8 +85,8 @@ const upsertProductAttribute = async (req, res) => {
     });
 
     console.log("Product attribute created successfully:", productAttrbt);
-    return res.status(201).json({
-      ResponseCode: "201",
+    return res.status(200).json({
+      ResponseCode: "200",
       Result: "true",
       ResponseMsg: "Product attribute created successfully.",
       productAttrbt,

@@ -42,8 +42,8 @@ if (!product) {
     store_id,product_id,date,quantity,total,status:1
   });
 
-  return res.status(201).json({
-    ResponseCode: "201",
+  return res.status(200).json({
+    ResponseCode: "200",
     Result: "true",
     ResponseMsg: "Product inventory created successfully.",
     inventory,
