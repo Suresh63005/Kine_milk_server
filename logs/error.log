@@ -263,3 +263,5 @@
 {"level":"error","message":"Invalid Email","service":"kine_milk_server","timestamp":"2025-02-24T07:04:28.358Z"}
 {"level":"error","message":"Invalid Email","service":"kine_milk_server","timestamp":"2025-02-24T07:31:30.869Z"}
 {"level":"error","message":"Invalid Email","service":"kine_milk_server","timestamp":"2025-02-24T09:58:57.155Z"}
+{"level":"error","message":"Image is required for a new coupon.","service":"kine_milk_server","timestamp":"2025-02-25T10:53:26.591Z"}
+{"level":"error","message":"Image is required for a new coupon.","service":"kine_milk_server","timestamp":"2025-02-25T10:53:27.926Z"}
