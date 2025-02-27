@@ -21,6 +21,7 @@ const instantOrder =  async (req, res) => {
       store_charge,
       tax,
       o_total,
+      odate,
       store_id,
       address_id,
       a_note,
@@ -30,7 +31,7 @@ const instantOrder =  async (req, res) => {
 
     const uid = "2dfd7d77-e6f6-43f9-8cc1-c7f29fbd91b6";
   
-    if (!uid || !products || !products.length || !timeslot_id || !o_type || !store_id || !subtotal || !o_total) {
+    if (!uid || !products || !products.length || !timeslot_id || !o_type || !store_id || !subtotal || !o_total ||!odate) {
       return res.status(400).json({
         ResponseCode: "400",
         Result: "false",
@@ -40,7 +41,7 @@ const instantOrder =  async (req, res) => {
   
     try {
       
-      const odate = new Date();
+      
   
       // Create the order
       const order = await NormalOrder.create(

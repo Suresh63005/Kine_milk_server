@@ -70,6 +70,18 @@ const Setting = sequelize.define(
       type: DataTypes.TEXT,
       allowNull: false,
     },
+    delivery_charges: {
+      type: DataTypes.BIGINT,
+      allowNull: false,
+    },
+    store_charges: {
+      type: DataTypes.BIGINT,
+      allowNull: false,
+    },
+    tax: {
+      type: DataTypes.BIGINT,
+      allowNull: false,
+    },
   },
   { tableName: "tbl_setting", timestamps: true, paranoid: true }
 );
