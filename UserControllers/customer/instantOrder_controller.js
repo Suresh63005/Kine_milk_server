@@ -94,7 +94,7 @@ const instantOrder =  async (req, res) => {
               )
   
       res.status(200).json({
-        ResponseCode: "201",
+        ResponseCode: "200",
         Result: "true",
         ResponseMsg: "Instant Order created successfully!",
         order_id: order.id,
@@ -133,7 +133,7 @@ const instantOrder =  async (req, res) => {
       });
   
       res.status(200).json({
-        ResponseCode: "201",
+        ResponseCode: "200",
         Result: "true",
         ResponseMsg: "Instant Order fetched successfully!",
         orders
@@ -180,7 +180,7 @@ const instantOrder =  async (req, res) => {
       }
   
       res.status(200).json({
-        ResponseCode: "201",
+        ResponseCode: "200",
         Result: "true",
         ResponseMsg: "Instant Order details fetched successfully!",
         orderDetails
@@ -227,7 +227,7 @@ const instantOrder =  async (req, res) => {
   
      
       res.status(200).json({
-        ResponseCode: "201",
+        ResponseCode: "200",
         Result: "true",
         ResponseMsg: "Order cancelled successfully!",
         order

@@ -16,7 +16,7 @@ const getsetting = async (req, res)=>{
         }
 
         return res.status(200).json({
-            ResponseCode: "201",
+            ResponseCode: "200",
             Result: "true",
             ResponseMsg: "settings fetched successfully!",
             setting

@@ -104,7 +104,7 @@ const upsertRider = async (req, res) => {
       });
 
       return res.status(200).json({
-        ResponseCode: "201",
+        ResponseCode: "200",
         Result: "true",
         ResponseMsg: "Rider created successfully",
         rider: newRider,

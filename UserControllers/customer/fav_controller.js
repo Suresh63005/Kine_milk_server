@@ -12,14 +12,14 @@ const addFavorite = async (req, res) => {
 
       if(existingFav){
         return res.status(400).json({
-          ResponseCode: "201",
+          ResponseCode: "200",
           ResponseMsg: "You already have this product in your favorites"});
       }
   
       const favorite = await Favorite.create({ uid,pid, store_id });
 
       res.status(200).json({
-        ResponseCode: "201",
+        ResponseCode: "200",
         Result: "true",
         ResponseMsg: "Favorite added successfully!",
         favorite
@@ -46,7 +46,7 @@ const addFavorite = async (req, res) => {
       });
   
       res.status(200).json({
-        ResponseCode: "201",
+        ResponseCode: "200",
         Result: "true",
         ResponseMsg: "Favorites fetched  successfully!",
         favorites
@@ -74,7 +74,7 @@ const addFavorite = async (req, res) => {
   
 
       res.status(200).json({
-        ResponseCode: "201",
+        ResponseCode: "200",
         Result: "true",
         ResponseMsg: "Favorite Deleted successfully!",
       });
