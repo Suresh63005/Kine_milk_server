@@ -206,7 +206,7 @@ const instantOrder =  async (req, res) => {
       order.status = "Cancelled";
       await order.save();
   
-      res.status(200).json({ success: true, message: "Order cancelled successfully", order });
+     
       res.status(200).json({
         ResponseCode: "201",
         Result: "true",
@@ -215,7 +215,7 @@ const instantOrder =  async (req, res) => {
       });
     } catch (error) {
       console.error("Error cancelling order:", error);
-      res.status(500).json({ success: false, message: "Server error", error });
+     
     }
   };
   

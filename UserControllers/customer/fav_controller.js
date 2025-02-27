@@ -2,7 +2,9 @@ const Favorite = require("../../Models/Favorite");
 
 const addFavorite = async (req, res) => {
     try {
-      const { uid,pid, store_id } = req.body;
+      const { pid, store_id } = req.body;
+
+      const uid = req.user.userId;
   
       const favorite = await Favorite.create({ uid,pid, store_id });
 
@@ -22,7 +24,9 @@ const addFavorite = async (req, res) => {
   
   const getFavorites = async (req, res) => {
     try {
-      const { uid,store_id } = req.body;
+      const {store_id } = req.body;
+
+      const uid = req.user.userId;
   
       const favorites = await Favorite.findAll({ where: { uid ,store_id} });
   
@@ -41,7 +45,9 @@ const addFavorite = async (req, res) => {
   // Remove a favorite
   const removeFavorite = async (req, res) => {
     try {
-      const { uid,pid, store_id } = req.body;
+      const { pid, store_id } = req.body;
+
+      const uid = req.user.userId;
   
       const deleted = await Favorite.destroy({
         where: { uid,pid, store_id },
