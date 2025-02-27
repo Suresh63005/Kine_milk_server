@@ -539,3 +539,4 @@
 {"level":"info","message":"successfully get all products","service":"kine_milk_server","timestamp":"2025-02-27T05:01:54.241Z"}
 {"level":"info","message":"successfully get all products","service":"kine_milk_server","timestamp":"2025-02-27T05:02:02.055Z"}
 {"level":"info","message":"successfully get all products","service":"kine_milk_server","timestamp":"2025-02-27T05:02:02.090Z"}
+{"level":"error","message":"Internal Server Error","service":"kine_milk_server","timestamp":"2025-02-27T14:56:30.582Z"}
