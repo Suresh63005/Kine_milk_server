@@ -165,9 +165,18 @@ const upsertProduct = async (req, res) => {
 };
 
 const getAllProducts = asyncHandler(async (req, res, next) => {
-  const Products = await Product.findAll();
+
+const {storeId} = req.params;
+ try {
+  
+  const Products = await Product.findAll({where:{store_id:storeId}});
   logger.info("successfully get all products");
   res.status(200).json(Products);
+
+ } catch (error) {
+  console.log(error)
+
+ }
 });
 
 const getProductCount = asyncHandler(async (req, res) => {
