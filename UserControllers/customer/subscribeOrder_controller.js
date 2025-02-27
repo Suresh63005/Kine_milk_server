@@ -101,7 +101,7 @@ const subscribeOrder =  async (req, res) => {
   
      
   
-      res.status(201).json({
+      res.status(200).json({
         ResponseCode: "201",
         Result: "true",
         ResponseMsg: "Order created successfully!",
@@ -156,7 +156,7 @@ const subscribeOrder =  async (req, res) => {
       });
       
   
-      res.status(201).json({
+      res.status(200).json({
         ResponseCode: "201",
         Result: "true",
         ResponseMsg: "Subscribe Order fetched successfully!",
@@ -175,8 +175,6 @@ const subscribeOrder =  async (req, res) => {
 
   const getOrderDetails = async (req, res) => {
     const {id} = req.params;
-
-
     try {
 
       const orderDetails  = await SubscribeOrder.findOne({
@@ -188,15 +186,15 @@ const subscribeOrder =  async (req, res) => {
             include: [
               {
                 model: Product,
-                as: "productDetails", // Ensure 'productDetails' alias is correct in the model associations
-                attributes: ["id", "title","img","subscribe_price", "description"] // Specify the fields you need
+                as: "productDetails", 
+                
               }
             ],
-            attributes:["pquantity",]
+            
           }
         ],
         order: [["createdAt", "DESC"]], 
-        attributes: ["id", "uid", "status", "createdAt"],
+        
       });
 
       if(!orderDetails){
@@ -210,7 +208,7 @@ const subscribeOrder =  async (req, res) => {
         });
       }
 
-      return res.status(201).json({
+      return res.status(200).json({
         ResponseCode: "201",
         Result: "true",
         ResponseMsg: "Instant Order fetched successfully!",

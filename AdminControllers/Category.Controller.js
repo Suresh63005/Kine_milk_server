@@ -69,7 +69,7 @@ const upsertCategory = asyncHandler(async (req, res) => {
     cover,
   });
 
-  return res.status(201).json({
+  return res.status(200).json({
     ResponseCode: "201",
     Result: "true",
     ResponseMsg: "Category created successfully.",

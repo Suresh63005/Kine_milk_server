@@ -72,7 +72,7 @@ const upsertProductImages = async (req, res) => {
           await ProductImages.bulkCreate(newImages);
         }
   
-        return res.status(201).json({ message: "Product image added successfully", newProductImage });
+        return res.status(200).json({ message: "Product image added successfully", newProductImage });
       }
     } catch (error) {
       console.error("Error in upsertProductImages:", error);

@@ -147,7 +147,7 @@ const upsertProduct = async (req, res) => {
       }
 
       console.log("Product created successfully:", product);
-      return res.status(201).json({
+      return res.status(200).json({
         ResponseCode: "201",
         Result: "true",
         ResponseMsg: "Product created successfully.",

@@ -132,7 +132,7 @@ const AddInventory = asyncHandler(async (req, res) => {
 
         console.log("Inventory updated successfully:", product);
 
-        return res.status(201).json({
+        return res.status(200).json({
             ResponseCode: "201",
             Result: "true",
             message: "Product updated successfully.",

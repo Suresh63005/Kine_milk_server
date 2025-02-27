@@ -32,7 +32,7 @@ const addPage = async (req, res) => {
   try {
     const { title, status, description } = req.body;
     const newPage = await Page.create({ title, status, description });
-    res.status(201).json(newPage);
+    res.status(200).json(newPage);
   } catch (error) {
     res.status(400).json({ error: 'Failed to create page' });
   }

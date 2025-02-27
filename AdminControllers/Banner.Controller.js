@@ -50,7 +50,7 @@ const upsertBanner = asyncHandler(async (req, res, next) => {
       } else {
         banner = await Banner.create({ img: imageUrl, status });
   
-        return res.status(201).json({
+        return res.status(200).json({
           ResponseCode: "201",
           Result: "true",
           ResponseMsg: "Banner created successfully.",

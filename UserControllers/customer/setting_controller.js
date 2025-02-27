@@ -15,7 +15,7 @@ const getsetting = async (req, res)=>{
             return res.status(404).json({ResponseMsg:"Setting not found"});
         }
 
-        return res.status(201).json({
+        return res.status(200).json({
             ResponseCode: "201",
             Result: "true",
             ResponseMsg: "settings fetched successfully!",

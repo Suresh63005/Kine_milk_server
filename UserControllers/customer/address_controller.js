@@ -64,7 +64,7 @@ const upSertAddress = async (req, res) => {
           a_type,
         });
   
-        return res.status(201).json({
+        return res.status(200).json({
           ResponseCode: "201",
           Result: "true",
           ResponseMsg: "Address Saved Successfully!",

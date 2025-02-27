@@ -106,7 +106,7 @@ const upsertCoupon = async (req, res) => {
         });
   
         logger.info("Coupon created successfully:", coupon);
-        return res.status(201).json({
+        return res.status(200).json({
           ResponseCode: "201",
           Result: "true",
           ResponseMsg: "Coupon created successfully.",
