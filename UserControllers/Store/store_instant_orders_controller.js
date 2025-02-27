@@ -42,12 +42,48 @@ const ListAllInstantOrders = asyncHandler(async (req, res) => {
     }
 });
 
+// const FetchAllInstantOrdersByStatus = asyncHandler(async (req, res) => {
+//     console.log("Decoded User:", req.user);
+
+//     const uid = req.user.userId;
+//     if (!uid) {
+//         return res.status(400).json({
+//             ResponseCode: "401",
+//             Result: "false",
+//             ResponseMsg: "User ID not provided",
+//         });
+//     }
+
+//     console.log("Fetching orders for user ID:", uid);
+//     const { store_id, status } = req.body;
+
+//     if (!store_id || !status) {
+//         return res.status(400).json({ message: "Store ID and status are required!" });
+//     }
+
+//     try {
+//         const orders = await NormalOrder.findAll({
+//             where: { store_id, status },
+//             order: [['createdAt', 'DESC']],
+//         });
+
+//         if (orders.length === 0) {
+//             return res.status(404).json({ message: "No orders found for the given status." });
+//         }
+
+//         return res.status(200).json({ message: "Orders fetched successfully!", orders });
+//     } catch (error) {
+//         console.error("Error fetching orders:", error.message);
+//         return res.status(500).json({ message: "Internal server error: " + error.message });
+//     }
+// });
+
 const FetchAllInstantOrdersByStatus = asyncHandler(async (req, res) => {
     console.log("Decoded User:", req.user);
+    const uid = req.user?.userId; 
 
-    const uid = req.user.userId;
     if (!uid) {
-        return res.status(400).json({
+        return res.status(401).json({
             ResponseCode: "401",
             Result: "false",
             ResponseMsg: "User ID not provided",
@@ -55,28 +91,53 @@ const FetchAllInstantOrdersByStatus = asyncHandler(async (req, res) => {
     }
 
     console.log("Fetching orders for user ID:", uid);
+
     const { store_id, status } = req.body;
 
-    if (!store_id || !status) {
-        return res.status(400).json({ message: "Store ID and status are required!" });
+    if (!store_id) {
+        return res.status(400).json({ message: "Store ID is required!" });
+    }
+
+    if (!status || !["active", "completed", "cancelled"].includes(status)) {
+        return res.status(400).json({
+            message: "Order status is required and should be either active, completed, or cancelled!",
+        });
     }
 
     try {
-        const orders = await NormalOrder.findAll({
-            where: { store_id, status },
-            order: [['createdAt', 'DESC']],
-        });
+        let queryFilter = { store_id }; 
 
-        if (orders.length === 0) {
-            return res.status(404).json({ message: "No orders found for the given status." });
+        if (status === "active") {
+            queryFilter.status = { [Op.or]: ["Pending", "Processing", "On Route"] };
+        } else if (status === "completed") {
+            queryFilter.status = "Completed";
+        } else if (status === "cancelled") {
+            queryFilter.status = "Cancelled";
         }
 
-        return res.status(200).json({ message: "Orders fetched successfully!", orders });
+        const orders = await NormalOrder.findAll({
+            where: queryFilter,
+            order: [["createdAt", "DESC"]],
+        });
+
+        return res.status(200).json({
+            ResponseCode: "200",
+            Result: "true",
+            ResponseMsg: "Orders fetched successfully",
+            Data: orders,
+        });
+
     } catch (error) {
-        console.error("Error fetching orders:", error.message);
-        return res.status(500).json({ message: "Internal server error: " + error.message });
+        console.error("Error fetching orders:", error);
+        return res.status(500).json({
+            ResponseCode: "500",
+            Result: "false",
+            ResponseMsg: "Internal server error",
+            Error: error.message,
+        });
     }
 });
+
 
 const AssignOrderToRider = asyncHandler(async (req, res) => {
     
