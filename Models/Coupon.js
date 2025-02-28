@@ -5,6 +5,7 @@ const Coupon = sequelize.define(
   "Coupon",
   {
     id: {
+      
       type: DataTypes.UUID,
       allowNull: false,
       primaryKey: true,
