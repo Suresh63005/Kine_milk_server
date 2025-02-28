@@ -71,7 +71,7 @@ const upsertCoupon = async (req, res) => {
           min_amt,
           coupon_val,
           description,
-          store_id
+          
         });
   
         logger.info("Coupon updated successfully:", coupon);
@@ -102,7 +102,7 @@ const upsertCoupon = async (req, res) => {
           min_amt,
           coupon_val,
           description,
-          store_id
+          
         });
   
         logger.info("Coupon created successfully:", coupon);

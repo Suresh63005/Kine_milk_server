@@ -10,10 +10,10 @@ const Coupon = sequelize.define(
       primaryKey: true,
       defaultValue: DataTypes.UUIDV4,
     },
-    store_id: {
-      type: DataTypes.UUID,
-      allowNull: false,
-    },
+    // store_id: {
+    //   type: DataTypes.UUID,
+    //   allowNull: false,
+    // },
     coupon_img: {
       type: DataTypes.TEXT,
       allowNull: false,
@@ -35,6 +35,14 @@ const Coupon = sequelize.define(
       allowNull: false,
     },
     description: {
+      type: DataTypes.TEXT,
+      allowNull: false,
+    },
+    coupon_code: {
+      type: DataTypes.TEXT,
+      allowNull: false,
+    },
+    coupon_title: {
       type: DataTypes.TEXT,
       allowNull: false,
     },
