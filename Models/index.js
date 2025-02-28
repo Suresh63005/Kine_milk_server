@@ -1,6 +1,7 @@
 // const Admin = require("./Admin");
 // const Category = require("./Category");
 // const Product = require("./Product");
+const Address = require("./Address");
 const Cart = require("./Cart");
 const Category = require("./Category");
 const Favorite = require("./Favorite");
@@ -99,7 +100,12 @@ Product.hasMany(Cart,{foreignKey:"product_id", });
 ProductInventory.belongsTo(Product, { foreignKey: "product_id", as: "inventoryProducts" });
 Product.hasMany(ProductInventory, { foreignKey: "product_id", as: "inventoryProducts" });
 
+<<<<<<< HEAD
+Address.belongsTo(User, { foreignKey: 'uid', as: 'user' });
+User.hasMany(Address, { foreignKey: 'uid', as: 'addresses' });
+=======
 Favorite.belongsTo(Product, { foreignKey: "pid", as: "favproducts" });
 Product.belongsTo(Favorite, { foreignKey: "pid", as: "favproducts" });
 
 
+>>>>>>> 08fdcd9d1e9ac1fd777a6e8cf52fc32abbd1b099
