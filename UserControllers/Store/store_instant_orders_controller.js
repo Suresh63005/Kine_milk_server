@@ -1,5 +1,5 @@
 const Product = require("../../Models/Product");
-const { Op } = require("sequelize");
+const { Op, Sequelize } = require("sequelize");
 const asyncHandler = require("../../middlewares/errorHandler");
 const logger = require("../../utils/logger");
 const uploadToS3 = require("../../config/fileUpload.aws");
@@ -7,6 +7,8 @@ const Store = require("../../Models/Store");
 const NormalOrder = require("../../Models/NormalOrder");
 const Rider = require("../../Models/Rider");
 const NormalOrderProduct = require("../../Models/NormalOrderProduct");
+const User = require("../../Models/User");
+const Address = require("../../Models/Address");
 
 const ListAllInstantOrders = asyncHandler(async (req, res) => {
     console.log("Decoded User:", req.user);
@@ -26,6 +28,22 @@ const ListAllInstantOrders = asyncHandler(async (req, res) => {
     try {
         const instantOrders = await NormalOrder.findAll({
             where: { store_id: storeId },
+            include:[
+                {
+                    model:User,
+                    as:"user",
+                    attributes:["id","name","mobile"],
+                    on: { "$user.id$": { [Op.eq]: Sequelize.col
+                    ("NormalOrder.uid") } },
+                    include:[
+                        {
+                            model:Address,
+                            as:"addresses",
+                            attributes:["id","uid","address","landmark","r_instruction","a_type","a_lat","a_long",],
+                        }
+                    ]
+                }
+            ]
         });
 
         if (!instantOrders || instantOrders.length === 0) {
@@ -118,6 +136,14 @@ const FetchAllInstantOrdersByStatus = asyncHandler(async (req, res) => {
         const orders = await NormalOrder.findAll({
             where: queryFilter,
             order: [["createdAt", "DESC"]],
+            include:[
+                {
+                    model:User,
+                    as:"user",
+                    attributes:["id","name","mobile"],
+                    on: { "$user.id$": { [Op.eq]: Sequelize.col("NormalOrder.uid") } }
+                }
+            ]
         });
 
         return res.status(200).json({
@@ -219,6 +245,19 @@ const ViewInstantOrderById = asyncHandler(async(req,res)=>{
                             model:Product,
                             as:"productDetails",
                             attributes: ["id", "title", "description", "normal_price", "mrp_price", "img"],
+                        },
+                    ]
+                },
+                {
+                    model:User,
+                    as:"user",
+                    attributes:["id","name","mobile","email"],
+                    on: { "$user.id$": { [Op.eq]: Sequelize.col("NormalOrder.uid") } },
+                    include:[
+                        {
+                            model:Address,
+                            as:"addresses",
+                            attributes:["id","uid","address","landmark","r_instruction","a_type","a_lat","a_long",]
                         }
                     ]
                 }
