@@ -6,6 +6,7 @@ const Store = require("../../Models/Store");
 const asyncHandler = require("../../middlewares/errorHandler");
 const moment = require('moment');
 const { Op } = require("sequelize");
+const ProductInventory = require("../../Models/ProductInventory");
 
 const StoreDashboardAPI = asyncHandler(async (req, res) => {
   try {
@@ -45,7 +46,7 @@ const StoreDashboardAPI = asyncHandler(async (req, res) => {
       where: { store_id: storeId, status: "Completed", createdAt: { [Op.between]: [startOfDay, endOfDay] } },
     });
 
-    const products = await Product.count({ where: { store_id: storeId } });
+    const products = await ProductInventory.count({ where: { store_id: storeId } });
     const deliveryBoys = await Rider.count({ where: { store_id: storeId } });
     const instantOrders = await NormalOrder.count({
       where: { store_id: storeId },

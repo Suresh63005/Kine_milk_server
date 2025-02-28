@@ -50,8 +50,8 @@ const upsertDelivery = async (req, res) => {
         delivery = await Delivery.create({ title, status, de_digit,store_id });
   
         console.log("delivery created successfully:", delivery);
-        return res.status(201).json({
-          ResponseCode: "201",
+        return res.status(200).json({
+          ResponseCode: "200",
           Result: "true",
           ResponseMsg: "delivery created successfully.",
           delivery,

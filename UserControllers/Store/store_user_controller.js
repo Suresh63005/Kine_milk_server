@@ -101,13 +101,16 @@ const EditStoreProfile = asyncHandler(async (req, res) => {
 });
 
 // const verifyMobile = asyncHandler(async (req, res) => {
+  
 //   const { mobile } = req.body;
+//   console.log("Received mobile number:", mobile);
 
 //   if (!mobile) {
 //       return res.status(400).json({ message: "Mobile number is required!" });
 //   }
 
 //   try {
+//     console.log("checking mobile number:", mobile);
 //       const userRecord = await storeFirebase.auth().getUserByPhoneNumber(mobile);
 //       if (!userRecord) {
 //           return res.status(404).json({ message: "Mobile number not found!" });
@@ -139,52 +142,72 @@ const EditStoreProfile = asyncHandler(async (req, res) => {
 // });
 
 const verifyMobile = asyncHandler(async (req, res) => {
-  const { mobile } = req.body;
+  let { mobile } = req.body;
 
   if (!mobile) {
-      return res.status(400).json({ message: "Mobile number is required!" });
+    return res.status(400).json({ message: "Mobile number is required!" });
+  }
+
+  // Ensure mobile number is in correct format
+  if (!mobile.startsWith("+")) {
+    mobile = `+${mobile}`;
   }
 
   try {
-      const userRecord = await storeFirebase.auth().getUserByPhoneNumber(mobile);
-      if (!userRecord) {
-          return res.status(404).json({ message: "Mobile number not found!" });
-      }
+    console.log("Checking mobile number:", mobile);
 
-      // Normalize mobile format
-      const formattedMobile = mobile.startsWith("+91") ? mobile.slice(3) : mobile;
+    let userRecord;
 
-      console.log("Checking store for mobile:", formattedMobile);
-
-      const store = await Store.findOne({ where: { mobile: formattedMobile } });
-
-      if (!store) {
-          console.log("No store found for mobile:", formattedMobile);
+    try {
+      // Fetch user from Firebase
+      userRecord = await storeFirebase.auth().getUserByPhoneNumber(mobile);
+    } catch (error) {
+      if (error.code === "auth/user-not-found") {
+        console.log("User not found in Firebase, creating new user...");
+        userRecord = await storeFirebase.auth().createUser({
+          phoneNumber: mobile,
+        });
       } else {
-          console.log("Store found:", store);
+        throw error;
       }
+    }
 
-      const token = jwt.sign(
-          { userId: userRecord.uid, mobile: userRecord.phoneNumber },
-          process.env.JWT_SECRET,
-          // { expiresIn: "7d" }
-      );
+    // 🔹 Remove country code before querying database
+    const mobileWithoutCountryCode = mobile.replace(/^\+91/, "");
 
-      return res.status(200).json({
-          message: "Mobile number verified successfully!",
-          user_details:{
-            mobile: userRecord.phoneNumber,
-            owner_name: store.owner_name,  
-            email: store.email,  
-            token
-          },
-          store
-      });
+    // Fetch store details from database
+    const store = await Store.findOne({ where: { mobile: mobileWithoutCountryCode } });
+
+    if (!store) {
+      console.warn(`Store not found for mobile: ${mobileWithoutCountryCode}`);
+    }
+
+    // Generate JWT token
+    const token = jwt.sign(
+      { userId: userRecord.uid, mobile: userRecord.phoneNumber },
+      process.env.JWT_SECRET,
+      { expiresIn: "7d" }
+    );
+
+    return res.status(200).json({
+      message: "Mobile number verified successfully!",
+      mobile: userRecord.phoneNumber,
+      token,
+      store,
+    });
+
   } catch (error) {
-      console.error("Error verifying mobile number:", error.message);
-      return res.status(500).json({ message: "Error verifying mobile number: " + error.message });
+    console.error("Error verifying mobile number:", error);
+    return res.status(500).json({ message: "Error verifying mobile number: " + error.message });
   }
 });
 
+
+
+const ListAllUsers = async()=>{
+  const listUsersResult = await storeFirebase.auth().listUsers();
+  console.log("All Firebase Users:", listUsersResult.users.map(user => user.phoneNumber));
+}
+ListAllUsers();
 
 module.exports = { StoreProfile, EditStoreProfile,verifyMobile };

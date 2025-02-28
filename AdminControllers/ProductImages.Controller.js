@@ -82,6 +82,10 @@ const upsertProductImages = async (req, res) => {
 
             return res.status(201).json({ message: "Product image created successfully!", productImage: newProductImage });
         }
+
+  
+        return res.status(200).json({ message: "Product image added successfully", newProductImage });
+      }
     } catch (error) {
         console.error("Error in upsertProductImages:", error);
         return res.status(500).json({ error: "Internal server error", details: error.message });

@@ -7,6 +7,6 @@ const router = express.Router();
 router.post("/",instantOrder);
 router.post("/status",getOrdersByStatus);
 router.get("/:id",getOrderDetails);
-router.post("/",cancelOrder);
+router.post("/cancel",cancelOrder);
 
 module.exports = router ;

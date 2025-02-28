@@ -3,6 +3,7 @@ const SubscribeOrder = require("../../Models/SubscribeOrder");
 const Product = require("../../Models/Product");
 const SubscribeOrderProduct = require("../../Models/SubscribeOrderProduct");
 const Notification = require("../../Models/Notification");
+const NormalOrder = require("../../Models/NormalOrder");
 
 
 const subscribeOrder =  async (req, res) => {
@@ -27,7 +28,7 @@ const subscribeOrder =  async (req, res) => {
 
     console.log(req.body);
 
-    const uid = "2dfd7d77-e6f6-43f9-8cc1-c7f29fbd91b6";
+    const uid =req.user.userId;
   
     if (!uid || !products || !products.length || !start_date || !days || !timeslot_id || !o_type || !store_id || !subtotal || !o_total) {
       return res.status(400).json({
@@ -100,8 +101,8 @@ const subscribeOrder =  async (req, res) => {
   
      
   
-      res.status(201).json({
-        ResponseCode: "201",
+      res.status(200).json({
+        ResponseCode: "200",
         Result: "true",
         ResponseMsg: "Order created successfully!",
         order_id: order.id,
@@ -136,11 +137,27 @@ const subscribeOrder =  async (req, res) => {
       
       const orders = await SubscribeOrder.findAll({
         where: { uid, status },
-        order: [["createdAt", "DESC"]],
+        include: [
+          {
+            model: SubscribeOrderProduct,
+            as: "orderProducts", // Ensure 'orderProducts' alias is correct in the model associations
+            include: [
+              {
+                model: Product,
+                as: "productDetails", // Ensure 'productDetails' alias is correct in the model associations
+                attributes: ["id", "title","img","subscribe_price", "description"] // Specify the fields you need
+              }
+            ],
+            attributes:["pquantity",]
+          }
+        ],
+        order: [["createdAt", "DESC"]], 
+        attributes: ["id", "uid", "status", "createdAt"], 
       });
+      
   
-      res.status(201).json({
-        ResponseCode: "201",
+      res.status(200).json({
+        ResponseCode: "200",
         Result: "true",
         ResponseMsg: "Subscribe Order fetched successfully!",
         orders
@@ -156,5 +173,105 @@ const subscribeOrder =  async (req, res) => {
     }
   };
 
+  const getOrderDetails = async (req, res) => {
+    const {id} = req.params;
+    try {
 
-  module.exports = {subscribeOrder,getOrdersByStatus};
+      const orderDetails  = await SubscribeOrder.findOne({
+        where: { id },
+        include: [
+          {
+            model: SubscribeOrderProduct,
+            as: "orderProducts", 
+            include: [
+              {
+                model: Product,
+                as: "productDetails", 
+                
+              }
+            ],
+            
+          }
+        ],
+        order: [["createdAt", "DESC"]], 
+        
+      });
+
+      if(!orderDetails){
+        console.error("Error fetching order details:", error);
+  
+        res.status(404).json({
+          ResponseCode: "404",
+          Result: "false",
+          ResponseMsg: "Order Not Found",
+          error: error.message,
+        });
+      }
+
+      return res.status(200).json({
+        ResponseCode: "200",
+        Result: "true",
+        ResponseMsg: "Instant Order fetched successfully!",
+        orderDetails
+      });
+      
+    } catch (error) {
+      console.error("Error  order:", error);
+  
+      res.status(500).json({
+        ResponseCode: "500",
+        Result: "false",
+        ResponseMsg: "Server Error",
+        error: error.message,
+      });
+    }
+
+  }
+
+  const cancelOrder = async (req, res) => {
+    try {
+      const { id } = req.body;
+  
+      // Find the order
+      const order = await SubscribeOrder.findOne({ where: { id } });
+  
+      if (!order) {
+        return res.status(400).json({
+          ResponseCode: "404",
+          Result: "false",
+          ResponseMsg: "Order not found",
+          
+        });
+      }
+  
+      if (order.status === "Cancelled") {
+        
+        return res.status(400).json({
+          ResponseCode: "404",
+          Result: "false",
+          ResponseMsg: "Order is already cancelled",
+          
+        });
+      }
+      order.status = "Cancelled";
+      await order.save();
+  
+      res.status(200).json({
+        ResponseCode: "200",
+        Result: "true",
+        ResponseMsg: "Order cancelled successfully!",
+        order
+      });
+    } catch (error) {
+      console.error("Error cancelling order:", error);
+     
+    }
+  };
+
+
+  module.exports = {
+    subscribeOrder,
+    getOrdersByStatus,
+    getOrderDetails,
+    cancelOrder
+  };

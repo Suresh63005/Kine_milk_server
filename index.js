@@ -53,6 +53,8 @@ const WalletReport = require("./Models/WalletReport");
 const Zone = require("./Models/Zone");
 const index = require("./Models/index");
 const Review = require("./Models/review");
+const ProductInventory = require("./Models/ProductInventory");
+const Setting = require("./Models/Setting");
 
 app.use(morgan("dev"));
 // Middlewares
@@ -103,6 +105,8 @@ app.use("/time",require("./AdminRoutes/Time.route"))
 app.use("/normalorder",require("./AdminRoutes/NormalOrder.route"))
 app.use("/banner",require('./AdminRoutes/Banner.route'))
 app.use("/store",require('./AdminRoutes/Store.route'))
+app.use("/product_inventory",require('./AdminRoutes/ProductInventory_route'))
+
 
 
 // User Routes
@@ -137,6 +141,8 @@ app.use("/delivery",require('./UserRoutes/Delivery/rider_auth_routes'))
 app.use("/deliveries",require('./UserRoutes/Delivery/delivery_dashboard_routes'))
 app.use("/instant-delivery",require('./UserRoutes/Delivery/instant_delivery_order_routes'))
 app.use("/subscribe-delivery",require('./UserRoutes/Delivery/subcribe_delivery_order_routes'))
+app.use("/u_settings", require("./UserRoutes/customer/settings_route"));
+
 
 app.get("/", (req, res) => {
     res.send("Server is Running");
