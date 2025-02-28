@@ -96,7 +96,7 @@ const ViewProductInventoryById = asyncHandler(async (req, res) => {
       ResponseCode: "500",
       Result: "false",
       ResponseMsg: "Internal Server Error",
-      error: error.message, // Provide detailed error message
+      error: error.message, 
     });
   }
 });
@@ -113,31 +113,19 @@ const AddInventory = asyncHandler(async (req, res) => {
     });
   }
 
-  console.log("Fetching orders for user ID:", uid);
-
   const { storeId } = req.params;
   const { productId, date, quantity } = req.body;
 
-  // Check if all fields are provided
   if (!productId || !date || !quantity) {
     return res.status(400).json({ message: "All fields are required." });
   }
 
   try {
-    // Find the product in the store
     const product = await Product.findOne({
       where: {
         id: productId,
-        store_id: storeId,
       },
-      attributes: [
-        "id",
-        "title",
-        "date",
-        "quantity",
-        "normal_price",
-        "mrp_price",
-      ],
+      attributes: ["id", "title", "normal_price", "mrp_price"],
     });
 
     if (!product) {
@@ -148,32 +136,36 @@ const AddInventory = asyncHandler(async (req, res) => {
       });
     }
 
+    const total = quantity * product.normal_price;
 
+    const inventoryRecord = await ProductInventory.create({
+      store_id: storeId, 
+      product_id: productId,
+      date: date,
+      quantity: quantity,
+      total: total,
+      status: 1, 
+    });
 
-        // Update only the specified fields (excluding title)
-        await product.update({ date, quantity });
+    console.log("Inventory record created successfully:", inventoryRecord);
 
-        console.log("Inventory updated successfully:", product);
-
-        return res.status(200).json({
-            ResponseCode: "200",
-            Result: "true",
-            message: "Product updated successfully.",
-            product: {
-                productId: product.id,
-                title: product.title, // Fetching title in the response
-                date: product.date,
-                quantity: product.quantity,
-                unit_price: product.normal_price,
-                total_price: product.mrp_price
-            },
-        });
-
-    } catch (error) {
-        console.error("Error updating store products:", error);
-        return res.status(500).json({ message: "Internal server error", error });
-    }
-
+    return res.status(200).json({
+      ResponseCode: "200",
+      Result: "true",
+      message: "Product added to inventory successfully.",
+      product: {
+        productId: product.id,
+        title: product.title,
+        date: inventoryRecord.date,
+        quantity: inventoryRecord.quantity,
+        unit_price: product.normal_price,
+        total_price: inventoryRecord.total,
+      },
+    });
+  } catch (error) {
+    console.error("Error adding product inventory:", error);
+    return res.status(500).json({ message: "Internal server error", error });
+  }
 });
 
 module.exports = { ListInventory, AddInventory, ViewProductInventoryById };
