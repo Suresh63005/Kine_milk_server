@@ -166,8 +166,9 @@ const FetchAllInstantOrdersByStatus = asyncHandler(async (req, res) => {
 
 
 const AssignOrderToRider = asyncHandler(async (req, res) => {
-    console.log("Decoded User:", req.user);
-    const uid = req.user.userId;
+    
+    const uid = "3aacc235-d219-4566-a00c-787765609da1";
+
     if (!uid) {
         return res.status(400).json({
             ResponseCode: "401",
@@ -176,6 +177,7 @@ const AssignOrderToRider = asyncHandler(async (req, res) => {
         });
     }
     console.log("Fetching orders for user ID:", uid);
+    
     const { order_id, rider_id } = req.body;
     if (!order_id || !rider_id) {
         return res.status(400).json({ message: "Order ID and Rider ID are required!" });

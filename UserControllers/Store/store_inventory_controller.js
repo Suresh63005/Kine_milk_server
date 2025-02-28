@@ -148,28 +148,32 @@ const AddInventory = asyncHandler(async (req, res) => {
       });
     }
 
-    // Update only the specified fields (excluding title)
-    await product.update({ date, quantity });
 
-    console.log("Inventory updated successfully:", product);
 
-    return res.status(201).json({
-      ResponseCode: "201",
-      Result: "true",
-      message: "Product updated successfully.",
-      product: {
-        productId: product.id,
-        title: product.title, // Fetching title in the response
-        date: product.date,
-        quantity: product.quantity,
-        unit_price: product.normal_price,
-        total_price: product.mrp_price,
-      },
-    });
-  } catch (error) {
-    console.error("Error updating store products:", error);
-    return res.status(500).json({ message: "Internal server error", error });
-  }
+        // Update only the specified fields (excluding title)
+        await product.update({ date, quantity });
+
+        console.log("Inventory updated successfully:", product);
+
+        return res.status(200).json({
+            ResponseCode: "200",
+            Result: "true",
+            message: "Product updated successfully.",
+            product: {
+                productId: product.id,
+                title: product.title, // Fetching title in the response
+                date: product.date,
+                quantity: product.quantity,
+                unit_price: product.normal_price,
+                total_price: product.mrp_price
+            },
+        });
+
+    } catch (error) {
+        console.error("Error updating store products:", error);
+        return res.status(500).json({ message: "Internal server error", error });
+    }
+
 });
 
 module.exports = { ListInventory, AddInventory, ViewProductInventoryById };

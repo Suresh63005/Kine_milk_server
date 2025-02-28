@@ -44,7 +44,7 @@ const upsertFaq = asynHandler(async (req, res) => {
           store_id
         });
         logger.info('FAQ created successfully')
-        res.status(201).json({ message: "FAQ created successfully", faq });
+        res.status(200).json({ message: "FAQ created successfully", faq });
       }
 });
 

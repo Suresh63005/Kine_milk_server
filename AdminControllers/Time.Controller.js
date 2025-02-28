@@ -24,7 +24,7 @@ const upsertTime = async (req, res) => {
         }else{
             const newTime=await Time.create({mintime,maxtime,status,store_id});
             logger.info(`New Timerecord created with ID ${newTime.id}`);
-            return res.status(201).json({ success: true, message: 'Timerecord created successfully.', data: newTime });
+            return res.status(200).json({ success: true, message: 'Timerecord created successfully.', data: newTime });
         }
     } catch (error) {
         console.error("Error fetching time slot:", error);
