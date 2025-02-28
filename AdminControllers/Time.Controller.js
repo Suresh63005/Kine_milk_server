@@ -39,9 +39,19 @@ const upsertTime = async (req, res) => {
 };
 
 const getAllTimes=asynHandler(async(req,res,next)=>{
-    const Times=await Time.findAll();
+
+    const {store_id} = req.body;
+
+    try {
+
+        const Times=await Time.findAll({where:{store_id}});
     logger.info("sucessfully get all Time's");
     res.status(200).json(Times);
+        
+    } catch (error) {
+        
+    }
+    
 });
 
 const getTimeCount=asynHandler(async(req,res)=>{
