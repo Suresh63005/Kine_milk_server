@@ -9,5 +9,6 @@ router.get("/getbyid/:id",ProductImagesController.getProductImagesById)
 router.delete("/delete/:id",ProductImagesController.deleteProductImages)
 router.patch("/update/:id",ProductImagesController.getProductImagesById)
 router.get("/count",ProductImagesController.getProductImagesCount)
+router.post("/imgupsert", upload.fields([{name:'img',maxCount:10}]) ,ProductImagesController.upsertProductImages)
 
 module.exports=router

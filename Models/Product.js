@@ -10,10 +10,7 @@ const Product = sequelize.define(
       defaultValue: DataTypes.UUIDV4,
       primaryKey: true,
     },
-    store_id: {
-      type: DataTypes.UUID,
-      allowNull: false,
-    },
+    
     cat_id: {
       type: DataTypes.UUID,
       allowNull: false,

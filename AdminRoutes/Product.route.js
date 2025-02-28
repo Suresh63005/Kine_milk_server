@@ -7,7 +7,7 @@ router.post("/upsert/:storeId", upload.fields([
     { name: "img", maxCount: 1 },
     { name: "extraImages", maxCount: 5 }
 ]), upsertProduct);
-router.get("/all/:storeId",getAllProducts)
+router.get("/all",getAllProducts)
 router.get("/getbyid/:id",getProductById)
 router.delete("/delete/:id",getAllProducts)
 router.patch("/update/:id",getAllProducts)

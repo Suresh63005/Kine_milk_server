@@ -637,9 +637,9 @@ const getCouponByIdSchema = Joi.object({
 });
 
 const CouponDeleteSchema = Joi.object({
-  id: Joi.number().integer().required().messages({
-    "number.base": "ID must be a number.",
-    "number.integer": "ID must be an integer.",
+  id: Joi.string().required().messages({
+    "number.base": "ID must be a string.",
+    "number.integer": "ID must be an string.",
     "any.required": "ID is required.",
   }),
   forceDelete: Joi.string().valid("true", "false").optional()

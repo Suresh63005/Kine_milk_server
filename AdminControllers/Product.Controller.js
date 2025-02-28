@@ -8,7 +8,6 @@ const Store = require("../Models/Store");
 const ProductImage = require("../Models/productImages");
 
 const upsertProduct = async (req, res) => {
-  const { storeId } = req.params;
   try {
     const {
       id,
@@ -24,8 +23,6 @@ const upsertProduct = async (req, res) => {
       quantity,
       subscription_required,
     } = req.body;
-
-
 
     console.log("Request body:", req.body);
 
@@ -48,32 +45,18 @@ const upsertProduct = async (req, res) => {
       });
     }
 
-    const store = await Store.findOne({ where: { id: storeId } });
-
-    if (!store) {
-      return res.status(404).json({
-        ResponseCode: "404",
-        Result: "false",
-        ResponseMsg: "Store not found.",
-      });
-    }
-
     let imageUrl = null;
     let extraImageUrls = [];
 
-      
-
-    if (req.files.img) {
+    if (req.files?.img) {
       imageUrl = await uploadToS3(req.files.img[0], "images");
     }
 
-    if (req.files["extraImages"]) {
+    if (req.files?.extraImages) {
       extraImageUrls = await Promise.all(
-        req.files["extraImages"].map((file) => uploadToS3(file, "extra-images"))
-    );
+        req.files.extraImages.map((file) => uploadToS3(file, "extra-images"))
+      );
     }
-
-
 
     let product;
     if (id) {
@@ -87,12 +70,11 @@ const upsertProduct = async (req, res) => {
       }
 
       await product.update({
-      title,
+        title,
         img: imageUrl || product.img,
         status,
         cat_id,
         description,
-        store_id: storeId,
         subscribe_price,
         normal_price,
         mrp_price,
@@ -118,7 +100,7 @@ const upsertProduct = async (req, res) => {
         ResponseCode: "200",
         Result: "true",
         ResponseMsg: "Product updated successfully.",
-        product, // Return the updated product instance
+        product,
       });
     } else {
       // Create new product
@@ -128,7 +110,6 @@ const upsertProduct = async (req, res) => {
         status,
         cat_id,
         description,
-        store_id: storeId,
         subscribe_price,
         normal_price,
         mrp_price,
@@ -164,12 +145,13 @@ const upsertProduct = async (req, res) => {
   }
 };
 
+
 const getAllProducts = asyncHandler(async (req, res, next) => {
 
-const {storeId} = req.params;
+
  try {
   
-  const Products = await Product.findAll({where:{store_id:storeId}});
+  const Products = await Product.findAll();
   logger.info("successfully get all products");
   res.status(200).json(Products);
 
