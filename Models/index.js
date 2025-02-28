@@ -42,7 +42,7 @@ Store.hasMany(NormalOrder, { as: "store", foreignKey: "store_id"});
 NormalOrder.belongsTo(User, { as: "user", foreignKey: "uid" });
 User.hasMany(NormalOrder, { as: "orders", foreignKey: "uid"});
 
-NormalOrderProduct.belongsTo(NormalOrder,{ foreignKey: "oid", as: "NormalProducts" })
+NormalOrderProduct.belongsTo(NormalOrder, { foreignKey: "oid", as: "NormalProducts" });
 NormalOrder.hasMany(NormalOrderProduct, { foreignKey: "oid", as: "NormalProducts" });
 
 NormalOrderProduct.belongsTo(Product, { foreignKey: "product_id", as: "ProductDetails" });
@@ -106,6 +106,4 @@ User.hasMany(Address, { foreignKey: 'uid', as: 'addresses' });
 
 Favorite.belongsTo(Product, { foreignKey: "pid", as: "favproducts" });
 Product.belongsTo(Favorite, { foreignKey: "pid", as: "favproducts" });
-
-
 

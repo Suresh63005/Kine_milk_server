@@ -217,63 +217,85 @@ const AssignOrderToRider = asyncHandler(async (req, res) => {
     }
 });
 
-const ViewInstantOrderById = asyncHandler(async(req,res)=>{
+const ViewInstantOrderById = asyncHandler(async (req, res) => {
     console.log("Decoded User:", req.user);
     const uid = req.user.userId;
     if (!uid) {
-        return res.status(400).json({
-            ResponseCode: "401",
-            Result: "false",
-            ResponseMsg: "User ID not provided",
-        });
+      return res.status(400).json({
+        ResponseCode: "401",
+        Result: "false",
+        ResponseMsg: "User ID not provided",
+      });
     }
     console.log("Fetching orders for user ID:", uid);
-    const {storeId,orderId}=req.body;
+    const { storeId, orderId } = req.body;
     if (!orderId) {
-        return res.status(400).json({ message: "Order ID is required!" });
+      return res.status(400).json({ message: "Order ID is required!" });
     }
     if (!storeId) {
-        return res.status(400).json({ message: "Store ID is required!" });
+      return res.status(400).json({ message: "Store ID is required!" });
     }
     try {
-        const instantOrder = await NormalOrder.findOne({
-            where: { id: orderId, store_id: storeId },
-            include:[
-                {
-                    model:NormalOrderProduct,
-                    as:"orderProducts",
-                    include:[
-                        {
-                            model:Product,
-                            as:"productDetails",
-                            attributes: ["id", "title", "description", "normal_price", "mrp_price", "img"],
-                        },
-                    ]
-                },
-                {
-                    model:User,
-                    as:"user",
-                    attributes:["id","name","mobile","email"],
-                    on: { "$user.id$": { [Op.eq]: Sequelize.col("NormalOrder.uid") } },
-                    include:[
-                        {
-                            model:Address,
-                            as:"addresses",
-                            attributes:["id","uid","address","landmark","r_instruction","a_type","a_lat","a_long",]
-                        }
-                    ]
-                }
-            ]
-        });
-        if(!instantOrder){
-            return res.status(404).json({message:"Instant Order not found!"})
-        }
-        return res.status(200).json({message:"Instant Order Fetched Successfully!",instantOrder})
+      const instantOrder = await NormalOrder.findOne({
+        where: { id: orderId, store_id: storeId },
+        include: [
+          {
+            model: NormalOrderProduct,
+            as: "NormalProducts", // updated alias to match association
+            include: [
+              {
+                model: Product,
+                as: "ProductDetails", // updated alias to match association
+                attributes: [
+                  "id",
+                  "title",
+                  "description",
+                  "normal_price",
+                  "mrp_price",
+                  "img",
+                ],
+              },
+            ],
+          },
+          {
+            model: User,
+            as: "user",
+            attributes: ["id", "name", "mobile", "email"],
+            on: { "$user.id$": { [Op.eq]: Sequelize.col("NormalOrder.uid") } },
+            include: [
+              {
+                model: Address,
+                as: "addresses",
+                attributes: [
+                  "id",
+                  "uid",
+                  "address",
+                  "landmark",
+                  "r_instruction",
+                  "a_type",
+                  "a_lat",
+                  "a_long",
+                ],
+              },
+            ],
+          },
+        ],
+      });
+      if (!instantOrder) {
+        return res.status(404).json({ message: "Instant Order not found!" });
+      }
+      return res.status(200).json({
+        message: "Instant Order Fetched Successfully!",
+        instantOrder,
+      });
     } catch (error) {
-        console.error("Error assigning order:", error.message);
-        return res.status(500).json({ message: "Internal server error: " + error.message });
+      console.error("Error assigning order:", error.message);
+      return res.status(500).json({
+        message: "Internal server error: " + error.message,
+      });
     }
-})
+  });
+  
 
 
 module.exports = {ListAllInstantOrders,AssignOrderToRider,FetchAllInstantOrdersByStatus,ViewInstantOrderById}
