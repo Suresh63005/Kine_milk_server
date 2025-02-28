@@ -4,7 +4,7 @@ const { DataTypes } = require("sequelize");
 const Coupon = sequelize.define(
   "Coupon",
   {
-   id: {
+    id: {
       type: DataTypes.UUID,
       allowNull: false,
       primaryKey: true,

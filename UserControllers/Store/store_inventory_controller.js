@@ -4,128 +4,151 @@ const asyncHandler = require("../../middlewares/errorHandler");
 const logger = require("../../utils/logger");
 const uploadToS3 = require("../../config/fileUpload.aws");
 const Store = require("../../Models/Store");
+const ProductInventory = require("../../Models/ProductInventory");
 
-const ListInventory = asyncHandler(async(req,res)=>{
-    console.log("Decoded User:", req.user);
+const ListInventory = asyncHandler(async (req, res) => {
+  console.log("Decoded User:", req.user);
 
-    const uid = req.user.userId;
-    if (!uid) {
-        return res.status(400).json({
-            ResponseCode: "401",
-            Result: "false",
-            ResponseMsg: "User  ID not provided",
-        });
-    }
+  const uid = req.user.userId;
+  if (!uid) {
+    return res.status(400).json({
+      ResponseCode: "401",
+      Result: "false",
+      ResponseMsg: "User  ID not provided",
+    });
+  }
 
-    console.log("Fetching orders for user ID:", uid);
-    const {storeId}=req.params;
-    if(!storeId){
-        res.status(401).json({message:"Store ID is required."})
+  console.log("Fetching orders for user ID:", uid);
+  const { storeId } = req.params;
+  if (!storeId) {
+    res.status(401).json({ message: "Store ID is required." });
+  }
+  try {
+    const products = await ProductInventory.findAll({
+      where: { store_id: storeId },  
+      include:[
+        {
+             model:Product,
+              as:'inventoryProducts',
+              attributes:["img","title","quantity","date"],        
+            }
+      ]    
+    });
+    if (!products || products.length === 0) {
+      return res
+        .status(404)
+        .json({ message: "No products found for this store!" });
     }
-    try {
-        const products = await Product.findAll({where:{store_id:storeId}});
-        if (!products || products.length === 0) {
-            return res.status(404).json({ message: "No products found for this store!" });
-        }
-        return res.status(200).json({message:"Store Products Fetched Successfully.",products})
-    } catch (error) {
-        console.error("Error Fetching store products", error);
-        return res.status(500).json({ message: "Internal server error", error })
-    }
+    return res
+      .status(200)
+      .json({ message: "Store Products Fetched Successfully.", products });
+  } catch (error) {
+    console.error("Error Fetching store products", error);
+    return res.status(500).json({ message: "Internal server error", error });
+  }
 });
 
 const ViewProductInventoryById = asyncHandler(async (req, res) => {
-    console.log("Decoded User:", req.user);
+  console.log("Decoded User:", req.user);
 
-    const uid = req.user?.userId;
-    if (!uid) {
-        return res.status(400).json({
-            ResponseCode: "401",
-            Result: "false",
-            ResponseMsg: "User ID not provided",
-        });
+  const uid = req.user?.userId;
+  if (!uid) {
+    return res.status(400).json({
+      ResponseCode: "401",
+      Result: "false",
+      ResponseMsg: "User ID not provided",
+    });
+  }
+
+  console.log("Fetching product inventory for user ID:", uid);
+
+  const { storeId, productId } = req.body; // Ensure productId is included in the request
+  if (!storeId) {
+    return res.status(400).json({ message: "Store ID is required" });
+  }
+
+  if (!productId) {
+    return res.status(400).json({ message: "Product ID is required" });
+  }
+
+  try {
+    // Find a specific product by its ID and store ID
+    const product = await Product.findOne({
+      where: { id: productId, store_id: storeId },
+      // attributes: ["id", "title", "date", "quantity", "normal_price", "mrp_price"],
+    });
+
+    if (!product) {
+      return res
+        .status(404)
+        .json({ message: "Product not found in the given store." });
     }
 
-    console.log("Fetching product inventory for user ID:", uid);
-
-    const { storeId, productId } = req.body; // Ensure productId is included in the request
-    if (!storeId) {
-        return res.status(400).json({ message: "Store ID is required" });
-    }
-    
-    if (!productId) {
-        return res.status(400).json({ message: "Product ID is required" });
-    }
-
-    try {
-        // Find a specific product by its ID and store ID
-        const product = await Product.findOne({
-            where: { id: productId, store_id: storeId },
-            // attributes: ["id", "title", "date", "quantity", "normal_price", "mrp_price"],
-        });
-
-        if (!product) {
-            return res.status(404).json({ message: "Product not found in the given store." });
-        }
-
-        return res.status(200).json({
-            ResponseCode: "200",
-            Result: "true",
-            ResponseMsg: "Product retrieved successfully.",
-            product,
-        });
-
-    } catch (error) {
-        console.error("Error fetching product inventory:", error);
-        return res.status(500).json({
-            ResponseCode: "500",
-            Result: "false",
-            ResponseMsg: "Internal Server Error",
-            error: error.message, // Provide detailed error message
-        });
-    }
+    return res.status(200).json({
+      ResponseCode: "200",
+      Result: "true",
+      ResponseMsg: "Product retrieved successfully.",
+      product,
+    });
+  } catch (error) {
+    console.error("Error fetching product inventory:", error);
+    return res.status(500).json({
+      ResponseCode: "500",
+      Result: "false",
+      ResponseMsg: "Internal Server Error",
+      error: error.message, // Provide detailed error message
+    });
+  }
 });
 
-
 const AddInventory = asyncHandler(async (req, res) => {
-    console.log("Decoded User:", req.user);
+  console.log("Decoded User:", req.user);
 
-    const uid = req.user.userId;
-    if (!uid) {
-        return res.status(400).json({
-            ResponseCode: "401",
-            Result: "false",
-            ResponseMsg: "User ID not provided",
-        });
+  const uid = req.user.userId;
+  if (!uid) {
+    return res.status(400).json({
+      ResponseCode: "401",
+      Result: "false",
+      ResponseMsg: "User ID not provided",
+    });
+  }
+
+  console.log("Fetching orders for user ID:", uid);
+
+  const { storeId } = req.params;
+  const { productId, date, quantity } = req.body;
+
+  // Check if all fields are provided
+  if (!productId || !date || !quantity) {
+    return res.status(400).json({ message: "All fields are required." });
+  }
+
+  try {
+    // Find the product in the store
+    const product = await Product.findOne({
+      where: {
+        id: productId,
+        store_id: storeId,
+      },
+      attributes: [
+        "id",
+        "title",
+        "date",
+        "quantity",
+        "normal_price",
+        "mrp_price",
+      ],
+    });
+
+    if (!product) {
+      return res.status(404).json({
+        ResponseCode: "402",
+        Result: "false",
+        message: "Product not found in the store.",
+      });
     }
 
-    console.log("Fetching orders for user ID:", uid);
 
-    const { storeId } = req.params;
-    const { productId, date, quantity} = req.body;
-
-    // Check if all fields are provided
-    if (!productId || !date || !quantity) {
-        return res.status(400).json({ message: "All fields are required." });
-    }
-
-    try {
-        // Find the product in the store
-        const product = await Product.findOne({
-            where: {
-                id: productId,
-                store_id: storeId,
-            },
-            attributes: ["id", "title", "date", "quantity", "normal_price", "mrp_price"],
-        });
-
-        if (!product) {
-            return res.status(404).json({
-                ResponseCode: "402",
-                Result: "false",
-                message: "Product not found in the store.",
-            });
-        }
 
         // Update only the specified fields (excluding title)
         await product.update({ date, quantity });
@@ -150,7 +173,7 @@ const AddInventory = asyncHandler(async (req, res) => {
         console.error("Error updating store products:", error);
         return res.status(500).json({ message: "Internal server error", error });
     }
+
 });
 
-
-module.exports = {ListInventory,AddInventory,ViewProductInventoryById}
+module.exports = { ListInventory, AddInventory, ViewProductInventoryById };

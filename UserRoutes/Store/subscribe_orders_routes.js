@@ -4,7 +4,7 @@ const subscribeOrdersController = require('../../UserControllers/Store/subscribe
 const authMiddleware = require('../../middlewares/authMiddleware');
 
 router.post("/order-status",authMiddleware.isAuthenticated,subscribeOrdersController.FetchSubscribeOrdersByStatus)
-router.post("/",authMiddleware.isAuthenticated,subscribeOrdersController.ViewSubscribeOrderById)
+router.post("/view-order",authMiddleware.isAuthenticated,subscribeOrdersController.ViewSubscribeOrderById)
 router.post("/assign-order",authMiddleware.isAuthenticated,subscribeOrdersController.AssignOrderToRider)
 
 module.exports = router;
