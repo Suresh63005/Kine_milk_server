@@ -75,13 +75,6 @@ const upsertCoupon = async (req, res) => {
           ResponseCode: "400",
           Result: "false",
           ResponseMsg: "Image is required for a new coupon.",
-  
-        logger.info("Coupon created successfully:", coupon);
-        return res.status(200).json({
-          ResponseCode: "200",
-          Result: "true",
-          ResponseMsg: "Coupon created successfully.",
-          coupon,
         });
       }
 
