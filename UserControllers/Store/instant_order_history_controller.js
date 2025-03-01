@@ -1,3 +1,4 @@
+const Address = require("../../Models/Address");
 const NormalOrder = require("../../Models/NormalOrder");
 const User = require("../../Models/User");
 const asyncHandler = require("../../middlewares/errorHandler");
@@ -64,4 +65,70 @@ const FetchInstantOrders = asyncHandler(async (req, res) => {
   }
 });
 
-module.exports = { FetchInstantOrders };
+const ViewOrderDetails = asyncHandler(async(req, res)=>{
+  console.log("Decoded User:", req.user);
+
+  const uid = req.user.userId;
+  if (!uid) {
+    return res.status(400).json({
+      ResponseCode: "401",
+      Result: "false",
+      ResponseMsg: "User ID not provided",
+    });
+  }
+  const {orderId,storeId}=req.body;
+  if(!orderId){
+    return res.status(400).json({
+      ResponseCode: "400",
+      Result: "false",
+      ResponseMsg: "Order ID not provided",
+    });
+  }
+  console.log("Fetching orders for user ID:", uid);
+  try {
+    const order = await NormalOrder.findOne({
+      where:{id:orderId,store_id:storeId},
+      include:[
+        {
+          model:User,
+          attributes:["id","name","mobile","email"],
+          as:"user",
+          include: [
+            {
+              model: Address,
+              as: "addresses",
+              attributes: [
+                "id",
+                "uid",
+                "address",
+                "landmark",
+                "r_instruction",
+                "a_type",
+                "a_lat",
+                "a_long",
+              ],
+            },
+          ],
+        }
+      ]
+    })
+    if(!order){
+      return res.status(404).json({
+        ResponseCode:"404",
+        Result:"false",
+        ResponseMsg:"Order not found",
+      })
+    }
+    return res.status(200).json({
+      ResponseCode:"200",
+      Result:"true",
+      ResponseMsg:"Order fetched successfully",
+      data:order
+    })
+  } catch (error) {
+    console.error("Error fetching orders:", error);
+    return res.status(500).json({ message: "Internal server error", error });
+  }
+})
+
+module.exports = { FetchInstantOrders,ViewOrderDetails };

@@ -121,6 +121,29 @@ const ViewSubscribeOrderById = asyncHandler(async (req, res) => {
   try {
     const order = await SubscribeOrder.findOne({
       where: { id: orderId, store_id: storeId },
+      include:[
+        {
+          model: User,
+          as: "user",
+          attributes: ["id", "name", "mobile"],
+          include: [
+              {
+                model: Address,
+                as: "addresses",
+                attributes: [
+                  "id",
+                  "uid",
+                  "address",
+                  "landmark",
+                  "r_instruction",
+                  "a_type",
+                  "a_lat",
+                  "a_long",
+                ],
+              },
+            ],
+        },
+      ]
     });
 
     if (!order) {
