@@ -207,4 +207,5 @@ const deleteCustomer = async (req, res) => {
     }
 }
 
-module.exports = { VerifyCustomerMobile,FetchCustomerDetails,UpdateCustomerDetails,deleteCustomer };
+module.exports = { 
+    VerifyCustomerMobile,FetchCustomerDetails,UpdateCustomerDetails,deleteCustomer };
