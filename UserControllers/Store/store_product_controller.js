@@ -7,6 +7,7 @@ const NormalOrder = require("../../Models/NormalOrder");
 const User = require("../../Models/User");
 const Rider = require("../../Models/Rider");
 const Review = require("../../Models/review");
+const NormalOrderProduct = require("../../Models/NormalOrderProduct");
 
 const AllProducts = asyncHandler(async (req, res) => {
   try {
@@ -232,6 +233,69 @@ const SearchProductByTitle = asyncHandler(async (req, res) => {
   }
 });
 
+// const FetchAllProductReviews = asyncHandler(async (req, res) => {
+//   console.log("Decoded User:", req.user);
+
+//   const uid = req.user?.userId;
+//   if (!uid) {
+//     return res.status(400).json({
+//       ResponseCode: "401",
+//       Result: "false",
+//       ResponseMsg: "User ID not provided",
+//     });
+//   }
+
+//   console.log("Fetching reviews for user ID:", uid);
+
+//   const { storeId } = req.params;
+//   if (!storeId) {
+//     return res.status(400).json({ message: "Store ID is required!" });
+//   }
+
+//   try {
+//     const reviews = await NormalOrder.findAll({
+//       where: { is_rate: 1, store_id: storeId },
+//       attributes: [
+//         "id",
+//         "uid",
+//         "odate",
+//         "rate_text",
+//         "total_rate",
+//         "createdAt",
+//       ],
+//       include: [
+//         {
+//           model: Product,
+//           as: "product",
+//           attributes: ["title", "img"],
+//         },
+//         {
+//           model: User,
+//           as: "user",
+//           attributes: ["name"],
+//         },
+//       ],
+//     });
+
+//     if (!reviews.length) {
+//       return res
+//         .status(404)
+//         .json({ message: "No reviews found for this store." });
+//     }
+
+//     return res.status(200).json({
+//       success: true,
+//       message: "Reviews fetched successfully",
+//       reviews,
+//     });
+//   } catch (error) {
+//     console.error("Error fetching reviews:", error);
+//     return res
+//       .status(500)
+//       .json({ message: "Internal Server Error", error: error.message });
+//   }
+// });
+
 const FetchAllProductReviews = asyncHandler(async (req, res) => {
   console.log("Decoded User:", req.user);
 
@@ -264,9 +328,15 @@ const FetchAllProductReviews = asyncHandler(async (req, res) => {
       ],
       include: [
         {
-          model: Product,
-          as: "product",
-          attributes: ["title", "img"],
+          model: NormalOrderProduct,
+          as: "NormalProducts",
+          include: [
+            {
+              model: Product,
+              as: "ProductDetails",
+              attributes: ["title", "img"],
+            },
+          ],
         },
         {
           model: User,
@@ -294,6 +364,8 @@ const FetchAllProductReviews = asyncHandler(async (req, res) => {
       .json({ message: "Internal Server Error", error: error.message });
   }
 });
+
+
 
 const ViewProductReviews = asyncHandler(async (req, res) => {
   console.log("Decoded User:", req.user);

@@ -133,6 +133,11 @@ const NormalOrder = sequelize.define(
       type: DataTypes.TEXT,
       defaultValue: null,
     },
+    delivery_images: {
+      type: DataTypes.JSON,
+      defaultValue: null,
+    },
+    
   },
   { tableName: "tbl_normal_order", timestamps: true, paranoid: true }
 );

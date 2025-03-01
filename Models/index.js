@@ -107,3 +107,6 @@ User.hasMany(Address, { foreignKey: 'uid', as: 'addresses' });
 Favorite.belongsTo(Product, { foreignKey: "pid", as: "favproducts" });
 Product.belongsTo(Favorite, { foreignKey: "pid", as: "favproducts" });
 
+SubscribeOrder.belongsTo(User, { as: "user", foreignKey: "uid" });
+User.hasMany(SubscribeOrder, { as: "suborders", foreignKey: "uid" });
+
