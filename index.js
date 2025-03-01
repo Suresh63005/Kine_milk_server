@@ -142,6 +142,7 @@ app.use("/deliveries",require('./UserRoutes/Delivery/delivery_dashboard_routes')
 app.use("/instant-delivery",require('./UserRoutes/Delivery/instant_delivery_order_routes'))
 app.use("/subscribe-delivery",require('./UserRoutes/Delivery/subcribe_delivery_order_routes'))
 app.use("/u_settings", require("./UserRoutes/customer/settings_route"));
+app.use("/order-delivered",require('./UserRoutes/Delivery/order_delivered_routes'));
 
 
 app.get("/", (req, res) => {
