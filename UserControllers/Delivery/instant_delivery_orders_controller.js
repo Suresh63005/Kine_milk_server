@@ -1,3 +1,4 @@
+const { Op, Sequelize } = require("sequelize");
 const Address = require("../../Models/Address");
 const NormalOrder = require("../../Models/NormalOrder");
 const NormalOrderProduct = require("../../Models/NormalOrderProduct");
@@ -6,85 +7,115 @@ const Rider = require("../../Models/Rider"); // Import Rider model
 const User = require("../../Models/User");
 const asyncHandler = require("../../middlewares/errorHandler");
 
-const FetchAllInstantDeliveryOrders = asyncHandler(async (req, res) => {
-  console.log("Decoded User:", req.user);
-
-  const riderId = req.user?.riderId;
-  const { status } = req.query;
-
-  if (!riderId) {
-    return res.status(401).json({
-      ResponseCode: "401",
-      Result: "false",
-      ResponseMsg: "Rider ID not provided",
-    });
-  }
-
-  if (!status) {
-    return res.status(400).json({ message: "Order status is required!" });
-  }
-
-  try {
-    console.log("Fetching rider details for ID:", riderId);
-
-    // Fetch rider details to get store_id
-    const rider = await Rider.findOne({
-      where: { id: riderId },
-      attributes: ["store_id", "id", "title"],
-    });
-
-    if (!rider || !rider.store_id) {
-      return res
-        .status(404)
-        .json({ message: "Rider not assigned to any store!" });
+const FetchAllInstantDeliveryOrdersByStatus = asyncHandler(async (req, res) => {
+    console.log("Decoded User:", req.user);
+  
+    const riderId = req.user?.riderId;
+    const { status } = req.query;
+  
+    if (!riderId) {
+      return res.status(401).json({
+        ResponseCode: "401",
+        Result: "false",
+        ResponseMsg: "Rider ID not provided",
+      });
     }
-
-    const store_id = rider.store_id; // Now store_id is defined
-
-    console.log(
-      `Fetching orders for Store ID: ${store_id} with Status: ${status}`
-    );
-
-    // Fetch orders assigned to the rider
-    const instantOrders = await NormalOrder.findAll({
-      where: { store_id, rid: riderId, status },
-      include: [
-        {
-          model: NormalOrderProduct,
-          as: "NormalProducts",
-          include: [
-            {
-              model: Product,
-              as: "productDetails",
-              attributes: [
-                "id",
-                "title",
-                "description",
-                "normal_price",
-                "mrp_price",
-                "img",
-              ],
-            },
-          ],
-        },
-      ],
-    });
-
-    if (!instantOrders.length) {
-      return res
-        .status(404)
-        .json({ message: "No orders found with the given status!" });
+  
+    if (!status || !["active", "completed", "cancelled"].includes(status)) {
+      return res.status(400).json({
+        message:
+          "Order status is required and should be either active, completed, or cancelled!",
+      });
     }
-
-    return res.status(200).json({
-      message: "Orders Fetched Successfully!",
-      orders: instantOrders,
-    });
-  } catch (error) {
-    console.error("Error Occurs While Fetching ", error);
-    return res.status(500).json({ message: "Internal Server Error", error });
-  }
-});
+  
+    try {
+      console.log("Fetching rider details for ID:", riderId);
+  
+      // Fetch rider details to get store_id
+      const rider = await Rider.findOne({
+        where: { id: riderId },
+        attributes: ["store_id", "id", "title"],
+      });
+  
+      if (!rider || !rider.store_id) {
+        return res.status(404).json({ message: "Rider not assigned to any store!" });
+      }
+  
+      const store_id = rider.store_id;
+      console.log(`Fetching orders for Store ID: ${store_id} with Status: ${status}`);
+  
+      // Build the query filter dynamically
+      let queryFilter = { store_id, rid: riderId };
+      if (status === "active") {
+        queryFilter.status = { [Op.in]: ["Pending", "Processing", "On Route"] };
+      } else if (status === "completed") {
+        queryFilter.status = "Completed";
+      } else if (status === "cancelled") {
+        queryFilter.status = "Cancelled";
+      }
+      console.log("Query Filter:", queryFilter);
+  
+      // Fetch orders assigned to the rider using the constructed filter
+      const instantOrders = await NormalOrder.findAll({
+        where: queryFilter,
+        order: [["createdAt", "DESC"]],
+        include: [
+          {
+            model: NormalOrderProduct,
+            as: "NormalProducts",
+            include: [
+              {
+                model: Product,
+                as: "ProductDetails",
+                attributes: [
+                  "id",
+                  "title",
+                  "description",
+                  "normal_price",
+                  "mrp_price",
+                  "img",
+                ],
+              },
+            ],
+          },
+          {
+            model: User,
+            as: "user",
+            attributes: ["id", "name", "email", "mobile"],
+            on: { "$user.id$": { [Op.eq]: Sequelize.col("NormalOrder.uid") } },
+            include: [
+              {
+                model: Address,
+                as: "addresses",
+                attributes: [
+                  "id",
+                  "uid",
+                  "address",
+                  "landmark",
+                  "r_instruction",
+                  "a_type",
+                  "a_lat",
+                  "a_long",
+                ],
+              },
+            ],
+          },
+        ],
+      });
+  
+      if (!instantOrders.length) {
+        return res.status(404).json({ message: "No orders found with the given status!" });
+      }
+  
+      return res.status(200).json({
+        message: "Orders Fetched Successfully!",
+        orders: instantOrders,
+      });
+    } catch (error) {
+      console.error("Error Occurs While Fetching ", error);
+      return res.status(500).json({ message: "Internal Server Error", error });
+    }
+  });
 
 const AcceptInstantOrders = asyncHandler(async (req, res) => {
   console.log("Decoded User:", req.user);
@@ -241,7 +272,7 @@ const ViewOrderDetails = asyncHandler(async (req, res) => {
 });
 
 module.exports = {
-  FetchAllInstantDeliveryOrders,
+    FetchAllInstantDeliveryOrdersByStatus,
   ViewOrderDetails,
   AcceptInstantOrders,
 };

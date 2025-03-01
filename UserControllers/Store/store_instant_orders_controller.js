@@ -140,7 +140,7 @@ const FetchAllInstantOrdersByStatus = asyncHandler(async (req, res) => {
                 {
                     model:User,
                     as:"user",
-                    attributes:["id","name","mobile"],
+                    attributes:["id","name","mobile","email"],
                     on: { "$user.id$": { [Op.eq]: Sequelize.col("NormalOrder.uid") } }
                 }
             ]
