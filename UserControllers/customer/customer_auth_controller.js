@@ -208,4 +208,5 @@ const deleteCustomer = async (req, res) => {
 }
 
 module.exports = { 
-    VerifyCustomerMobile,FetchCustomerDetails,UpdateCustomerDetails,deleteCustomer };
+    VerifyCustomerMobile,FetchCustomerDetails,UpdateCustomerDetails,deleteCustomer 
+};
