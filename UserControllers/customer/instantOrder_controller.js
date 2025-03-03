@@ -29,7 +29,7 @@ const instantOrder =  async (req, res) => {
 
     console.log(req.body);
 
-    const uid = "2dfd7d77-e6f6-43f9-8cc1-c7f29fbd91b6";
+    const uid = req.user.userId;
   
     if (!uid || !products || !products.length || !timeslot_id || !o_type || !store_id || !subtotal || !o_total ||!odate) {
       return res.status(400).json({
