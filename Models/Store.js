@@ -30,6 +30,10 @@ const Store = sequelize.define(
       type: DataTypes.TEXT,
       allowNull: false,
     },
+    tags:{
+      type:DataTypes.TEXT,
+      allowNull:true,
+    },
     lcode: {
       type: DataTypes.STRING,
       defaultValue: null,
@@ -64,7 +68,7 @@ const Store = sequelize.define(
     },
     dcharge: {
       type: DataTypes.FLOAT,
-      allowNull: false,
+      allowNull: true,
     },
     morder: {
       type: DataTypes.INTEGER,
@@ -136,8 +140,8 @@ const Store = sequelize.define(
       defaultValue: null,
     },
     zone_id: {
-      type: DataTypes.INTEGER,
-      allowNull: false,
+      type: DataTypes.TEXT,
+      allowNull: true,
     },
     cover_img: {
       type: DataTypes.TEXT,
@@ -149,7 +153,7 @@ const Store = sequelize.define(
     },
     cdesc: {
       type: DataTypes.TEXT("long"),
-      allowNull: false,
+      allowNull: true,
     },
     opentime: {
       type: DataTypes.TIME,

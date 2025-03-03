@@ -16,20 +16,26 @@ const WalletReport = sequelize.define(
     },
     message: {
       type: DataTypes.TEXT,
-      allowNull: false,
+      allowNull: true,
     },
     status: {
       type: DataTypes.INTEGER,
       allowNull: false,
+      defaultValue:1
     },
     amt: {
       type: DataTypes.INTEGER,
+      allowNull: false,
+    },
+    transaction_no:{
+      type: DataTypes.TEXT,
       allowNull: false,
     },
     tdate: {
       type: DataTypes.DATE,
       allowNull: false,
     },
+
   },
   { tableName: "wallet_report", timestamps: true, paranoid: true }
 );
