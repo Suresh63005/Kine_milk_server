@@ -75,8 +75,9 @@ const updateWallet = async (req,res) =>{
   user.save();
 
   const wallet = await WalletReport.create({
+    tdate:new Date(),
     uid:userId,
-    amount:amount,
+    amt:amount,
     message:message,
     transaction_no:transaction_no,
 
