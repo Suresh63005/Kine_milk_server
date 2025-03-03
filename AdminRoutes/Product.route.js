@@ -3,7 +3,7 @@ const router=express.Router();
 const { upsertProduct, getAllProducts, getProductById, getProductCount, toggleproductStatus } = require("../AdminControllers/Product.Controller");
 const upload = require("../utils/multerConfig");
 
-router.post("/upsert/:storeId", upload.fields([
+router.post("/upsert", upload.fields([
     { name: "img", maxCount: 1 },
     { name: "extraImages", maxCount: 5 }
 ]), upsertProduct);

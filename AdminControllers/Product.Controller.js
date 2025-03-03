@@ -20,7 +20,6 @@ const upsertProduct = async (req, res) => {
       mrp_price,
       discount,
       out_of_stock,
-      quantity,
       subscription_required,
     } = req.body;
 
@@ -147,6 +146,7 @@ const upsertProduct = async (req, res) => {
 
 
 const getAllProducts = asyncHandler(async (req, res, next) => {
+
 
 
  try {
