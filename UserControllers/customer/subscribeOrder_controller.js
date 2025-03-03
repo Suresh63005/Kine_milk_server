@@ -4,6 +4,7 @@ const Product = require("../../Models/Product");
 const SubscribeOrderProduct = require("../../Models/SubscribeOrderProduct");
 const Notification = require("../../Models/Notification");
 const NormalOrder = require("../../Models/NormalOrder");
+const User = require("../../Models/User");
 
 
 const subscribeOrder =  async (req, res) => {
@@ -40,6 +41,17 @@ const subscribeOrder =  async (req, res) => {
   
     try {
       // Start a transaction
+
+
+      const user = await User.findByPk(uid);
+
+      if(!user){
+        return res.status(400).json({
+          ResponseCode: "400",
+          Result: "false",
+          ResponseMsg: "User not found",
+          });
+      }
       
 
       const odate = new Date();
@@ -87,6 +99,34 @@ const subscribeOrder =  async (req, res) => {
           );
         })
       );
+
+
+      try {
+        const notificationContent = {
+          app_id: process.env.ONESIGNAL_APP_ID,
+          include_player_ids: [user.one_subscription],
+          data: { user_id: user.id, type: "Subscription order confirmed" },
+          contents: {
+            en: `${user.name}, Your order  has been confirmed!`,
+          },
+          headings: { en: "Order Confirmed!" },
+        };
+  
+        const response = await axios.post(
+          "https://onesignal.com/api/v1/notifications",
+          notificationContent,
+          {
+            headers: {
+              "Content-Type": "application/json; charset=utf-8",
+              Authorization: `Basic ${process.env.ONESIGNAL_API_KEY}`,
+            },
+          }
+        );
+  
+        console.log(response, "notification sent");
+      } catch (error) {
+        console.log(error);
+      }
 
       await Notification.create(
 {
@@ -231,6 +271,19 @@ const subscribeOrder =  async (req, res) => {
   const cancelOrder = async (req, res) => {
     try {
       const { id } = req.body;
+
+      const uid = req.user.userId;
+
+      const user = await User.findByPk(uid);
+
+      if(!user){
+        console.error("User not found");
+        return res.status(404).json({
+          ResponseCode: "404",
+          Result: "false",
+          ResponseMsg: "User Not Found",
+          });
+      }
   
       // Find the order
       const order = await SubscribeOrder.findOne({ where: { id } });
@@ -255,6 +308,44 @@ const subscribeOrder =  async (req, res) => {
       }
       order.status = "Cancelled";
       await order.save();
+
+
+      try {
+        const notificationContent = {
+          app_id: process.env.ONESIGNAL_APP_ID,
+          include_player_ids: [user.one_subscription],
+          data: { user_id: user.id, type: "Subscription order Cancelled" },
+          contents: {
+            en: `${user.name}, Your order  has been Cancelled!`,
+          },
+          headings: { en: "Order Cancelled!" },
+        };
+  
+        const response = await axios.post(
+          "https://onesignal.com/api/v1/notifications",
+          notificationContent,
+          {
+            headers: {
+              "Content-Type": "application/json; charset=utf-8",
+              Authorization: `Basic ${process.env.ONESIGNAL_API_KEY}`,
+            },
+          }
+        );
+  
+        console.log(response, "notification sent");
+      } catch (error) {
+        console.log(error);
+      }
+
+      await Notification.create(
+        {
+            uid, 
+            datetime: new Date(),
+                title: "Order Subscription  CAncelled",
+                description: `Your order Cancelled.`,
+        }
+              )
+
   
       res.status(200).json({
         ResponseCode: "200",
