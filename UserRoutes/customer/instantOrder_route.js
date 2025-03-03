@@ -9,6 +9,7 @@ const router = express.Router();
 router.post("/", authMiddleware.isAuthenticated, instantOrder);
 router.post("/status",authMiddleware.isAuthenticated,getOrdersByStatus);
 router.get("/:id",authMiddleware.isAuthenticated,getOrderDetails);
+
 router.post("/cancel",authMiddleware.isAuthenticated,cancelOrder);
 
 module.exports = router ;
