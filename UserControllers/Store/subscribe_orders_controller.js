@@ -4,6 +4,8 @@ const SubscribeOrder = require("../../Models/SubscribeOrder");
 const User = require("../../Models/User");
 const asyncHandler = require("../../middlewares/errorHandler");
 const Address = require("../../Models/Address");
+const SubscribeOrderProduct = require("../../Models/SubscribeOrderProduct");
+const Product = require("../../Models/Product");
 
 const FetchSubscribeOrdersByStatus = asyncHandler(async (req, res) => {
     console.log("Decoded User:", req.user);
@@ -46,6 +48,17 @@ const FetchSubscribeOrdersByStatus = asyncHandler(async (req, res) => {
         where: queryFilter,
         order: [["createdAt", "DESC"]],
         include: [
+          {
+            model: SubscribeOrderProduct,
+            as: "orderProducts",
+            include: [
+              {
+                model: Product,
+                as: "productDetails",
+                attributes: ["id", "title", "img"],
+              },
+            ]
+          },
           {
             model: User,
             as: "user",
@@ -121,6 +134,29 @@ const ViewSubscribeOrderById = asyncHandler(async (req, res) => {
   try {
     const order = await SubscribeOrder.findOne({
       where: { id: orderId, store_id: storeId },
+      include:[
+        {
+          model: User,
+          as: "user",
+          attributes: ["id", "name", "mobile","email"],
+          include: [
+              {
+                model: Address,
+                as: "addresses",
+                attributes: [
+                  "id",
+                  "uid",
+                  "address",
+                  "landmark",
+                  "r_instruction",
+                  "a_type",
+                  "a_lat",
+                  "a_long",
+                ],
+              },
+            ],
+        },
+      ]
     });
 
     if (!order) {
