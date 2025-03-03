@@ -168,4 +168,48 @@ const AddInventory = asyncHandler(async (req, res) => {
   }
 });
 
-module.exports = { ListInventory, AddInventory, ViewProductInventoryById };
+const DeleteInventory = asyncHandler(async(req,res)=>{
+  console.log("Decoded User:", req.user);
+
+  const uid = req.user?.userId;
+  if (!uid) {
+    return res.status(400).json({
+      ResponseCode: "401",
+      Result: "false",
+      ResponseMsg: "User ID not provided",
+    });
+  }
+
+  console.log("Fetching product inventory for user ID:", uid);
+  const {productId}=req.params;
+  if(!productId){
+    return res.status(400).json({
+      ResponceCode:"400",
+      Result:"false",
+      ResponseMsg:"Product ID is required"
+    })
+  }
+  try {
+    const product = await ProductInventory.findOne({where:{id:productId}})
+    if(!product){
+      return res.status(404).json({
+        ResponceCode:"404",
+        Result:"false",
+        ResponseMsg:"Product not found"
+      })
+    }
+    await ProductInventory.destroy({where:{id:productId}})
+    return res.status(200).json({
+      ResponceCode:"200",
+      Result:"true",
+      ResponseMsg:"Product deleted successfully"
+    })
+    
+  } catch (error) {
+    console.error("Error adding product inventory:", error);
+    return res.status(500).json({ message: "Internal server error", error });
+  }
+
+})
+
+module.exports = { ListInventory, AddInventory, ViewProductInventoryById,DeleteInventory };
