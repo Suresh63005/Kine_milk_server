@@ -71,7 +71,7 @@ const updateWallet = async (req,res) =>{
             ResponseMsg: "User not found",
             });
     }
-  user.wallet = amount;
+  user.wallet = user.wallet + amount;
   user.save();
 
   const wallet = await WalletReport.create({
