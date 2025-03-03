@@ -1,4 +1,5 @@
 const Rider = require('../../Models/Rider');
+const uploadToS3 = require('../../config/fileUpload.aws');
 const { deliveryFirebase } = require('../../config/firebase-config');
 const asyncHandler = require('../../middlewares/errorHandler');
 const jwt = require('jsonwebtoken');
@@ -81,6 +82,11 @@ const EditRiderProfile = asyncHandler(async (req, res) => {
           Result: "false",
           ResponseMsg: "Rider not found",
         });
+      }
+
+      let imageUrl = rider.img;
+      if(req.file){
+        imageUrl = await uploadToS3(req.file, "rider-images")
       }
   
       rider.title = title || rider.title;
