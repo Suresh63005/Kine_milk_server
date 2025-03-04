@@ -9,7 +9,7 @@ router.post("/upsert",upload.fields([
     {name:"cover_img",maxCount:1}
 ]),storeController.upsertStore);
 router.get("/fetch",storeController.fetchStores);
-router.get("/fetch/:id",adminMiddleware.isAdmin,storeController.fetchStoreById);
-router.delete("/delete/:id",adminMiddleware.isAdmin,storeController.deleteStore);
+router.get("/fetch/:id",storeController.fetchStoreById);
+router.delete("/delete/:id",storeController.deleteStore);
 
 module.exports = router;
