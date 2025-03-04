@@ -47,6 +47,7 @@ const getAllProductImages = async (req, res, next) => {
     }
 };
 
+
 const toggleProductImageStatus = asynHandler(async(req, res)=>{
     console.log("Request received:", req.body);
     const {id, value}= req.body;

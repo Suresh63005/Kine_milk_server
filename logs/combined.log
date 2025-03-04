@@ -1311,6 +1311,7 @@
 {"level":"info","message":"Store Soft Deleted","service":"kine_milk_server","timestamp":"2025-03-04T11:02:00.458Z"}
 {"level":"info","message":"Store Soft Deleted","service":"kine_milk_server","timestamp":"2025-03-04T11:02:13.033Z"}
 {"level":"info","message":"Store Soft Deleted","service":"kine_milk_server","timestamp":"2025-03-04T11:02:19.786Z"}
+
 {"level":"info","message":"sucessfully get all categories","service":"kine_milk_server","timestamp":"2025-03-04T11:42:56.847Z"}
 {"level":"info","message":"sucessfully get all categories","service":"kine_milk_server","timestamp":"2025-03-04T11:42:56.892Z"}
 {"level":"info","message":"successfully get all products","service":"kine_milk_server","timestamp":"2025-03-04T11:42:58.254Z"}
