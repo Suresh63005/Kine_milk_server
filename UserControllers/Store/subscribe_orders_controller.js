@@ -136,6 +136,22 @@ const ViewSubscribeOrderById = asyncHandler(async (req, res) => {
       where: { id: orderId, store_id: storeId },
       include:[
         {
+          model:SubscribeOrderProduct,
+          as:"orderProducts",
+          include:[
+            {
+              model:Product,
+              as:"productDetails",
+              attributes:["id",
+                  "title",
+                  "description",
+                  "normal_price",
+                  "mrp_price",
+                  "img",]
+            }
+          ]
+        },
+        {
           model: User,
           as: "user",
           attributes: ["id", "name", "mobile","email"],
@@ -203,7 +219,7 @@ const AssignOrderToRider = asyncHandler(async (req, res) => {
       return res.status(404).json({ message: "Rider not found! OR inactive!" });
     }
     await SubscribeOrder.update(
-      { rid: rider_id, status: "Processing" },
+      { rid: rider_id, status: "Active" },
       { where: { id: order_id } }
     );
     const updatedOrder = await SubscribeOrder.findOne({

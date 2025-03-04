@@ -1,9 +1,10 @@
+const asynHandler = require("../middlewares/errorHandler");
 const Product = require("../Models/Product");
 const ProductInventory = require("../Models/ProductInventory");
 const Store = require("../Models/Store");
 
 const addInventory = async (req, res) => {
-  const { inventory_id, store_id, product_id, date, quantity, total } = req.body;
+  const { store_id, product_id, date, quantity, total } = req.body;
   
   try {
     if (!store_id || !product_id || !date || !quantity) {
@@ -32,19 +33,21 @@ const addInventory = async (req, res) => {
       });
     }
     
-    let inventory;
-    
-    if (inventory_id) {
-      inventory = await ProductInventory.findOne({
-        where: { id: inventory_id, store_id, product_id }
+    let inventory = await ProductInventory.findOne({
+      where: { store_id, product_id, date }
+    });
+
+    if (inventory) {
+      inventory.quantity = quantity || inventory.quantity;
+      inventory.total = total || inventory.total;
+      await inventory.save();
+
+      return res.status(200).json({
+        ResponseCode: "200",
+        Result: "true",
+        ResponseMsg: "Product inventory already exists, so it has been updated.",
+        inventory,
       });
-      
-      if (inventory) {
-        inventory.date = date || inventory.date;
-        inventory.quantity = quantity || inventory.quantity;
-        inventory.total = total || inventory.total;
-        await inventory.save();
-      } 
     } else {
       inventory = await ProductInventory.create({
         store_id,
@@ -54,14 +57,14 @@ const addInventory = async (req, res) => {
         total,
         status: 1
       });
+
+      return res.status(201).json({
+        ResponseCode: "201",
+        Result: "true",
+        ResponseMsg: "Product inventory created successfully.",
+        inventory,
+      });
     }
-    
-    return res.status(200).json({
-      ResponseCode: "200",
-      Result: "true",
-      ResponseMsg: "Product inventory upserted successfully.",
-      inventory,
-    });
     
   } catch (error) {
     console.error("Error processing inventory upsert:", error);
@@ -72,6 +75,10 @@ const addInventory = async (req, res) => {
     });
   }
 };
+
+const ProductInventoryList = asynHandler(async(req,res)=>{
+  
+})
 
 
 module.exports = {

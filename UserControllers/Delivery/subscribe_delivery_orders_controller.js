@@ -1,8 +1,11 @@
+const { Op } = require("sequelize");
 const asyncHandler = require("../../middlewares/errorHandler");
 const Product = require("../../Models/Product");
 const Rider = require("../../Models/Rider");
 const SubscribeOrder = require("../../Models/SubscribeOrder");
 const SubscribeOrderProduct = require("../../Models/SubscribeOrderProduct");
+const User = require("../../Models/User");
+const Address = require("../../Models/Address");
 
 const FetchAllSubscribeOrders = asyncHandler(async (req, res) => {
   console.log("Decoded User:", req.user);
@@ -15,10 +18,21 @@ const FetchAllSubscribeOrders = asyncHandler(async (req, res) => {
       ResponseMsg: "Rider ID not provided",
     });
   }
-  if (!status) {
-    return res.status(400).json({ message: "Order status is required!" });
-  }
+  if (!status || !["active", "completed", "cancelled"].includes(status)) {
+    return res.status(400).json({
+        message: "Order status is required and should be either active, completed, or cancelled!",
+    });
+}
   try {
+    let queryFilter = { rid: riderId };
+    if (status === "active") {
+        queryFilter.status = { [Op.or]: ["Active"] };
+    } else if (status === "completed") {
+        queryFilter.status = "Completed";
+    } else if (status === "cancelled") {
+        queryFilter.status = "Cancelled";
+    }
+
     console.log("Fetching rider details for ID:", riderId);
     const rider = await Rider.findOne({ where: { id: riderId }, attributes:["store_id","id","title"] });
     if (!rider || !rider.store_id) {
@@ -39,7 +53,29 @@ const FetchAllSubscribeOrders = asyncHandler(async (req, res) => {
                         attributes:["id","title","description","subscribe_price","normal_price","mrp_price"]
                     }
                 ]
+            },
+            {
+                model:User,
+                as:"user",
+                attributes:["id","name","mobile","email"],
+                include:[
+                    {
+                        model:Address,
+                        as:"addresses",
+                        attributes:[
+                            "id",
+                  "uid",
+                  "address",
+                  "landmark",
+                  "r_instruction",
+                  "a_type",
+                  "a_lat",
+                  "a_long",
+                        ]
+                    }
+                ]
             }
+
         ]
     })
     if(!subscribeOrders.length){
@@ -86,8 +122,29 @@ const ViewSubscribeOrderDetails = asyncHandler(async(req,res)=>{
                     include:[
                         {
                             model:Product,
-                            as:"productsDetails",
+                            as:"productDetails",
                             attributes: ["id", "title", "description", "normal_price", "mrp_price", "img"],
+                        }
+                    ]
+                },
+                {
+                    model:User,
+                    as:"user",
+                    attributes:["id","name","mobile","email"],
+                    include:[
+                        {
+                            model:Address,
+                            as:"addresses",
+                            attributes:[
+                                "id",
+                      "uid",
+                      "address",
+                      "landmark",
+                      "r_instruction",
+                      "a_type",
+                      "a_lat",
+                      "a_long",
+                            ]
                         }
                     ]
                 }
