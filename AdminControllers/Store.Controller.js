@@ -25,7 +25,7 @@ const upsertStore = asyncHandler(async (req, res) => {
       lats,
       longs,
       store_charge,
-      dcharge,
+      // dcharge,
       morder,
       commission,
       bank_name,
@@ -41,21 +41,27 @@ const upsertStore = asyncHandler(async (req, res) => {
       sdesc,
       cancle_policy,
       charge_type,
-      ukm,
-      uprice,
-      aprice,
+      
+      // ukm,
+      // uprice,
+      // aprice,
       zone_id,
       slogan_title,
-      cdesc,
+      // cdesc,
       opentime,
       closetime,
       is_pickup,
-      owner_name
+      owner_name,
+      tags,
     } = req.body;
+    console.log(req.body,"nalladhiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiii")
 
     let rimg, cover_img;
 
-    if (req.files?.rimg?.[0]) {
+
+    console.log(req.files,"nallaaaaaaaaaaaaa jilakarraaaaaaa moggaaaaaaaaaaaaaaaaaaaaaaaaaaa");
+
+    if (req.files?.rimg) {
       rimg = await uploadToS3(req.files.rimg[0], "store-logos");
     } else if (!id) {
       return res.status(400).json({ error: "Store logo is required for a new store." });
@@ -86,7 +92,7 @@ const upsertStore = asyncHandler(async (req, res) => {
         lats,
         longs,
         store_charge,
-        dcharge,
+        // dcharge,
         morder,
         commission,
         bank_name,
@@ -102,12 +108,13 @@ const upsertStore = asyncHandler(async (req, res) => {
         sdesc,
         cancle_policy,
         charge_type,
-        ukm,
-        uprice,
-        aprice,
+        // ukm,
+        // uprice,
+        // aprice,
+        tags : JSON.stringify(tags),
         zone_id,
         slogan_title,
-        cdesc,
+        // cdesc,
         opentime,
         closetime,
         is_pickup,
@@ -132,7 +139,7 @@ const upsertStore = asyncHandler(async (req, res) => {
         lats,
         longs,
         store_charge,
-        dcharge,
+        // dcharge,
         morder,
         commission,
         bank_name,
@@ -148,18 +155,19 @@ const upsertStore = asyncHandler(async (req, res) => {
         sdesc,
         cancle_policy,
         charge_type,
-        ukm,
-        uprice,
-        aprice,
+        // ukm,
+        // uprice,
+        // aprice,
         zone_id,
         slogan_title,
-        cdesc,
+        // cdesc,
         opentime,
         closetime,
         is_pickup,
         rimg,
         cover_img,
-        owner_name
+        owner_name,
+        tags:JSON.stringify(tags)
       });
 
       // **Check if the mobile number already exists in Firebase Authentication**
@@ -196,6 +204,9 @@ const upsertStore = asyncHandler(async (req, res) => {
 const fetchStores = asyncHandler(async(req,res)=>{
   try {
     const stores = await Store.findAll();
+
+    console.log(stores,"hhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhh")
+
     if(!stores){
       res.status(400).json({message:"Store not found!"})
     }
