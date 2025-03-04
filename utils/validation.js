@@ -781,7 +781,7 @@ const storeValidationSchema = Joi.object({
 });
 
 const upsertStoreSchema = Joi.object({
-  id: Joi.string().uuid().optional(),
+  id: Joi.optional(),
   title: Joi.string().required(),
   owner_name:Joi.string().required(),
   rimg: Joi.allow(null, "").optional(),
@@ -797,7 +797,7 @@ const upsertStoreSchema = Joi.object({
   lats: Joi.string().required(),
   longs: Joi.string().required(),
   store_charge: Joi.number().precision(2).required(),
-  // dcharge: Joi.number().precision(2).required(),
+  dcharge: Joi.allow(null,"").optional(),
   morder: Joi.number().integer().required(),
   commission: Joi.number().precision(2).required(),
   bank_name: Joi.string().required(),
@@ -812,20 +812,17 @@ const upsertStoreSchema = Joi.object({
   mobile: Joi.string().required(),
   sdesc: Joi.string().required(),
   charge_type: Joi.required(),
-  ukm: Joi.number().integer().allow(null),
-  uprice: Joi.number().integer().allow(null),
-  aprice: Joi.number().integer().allow(null),
+  ukm: Joi.allow(null).optional(),
+  uprice: Joi.allow(null).optional(),
+  aprice: Joi.allow(null).optional(),
   zone_id: Joi.optional(),
   cover_img: Joi.optional(),
   slogan_title: Joi.string().required(),
-  // cdesc: Joi.string().required(),
+  cdesc: Joi.allow(null,"").optional(),
   opentime: Joi.string()
-    .trim()  // Removes leading and trailing spaces
-    .regex(/^([0-1]?[0-9]|2[0-3]):[0-5][0-9]$/)
+    
     .required(),
   closetime: Joi.string()
-    .trim()
-    .regex(/^([0-1]?[0-9]|2[0-3]):[0-5][0-9]$/)
     .required(),
   cancle_policy: Joi.string().required(),
   is_pickup: Joi.number().integer().required().messages({

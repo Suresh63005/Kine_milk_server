@@ -7,10 +7,10 @@ const {storeFirebase} = require("../config/firebase-config");
 
 const upsertStore = asyncHandler(async (req, res) => {
   try {
-    const { error } = upsertStoreSchema.validate(req.body);
-    if (error) {
-      return res.status(400).json({ error: error.details[0].message });
-    }
+    // const { error } = upsertStoreSchema.validate(req.body);
+    // if (error) {
+    //   return res.status(400).json({ error: error.details[0].message });
+    // }
     const {
       id,
       title,
@@ -55,11 +55,11 @@ const upsertStore = asyncHandler(async (req, res) => {
       tags,
     } = req.body;
   
-
+    console.log(req.body,"nallaaaaaaaaaaaaa jilakarraaaaaaa moggaaaaaaaaaaaaaaaaaaaaaaaaaaa");
     let rimg, cover_img;
 
 
-    console.log(req.files,"nallaaaaaaaaaaaaa jilakarraaaaaaa moggaaaaaaaaaaaaaaaaaaaaaaaaaaa");
+    
 
     if (req.files?.rimg) {
       rimg = await uploadToS3(req.files.rimg[0], "store-logos");
@@ -122,7 +122,7 @@ const upsertStore = asyncHandler(async (req, res) => {
         cover_img: cover_img || store.cover_img,
         owner_name
       });
-
+      console.log(store,"storrrrrrrrrrrrrreeeeeeeeeee")
       return res.status(200).json({ message: "Store updated successfully!", store });
     } else {
       // **Create new store**
@@ -169,7 +169,7 @@ const upsertStore = asyncHandler(async (req, res) => {
         owner_name,
         tags:JSON.stringify(tags)
       });
-
+      
       // **Check if the mobile number already exists in Firebase Authentication**
       try {
         const userRecord = await storeFirebase.auth().getUserByPhoneNumber(`+${mobile}`);

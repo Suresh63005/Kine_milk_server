@@ -124,7 +124,7 @@ const Store = sequelize.define(
       allowNull: false,
     },
     charge_type: {
-      type: DataTypes.INTEGER,
+      type: DataTypes.TEXT,
       allowNull: false,
     },
     ukm: {
