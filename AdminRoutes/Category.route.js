@@ -30,6 +30,6 @@ router.get("/getbyid/:id",categoryController.getCategoryById)
 router.delete("/delete/:id",adminMiddleware.isAdmin,categoryController.deleteCategory)
 router.patch("/update/:id",adminMiddleware.isAdmin,categoryController.upsertCategory)
 router.get("/count",adminMiddleware.isAdmin,categoryController.getCategoryCount)
-router.patch("/toggle-status",adminMiddleware.isAdmin,categoryController.toggleCategoryStatus)
+router.patch("/toggle-status",categoryController.toggleCategoryStatus)
 
 module.exports=router

@@ -7,17 +7,35 @@ const { ProductImagesByIdSchema, ProductImagesDeleteSchema, ProductImagesSearchS
 
 
 const getAllProductImages = async (req, res, next) => {
-    const photos = await ProductImages.findAll();
+    try {
+        const photos = await ProductImages.findAll();
 
-    // Convert 'img' field from string to JSON array
-    const formattedPhotos = photos.map(photo => ({
-        ...photo.toJSON(),
-        img: photo.img ? JSON.parse(photo.img) : [] // Parse only if not null
-    }));
+        const formattedPhotos = photos.map(photo => {
+            let parsedImages;
+            
+            try {
+                parsedImages = JSON.parse(photo.img); 
+                if (!Array.isArray(parsedImages)) {
+                    parsedImages = [photo.img]; // Convert single string to an array
+                }
+            } catch (error) {
+                parsedImages = [photo.img]; // If parsing fails, keep it as a single-item array
+            }
 
-    logger.info("Successfully retrieved all ProductImages");
-    res.status(200).json(formattedPhotos);
+            return {
+                ...photo.toJSON(),
+                img: parsedImages
+            };
+        });
+
+        logger.info("Successfully retrieved all ProductImages");
+        res.status(200).json(formattedPhotos);
+    } catch (error) {
+        console.error("Error fetching product images:", error);
+        res.status(500).json({ error: "Failed to fetch product images" });
+    }
 };
+
 
 // const getAllProductImagesbyId = async (req, res, next) => {
 //     const photos = await ProductImages.findByPk(id);

@@ -204,6 +204,9 @@ const upsertStore = asyncHandler(async (req, res) => {
 const fetchStores = asyncHandler(async(req,res)=>{
   try {
     const stores = await Store.findAll();
+
+    console.log(stores,"hhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhh")
+
     if(!stores){
       res.status(400).json({message:"Store not found!"})
     }
