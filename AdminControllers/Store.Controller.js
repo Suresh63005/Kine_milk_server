@@ -54,7 +54,7 @@ const upsertStore = asyncHandler(async (req, res) => {
       owner_name,
       tags,
     } = req.body;
-    console.log(req.body,"nalladhiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiii")
+  
 
     let rimg, cover_img;
 
@@ -85,7 +85,7 @@ const upsertStore = asyncHandler(async (req, res) => {
         rate,
         slogan,
         lcode,
-        catid,
+        catid : JSON.stringify(catid) || store.catid,
         full_address,
         pincode,
         landmark,
@@ -132,7 +132,7 @@ const upsertStore = asyncHandler(async (req, res) => {
         rate,
         slogan,
         lcode,
-        catid,
+        catid : JSON.stringify(catid),
         full_address,
         pincode,
         landmark,
@@ -235,10 +235,10 @@ const deleteStore = asyncHandler(async (req, res) => {
   const dataToValidate = { ...req.params, ...req.body };
   const { error } = storeDeleteSchema.validate(dataToValidate);
 
-  if (error) {
-    logger.error(error.details[0].message);
-    return res.status(400).json({ error: error.details[0].message });
-  }
+  // if (error) {
+  //   logger.error(error.details[0].message);
+  //   return res.status(400).json({ error: error.details[0].message });
+  // }
 
   try {
     const { id } = req.params;
