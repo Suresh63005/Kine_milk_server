@@ -36,7 +36,7 @@ const FetchSubscribeOrdersByStatus = asyncHandler(async (req, res) => {
     try {
       let queryFilter = { store_id };
       if (status === "active") {
-        queryFilter.status = { [Op.in]: ["Pending", "Processing"] };
+        queryFilter.status = { [Op.in]: ["Pending", "Active"] };
       } else if (status === "completed") {
         queryFilter.status = "Completed";
       } else if (status === "cancelled") {
@@ -62,7 +62,7 @@ const FetchSubscribeOrdersByStatus = asyncHandler(async (req, res) => {
           {
             model: User,
             as: "user",
-            attributes: ["id", "name", "mobile"],
+            attributes: ["id", "name", "mobile","email"],
             include: [
                 {
                   model: Address,
