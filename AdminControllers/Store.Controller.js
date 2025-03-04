@@ -273,4 +273,30 @@ const deleteStore = asyncHandler(async (req, res) => {
   }
 });
 
-module.exports = { upsertStore,fetchStores,fetchStoreById,deleteStore };
+const toggleStoreStatus = async (req, res) => {
+  console.log("Request received:", req.body);
+  const { id, value } = req.body;
+
+  try {
+    const store = await Store.findByPk(id);
+
+    if (!store) {
+      logger.error("Store not found");
+      return res.status(404).json({ message: "Store not found." });
+    }
+
+    store.status = value;
+    await store.save();
+
+    logger.info("Store updated successfully:", store);
+    res.status(200).json({
+      message: "Store status updated successfully.",
+      updatedStatus: store.status,
+    });
+  } catch (error) {
+    logger.error("Error updating Store status:", error);
+    res.status(500).json({ message: "Internal server error." });
+  }
+}
+
+module.exports = { upsertStore,fetchStores,fetchStoreById,deleteStore,toggleStoreStatus };
