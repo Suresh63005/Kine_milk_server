@@ -10,6 +10,6 @@ router.get("/getbyid/:id",couponController.getCouponById)
 router.delete("/delete/:id",couponController.deleteCoupon)
 // router.patch("/update/:id",couponController.upsertcoupon)
 router.get("/count",adminMiddleware.authMiddleware,couponController.getCouponCount)
-router.patch("/toggle-status",adminMiddleware.authMiddleware,couponController.toggleCouponStatus)
+router.patch("/toggle-status",couponController.toggleCouponStatus)
 
 module.exports=router
