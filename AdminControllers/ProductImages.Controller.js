@@ -9,6 +9,7 @@ const Product = require("../Models/Product");
 
 const getAllProductImages = async (req, res, next) => {
     try {
+
         const photos = await ProductImages.findAll({
             include:[
                 {
@@ -31,6 +32,7 @@ const getAllProductImages = async (req, res, next) => {
                 parsedImages = [photo.img]; // If parsing fails, keep it as a single-item array
             }
 
+
             return {
                 ...photo.toJSON(),
                 img: parsedImages
@@ -44,6 +46,7 @@ const getAllProductImages = async (req, res, next) => {
         res.status(500).json({ error: "Failed to fetch product images" });
     }
 };
+
 
 const toggleProductImageStatus = asynHandler(async(req, res)=>{
     console.log("Request received:", req.body);
@@ -66,6 +69,7 @@ const toggleProductImageStatus = asynHandler(async(req, res)=>{
         res.status(500).json({ message: "Internal server error." });    
     }
 })
+
 
 // const getAllProductImagesbyId = async (req, res, next) => {
 //     const photos = await ProductImages.findByPk(id);

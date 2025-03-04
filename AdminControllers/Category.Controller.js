@@ -182,6 +182,7 @@ const searchCategory = asyncHandler(async (req, res) => {
 });
 
 const toggleCategoryStatus = asyncHandler(async (req, res) => {
+  console.log(req.body)
   const { id, value } = req.body;
 
   const category = await Category.findByPk(id);
