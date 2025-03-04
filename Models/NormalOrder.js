@@ -3,6 +3,7 @@ const { DataTypes } = require("sequelize");
 
 const NormalOrder = sequelize.define(
   "NormalOrder",
+  
   {
    id: {
       type: DataTypes.UUID,
