@@ -20,7 +20,6 @@ const upsertProduct = async (req, res) => {
       mrp_price,
       discount,
       out_of_stock,
-      quantity,
       subscription_required,
     } = req.body;
 
@@ -128,8 +127,8 @@ const upsertProduct = async (req, res) => {
       }
 
       console.log("Product created successfully:", product);
-      return res.status(201).json({
-        ResponseCode: "201",
+      return res.status(200).json({
+        ResponseCode: "200",
         Result: "true",
         ResponseMsg: "Product created successfully.",
         product,
@@ -147,6 +146,7 @@ const upsertProduct = async (req, res) => {
 
 
 const getAllProducts = asyncHandler(async (req, res, next) => {
+
 
 
  try {

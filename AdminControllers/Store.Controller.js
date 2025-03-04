@@ -123,7 +123,7 @@ const upsertStore = asyncHandler(async (req, res) => {
         owner_name
       });
 
-      return res.status(201).json({ message: "Store updated successfully!", store });
+      return res.status(200).json({ message: "Store updated successfully!", store });
     } else {
       // **Create new store**
       store = await Store.create({

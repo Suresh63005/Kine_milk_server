@@ -1,11 +1,12 @@
 const express = require('express');
 const { addFavorite, getFavorites, removeFavorite } = require('../../UserControllers/customer/fav_controller');
+const { isAuthenticated } = require('../../middlewares/authMiddleware');
 
 const router = express.Router();
 
-router.post('/',addFavorite);
-router.post('/all',getFavorites);
-router.delete('/',removeFavorite);
+router.post('/',isAuthenticated,addFavorite);
+router.get('/',isAuthenticated,getFavorites);
+router.delete('/',isAuthenticated,removeFavorite);
 
 
 

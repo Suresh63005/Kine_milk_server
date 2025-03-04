@@ -24,7 +24,7 @@ const upsertTime = async (req, res) => {
         }else{
             const newTime=await Time.create({mintime,maxtime,status,store_id});
             logger.info(`New Timerecord created with ID ${newTime.id}`);
-            return res.status(201).json({ success: true, message: 'Timerecord created successfully.', data: newTime });
+            return res.status(200).json({ success: true, message: 'Timerecord created successfully.', data: newTime });
         }
     } catch (error) {
         console.error("Error fetching time slot:", error);
@@ -39,9 +39,19 @@ const upsertTime = async (req, res) => {
 };
 
 const getAllTimes=asynHandler(async(req,res,next)=>{
-    const Times=await Time.findAll();
+
+    const {store_id} = req.body;
+
+    try {
+
+        const Times=await Time.findAll({where:{store_id}});
     logger.info("sucessfully get all Time's");
     res.status(200).json(Times);
+        
+    } catch (error) {
+        
+    }
+    
 });
 
 const getTimeCount=asynHandler(async(req,res)=>{

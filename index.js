@@ -53,6 +53,8 @@ const WalletReport = require("./Models/WalletReport");
 const Zone = require("./Models/Zone");
 const index = require("./Models/index");
 const Review = require("./Models/review");
+const ProductInventory = require("./Models/ProductInventory");
+const Setting = require("./Models/Setting");
 
 app.use(morgan("dev"));
 // Middlewares
@@ -103,26 +105,26 @@ app.use("/time",require("./AdminRoutes/Time.route"))
 app.use("/normalorder",require("./AdminRoutes/NormalOrder.route"))
 app.use("/banner",require('./AdminRoutes/Banner.route'))
 app.use("/store",require('./AdminRoutes/Store.route'))
+app.use("/product_inventory",require('./AdminRoutes/ProductInventory_route'))
+app.use("/notifications",require('./UserRoutes/notification_route'));
+
 
 
 // User Routes
 app.use("/user",require('./UserRoutes/user_auth_route'))
-app.use("/customer",require('./UserRoutes/customer_auth_routes'))
-
-
+app.use("/customer",require('./UserRoutes/customer/customer_auth_routes'))
 app.use("/home_data", require("./UserRoutes/customer/home_data_route"));
 app.use("/u_product", require("./UserRoutes/customer/product_route"));
-
-
 app.use("/u_address", require("./UserRoutes/customer/address_route"));
-
 app.use("/u_cart", require("./UserRoutes/customer/cart_route"));
 app.use("/u_sub_order", require("./UserRoutes/customer/subscribeOrder_route"));
 app.use("/u_instant_order", require("./UserRoutes/customer/instantOrder_route"));
 app.use("/u_fav", require("./UserRoutes/customer/fav_route"));
 app.use("/u_timeslot", require("./UserRoutes/customer/timeslot_route"));
 app.use("/reviews",require('./UserRoutes/customer/customer_review_routes'))
+app.use("/u_wallet", require("./UserRoutes/customer/wallet_route"));
 
+{/** Stores */}
 
 app.use("/stores",require('./UserRoutes/Store/store_dashboard_routes'));
 app.use("/store-products",require('./UserRoutes/Store/store_product_routes'))
@@ -133,10 +135,15 @@ app.use("/store-inventory",require('./UserRoutes/Store/store_inventory_routes'))
 app.use("/instant-orders",require('./UserRoutes/Store/instant_order_history_routes'))
 app.use("/subscribe-orders",require('./UserRoutes/Store/subscribe_orders_routes'))
 
+{/** Delivery */}
+
 app.use("/delivery",require('./UserRoutes/Delivery/rider_auth_routes'))
 app.use("/deliveries",require('./UserRoutes/Delivery/delivery_dashboard_routes'))
 app.use("/instant-delivery",require('./UserRoutes/Delivery/instant_delivery_order_routes'))
 app.use("/subscribe-delivery",require('./UserRoutes/Delivery/subcribe_delivery_order_routes'))
+app.use("/u_settings", require("./UserRoutes/customer/settings_route"));
+app.use("/order-delivered",require('./UserRoutes/Delivery/order_delivered_routes'));
+
 
 app.get("/", (req, res) => {
     res.send("Server is Running");

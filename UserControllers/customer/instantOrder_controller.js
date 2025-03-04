@@ -7,6 +7,7 @@ const Product = require("../../Models/Product");
 const NormalOrder = require("../../Models/NormalOrder");
 const NormalOrderProduct = require("../../Models/NormalOrderProduct");
 const Notification = require("../../Models/Notification");
+const User = require("../../Models/User");
 
 
 const instantOrder =  async (req, res) => {
@@ -21,6 +22,7 @@ const instantOrder =  async (req, res) => {
       store_charge,
       tax,
       o_total,
+      odate,
       store_id,
       address_id,
       a_note,
@@ -28,9 +30,9 @@ const instantOrder =  async (req, res) => {
 
     console.log(req.body);
 
-    const uid = "2dfd7d77-e6f6-43f9-8cc1-c7f29fbd91b6";
+    const uid = req.user.userId;
   
-    if (!uid || !products || !products.length || !timeslot_id || !o_type || !store_id || !subtotal || !o_total) {
+    if (!uid || !products || !products.length || !timeslot_id || !o_type || !store_id || !subtotal || !o_total ||!odate) {
       return res.status(400).json({
         ResponseCode: "400",
         Result: "false",
@@ -39,8 +41,19 @@ const instantOrder =  async (req, res) => {
     }
   
     try {
+
+      const user = await User.findByPk(uid);
+
+      if(!user){
+        return res.status(400).json({
+          ResponseCode: "400",
+          Result: "false",
+          ResponseMsg: "User not found",
+          });
+
+      }
       
-      const odate = new Date();
+      
   
       // Create the order
       const order = await NormalOrder.create(
@@ -83,6 +96,36 @@ const instantOrder =  async (req, res) => {
         })
       );
 
+
+      try {
+        const notificationContent = {
+          app_id: process.env.ONESIGNAL_APP_ID,
+          include_player_ids: [user.one_subscription],
+          data: { user_id: user.id, type: "instant order placed" },
+          contents: {
+            en: `${user.name}, Your order  has been confirmed!`,
+          },
+          headings: { en: "Order Confirmed!" },
+        };
+  
+        const response = await axios.post(
+          "https://onesignal.com/api/v1/notifications",
+          notificationContent,
+          {
+            headers: {
+              "Content-Type": "application/json; charset=utf-8",
+              Authorization: `Basic ${process.env.ONESIGNAL_API_KEY}`,
+            },
+          }
+        );
+  
+        console.log(response, "notification sent");
+      } catch (error) {
+        console.log(error);
+      }
+
+
+
       await Notification.create(
         {
             uid, 
@@ -92,8 +135,8 @@ const instantOrder =  async (req, res) => {
         }
               )
   
-      res.status(201).json({
-        ResponseCode: "201",
+      res.status(200).json({
+        ResponseCode: "200",
         Result: "true",
         ResponseMsg: "Instant Order created successfully!",
         order_id: order.id,
@@ -131,8 +174,8 @@ const instantOrder =  async (req, res) => {
         order: [["createdAt", "DESC"]],
       });
   
-      res.status(201).json({
-        ResponseCode: "201",
+      res.status(200).json({
+        ResponseCode: "200",
         Result: "true",
         ResponseMsg: "Instant Order fetched successfully!",
         orders
@@ -154,16 +197,35 @@ const instantOrder =  async (req, res) => {
   
       
       const order = await NormalOrder.findOne({ where: { id } });
+
+      const orderDetails  = await NormalOrder.findOne({
+        where: { id },
+        include: [
+          {
+            model: NormalOrderProduct,
+            as: "NormalProducts", 
+            include: [
+              {
+                model: Product,
+                as: "ProductDetails", 
+              }
+            ],
+            
+          }
+        ],
+        order: [["createdAt", "DESC"]], 
+        
+      });
   
       if (!order) {
         return res.status(404).json({ success: false, message: "Order not found" });
       }
   
-      res.status(201).json({
-        ResponseCode: "201",
+      res.status(200).json({
+        ResponseCode: "200",
         Result: "true",
         ResponseMsg: "Instant Order details fetched successfully!",
-        order
+        orderDetails
       });
     } catch (error) {
       console.error("Error fetching order details:", error);
@@ -180,6 +242,8 @@ const instantOrder =  async (req, res) => {
   const cancelOrder = async (req, res) => {
     try {
       const { id } = req.body;
+
+      const uid = req.user.userId;
   
       // Find the order
       const order = await NormalOrder.findOne({ where: { id } });
@@ -191,6 +255,17 @@ const instantOrder =  async (req, res) => {
           ResponseMsg: "Order not found",
           
         });
+      }
+
+      const user = await User.findByPk(uid);
+
+      if(!user){
+        return res.status(400).json({
+          ResponseCode: "404",
+          Result: "false",
+          ResponseMsg: "User not found",
+        })
+          
       }
   
       if (order.status === "Cancelled") {
@@ -204,17 +279,58 @@ const instantOrder =  async (req, res) => {
       }
       order.status = "Cancelled";
       await order.save();
+
+    
+
+      
+      try {
+        const notificationContent = {
+          app_id: process.env.ONESIGNAL_APP_ID,
+          include_player_ids: [user.one_subscription],
+          data: { user_id: user.id, type: "instant order Cancelled" },
+          contents: {
+            en: `${user.name}, Your order  has been Cancelled!`,
+          },
+          headings: { en: "Order Cancelled!" },
+        };
   
-      res.status(200).json({ success: true, message: "Order cancelled successfully", order });
+        const response = await axios.post(
+          "https://onesignal.com/api/v1/notifications",
+          notificationContent,
+          {
+            headers: {
+              "Content-Type": "application/json; charset=utf-8",
+              Authorization: `Basic ${process.env.ONESIGNAL_API_KEY}`,
+            },
+          }
+        );
+  
+        console.log(response, "notification sent");
+      } catch (error) {
+        console.log(error);
+      }
+
+      await Notification.create(
+        {
+            uid, 
+            datetime: new Date(),
+                title: "Order Instant Confirmed",
+                description: `Your order created  Order ID ${order.id} .`,
+        }
+              )
+
+
+  
+     
       res.status(200).json({
-        ResponseCode: "201",
+        ResponseCode: "200",
         Result: "true",
         ResponseMsg: "Order cancelled successfully!",
         order
       });
     } catch (error) {
       console.error("Error cancelling order:", error);
-      res.status(500).json({ success: false, message: "Server error", error });
+     
     }
   };
   
