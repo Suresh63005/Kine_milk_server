@@ -324,49 +324,38 @@ const FetchAllProductReviews = asyncHandler(async (req, res) => {
 
   console.log("Fetching reviews for user ID:", uid);
 
-  // Extract Product ID from request params
-  const { productId } = req.params;
-  if (!productId) {
-    return res.status(400).json({ message: "Product ID is required!" });
+  const { storeId } = req.query;
+  if (!storeId) {
+    return res.status(400).json({ message: "Store ID is required!" });
   }
 
   try {
     const reviews = await ProductReview.findAll({
-      where: { 
-        product_id: productId,
-        status: 1 
-      },
-      attributes: [
-        "id",
-        "user_id",
-        "product_id",
-        "rating",
-        "review",
-        "createdAt",
-      ],
+      where: { store_id: storeId, status: 1 }, // Filter by store_id directly in ProductReview
       include: [
+        {
+          model: Product,
+          as: "product",
+          attributes: ["id", "title", "img"],
+          include: [
+            {
+              model: Category,
+              as: "category",
+              attributes: ["id", "title"],
+            }
+          ],
+        },
         {
           model: User,
           as: "UserDetails",
           attributes: ["name", "img"],
         },
-        {
-          model: Product,
-          as: "product", 
-          attributes: ["title", "img"],
-          include: [
-            {
-              model: Category,
-              as: "category", 
-              attributes: ["id", "title"],
-            }
-          ]
-        }
       ],
+      attributes: ["id", "user_id", "product_id", "rating", "review", "createdAt"],
     });
 
     if (!reviews || reviews.length === 0) {
-      return res.status(404).json({ message: "No reviews found for this product." });
+      return res.status(404).json({ message: "No reviews found for this store." });
     }
 
     return res.status(200).json({
@@ -382,6 +371,7 @@ const FetchAllProductReviews = asyncHandler(async (req, res) => {
     });
   }
 });
+
 
 // const ViewProductReviews = asyncHandler(async (req, res) => {
 //   console.log("Decoded User:", req.user);
@@ -480,15 +470,21 @@ const ViewProductReviews = asyncHandler(async (req, res) => {
 
   console.log("Fetching reviews for user ID:", uid);
 
-  const { productId } = req.body;
+  const { productId, storeId } = req.body; 
   if (!productId) {
     return res.status(400).json({ message: "Product ID is required!" });
   }
+  if (!storeId) {
+    return res.status(400).json({ message: "Store ID is required!" });
+  }
 
   try {
-    // Fetch product reviews
     const reviews = await ProductReview.findAll({
-      where: { product_id: productId },
+      where: { 
+        product_id: productId, 
+        store_id: storeId,
+        status: 1 
+      },
       attributes: ["id", "user_id", "product_id", "rating", "review", "createdAt"],
       include: [
         {
@@ -512,12 +508,12 @@ const ViewProductReviews = asyncHandler(async (req, res) => {
     });
 
     if (!reviews.length) {
-      return res.status(404).json({ message: "No reviews found for this product." });
+      return res.status(404).json({ message: "No reviews found for this product in the given store." });
     }
 
-    // Aggregate Ratings Data for the Product
+    // Aggregate Ratings Data for the Product in the Specific Store
     const ratingStats = await ProductReview.findAll({
-      where: { product_id: productId },
+      where: { product_id: productId, store_id: storeId },
       attributes: [
         [Sequelize.fn("AVG", Sequelize.col("rating")), "average_rating"],
         [Sequelize.fn("COUNT", Sequelize.col("id")), "total_reviews"],
@@ -527,7 +523,7 @@ const ViewProductReviews = asyncHandler(async (req, res) => {
         [Sequelize.literal(`SUM(CASE WHEN rating = 4 THEN 1 ELSE 0 END)`), "4"],
         [Sequelize.literal(`SUM(CASE WHEN rating = 5 THEN 1 ELSE 0 END)`), "5"],
       ],
-      raw: true, // Ensures a plain JSON object instead of a Sequelize model instance
+      raw: true,
     });
 
     return res.status(200).json({
@@ -541,6 +537,7 @@ const ViewProductReviews = asyncHandler(async (req, res) => {
     return res.status(500).json({ message: "Internal Server Error", error: error.message });
   }
 });
+
 
 const ViewDeliveryBoyReviews = asyncHandler(async (req, res) => {
   console.log("Decoded User", req.user);

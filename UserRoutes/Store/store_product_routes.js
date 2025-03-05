@@ -7,7 +7,7 @@ router.get("/fetch-all",authMiddleware.isAuthenticated,productController.AllProd
 router.get("/view-product/:productId",authMiddleware.isAuthenticated,productController.ViewSingleProduct);
 router.get("/cat-product/:categoryId",authMiddleware.isAuthenticated,productController.GetProductsByCategory);
 router.post("/search-product",authMiddleware.isAuthenticated,productController.SearchProductByTitle);
-router.get("/product-reviews/:productId",authMiddleware.isAuthenticated,productController.FetchAllProductReviews);
+router.get("/product-reviews",authMiddleware.isAuthenticated,productController.FetchAllProductReviews);
 router.post("/view-reviews",authMiddleware.isAuthenticated,productController.ViewProductReviews);
 router.get("/view-delivery-reviews",authMiddleware.isAuthenticated,productController.ViewDeliveryBoyReviews)
 
