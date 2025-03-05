@@ -141,6 +141,14 @@ const SubscribeOrder = sequelize.define(
       type: DataTypes.TEXT,
       defaultValue: null,
     },
+    feedback:{
+      type:DataTypes.TEXT,
+      allowNull:true
+    },
+    delivery_images: {
+      type: DataTypes.JSON,
+      defaultValue: null,
+    },
     commission: {
       type: DataTypes.INTEGER,
       defaultValue: 0,
