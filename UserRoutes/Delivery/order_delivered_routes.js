@@ -11,4 +11,11 @@ router.post(
   deliveryController.OrderDelivered
 );
 
+router.post(
+  "/subscription-order-delivered",
+  authMiddleware.isAuthenticated,
+  upload.array("delivery_images",5),
+  deliveryController.SubscriptionOrderDelivered
+);
+
 module.exports = router;

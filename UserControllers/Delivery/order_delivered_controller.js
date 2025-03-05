@@ -162,7 +162,10 @@ const OrderDelivered = asyncHandler(async (req, res) => {
         ResponseCode: "200",
         Result: "200",
         ResponseMsg: "Order delivered successfully!",
-        data: order,
+        data:{
+          ...order.dataValues,
+          delivered_dates:JSON.parse(order.delivered_dates)
+        },
       });
     } catch (error) {
        console.error("Error updating order:", error.message);
