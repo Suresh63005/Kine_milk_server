@@ -193,7 +193,6 @@ const deleteProductImages = asynHandler(async (req, res) => {
         logger.error("ProductImages not found");
         return res.status(404).json({ error: "ProductImages not found" });
     }
-    
 
     if (getProductImagesById.deletedAt && forceDelete !== "true") {
         logger.error("ProductImages is already soft-deleted");
