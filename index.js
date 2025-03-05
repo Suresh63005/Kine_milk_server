@@ -55,6 +55,7 @@ const index = require("./Models/index");
 const Review = require("./Models/review");
 const ProductInventory = require("./Models/ProductInventory");
 const Setting = require("./Models/Setting");
+const ProductReview = require('./Models/ProductReview');
 const upload = require("./utils/multerConfig");
 
 app.use(morgan("dev"));
