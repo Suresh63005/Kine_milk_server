@@ -539,6 +539,25 @@ const ViewProductReviews = asyncHandler(async (req, res) => {
 });
 
 
+const FetchAllDeliveryBoyReviews = asyncHandler(async(req,res)=>{
+  console.log("Decoded User", req.user);
+  const uid = req.user?.userId;
+
+  if (!uid) {
+    return res.status(401).json({
+      ResponseCode: "401",
+      Result: "false",
+      ResponseMsg: "User not found!",
+    });
+  }
+  try {
+    
+  } catch (error) {
+    
+  }
+})
+
+
 const ViewDeliveryBoyReviews = asyncHandler(async (req, res) => {
   console.log("Decoded User", req.user);
   const uid = req.user?.userId;
