@@ -11,7 +11,7 @@ const Rider = require("./Rider");
 const SubscribeOrder = sequelize.define(
   "SubscribeOrder",
   {
-   id: {
+    id: {
       type: DataTypes.UUID,
       allowNull: false,
       defaultValue: DataTypes.UUIDV4,
@@ -45,7 +45,7 @@ const SubscribeOrder = sequelize.define(
       type: DataTypes.ENUM("Delivery", "Self Pickup"),
       allowNull: false,
     },
-    
+
     timeslot_id: {
       type: DataTypes.UUID,
       allowNull: false,
@@ -60,11 +60,15 @@ const SubscribeOrder = sequelize.define(
       type: DataTypes.DATEONLY,
       allowNull: true,
     },
-
+    delivered_dates: {
+      type: DataTypes.JSON,
+      allowNull: true,
+      defaultValue: [],
+    },
     days: {
-      type: DataTypes.JSON, 
+      type: DataTypes.JSON,
       allowNull: false,
-      defaultValue: [], 
+      defaultValue: [],
     },
 
     tax: {
@@ -110,7 +114,6 @@ const SubscribeOrder = sequelize.define(
       type: DataTypes.UUID,
       allowNull: true,
       defaultValue: 0,
-      
     },
     wall_amt: {
       type: DataTypes.FLOAT,
@@ -119,7 +122,7 @@ const SubscribeOrder = sequelize.define(
     status: {
       type: DataTypes.ENUM("Pending", "Active", "Completed", "Cancelled"),
       allowNull: false,
-      defaultValue:"Pending"
+      defaultValue: "Pending",
     },
     is_rate: {
       type: DataTypes.INTEGER,

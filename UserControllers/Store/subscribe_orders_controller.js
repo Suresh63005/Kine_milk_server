@@ -181,7 +181,12 @@ const ViewSubscribeOrderById = asyncHandler(async (req, res) => {
 
     return res
       .status(200)
-      .json({ message: "Order fetched successfully!", order });
+      .json({ message: "Order fetched successfully!",
+        Data:{
+          ...order.dataValues,
+          delivered_dates:JSON.parse(order.delivered_dates || "[]")
+        }
+         });
   } catch (error) {
     console.error("Error fetching order by ID:", error.message);
     return res
