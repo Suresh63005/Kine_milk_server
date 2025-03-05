@@ -417,7 +417,7 @@ const ViewProductReviews = asyncHandler(async (req, res) => {
         {
           model: User,
           as: "user",
-          attributes: ["name","img"],
+          attributes: ["name",'img'],
         },
       ],
     });
