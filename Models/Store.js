@@ -39,7 +39,7 @@ const Store = sequelize.define(
       defaultValue: null,
     },
     catid: {
-      type: DataTypes.INTEGER,
+      type: DataTypes.TEXT,
       allowNull: false,
     },
     full_address: {
@@ -124,7 +124,7 @@ const Store = sequelize.define(
       allowNull: false,
     },
     charge_type: {
-      type: DataTypes.INTEGER,
+      type: DataTypes.TEXT,
       allowNull: false,
     },
     ukm: {
