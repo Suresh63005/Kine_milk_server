@@ -55,6 +55,7 @@ const index = require("./Models/index");
 const Review = require("./Models/review");
 const ProductInventory = require("./Models/ProductInventory");
 const Setting = require("./Models/Setting");
+const upload = require("./utils/multerConfig");
 
 app.use(morgan("dev"));
 // Middlewares
@@ -105,7 +106,7 @@ app.use("/time",require("./AdminRoutes/Time.route"))
 app.use("/normalorder",require("./AdminRoutes/NormalOrder.route"))
 app.use("/banner",require('./AdminRoutes/Banner.route'))
 app.use("/store",require('./AdminRoutes/Store.route'))
-app.use("/product_inventory",require('./AdminRoutes/ProductInventory_route'))
+app.use("/product_inventory",upload.none(),require('./AdminRoutes/ProductInventory_route'))
 app.use("/notifications",require('./UserRoutes/notification_route'));
 
 
