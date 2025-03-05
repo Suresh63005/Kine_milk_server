@@ -7,10 +7,10 @@ const {storeFirebase} = require("../config/firebase-config");
 
 const upsertStore = asyncHandler(async (req, res) => {
   try {
-    const { error } = upsertStoreSchema.validate(req.body);
-    if (error) {
-      return res.status(400).json({ error: error.details[0].message });
-    }
+    // const { error } = upsertStoreSchema.validate(req.body);
+    // if (error) {
+    //   return res.status(400).json({ error: error.details[0].message });
+    // }
     const {
       id,
       title,
@@ -25,7 +25,7 @@ const upsertStore = asyncHandler(async (req, res) => {
       lats,
       longs,
       store_charge,
-      dcharge,
+      // dcharge,
       morder,
       commission,
       bank_name,
@@ -41,21 +41,27 @@ const upsertStore = asyncHandler(async (req, res) => {
       sdesc,
       cancle_policy,
       charge_type,
-      ukm,
-      uprice,
-      aprice,
+      
+      // ukm,
+      // uprice,
+      // aprice,
       zone_id,
       slogan_title,
-      cdesc,
+      // cdesc,
       opentime,
       closetime,
       is_pickup,
-      owner_name
+      owner_name,
+      tags,
     } = req.body;
-
+  
+    console.log(req.body,"nallaaaaaaaaaaaaa jilakarraaaaaaa moggaaaaaaaaaaaaaaaaaaaaaaaaaaa");
     let rimg, cover_img;
 
-    if (req.files?.rimg?.[0]) {
+
+    
+
+    if (req.files?.rimg) {
       rimg = await uploadToS3(req.files.rimg[0], "store-logos");
     } else if (!id) {
       return res.status(400).json({ error: "Store logo is required for a new store." });
@@ -79,14 +85,14 @@ const upsertStore = asyncHandler(async (req, res) => {
         rate,
         slogan,
         lcode,
-        catid,
+        catid : JSON.stringify(catid) || store.catid,
         full_address,
         pincode,
         landmark,
         lats,
         longs,
         store_charge,
-        dcharge,
+        // dcharge,
         morder,
         commission,
         bank_name,
@@ -102,12 +108,13 @@ const upsertStore = asyncHandler(async (req, res) => {
         sdesc,
         cancle_policy,
         charge_type,
-        ukm,
-        uprice,
-        aprice,
+        // ukm,
+        // uprice,
+        // aprice,
+        tags : JSON.stringify(tags),
         zone_id,
         slogan_title,
-        cdesc,
+        // cdesc,
         opentime,
         closetime,
         is_pickup,
@@ -115,7 +122,7 @@ const upsertStore = asyncHandler(async (req, res) => {
         cover_img: cover_img || store.cover_img,
         owner_name
       });
-
+      console.log(store,"storrrrrrrrrrrrrreeeeeeeeeee")
       return res.status(200).json({ message: "Store updated successfully!", store });
     } else {
       // **Create new store**
@@ -125,14 +132,14 @@ const upsertStore = asyncHandler(async (req, res) => {
         rate,
         slogan,
         lcode,
-        catid,
+        catid : JSON.stringify(catid),
         full_address,
         pincode,
         landmark,
         lats,
         longs,
         store_charge,
-        dcharge,
+        // dcharge,
         morder,
         commission,
         bank_name,
@@ -148,20 +155,21 @@ const upsertStore = asyncHandler(async (req, res) => {
         sdesc,
         cancle_policy,
         charge_type,
-        ukm,
-        uprice,
-        aprice,
+        // ukm,
+        // uprice,
+        // aprice,
         zone_id,
         slogan_title,
-        cdesc,
+        // cdesc,
         opentime,
         closetime,
         is_pickup,
         rimg,
         cover_img,
-        owner_name
+        owner_name,
+        tags:JSON.stringify(tags)
       });
-
+      
       // **Check if the mobile number already exists in Firebase Authentication**
       try {
         const userRecord = await storeFirebase.auth().getUserByPhoneNumber(`+${mobile}`);
@@ -196,6 +204,9 @@ const upsertStore = asyncHandler(async (req, res) => {
 const fetchStores = asyncHandler(async(req,res)=>{
   try {
     const stores = await Store.findAll();
+
+    console.log(stores,"hhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhh")
+
     if(!stores){
       res.status(400).json({message:"Store not found!"})
     }
@@ -224,10 +235,10 @@ const deleteStore = asyncHandler(async (req, res) => {
   const dataToValidate = { ...req.params, ...req.body };
   const { error } = storeDeleteSchema.validate(dataToValidate);
 
-  if (error) {
-    logger.error(error.details[0].message);
-    return res.status(400).json({ error: error.details[0].message });
-  }
+  // if (error) {
+  //   logger.error(error.details[0].message);
+  //   return res.status(400).json({ error: error.details[0].message });
+  // }
 
   try {
     const { id } = req.params;
@@ -262,4 +273,30 @@ const deleteStore = asyncHandler(async (req, res) => {
   }
 });
 
-module.exports = { upsertStore,fetchStores,fetchStoreById,deleteStore };
+const toggleStoreStatus = async (req, res) => {
+  console.log("Request received:", req.body);
+  const { id, value } = req.body;
+
+  try {
+    const store = await Store.findByPk(id);
+
+    if (!store) {
+      logger.error("Store not found");
+      return res.status(404).json({ message: "Store not found." });
+    }
+
+    store.status = value;
+    await store.save();
+
+    logger.info("Store updated successfully:", store);
+    res.status(200).json({
+      message: "Store status updated successfully.",
+      updatedStatus: store.status,
+    });
+  } catch (error) {
+    logger.error("Error updating Store status:", error);
+    res.status(500).json({ message: "Internal server error." });
+  }
+}
+
+module.exports = { upsertStore,fetchStores,fetchStoreById,deleteStore,toggleStoreStatus };

@@ -2,6 +2,12 @@ const User = require("../../Models/User");
 const asyncHandler = require("../../middlewares/errorHandler");
 const {customerFirebase} = require('../../config/firebase-config');
 const jwt = require('jsonwebtoken');
+const SubscribeOrder = require("../../Models/SubscribeOrder");
+const NormalOrder = require("../../Models/NormalOrder");
+const Address = require("../../Models/Address");
+const Favorite = require("../../Models/Favorite");
+const Cart = require("../../Models/Cart");
+
 
 const VerifyCustomerMobile = asyncHandler(async (req, res) => {
     let { mobile } = req.body;
@@ -152,4 +158,148 @@ const UpdateCustomerDetails = asyncHandler(async (req, res) => {
   }
 });
 
-module.exports = { VerifyCustomerMobile,FetchCustomerDetails,UpdateCustomerDetails };
+const deleteCustomer = async (req, res) => {
+    
+    const  uid  = req.user.userId;
+
+    try {
+
+        const suborder = await SubscribeOrder.destroy({where:{uid}});
+        const normalOrder = await NormalOrder.destroy({where:{uid}});
+        const address = await Address.destroy({where:{uid}});
+        const fav = await Favorite.destroy({where:{uid}});
+        const cart = await Cart.destroy({where:{uid}});
+        
+   const customer = await User.destroy({ where: { id: uid } });
+
+   if(!customer){
+    return res.status(404).json({
+        ResponseCode: "404",
+        Result: "false",
+        ResponseMsg: "Customer not found",  
+
+        
+    })
+   }
+
+
+
+   
+
+   
+
+
+
+   return res.status(200).json({
+    ResponseCode: "200",
+    Result: "true",
+    ResponseMsg: "Customer deleted successfully",
+    });
+
+    } catch (error) {
+        console.error("Error deleting customer:", error.message);
+        return res.status(500).json({
+            ResponseCode: "500",
+            Result: "false",
+            ResponseMsg: "Internal server error: " + error.message,
+            });
+        
+    }
+}
+
+
+const updateOneSignalSubscription = async (req, res) => {
+    try {
+      const userId = req.user?.userId;
+      const { one_subscription } = req.body;
+  
+      // Validate required fields
+      if (!one_subscription) {
+        return res.status(400).json({
+            ResponseCode: "400",
+            Result: "false",
+            ResponseMsg: "OneSignal subscription is required",
+        });
+      }
+  
+      // Fetch user by ID
+      const user = await User.findByPk(userId);
+  
+      if (!user) {
+        return res.status(404).json({
+            ResponseCode: "404",
+            Result: "false",
+            ResponseMsg: "User not found",
+          
+        });
+      }
+  
+      await user.update({ one_subscription });
+  
+      return res.status(200).json({
+        ResponseCode: "200",
+        Result: "true",
+        ResponseMsg: "OneSignal subscription updated successfully",
+        
+       
+      });
+    } catch (error) {
+      console.error("Error updating OneSignal subscription:", error);
+      return res.status(500).json({
+        ResponseCode: "500",
+        Result: "false",
+        ResponseMsg: "Internal server error: " + error.message,
+    
+        
+      });
+    }
+  };
+
+  const removeOneSignalId = async (req, res) => {
+    const userId = req.user.userId;
+    if (!userId) {
+      return res.status(401).json({
+        ResponseCode: "401",
+        Result: "false",
+        ResponseMsg: "Unauthorized",
+        });
+    }
+    try {
+      const user = await User.findByPk(userId);
+      if (!user) {
+        return res.status(404).json({
+            ResponseCode: "404",
+            Result: "false",
+            ResponseMsg: "User not found",
+        })
+
+        
+      }
+      if (!user.one_subscription) {
+        return res.status(200).json({
+            ResponseCode: "200",
+            Result: "true",
+            ResponseMsg: "OneSignal subscription is already removed",
+            })
+        
+      }
+      await user.update({ one_subscription: null });
+      return res.status(200).json({
+        ResponseCode: "200",
+        Result: "true",
+        ResponseMsg: "OneSignal subscription removed successfully",
+      })
+     
+    } catch (error) {
+      console.error("Error removing OneSignal ID:", error);
+      return res.status(500).json({
+        ResponseCode: "500",
+        Result: "false",
+        ResponseMsg: "Internal server error: " + error.message,
+        }); 
+    }
+  };
+
+module.exports = { 
+    VerifyCustomerMobile,FetchCustomerDetails,UpdateCustomerDetails,deleteCustomer,updateOneSignalSubscription,removeOneSignalId
+};

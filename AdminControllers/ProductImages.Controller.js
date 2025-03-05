@@ -4,20 +4,72 @@ const asynHandler = require("../middlewares/errorHandler");
 const logger = require("../utils/logger");
 const uploadToS3 = require("../config/fileUpload.aws");
 const { ProductImagesByIdSchema, ProductImagesDeleteSchema, ProductImagesSearchSchema} = require("../utils/validation");
+const Product = require("../Models/Product");
 
 
 const getAllProductImages = async (req, res, next) => {
-    const photos = await ProductImages.findAll();
+    try {
 
-    // Convert 'img' field from string to JSON array
-    const formattedPhotos = photos.map(photo => ({
-        ...photo.toJSON(),
-        img: photo.img ? JSON.parse(photo.img) : [] // Parse only if not null
-    }));
+        const photos = await ProductImages.findAll({
+            include:[
+                {
+                    model:Product,
+                    attributes:['title'],
+                    as:'product'
+                }
+            ]
+        });
 
-    logger.info("Successfully retrieved all ProductImages");
-    res.status(200).json(formattedPhotos);
+        const formattedPhotos = photos.map(photo => {
+            let parsedImages;
+
+            try {
+                parsedImages = JSON.parse(photo.img); 
+                if (!Array.isArray(parsedImages)) {
+                    parsedImages = [photo.img]; // Convert single string to an array
+                }
+            } catch (error) {
+                parsedImages = [photo.img]; // If parsing fails, keep it as a single-item array
+            }
+
+
+            return {
+                ...photo.toJSON(),
+                img: parsedImages
+            };
+        });
+
+        logger.info("Successfully retrieved all ProductImages");
+        res.status(200).json(formattedPhotos);
+    } catch (error) {
+        console.error("Error fetching product images:", error);
+        res.status(500).json({ error: "Failed to fetch product images" });
+    }
 };
+
+
+const toggleProductImageStatus = asynHandler(async(req, res)=>{
+    console.log("Request received:", req.body);
+    const {id, value}= req.body;
+    try {
+        const productImage = await ProductImages.findByPk(id);
+        if(!productImage){
+            console.log("product Image not found!");
+            return res.status(404).json({message:"product Image not found!"})
+        }
+        productImage.status=value;
+        await productImage.save();
+        console.log("product Image status updated successfully.");
+        res.status(200).json({
+            message:"product Image status updated successfully.",
+            updatedStatus:productImage.status,
+        })
+    } catch (error) {
+        console.error("Error updating product Image status:", error);
+        res.status(500).json({ message: "Internal server error." });    
+    }
+})
+
 
 // const getAllProductImagesbyId = async (req, res, next) => {
 //     const photos = await ProductImages.findByPk(id);
@@ -190,6 +242,7 @@ const searchProductImages=asynHandler(async(req,res)=>{
 module.exports={
     // getAllProductImagesbyId,
     getAllProductImages,
+    toggleProductImageStatus,
     getProductImagesCount,
     getProductImagesById,
     deleteProductImages,

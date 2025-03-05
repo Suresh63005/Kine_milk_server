@@ -781,22 +781,23 @@ const storeValidationSchema = Joi.object({
 });
 
 const upsertStoreSchema = Joi.object({
-  id: Joi.string().uuid().optional(),
+  id: Joi.optional(),
   title: Joi.string().required(),
   owner_name:Joi.string().required(),
-  rimg: Joi.string().allow(null, "").optional(),
+  rimg: Joi.allow(null, "").optional(),
   status: Joi.number().integer().required(),
   rate: Joi.number().precision(2).required(),
   slogan: Joi.string().required(),
+  tags:Joi.allow(null,""),
   lcode: Joi.string().allow(null, ""),
-  catid: Joi.number().integer().required(),
+  catid: Joi.required(),
   full_address: Joi.string().required(),
   pincode: Joi.string().required(),
   landmark: Joi.string().required(),
   lats: Joi.string().required(),
   longs: Joi.string().required(),
   store_charge: Joi.number().precision(2).required(),
-  dcharge: Joi.number().precision(2).required(),
+  dcharge: Joi.allow(null,"").optional(),
   morder: Joi.number().integer().required(),
   commission: Joi.number().precision(2).required(),
   bank_name: Joi.string().required(),
@@ -810,21 +811,18 @@ const upsertStoreSchema = Joi.object({
   rstatus: Joi.number().integer().default(1),
   mobile: Joi.string().required(),
   sdesc: Joi.string().required(),
-  charge_type: Joi.number().integer().required(),
-  ukm: Joi.number().integer().allow(null),
-  uprice: Joi.number().integer().allow(null),
-  aprice: Joi.number().integer().allow(null),
-  zone_id: Joi.number().integer().required(),
-  cover_img: Joi.string().optional(),
+  charge_type: Joi.required(),
+  ukm: Joi.allow(null).optional(),
+  uprice: Joi.allow(null).optional(),
+  aprice: Joi.allow(null).optional(),
+  zone_id: Joi.optional(),
+  cover_img: Joi.optional(),
   slogan_title: Joi.string().required(),
-  cdesc: Joi.string().required(),
+  cdesc: Joi.allow(null,"").optional(),
   opentime: Joi.string()
-    .trim()  // Removes leading and trailing spaces
-    .regex(/^([0-1]?[0-9]|2[0-3]):[0-5][0-9]$/)
+    
     .required(),
   closetime: Joi.string()
-    .trim()
-    .regex(/^([0-1]?[0-9]|2[0-3]):[0-5][0-9]$/)
     .required(),
   cancle_policy: Joi.string().required(),
   is_pickup: Joi.number().integer().required().messages({

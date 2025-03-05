@@ -60,6 +60,10 @@ const User = sequelize.define(
       allowNull: true,
       defaultValue: 0,
     },
+    one_subscription:{
+      type:DataTypes.TEXT,
+      allowNull:true
+    },
   },
   { tableName: "tbl_user", timestamps: true, paranoid: true }
 );

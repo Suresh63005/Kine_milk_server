@@ -95,7 +95,7 @@ const EditRiderProfile = asyncHandler(async (req, res) => {
 
     rider.title = title || rider.title;
     rider.email = email || rider.email;
-    rider.img = imageUrl;
+    rider.img = imageUrl; 
 
     await rider.save({ fields: ["title", "email", "img"] }); 
 

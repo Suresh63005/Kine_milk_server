@@ -8,6 +8,7 @@ const Favorite = require("./Favorite");
 const NormalOrder = require("./NormalOrder");
 const NormalOrderProduct = require("./NormalOrderProduct");
 const Product = require("./Product");
+const ProductImage = require("./productImages");
 const ProductInventory = require("./ProductInventory");
 // const User = require("./User");
 // const PaymentList = require("./PaymentList");
@@ -110,5 +111,4 @@ Product.belongsTo(Favorite, { foreignKey: "pid", as: "favproducts" });
 SubscribeOrder.belongsTo(User, { as: "user", foreignKey: "uid" });
 User.hasMany(SubscribeOrder, { as: "suborders", foreignKey: "uid" });
 
-
-
+ProductImage.belongsTo(Product,{foreignKey:'product_id',as:'product'})

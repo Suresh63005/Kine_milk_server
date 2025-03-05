@@ -151,4 +151,9 @@ const verifyEmail = asyncHandler(async(req,res)=>{
     }
 })
 
+
+const acountDelete = asyncHandler(async(req,res)=>{
+    
+})
+
 module.exports = {otpLogin,verifyOtp,verifyMobile,verifyEmail}
