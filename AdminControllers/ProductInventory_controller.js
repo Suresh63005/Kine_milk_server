@@ -5,7 +5,7 @@ const Store = require("../Models/Store");
 
 const addInventory = async (req, res) => {
   const { store_id, product_id, date, quantity, total } = req.body;
-  
+  console.log(req.body)
   try {
     if (!store_id || !product_id || !date || !quantity) {
       return res.status(400).json({
@@ -34,7 +34,7 @@ const addInventory = async (req, res) => {
     }
     
     let inventory = await ProductInventory.findOne({
-      where: { store_id, product_id, date }
+      where: { store_id, product_id }
     });
 
     if (inventory) {
