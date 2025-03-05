@@ -60,7 +60,11 @@ const SubscribeOrder = sequelize.define(
       type: DataTypes.DATEONLY,
       allowNull: true,
     },
-
+    // delivered_dates:{
+    //     type:DataTypes.JSON,
+    //     allowNull:true,
+    //     defaultValue:[],
+    // },
     days: {
       type: DataTypes.JSON, 
       allowNull: false,
