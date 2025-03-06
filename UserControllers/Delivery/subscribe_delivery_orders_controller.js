@@ -161,7 +161,10 @@ const ViewSubscribeOrderDetails = asyncHandler(async(req,res)=>{
         return res.status(200).json({
             success:true,
             ResponseCode:"Subscribe Order details fetched successfully",
-            Data:subscribeOrders
+            Data:{
+                ...subscribeOrders.dataValues,
+                delivered_dates:JSON.parse(subscribeOrders.delivered_dates || "[]")
+            }
         })
     } catch (error) {
         console.error("Error Occurs While Fetching Order Details: ",error)
@@ -174,4 +177,63 @@ const ViewSubscribeOrderDetails = asyncHandler(async(req,res)=>{
     }
 })
 
-module.exports = {FetchAllSubscribeOrders,ViewSubscribeOrderDetails}
+const CompleteSubscriptionOrder = asyncHandler(async (req, res) => {
+    try {
+        const { orderId, deliveryDate } = req.body;
+
+        if (!orderId || !deliveryDate) {
+            return res.status(400).json({
+                success: false,
+                ResponseCode: "400",
+                ResponseMsg: "Order ID and delivery date are required",
+            });
+        }
+
+        // Fetch existing order
+        const order = await SubscribeOrder.findOne({ where: { id: orderId } });
+
+        if (!order) {
+            return res.status(404).json({
+                success: false,
+                ResponseCode: "404",
+                ResponseMsg: "Order not found",
+            });
+        }
+
+        let deliveredDates = order.delivered_dates || []; // Ensure it's an array
+
+        // Convert to array if it's stored as a string (MySQL TEXT issue)
+        if (typeof deliveredDates === "string") {
+            deliveredDates = JSON.parse(deliveredDates);
+        }
+
+        // Append new delivery date if it doesn't already exist
+        if (!deliveredDates.includes(deliveryDate)) {
+            deliveredDates.push(deliveryDate);
+        }
+
+        // Update the order
+        await SubscribeOrder.update(
+            { delivered_dates: JSON.stringify(deliveredDates) }, // Store as JSON string
+            { where: { id: orderId } }
+        );
+
+        return res.status(200).json({
+            success: true,
+            ResponseCode: "200",
+            ResponseMsg: "Order updated successfully",
+            Data: { ...order.dataValues, delivered_dates: deliveredDates },
+        });
+    } catch (error) {
+        console.error("Error updating delivered dates:", error);
+        return res.status(500).json({
+            success: false,
+            ResponseCode: "500",
+            ResponseMsg: "Internal Server Error",
+            Error: error.message,
+        });
+    }
+});
+
+
+module.exports = {FetchAllSubscribeOrders,ViewSubscribeOrderDetails,CompleteSubscriptionOrder}

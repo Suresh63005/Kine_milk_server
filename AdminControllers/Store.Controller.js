@@ -54,8 +54,10 @@ const upsertStore = asyncHandler(async (req, res) => {
       owner_name,
       tags,
     } = req.body;
+
+    
   
-    console.log(catid,"nallaaaaaaaaaaaaa jilakarraaaaaaa moggaaaaaaaaaaaaaaaaaaaaaaaaaaa");
+    console.log(req.body,"nallaaaaaaaaaaaaa jilakarraaaaaaa moggaaaaaaaaaaaaaaaaaaaaaaaaaaa");
     let rimg, cover_img;
 
 
@@ -72,9 +74,8 @@ const upsertStore = asyncHandler(async (req, res) => {
     } else if (!id) {
       return res.status(400).json({ error: "Cover image is required for a new store." });
     }
-    const catidArray = Array.isArray(catid) ? catid : [];
-    const catidString = JSON.stringify(catidArray);
-    const tagsString = JSON.stringify(tags);
+   
+    
 
     let store;
     if (id) {
@@ -88,7 +89,7 @@ const upsertStore = asyncHandler(async (req, res) => {
         rate,
         slogan,
         lcode,
-        catid: catidString,
+        catid: catid,
         full_address,
         pincode,
         landmark,
@@ -114,7 +115,7 @@ const upsertStore = asyncHandler(async (req, res) => {
         // ukm,
         // uprice,
         // aprice,
-        tags: tagsString,
+        tags: tags,
         zone_id,
         slogan_title,
         // cdesc,
@@ -135,7 +136,7 @@ const upsertStore = asyncHandler(async (req, res) => {
         rate,
         slogan,
         lcode,
-        catid: catidString,
+        catid: catid,
         full_address,
         pincode,
         landmark,
@@ -170,7 +171,7 @@ const upsertStore = asyncHandler(async (req, res) => {
         rimg,
         cover_img,
         owner_name,
-        tags: tagsString,
+        tags: tags,
       });
       
       // **Check if the mobile number already exists in Firebase Authentication**
@@ -208,7 +209,7 @@ const fetchStores = asyncHandler(async(req,res)=>{
   try {
     const stores = await Store.findAll();
 
-    console.log(stores,"hhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhh")
+    
 
     if(!stores){
       res.status(400).json({message:"Store not found!"})
@@ -229,17 +230,12 @@ const fetchStoreById = asyncHandler(async (req, res) => {
     }
 
     // Parse catid from JSON string to array
-    const tags = JSON.parse(store.tags || "[]");
-    const catid = JSON.parse(store.catid || "[]");;
+  
 
     return res.status(200).json({
       success: true,
       message: "Single Store Fetched Successfully",
-      store: {
-        ...store.toJSON(),
-        catid,
-        tags, // Send as array
-      },
+      store
     });
   } catch (error) {
     logger.error("Error in Fetching Store:", error);
@@ -289,4 +285,30 @@ const deleteStore = asyncHandler(async (req, res) => {
   }
 });
 
-module.exports = { upsertStore,fetchStores,fetchStoreById,deleteStore };
+const toggleStoreStatus = async (req, res) => {
+  console.log("Request received:", req.body);
+  const { id, value } = req.body;
+
+  try {
+    const store = await Store.findByPk(id);
+
+    if (!store) {
+      logger.error("Store not found");
+      return res.status(404).json({ message: "Store not found." });
+    }
+
+    store.status = value;
+    await store.save();
+
+    logger.info("Store updated successfully:", store);
+    res.status(200).json({
+      message: "Store status updated successfully.",
+      updatedStatus: store.status,
+    });
+  } catch (error) {
+    logger.error("Error updating Store status:", error);
+    res.status(500).json({ message: "Internal server error." });
+  }
+}
+
+module.exports = { upsertStore,fetchStores,fetchStoreById,deleteStore,toggleStoreStatus };

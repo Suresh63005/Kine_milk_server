@@ -15,6 +15,10 @@ const Review = sequelize.define(
         type: DataTypes.UUID,
         allowNull: false,
     },
+    store_id:{
+        type: DataTypes.UUID,
+        allowNull: false,
+    },
     rider_id:{
       type: DataTypes.UUID,
       allowNull: false,
@@ -41,4 +45,3 @@ const Review = sequelize.define(
 
 
 module.exports = Review;
-

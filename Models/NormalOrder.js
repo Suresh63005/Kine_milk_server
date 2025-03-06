@@ -138,6 +138,10 @@ const NormalOrder = sequelize.define(
       type: DataTypes.JSON,
       defaultValue: null,
     },
+    feedback:{
+      type:DataTypes.TEXT,
+      allowNull:true
+    },
     
   },
   { tableName: "tbl_normal_order", timestamps: true, paranoid: true }

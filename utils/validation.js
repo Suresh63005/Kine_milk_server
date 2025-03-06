@@ -1,7 +1,7 @@
 const Joi = require("joi");
 
 const registerAdminSchema = Joi.object({
-  username: Joi.string().min(3).max(50).required(),
+  email: Joi.string().min(3).max(50).required(),
   password: Joi.string().min(6).required(),
   // role: Joi.string().valid("admin", "store").required(),
 })
@@ -13,7 +13,7 @@ const loginAdminSchema = Joi.object({
 })
 
 const updateAdminSchema = Joi.object({
-  username: Joi.string().min(3).max(50).required(),
+  email: Joi.string().min(3).max(50).required(),
   password: Joi.string().min(6).optional(),
 })
 
@@ -30,7 +30,7 @@ const deleteAdminSchema = Joi.object({
 });
 
 const getAdminbyIdSchema = Joi.object({
-  id: Joi.number().integer().required().messages({
+  id: Joi.required().messages({
     "number.base": "ID must be a number.",
     "number.integer": "ID must be an integer.",
     "any.required": "ID is required.",

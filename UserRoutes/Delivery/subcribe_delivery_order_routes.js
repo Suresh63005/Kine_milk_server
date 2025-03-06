@@ -5,5 +5,6 @@ const authMiddleware = require('../../middlewares/authMiddleware');
 
 router.get("/subscribe-orders",authMiddleware.isAuthenticated,subscribeDeliveryOrderController.FetchAllSubscribeOrders)
 router.get("/view-orderDetails",authMiddleware.isAuthenticated,subscribeDeliveryOrderController.ViewSubscribeOrderDetails)
+router.post("/complete-order",authMiddleware.isAuthenticated,subscribeDeliveryOrderController.CompleteSubscriptionOrder)
 
 module.exports = router

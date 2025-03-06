@@ -11,5 +11,6 @@ router.post("/upsert",upload.fields([
 router.get("/fetch",storeController.fetchStores);
 router.get("/fetch/:id",storeController.fetchStoreById);
 router.delete("/delete/:id",storeController.deleteStore);
+router.patch("/toggle-status",storeController.toggleStoreStatus)
 
 module.exports = router;
