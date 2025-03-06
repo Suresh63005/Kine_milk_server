@@ -54,6 +54,8 @@ const upsertStore = asyncHandler(async (req, res) => {
       owner_name,
       tags,
     } = req.body;
+
+    
   
     console.log(req.body,"nallaaaaaaaaaaaaa jilakarraaaaaaa moggaaaaaaaaaaaaaaaaaaaaaaaaaaa");
     let rimg, cover_img;
@@ -72,6 +74,8 @@ const upsertStore = asyncHandler(async (req, res) => {
     } else if (!id) {
       return res.status(400).json({ error: "Cover image is required for a new store." });
     }
+   
+    
 
     let store;
     if (id) {
@@ -85,7 +89,7 @@ const upsertStore = asyncHandler(async (req, res) => {
         rate,
         slogan,
         lcode,
-        catid : JSON.stringify(catid) || store.catid,
+        catid: catid,
         full_address,
         pincode,
         landmark,
@@ -111,7 +115,7 @@ const upsertStore = asyncHandler(async (req, res) => {
         // ukm,
         // uprice,
         // aprice,
-        tags : JSON.stringify(tags),
+        tags: tags,
         zone_id,
         slogan_title,
         // cdesc,
@@ -122,7 +126,7 @@ const upsertStore = asyncHandler(async (req, res) => {
         cover_img: cover_img || store.cover_img,
         owner_name
       });
-      console.log(store,"storrrrrrrrrrrrrreeeeeeeeeee")
+      
       return res.status(200).json({ message: "Store updated successfully!", store });
     } else {
       // **Create new store**
@@ -132,7 +136,7 @@ const upsertStore = asyncHandler(async (req, res) => {
         rate,
         slogan,
         lcode,
-        catid : JSON.stringify(catid),
+        catid: catid,
         full_address,
         pincode,
         landmark,
@@ -167,7 +171,7 @@ const upsertStore = asyncHandler(async (req, res) => {
         rimg,
         cover_img,
         owner_name,
-        tags:JSON.stringify(tags)
+        tags: tags,
       });
       
       // **Check if the mobile number already exists in Firebase Authentication**
@@ -205,7 +209,7 @@ const fetchStores = asyncHandler(async(req,res)=>{
   try {
     const stores = await Store.findAll();
 
-    console.log(stores,"hhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhh")
+    
 
     if(!stores){
       res.status(400).json({message:"Store not found!"})
@@ -217,19 +221,27 @@ const fetchStores = asyncHandler(async(req,res)=>{
   }
 })
 
-const fetchStoreById = asyncHandler(async(req,res)=>{
-  const {id}=req.params
+const fetchStoreById = asyncHandler(async (req, res) => {
+  const { id } = req.params;
   try {
-    const stores = await Store.findByPk(id);
-    if(!stores){
-      res.status(400).json({message:"Store not found!"})
+    const store = await Store.findByPk(id);
+    if (!store) {
+      return res.status(400).json({ message: "Store not found!" });
     }
-    return res.status(200).json({success:true,message:"Sigle Store Fetched Successfully",stores})
+
+    // Parse catid from JSON string to array
+  
+
+    return res.status(200).json({
+      success: true,
+      message: "Single Store Fetched Successfully",
+      store
+    });
   } catch (error) {
     logger.error("Error in Fetching Store:", error);
     return res.status(500).json({ success: false, message: "Internal Server Error" });
   }
-})
+});
 
 const deleteStore = asyncHandler(async (req, res) => {
   const dataToValidate = { ...req.params, ...req.body };

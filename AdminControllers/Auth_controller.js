@@ -37,10 +37,10 @@ const registerAdmin = asynHandler(async (req, res) => {
     logger.error(error.details[0].message);
     return res.status(400).json({ error: error.details[0].message });
   }
-  const { username, password } = req.body;
+  const { email, password } = req.body;
   console.log(req.body);
 
-  if (!username || !password) {
+  if (!email || !password) {
     logger.error("All fields are required");
     return res.status(400).json({ error: "All fields are required" });
   }
@@ -52,7 +52,7 @@ const registerAdmin = asynHandler(async (req, res) => {
   //     .json({ error: "Invalid role. Role must be 'admin' or 'store'." });
   // }
 
-  const existingAdmin = await Admin.findOne({ where: { username } });
+  const existingAdmin = await Admin.findOne({ where: { email } });
 
   if (existingAdmin) {
     logger.error("Admin already exists");
@@ -62,7 +62,7 @@ const registerAdmin = asynHandler(async (req, res) => {
   const hashedPassword = await bcrypt.hash(password, 10);
   console.log(4);
   const admin = await Admin.create({
-    username,
+    email,
     password: hashedPassword,
   });
 
@@ -156,7 +156,7 @@ const updateAdmin = asynHandler(async (req, res) => {
     logger.error(error.details[0].message);
     return res.status(400).json({ error: error.details[0].message });
   }
-  const { username, password } = value;
+  const { email, password } = value;
 
   const admin = await Admin.findByPk(id);
   if (!admin) {
@@ -164,7 +164,7 @@ const updateAdmin = asynHandler(async (req, res) => {
     return res.status(404).json({ error: "Admin not found" });
   }
 
-  admin.username = username;
+  admin.email = email;
   admin.password = password;
   // if (password) {
   //   admin.password = await bcrypt.hash(password, 12);
