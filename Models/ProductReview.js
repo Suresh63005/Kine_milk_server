@@ -2,8 +2,8 @@ const sequelize = require("../config/db");
 const { DataTypes } = require("sequelize");
 
 
-const Review = sequelize.define(
-  "Tbl_reviews",
+const ProductReview = sequelize.define(
+  "tbl_product_reivews",
   {
     id: {
       type: DataTypes.UUID,
@@ -15,11 +15,15 @@ const Review = sequelize.define(
         type: DataTypes.UUID,
         allowNull: false,
     },
+    product_id:{
+      type: DataTypes.UUID,
+      allowNull: false,
+    },
     store_id:{
       type:DataTypes.UUID,
-      allowNull:false,
+      allowNull:false
     },
-    rider_id:{
+    category_id:{
       type: DataTypes.UUID,
       allowNull: false,
     },
@@ -37,11 +41,12 @@ const Review = sequelize.define(
     },
   },
   {
-    tableName: "Tbl_reviews",
+    tableName: "tbl_product_reviews",
     timestamps: true,
     paranoid: true,
   }
 );
 
 
-module.exports = Review;
+module.exports = ProductReview;
+

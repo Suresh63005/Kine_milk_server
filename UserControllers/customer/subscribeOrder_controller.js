@@ -169,7 +169,7 @@ const subscribeOrder =  async (req, res) => {
       console.log()
   
       
-      const validStatuses = ["Pending", "Processing", "Completed", "Cancelled", "On Route"];
+      const validStatuses = ["Pending", "Active", "Completed", "Cancelled"];
       if (!validStatuses.includes(status)) {
         return res.status(400).json({ success: false, message: "Invalid order status" });
       }

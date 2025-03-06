@@ -8,6 +8,7 @@ const User = require("../../Models/User");
 const Rider = require("../../Models/Rider");
 const Review = require("../../Models/review");
 const NormalOrderProduct = require("../../Models/NormalOrderProduct");
+const ProductReview = require("../../Models/ProductReview");
 
 const AllProducts = asyncHandler(async (req, res) => {
   try {
@@ -265,14 +266,27 @@ const SearchProductByTitle = asyncHandler(async (req, res) => {
 //       ],
 //       include: [
 //         {
-//           model: Product,
-//           as: "product",
-//           attributes: ["title", "img"],
+//           model: NormalOrderProduct,
+//           as: "NormalProducts",
+//           include: [
+//             {
+//               model: Product,
+//               as: "ProductDetails",
+//               attributes: ["title", "img"],
+//               include:[
+//                 {
+//                   model:Category,
+//                   as:'category',
+//                   attributes:['title','id']
+//                 }
+//               ]
+//             },
+//           ],
 //         },
 //         {
 //           model: User,
 //           as: "user",
-//           attributes: ["name"],
+//           attributes: ["name",'img'],
 //         },
 //       ],
 //     });
@@ -301,62 +315,47 @@ const FetchAllProductReviews = asyncHandler(async (req, res) => {
 
   const uid = req.user?.userId;
   if (!uid) {
-    return res.status(400).json({
+    return res.status(401).json({
       ResponseCode: "401",
       Result: "false",
-      ResponseMsg: "User ID not provided",
+      ResponseMsg: "Unauthorized! User ID not provided",
     });
   }
 
   console.log("Fetching reviews for user ID:", uid);
 
-  const { storeId } = req.params;
+  const { storeId } = req.query;
   if (!storeId) {
     return res.status(400).json({ message: "Store ID is required!" });
   }
 
   try {
-    const reviews = await NormalOrder.findAll({
-      where: { is_rate: 1, store_id: storeId },
-      attributes: [
-        "id",
-        "uid",
-        "odate",
-        "rate_text",
-        "total_rate",
-        "createdAt",
-      ],
+    const reviews = await ProductReview.findAll({
+      where: { store_id: storeId, status: 1 }, // Filter by store_id directly in ProductReview
       include: [
         {
-          model: NormalOrderProduct,
-          as: "NormalProducts",
+          model: Product,
+          as: "product",
+          attributes: ["id", "title", "img"],
           include: [
             {
-              model: Product,
-              as: "ProductDetails",
-              attributes: ["title", "img"],
-              include:[
-                {
-                  model:Category,
-                  as:'category',
-                  attributes:['title','id']
-                }
-              ]
-            },
+              model: Category,
+              as: "category",
+              attributes: ["id", "title"],
+            }
           ],
         },
         {
           model: User,
-          as: "user",
-          attributes: ["name",'img'],
+          as: "UserDetails",
+          attributes: ["name", "img"],
         },
       ],
+      attributes: ["id", "user_id", "product_id", "rating", "review", "createdAt"],
     });
 
-    if (!reviews.length) {
-      return res
-        .status(404)
-        .json({ message: "No reviews found for this store." });
+    if (!reviews || reviews.length === 0) {
+      return res.status(404).json({ message: "No reviews found for this store." });
     }
 
     return res.status(200).json({
@@ -366,12 +365,95 @@ const FetchAllProductReviews = asyncHandler(async (req, res) => {
     });
   } catch (error) {
     console.error("Error fetching reviews:", error);
-    return res
-      .status(500)
-      .json({ message: "Internal Server Error", error: error.message });
+    return res.status(500).json({ 
+      message: "Internal Server Error", 
+      error: error.message 
+    });
   }
 });
 
+
+// const ViewProductReviews = asyncHandler(async (req, res) => {
+//   console.log("Decoded User:", req.user);
+
+//   const uid = req.user?.userId;
+//   if (!uid) {
+//     return res.status(400).json({
+//       ResponseCode: "401",
+//       Result: "false",
+//       ResponseMsg: "User ID not provided",
+//     });
+//   }
+
+//   console.log("Fetching reviews for user ID:", uid);
+
+//   const { storeId, productId } = req.body;
+//   if (!storeId) {
+//     return res.status(400).json({ message: "Store ID is required!" });
+//   }
+
+//   try {
+//     const reviews = await NormalOrder.findAll({
+//       where: {
+//         is_rate: 1,
+//         store_id: storeId,
+//       },
+//       attributes: ["id", "uid", "odate", "rate_text", "total_rate", "createdAt"],
+//       include: [
+//         {
+//           model: NormalOrderProduct,
+//           as: "NormalProducts",
+//           where: productId ? { product_id: productId } : {}, 
+//           include: [
+//             {
+//               model: Product,
+//               as: "ProductDetails",
+//               attributes: ["title", "img"],
+//             },
+//           ],
+//         },
+//         {
+//           model: User,
+//           as: "user",
+//           attributes: ["name",'img'],
+//         },
+//       ],
+//     });
+
+//     if (!reviews.length) {
+//       return res.status(404).json({ message: "No reviews found for this store." });
+//     }
+
+//     // Aggregate Ratings Data for the Product
+//     const ratingStats = await NormalOrder.findAll({
+//       where: {
+//         is_rate: 1,
+//         store_id: storeId,
+//       },
+//       attributes: [
+//         [Sequelize.fn("AVG", Sequelize.col("total_rate")), "average_rating"],
+//         [Sequelize.fn("COUNT", Sequelize.col("id")), "total_reviews"],
+//         [Sequelize.literal(`SUM(CASE WHEN total_rate = 1 THEN 1 ELSE 0 END)`), "1"],
+//         [Sequelize.literal(`SUM(CASE WHEN total_rate = 2 THEN 1 ELSE 0 END)`), "2"],
+//         [Sequelize.literal(`SUM(CASE WHEN total_rate = 3 THEN 1 ELSE 0 END)`), "3"],
+//         [Sequelize.literal(`SUM(CASE WHEN total_rate = 4 THEN 1 ELSE 0 END)`), "4"],
+//         [Sequelize.literal(`SUM(CASE WHEN total_rate = 5 THEN 1 ELSE 0 END)`), "5"],
+//       ],
+//     });
+
+//     return res.status(200).json({
+//       success: true,
+//       message: "Reviews fetched successfully",
+//       ratingSummary: ratingStats[0], 
+//       reviews,
+//     });
+//   } catch (error) {
+//     console.error("Error fetching reviews:", error);
+//     return res
+//       .status(500)
+//       .json({ message: "Internal Server Error", error: error.message });
+//   }
+// });
 
 
 const ViewProductReviews = asyncHandler(async (req, res) => {
@@ -388,74 +470,117 @@ const ViewProductReviews = asyncHandler(async (req, res) => {
 
   console.log("Fetching reviews for user ID:", uid);
 
-  const { storeId, productId } = req.body;
+  const { productId, storeId } = req.body; 
+  if (!productId) {
+    return res.status(400).json({ message: "Product ID is required!" });
+  }
   if (!storeId) {
     return res.status(400).json({ message: "Store ID is required!" });
   }
 
   try {
-    // Fetch Reviews with Product & User details
-    const reviews = await NormalOrder.findAll({
-      where: {
-        is_rate: 1,
+    const reviews = await ProductReview.findAll({
+      where: { 
+        product_id: productId, 
         store_id: storeId,
+        status: 1 
       },
-      attributes: ["id", "uid", "odate", "rate_text", "total_rate", "createdAt"],
+      attributes: ["id", "user_id", "product_id", "rating", "review", "createdAt"],
       include: [
         {
-          model: NormalOrderProduct,
-          as: "NormalProducts",
-          where: productId ? { product_id: productId } : {}, // Apply filter correctly
+          model: Product,
+          as: "product",
+          attributes: ["title", "img"],
           include: [
             {
-              model: Product,
-              as: "ProductDetails",
-              attributes: ["title", "img"],
+              model: Category,
+              as: "category",
+              attributes: ["id", "title"],
             },
           ],
         },
         {
           model: User,
-          as: "user",
-          attributes: ["name",'img'],
+          as: "UserDetails",
+          attributes: ["name", "img"],
         },
       ],
     });
 
     if (!reviews.length) {
-      return res.status(404).json({ message: "No reviews found for this store." });
+      return res.status(404).json({ message: "No reviews found for this product in the given store." });
     }
 
-    // Aggregate Ratings Data for the Product
-    const ratingStats = await NormalOrder.findAll({
-      where: {
-        is_rate: 1,
-        store_id: storeId,
-      },
+    // Aggregate Ratings Data for the Product in the Specific Store
+    const ratingStats = await ProductReview.findAll({
+      where: { product_id: productId, store_id: storeId },
       attributes: [
-        [Sequelize.fn("AVG", Sequelize.col("total_rate")), "average_rating"],
+        [Sequelize.fn("AVG", Sequelize.col("rating")), "average_rating"],
         [Sequelize.fn("COUNT", Sequelize.col("id")), "total_reviews"],
-        [Sequelize.literal(`SUM(CASE WHEN total_rate = 1 THEN 1 ELSE 0 END)`), "1"],
-        [Sequelize.literal(`SUM(CASE WHEN total_rate = 2 THEN 1 ELSE 0 END)`), "2"],
-        [Sequelize.literal(`SUM(CASE WHEN total_rate = 3 THEN 1 ELSE 0 END)`), "3"],
-        [Sequelize.literal(`SUM(CASE WHEN total_rate = 4 THEN 1 ELSE 0 END)`), "4"],
-        [Sequelize.literal(`SUM(CASE WHEN total_rate = 5 THEN 1 ELSE 0 END)`), "5"],
+        [Sequelize.literal(`SUM(CASE WHEN rating = 1 THEN 1 ELSE 0 END)`), "1"],
+        [Sequelize.literal(`SUM(CASE WHEN rating = 2 THEN 1 ELSE 0 END)`), "2"],
+        [Sequelize.literal(`SUM(CASE WHEN rating = 3 THEN 1 ELSE 0 END)`), "3"],
+        [Sequelize.literal(`SUM(CASE WHEN rating = 4 THEN 1 ELSE 0 END)`), "4"],
+        [Sequelize.literal(`SUM(CASE WHEN rating = 5 THEN 1 ELSE 0 END)`), "5"],
       ],
+      raw: true,
     });
 
     return res.status(200).json({
       success: true,
       message: "Reviews fetched successfully",
-      ratingSummary: ratingStats[0], 
+      ratingSummary: ratingStats[0],
       reviews,
     });
   } catch (error) {
     console.error("Error fetching reviews:", error);
-    return res
-      .status(500)
-      .json({ message: "Internal Server Error", error: error.message });
+    return res.status(500).json({ message: "Internal Server Error", error: error.message });
   }
 });
+
+
+const FetchAllDeliveryBoyReviews = asyncHandler(async(req,res)=>{
+  console.log("Decoded User", req.user);
+  const uid = req.user?.userId;
+
+  if (!uid) {
+    return res.status(401).json({
+      ResponseCode: "401",
+      Result: "false",
+      ResponseMsg: "User not found!",
+    });
+  }
+  const {storeId}=req.query;
+  if(!storeId){
+    return res.status(400).json({message:"Store ID is required!"})
+  }
+  try {
+    const reviews = await Review.findAll({
+      where:{store_id:storeId,status:1},
+      include:[
+        {
+          model:Rider,
+          as:"rider",
+          attributes:["id","title","email","mobile","img"],
+        }
+      ]
+    })
+    if (!reviews || reviews.length === 0) {
+      return res.status(404).json({ message: "No reviews found for this store." });
+    }
+    return res.status(200).json({
+      success: true,
+      message: "Reviews fetched successfully",
+      reviews,
+    });
+  } catch (error) {
+    console.error("Error fetching reviews:", error);
+    return res.status(500).json({ 
+      message: "Internal Server Error", 
+      error: error.message 
+    });
+  }
+})
 
 
 const ViewDeliveryBoyReviews = asyncHandler(async (req, res) => {
@@ -470,9 +595,9 @@ const ViewDeliveryBoyReviews = asyncHandler(async (req, res) => {
     });
   }
 
-  const { storeId } = req.body;
-  if (!storeId) {
-    return res.status(400).json({ message: "Store ID is required!" });
+  const { riderId,storeId } = req.body;
+  if (!riderId || !storeId) {
+    return res.status(400).json({ message: "Store ID and Rider ID are required!" });
   }
 
   try {
@@ -482,7 +607,7 @@ const ViewDeliveryBoyReviews = asyncHandler(async (req, res) => {
       return res.status(404).json({ message: "Rider not found for this store." });
     }
 
-    const reviews = await Review.findAll({ where: { rider_id: rider.id } });
+    const reviews = await Review.findAll({ where: { rider_id: riderId } });
 
     if (!reviews.length) {
       return res.status(404).json({ message: "No reviews found for this store." });
@@ -586,5 +711,6 @@ module.exports = {
   SearchProductByTitle,
   FetchAllProductReviews,
   ViewProductReviews,
-  ViewDeliveryBoyReviews
+  ViewDeliveryBoyReviews,
+  FetchAllDeliveryBoyReviews
 };

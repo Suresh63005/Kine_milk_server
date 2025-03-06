@@ -10,6 +10,9 @@ const NormalOrderProduct = require("./NormalOrderProduct");
 const Product = require("./Product");
 const ProductImage = require("./productImages");
 const ProductInventory = require("./ProductInventory");
+const ProductReivew = require("./ProductReview");
+const Review = require("./review");
+const Rider = require("./Rider");
 // const User = require("./User");
 // const PaymentList = require("./PaymentList");
 // const Coupon = require('./Coupon');
@@ -57,8 +60,8 @@ Product.hasMany(Cart,{foreignKey:"product_id", });
 
 
 
-// Product.hasMany(NormalOrder, { foreignKey: "product_id", as: "product_orders" }); 
-// NormalOrder.belongsTo(Product, { foreignKey: "product_id", as: "ordered_product" }); // Change alias to "ordered_product"
+Product.hasMany(NormalOrder, { foreignKey: "product_id", as: "product_orders" }); 
+NormalOrder.belongsTo(Product, { foreignKey: "product_id", as: "ordered_product" }); // Change alias to "ordered_product"
 
 
 // NormalOrder.belongsTo(PaymentList, { as: "paymentmethod", foreignKey: "p_method_id" });
@@ -112,3 +115,18 @@ SubscribeOrder.belongsTo(User, { as: "user", foreignKey: "uid" });
 User.hasMany(SubscribeOrder, { as: "suborders", foreignKey: "uid" });
 
 ProductImage.belongsTo(Product,{foreignKey:'product_id',as:'product'})
+
+ProductReivew.belongsTo(Product, { foreignKey: 'product_id', as: 'product' });
+
+User.hasMany(ProductReivew, { foreignKey: "user_id", as: "UserReviews" });
+ProductReivew.belongsTo(User, { foreignKey: "user_id", as: "UserDetails" });
+
+Review.belongsTo(Rider, { foreignKey: "rider_id", as: "rider" });
+Rider.hasMany(Review, { foreignKey: "rider_id", as: "reviews" });
+
+Review.belongsTo(User, { foreignKey: "user_id", as: "user" });
+User.hasMany(Review, { foreignKey: "user_id", as: "reviews" });
+
+
+
+

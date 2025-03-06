@@ -257,19 +257,13 @@ const ViewInstantOrderById = asyncHandler(async (req, res) => {
         include: [
           {
             model: NormalOrderProduct,
-            as: "NormalProducts", // updated alias to match association
+            as: "NormalProducts", 
+            attributes: ["id", "product_id", "pquantity", "price"], // Include `product_id` here
             include: [
               {
                 model: Product,
-                as: "ProductDetails", // updated alias to match association
-                attributes: [
-                  "id",
-                  "title",
-                  "description",
-                  "normal_price",
-                  "mrp_price",
-                  "img",
-                ],
+                as: "ProductDetails", 
+                attributes: ["id", "title", "description", "normal_price", "mrp_price", "img"],
               },
             ],
           },
@@ -277,26 +271,17 @@ const ViewInstantOrderById = asyncHandler(async (req, res) => {
             model: User,
             as: "user",
             attributes: ["id", "name", "mobile", "email"],
-            on: { "$user.id$": { [Op.eq]: Sequelize.col("NormalOrder.uid") } },
             include: [
               {
                 model: Address,
                 as: "addresses",
-                attributes: [
-                  "id",
-                  "uid",
-                  "address",
-                  "landmark",
-                  "r_instruction",
-                  "a_type",
-                  "a_lat",
-                  "a_long",
-                ],
+                attributes: ["id", "uid", "address", "landmark", "r_instruction", "a_type", "a_lat", "a_long"],
               },
             ],
           },
         ],
       });
+      
       if (!instantOrder) {
         return res.status(404).json({ message: "Instant Order not found!" });
       }
