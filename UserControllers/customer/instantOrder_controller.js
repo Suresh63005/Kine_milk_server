@@ -171,6 +171,20 @@ const instantOrder =  async (req, res) => {
       
       const orders = await NormalOrder.findAll({
         where: { uid, status },
+        include: [
+          {
+            model: NormalOrderProduct,
+            as: "NormalProducts", // Ensure 'orderProducts' alias is correct in the model associations
+            include: [
+              {
+                model: Product,
+                as: "ProductDetails", // Ensure 'productDetails' alias is correct in the model associations
+                attributes: ["id", "title","img","subscribe_price", "description"] // Specify the fields you need
+              }
+            ],
+            attributes:["pquantity",]
+          }
+        ],
         order: [["createdAt", "DESC"]],
       });
   
