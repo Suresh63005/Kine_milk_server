@@ -11,6 +11,8 @@ const Product = require("./Product");
 const ProductImage = require("./productImages");
 const ProductInventory = require("./ProductInventory");
 const ProductReivew = require("./ProductReview");
+const Review = require("./review");
+const Rider = require("./Rider");
 // const User = require("./User");
 // const PaymentList = require("./PaymentList");
 // const Coupon = require('./Coupon');
@@ -118,5 +120,13 @@ ProductReivew.belongsTo(Product, { foreignKey: 'product_id', as: 'product' });
 
 User.hasMany(ProductReivew, { foreignKey: "user_id", as: "UserReviews" });
 ProductReivew.belongsTo(User, { foreignKey: "user_id", as: "UserDetails" });
+
+Review.belongsTo(Rider, { foreignKey: "rider_id", as: "rider" });
+Rider.hasMany(Review, { foreignKey: "rider_id", as: "reviews" });
+
+Review.belongsTo(User, { foreignKey: "user_id", as: "user" });
+User.hasMany(Review, { foreignKey: "user_id", as: "reviews" });
+
+
 
 
