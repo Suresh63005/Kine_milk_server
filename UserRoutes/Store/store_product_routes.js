@@ -9,6 +9,7 @@ router.get("/cat-product/:categoryId",authMiddleware.isAuthenticated,productCont
 router.post("/search-product",authMiddleware.isAuthenticated,productController.SearchProductByTitle);
 router.get("/product-reviews",authMiddleware.isAuthenticated,productController.FetchAllProductReviews);
 router.post("/view-reviews",authMiddleware.isAuthenticated,productController.ViewProductReviews);
-router.get("/view-delivery-reviews",authMiddleware.isAuthenticated,productController.ViewDeliveryBoyReviews)
+router.post("/view-delivery-reviews",authMiddleware.isAuthenticated,productController.ViewDeliveryBoyReviews);
+router.get("/fetch-all-delivery-reviews",authMiddleware.isAuthenticated,productController.FetchAllDeliveryBoyReviews)
 
 module.exports = router;

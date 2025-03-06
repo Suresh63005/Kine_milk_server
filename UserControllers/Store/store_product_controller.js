@@ -550,10 +550,35 @@ const FetchAllDeliveryBoyReviews = asyncHandler(async(req,res)=>{
       ResponseMsg: "User not found!",
     });
   }
+  const {storeId}=req.query;
+  if(!storeId){
+    return res.status(400).json({message:"Store ID is required!"})
+  }
   try {
-    
+    const reviews = await Review.findAll({
+      where:{store_id:storeId,status:1},
+      include:[
+        {
+          model:Rider,
+          as:"rider",
+          attributes:["id","title","email","mobile","img"],
+        }
+      ]
+    })
+    if (!reviews || reviews.length === 0) {
+      return res.status(404).json({ message: "No reviews found for this store." });
+    }
+    return res.status(200).json({
+      success: true,
+      message: "Reviews fetched successfully",
+      reviews,
+    });
   } catch (error) {
-    
+    console.error("Error fetching reviews:", error);
+    return res.status(500).json({ 
+      message: "Internal Server Error", 
+      error: error.message 
+    });
   }
 })
 
@@ -570,9 +595,9 @@ const ViewDeliveryBoyReviews = asyncHandler(async (req, res) => {
     });
   }
 
-  const { storeId } = req.body;
-  if (!storeId) {
-    return res.status(400).json({ message: "Store ID is required!" });
+  const { riderId,storeId } = req.body;
+  if (!riderId || !storeId) {
+    return res.status(400).json({ message: "Store ID and Rider ID are required!" });
   }
 
   try {
@@ -582,7 +607,7 @@ const ViewDeliveryBoyReviews = asyncHandler(async (req, res) => {
       return res.status(404).json({ message: "Rider not found for this store." });
     }
 
-    const reviews = await Review.findAll({ where: { rider_id: rider.id } });
+    const reviews = await Review.findAll({ where: { rider_id: riderId } });
 
     if (!reviews.length) {
       return res.status(404).json({ message: "No reviews found for this store." });
@@ -686,5 +711,6 @@ module.exports = {
   SearchProductByTitle,
   FetchAllProductReviews,
   ViewProductReviews,
-  ViewDeliveryBoyReviews
+  ViewDeliveryBoyReviews,
+  FetchAllDeliveryBoyReviews
 };
