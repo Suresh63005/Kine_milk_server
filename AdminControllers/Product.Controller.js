@@ -243,6 +243,7 @@ const toggleproductStatus = async (req, res) => {
   console.log("Request received:", req.body);
 
   const { id, value } = req.body;
+  console.log(req.body,"ssssssssssssssssssssssssss")
 
   try {
     const product = await Product.findByPk(id);
