@@ -16,8 +16,10 @@ const Review = sequelize.define(
         allowNull: false,
     },
     store_id:{
+
       type:DataTypes.UUID,
       allowNull:false,
+
     },
     rider_id:{
       type: DataTypes.UUID,
