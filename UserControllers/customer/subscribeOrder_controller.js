@@ -274,6 +274,15 @@ const subscribeOrder =  async (req, res) => {
 
       const uid = req.user.userId;
 
+      if(!uid){
+        return res.status(401).json({
+          ResponseCode: "401",
+          Result: "false",
+          ResponseMsg: "Unauthorized",
+          });
+      }
+
+      console.log(uid,"idddddddddddd");
       const user = await User.findByPk(uid);
 
       if(!user){
