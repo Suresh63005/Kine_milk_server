@@ -34,7 +34,7 @@ const addFavorite = async (req, res) => {
   
   const getFavorites = async (req, res) => {
     try {
-      const {store_id } = req.body;
+      const {store_id } = req.params;
 
       const uid = req.user.userId;
   
