@@ -15,12 +15,16 @@ const morgan = require("morgan");
 const swaggerUi = require('swagger-ui-express');
 const logger=require("morgan")
 app.use(logger('dev'))
+
+
 // const swaggerFile = require('./swagger-output.json');
 // require("./models/index");
 
 // app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerFile));
 
 // Models 
+
+
 
 const admin = require("./Models/Admin");
 const address = require("./Models/Address");
@@ -95,6 +99,7 @@ sequelize
   });
 //Admin Routes
 app.use('/admin', require('./AdminRoutes/Auth_route'))
+app.use('/settings', require("./AdminRoutes/Settings.route"))
 app.use("/category",require("./AdminRoutes/Category.route"))
 app.use("/product",require("./AdminRoutes/Product.route"))
 // app.use("/product-attribute",require("./AdminRoutes/ProductAttributes.route"))
