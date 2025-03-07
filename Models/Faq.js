@@ -1,30 +1,33 @@
-const { DataTypes } = require('sequelize');
+const sequelize = require("../config/db");
+const { DataTypes } = require("sequelize");
 
-const sequelize = require('../config/db');
-
-
-const Faq = sequelize.define('Address', {
-    id: {
-        type: DataTypes.INTEGER,
-        primaryKey: true,
-        autoIncrement: true,
-        allowNull: false,
+const FAQ = sequelize.define(
+  "FAQ",
+  {
+   id: {
+      type: DataTypes.UUID,
+      allowNull: false,
+      primaryKey: true,
+      defaultValue: DataTypes.UUIDV4,
+    },
+    store_id: {
+      type: DataTypes.UUID,
+      allowNull: false,
     },
     question: {
-        type: DataTypes.TEXT,
-        allowNull: false,
+      type: DataTypes.TEXT,
+      allowNull: false,
     },
     answer: {
-        type: DataTypes.TEXT,
-        allowNull: true,
+      type: DataTypes.TEXT,
+      allowNull: false,
     },
     status: {
-        type: DataTypes.INTEGER,
-        allowNull: false,
+      type: DataTypes.INTEGER,
+      allowNull: false,
     },
-}, {
-    tableName: 'Faq',
-    timestamps: true,
-});
+  },
+  { tableName: "tbl_faq", timestamps: true, paranoid: true }
+);
 
-module.exports = Faq;
+module.exports = FAQ;

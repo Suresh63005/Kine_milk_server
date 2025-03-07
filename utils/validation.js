@@ -3,13 +3,13 @@ const Joi = require("joi");
 const registerAdminSchema = Joi.object({
   username: Joi.string().min(3).max(50).required(),
   password: Joi.string().min(6).required(),
-  role: Joi.string().valid("admin", "store").required(),
+  // role: Joi.string().valid("admin", "store").required(),
 })
 
 const loginAdminSchema = Joi.object({
   username: Joi.string().min(3).max(50).required(),
   password: Joi.string().min(6).required(),
-  role: Joi.string().valid("admin", "store").required(),
+  // role: Joi.string().valid("admin", "store").required(),
 })
 
 const updateAdminSchema = Joi.object({
@@ -54,11 +54,7 @@ const searchAdminSchema = Joi.object({
 
 // for category
 const getCategoryByIdSchema = Joi.object({
-  id: Joi.number().integer().required().messages({
-    "number.base": "ID must be a number.",
-    "number.integer": "ID must be an integer.",
-    "any.required": "ID is required.",
-  }),
+  id: Joi.string().uuid().optional(),
 });
 
 const categoryDeleteSchema = Joi.object({
@@ -84,10 +80,7 @@ const categorySearchSchema = Joi.object({
 });
 
 const upsertCategorySchema = Joi.object({
-  id: Joi.string().pattern(/^\d+$/).allow(null, '').optional().messages({
-    "string.pattern.base": "ID must be a number.",
-    "any.only": "ID cannot be empty."
-  }),
+  id: Joi.string().uuid().optional(),
   title: Joi.string().trim().required().messages({
     "string.base": "Title must be a string.",
     "any.required": "Title is required.",
@@ -420,6 +413,10 @@ const upsertFaqSchema = Joi.object({
     "number.base": "Status must be a number (0 or 1).",
     "any.required": "Status is required.",
   }),
+  store_id: Joi.number().optional().messages({
+    "string.pattern.base": "ID must be a number.",
+    "any.only": "ID cannot be empty."
+  }),
 });
 
 const getFaqIdBySchema = Joi.object({
@@ -742,6 +739,135 @@ const upsertCouponSchema = Joi.object({
   }),
 });
 
+
+const bannerUpsertSchema = Joi.object({
+  id: Joi.number().integer().positive().optional(),
+  status: Joi.number().integer().valid(0, 1).required().messages({
+    'number.base': 'Status must be a number.',
+    'any.required': 'Status is required.',
+    'any.only': 'Status must be either 0 (inactive) or 1 (active).'
+  })
+});
+
+const bannerListSchema = Joi.object({
+  page: Joi.number().integer().positive().default(1).messages({
+    'number.base': 'Page must be a number.',
+    'number.positive': 'Page must be greater than 0.'
+  }),
+  limit: Joi.number().integer().positive().default(10).messages({
+    'number.base': 'Limit must be a number.',
+    'number.positive': 'Limit must be greater than 0.'
+  }),
+  status: Joi.number().integer().valid(0, 1).optional().messages({
+    'number.base': 'Status must be a number.',
+    'any.only': 'Status must be either 0 (inactive) or 1 (active).'
+  })
+});
+
+
+const storeValidationSchema = Joi.object({
+  id: Joi.string().uuid().optional(),
+  title: Joi.string().required(),
+  rimg: Joi.string().required(),
+  status: Joi.number().integer().required(),
+  rate: Joi.number().precision(2).required(),
+  slogan: Joi.string().required(),
+  lcode: Joi.string().allow(null, ""),
+  catid: Joi.number().integer().required(),
+  full_address: Joi.string().required(),
+  pincode: Joi.string().required(),
+  landmark: Joi.string().required(),
+  lats: Joi.string().required(),
+  longs: Joi.string().required(),
+  store_charge: Joi.number().precision(2).required(),
+  dcharge: Joi.number().precision(2).required(),
+  morder: Joi.number().integer().required(),
+  commission: Joi.number().precision(2).required(),
+  bank_name: Joi.string().required(),
+  ifsc: Joi.string().required(),
+  receipt_name: Joi.string().required(),
+  acc_number: Joi.string().required(),
+  paypal_id: Joi.string().allow(null, ""),
+  upi_id: Joi.string().allow(null, ""),
+  email: Joi.string().email().required(),
+  password: Joi.string().min(6).required(),
+  rstatus: Joi.number().integer().default(1),
+  mobile: Joi.string().required(),
+  sdesc: Joi.string().required(),
+  charge_type: Joi.number().integer().required(),
+  ukm: Joi.number().integer().allow(null),
+  uprice: Joi.number().integer().allow(null),
+  aprice: Joi.number().integer().allow(null),
+  zone_id: Joi.number().integer().required(),
+  cover_img: Joi.string().required(),
+  slogan_title: Joi.string().required(),
+  cdesc: Joi.string().required(),
+  opentime: Joi.string().regex(/^([0-1]?[0-9]|2[0-3]):[0-5][0-9]$/).required(),
+  closetime: Joi.string().regex(/^([0-1]?[0-9]|2[0-3]):[0-5][0-9]$/).required(),
+  cancle_policy: Joi.string().required(),
+  is_pickup: Joi.number().integer().required(),
+});
+
+const upsertStoreSchema = Joi.object({
+  id: Joi.string().uuid().optional(),
+  title: Joi.string().required(),
+  rimg: Joi.string().allow(null, "").optional(),
+  status: Joi.number().integer().required(),
+  rate: Joi.number().precision(2).required(),
+  slogan: Joi.string().required(),
+  lcode: Joi.string().allow(null, ""),
+  catid: Joi.number().integer().required(),
+  full_address: Joi.string().required(),
+  pincode: Joi.string().required(),
+  landmark: Joi.string().required(),
+  lats: Joi.string().required(),
+  longs: Joi.string().required(),
+  store_charge: Joi.number().precision(2).required(),
+  dcharge: Joi.number().precision(2).required(),
+  morder: Joi.number().integer().required(),
+  commission: Joi.number().precision(2).required(),
+  bank_name: Joi.string().required(),
+  ifsc: Joi.string().required(),
+  receipt_name: Joi.string().required(),
+  acc_number: Joi.string().required(),
+  paypal_id: Joi.string().allow(null, ""),
+  upi_id: Joi.string().allow(null, ""),
+  email: Joi.string().email().required(),
+  password: Joi.string().min(6).required(),
+  rstatus: Joi.number().integer().default(1),
+  mobile: Joi.string().required(),
+  sdesc: Joi.string().required(),
+  charge_type: Joi.number().integer().required(),
+  ukm: Joi.number().integer().allow(null),
+  uprice: Joi.number().integer().allow(null),
+  aprice: Joi.number().integer().allow(null),
+  zone_id: Joi.number().integer().required(),
+  cover_img: Joi.string().optional(),
+  slogan_title: Joi.string().required(),
+  cdesc: Joi.string().required(),
+  opentime: Joi.string()
+    .trim()  // Removes leading and trailing spaces
+    .regex(/^([0-1]?[0-9]|2[0-3]):[0-5][0-9]$/)
+    .required(),
+  closetime: Joi.string()
+    .trim()
+    .regex(/^([0-1]?[0-9]|2[0-3]):[0-5][0-9]$/)
+    .required(),
+  cancle_policy: Joi.string().required(),
+  is_pickup: Joi.number().integer().required().messages({
+    "number.base": `"is_pickup" must be a number`
+}),
+});
+
+const storeDeleteSchema = Joi.object({
+  id: Joi.number().integer().required().messages({
+    "number.base": "ID must be a number",
+    "number.integer": "ID must be an integer",
+    "any.required": "ID is required"
+  })
+});
+
+
 const couponToggleStatus=Joi.object({
   id:Joi.number().integer().required().messages({
     "number.base":"ID must be a number",
@@ -750,18 +876,52 @@ const couponToggleStatus=Joi.object({
   }),
   value:Joi.string().valid("status").required().messages({
     "any.required":"value required"
+  }) 
+});
+
+const otpLoginSchema = Joi.object({
+  ccode:Joi.string().pattern(/^\+\d{1,3}$/).required()
+  .messages({
+    "string.pattern.base": "Country code must start with '+' followed by 1 to 3 digits.",
+    "any.required": "Country code is required.",
+  }),
+  mobile:Joi.string().pattern(/^[0-9]{10}$/).required()
+  .messages({
+    "string.pattern.base": "Mobile number must be exactly 10 digits.",
+    "any.required": "Mobile number is required.",
+  }),
+})
+
+const verifyOtpSchema = Joi.object({
+  ccode:Joi.string().pattern(/^\+\d{1,3}$/).required()
+  .messages({
+    "string.pattern.base": "Country code must start with '+' followed by 1 to 3 digits.",
+    "any.required": "Country code is required.",
+  }),
+  mobile:Joi.string().pattern(/^[0-9]{10}$/).required()
+  .messages({
+    "string.pattern.base": "Mobile number must be exactly 10 digits.",
+    "any.required": "Mobile number is required.",
+  }),
+  otp:Joi.string().length(6).pattern(/^[0-9]{6}$/).required()
+  .messages({
+    "string.pattern.base": "OTP must be a 6-digit numeric value.",
+    "any.required": "OTP is required.",
   })
 })
 
-module.exports = {
-  registerAdminSchema, loginAdminSchema, updateAdminSchema, deleteAdminSchema, getAdminbyIdSchema, searchAdminSchema,
-  getCategoryByIdSchema, categoryDeleteSchema, categorySearchSchema, upsertCategorySchema,categoryToggleStatus,
-  getProductByIdSchema, ProductDeleteSchema, ProductSearchSchema, upsertProductSchema,productToggleStatusSchema,
-  getProductAttributeByIdSchema, ProductAttributeDeleteSchema, ProductAttributeSearchSchema, upsertProductAttributeSchema,
-  ProductImagesByIdSchema, ProductImagesDeleteSchema, ProductImagesSearchSchema, ProductImagesUpsertSchema,
-  getDeliveryByIdSchema, DeliveryDeleteSchema, DeliverySearchSchema,DeliveryToggleStatusSchema,
-  upsertFaqSchema, getFaqIdBySchema, FaqDeleteSchema, FaqSearchSchema, FaqStatusSchema,
-  RiderSearchSchema, RiderDeleteSchema, getRiderIdBySchema, upsertRiderSchema, RiderStatusSchema,RiderToggleStatusSchema,
-  upsertTimeSchema, getTimeIdBySchema, DeleteTimeSchema, TimeSearchSchema,timeToggleStatusSchema,
-  upsertCouponSchema, CouponDeleteSchema, getCouponByIdSchema,couponToggleStatus,
+module.exports={registerAdminSchema,loginAdminSchema,updateAdminSchema, deleteAdminSchema,getAdminbyIdSchema,searchAdminSchema,
+    getCategoryByIdSchema,categoryDeleteSchema,categorySearchSchema,upsertCategorySchema,
+    getProductByIdSchema,ProductDeleteSchema,ProductSearchSchema,upsertProductSchema,
+    getProductAttributeByIdSchema,ProductAttributeDeleteSchema,ProductAttributeSearchSchema,upsertProductAttributeSchema,
+    ProductImagesByIdSchema,ProductImagesDeleteSchema,ProductImagesSearchSchema,ProductImagesUpsertSchema,
+    getDeliveryByIdSchema,DeliveryDeleteSchema,DeliverySearchSchema,
+    upsertFaqSchema,getFaqIdBySchema,FaqDeleteSchema,FaqSearchSchema,
+    RiderSearchSchema,RiderDeleteSchema,getRiderIdBySchema,upsertRiderSchema,
+    upsertTimeSchema,getTimeIdBySchema,DeleteTimeSchema,TimeSearchSchema,
+
+    upsertCouponSchema,CouponDeleteSchema,getCouponByIdSchema, bannerUpsertSchema,bannerListSchema,
+    storeValidationSchema,upsertStoreSchema,storeDeleteSchema,
+
+    otpLoginSchema,verifyOtpSchema
 }

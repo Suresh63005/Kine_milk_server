@@ -30,7 +30,7 @@ const Category = require("./Models/Category");
 const Coupon = require("./Models/Coupon");
 const Delivery = require("./Models/Delivery");
 const Favorite = require("./Models/Favorite");
-const Mcat = require("./Models/Mcat");
+const MilkCategory = require("./Models/MilkCategory");
 const Milk = require("./Models/Milk");
 const NormalOrder = require("./Models/NormalOrder");
 const NormalOrderProduct = require("./Models/NormalOrderProduct");
@@ -40,11 +40,11 @@ const PaymentList = require("./Models/PaymentList");
 const PayoutSetting = require("./Models/PayoutSetting");
 const Photo = require("./Models/Photo");
 const Product = require("./Models/Product");
-const ProductAttribute = require("./Models/ProductAttribute");
+// const ProductAttribute = require("./Models/ProductAttribute");
 const Rider = require("./Models/Rider");
-const Rnoti = require("./Models/Rnoti");
-const ServiceDetails = require("./Models/ServiceDetails");
-const Snoti = require("./Models/Snoti");
+const RiderNotification = require("./Models/RiderNotification");
+const Store = require("./Models/Store");
+const StoreNotification = require("./Models/StoreNotification");
 const SubscribeOrder = require("./Models/SubscribeOrder");
 const SubscribeOrderProduct = require("./Models/SubscribeOrderProduct");
 const Time = require("./Models/Time");
@@ -65,6 +65,7 @@ app.use(
   cors({
     origin: ["http://localhost:3000","http://localhost:3001","http://localhost:3002"],
     credentials: true,
+    allowedHeaders: ["Content-Type", "Authorization"]
   })
 );
 
@@ -86,11 +87,11 @@ sequelize
   .catch((err) => {
     console.error("Unable to create the database:", err);
   });
-
+//Admin Routes
 app.use('/admin', require('./AdminRoutes/Auth_route'))
 app.use("/category",require("./AdminRoutes/Category.route"))
 app.use("/product",require("./AdminRoutes/Product.route"))
-app.use("/product-attribute",require("./AdminRoutes/ProductAttributes.route"))
+// app.use("/product-attribute",require("./AdminRoutes/ProductAttributes.route"))
 app.use("/product-images",require("./AdminRoutes/ProductImages.route"))
 app.use("/delivery",require("./AdminRoutes/Delivery.route"))
 app.use("/coupon",require("./AdminRoutes/Couppon.route"))
@@ -99,6 +100,37 @@ app.use("/rider",require("./AdminRoutes/Rider.route"))
 app.use("/faq",require("./AdminRoutes/Faq.route"))
 app.use("/time",require("./AdminRoutes/Time.route"))
 app.use("/normalorder",require("./AdminRoutes/NormalOrder.route"))
+app.use("/banner",require('./AdminRoutes/Banner.route'))
+app.use("/store",require('./AdminRoutes/Store.route'))
+
+
+// User Routes
+app.use("/user",require('./UserRoutes/user_auth_route'))
+app.use("/customer",require('./UserRoutes/customer_auth_routes'))
+
+
+app.use("/home_data", require("./UserRoutes/customer/home_data_route"));
+app.use("/u_product", require("./UserRoutes/customer/product_route"));
+
+
+app.use("/u_address", require("./UserRoutes/customer/address_route"));
+
+app.use("/u_cart", require("./UserRoutes/customer/cart_route"));
+app.use("/u_sub_order", require("./UserRoutes/customer/subscribeOrder_route"));
+app.use("/u_instant_order", require("./UserRoutes/customer/instantOrder_route"));
+app.use("/u_fav", require("./UserRoutes/customer/fav_route"));
+
+
+app.use("/stores",require('./UserRoutes/Store/store_dashboard_routes'));
+app.use("/store-products",require('./UserRoutes/Store/store_product_routes'))
+app.use("/store-rider",require('./UserRoutes/Store/store_rider_routes'));
+app.use("/store-owner",require('./UserRoutes/Store/store_user_routes'))
+app.use("/store-instant",require('./UserRoutes/Store/store_instant_orders_route'))
+app.use("/store-inventory",require('./UserRoutes/Store/store_inventory_routes'))
+app.use("/instant-orders",require('./UserRoutes/Store/instant_order_history_routes'))
+app.use("/subscribe-orders",require('./UserRoutes/Store/subscribe_orders_routes'))
+
+
 
 app.get("/", (req, res) => {
     res.send("Server is Running");

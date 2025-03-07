@@ -7,6 +7,7 @@ const sequelize = new Sequelize(process.env.DB_NAME, process.env.DB_USER, proces
     dialect: process.env.DB_DIALECT || 'mysql',
     dialectModule:require('mysql2'),
     port: process.env.DB_PORT ,
+    logging: console.log,
     pool: {
         max: 10, 
         min: 0,  
