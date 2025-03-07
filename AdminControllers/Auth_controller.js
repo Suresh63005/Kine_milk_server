@@ -149,31 +149,39 @@ const loginAdmin = asynHandler(async (req, res) => {
 });
 
 // Update Admin Controller
-const updateAdmin = asynHandler(async (req, res) => {
-  const { id } = req.params;
-  const { error, value } = updateAdminSchema.validate(req.body);
-  if (error) {
-    logger.error(error.details[0].message);
-    return res.status(400).json({ error: error.details[0].message });
+const updateAdmin = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { error, value } = updateAdminSchema.validate(req.body);
+
+    if (error) {
+      logger.error(error.details[0].message);
+      return res.status(400).json({ error: error.details[0].message });
+    }
+
+    const { email, password } = value;
+    const admin = await Admin.findByPk(id);
+    
+    if (!admin) {
+      logger.error("Admin not found");
+      return res.status(404).json({ error: "Admin not found" });
+    }
+
+    admin.email = email;
+
+    if (password) {
+      admin.password = await bcrypt.hash(password, 12);
+    }
+
+    await admin.save();
+    logger.info("Admin updated successfully", admin);
+    res.status(200).json({ message: "Admin updated successfully", admin });
+  } catch (err) {
+    logger.error("Error updating admin:", err.message);
+    res.status(500).json({ error: "Internal server error" });
   }
-  const { email, password } = value;
+};
 
-  const admin = await Admin.findByPk(id);
-  if (!admin) {
-    logger.error("Admin not found");
-    return res.status(404).json({ error: "Admin not found" });
-  }
-
-  admin.email = email;
-  admin.password = password;
-  // if (password) {
-  //   admin.password = await bcrypt.hash(password, 12);
-  // }
-
-  await admin.save();
-  logger.info("Admin updated successfully", admin);
-  res.status(200).json({ message: "Admin updated successfully", admin });
-});
 
 const getUserbyToken = async (req, res) => {
   try {

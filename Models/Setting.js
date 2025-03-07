@@ -14,61 +14,37 @@ const Setting = sequelize.define(
       type: DataTypes.TEXT,
       allowNull: false,
     },
-    webnlogo: {
+    weblogo: {
       type: DataTypes.TEXT,
       allowNull: false,
     },
     timezone: {
       type: DataTypes.TEXT,
-      allowNull: false,
-    },
-    currency: {
-      type: DataTypes.TEXT,
-      allowNull: false,
+      allowNull: true,
     },
     pstore: {
       type: DataTypes.INTEGER,
-      allowNull: false,
+      allowNull: true,
     },
-    one_key: {
+    onesignal_keyId: {
       type: DataTypes.TEXT,
       allowNull: false,
     },
-    one_hash: {
+    onesignal_apikey: {
       type: DataTypes.TEXT,
       allowNull: false,
     },
-    d_key: {
-      type: DataTypes.TEXT,
-      allowNull: false,
-    },
-    d_hash: {
-      type: DataTypes.TEXT,
-      allowNull: false,
-    },
-    s_key: {
-      type: DataTypes.TEXT,
-      allowNull: false,
-    },
-    s_hash: {
+    onesignal_appId: {
       type: DataTypes.TEXT,
       allowNull: false,
     },
     scredit: {
       type: DataTypes.INTEGER,
-      allowNull: false,
+      allowNull: true,
     },
     rcredit: {
       type: DataTypes.INTEGER,
-      allowNull: false,
-    },
-    show_dark: {
-      type: DataTypes.INTEGER,
-      allowNull: false,
-    },
-    gkey: {
-      type: DataTypes.TEXT,
-      allowNull: false,
+      allowNull: true,
     },
     delivery_charges: {
       type: DataTypes.BIGINT,

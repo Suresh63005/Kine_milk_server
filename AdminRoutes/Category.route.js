@@ -24,7 +24,7 @@ const allowAdminOrAuthenticated = (req, res, next) => {
     });
 };
 
-router.post("/upsert",adminMiddleware.isAdmin, upload.single("img"),categoryController.upsertCategory);
+router.post("/upsert", upload.single("img"),categoryController.upsertCategory);
 router.get("/all", categoryController.getAllCategories);
 router.get("/getbyid/:id",categoryController.getCategoryById)
 router.delete("/delete/:id",adminMiddleware.isAdmin,categoryController.deleteCategory)
