@@ -109,53 +109,48 @@ const FetchSubscribeOrdersByStatus = asyncHandler(async (req, res) => {
   
    
 
-const ViewSubscribeOrderById = asyncHandler(async (req, res) => {
-  console.log("Decoded User:", req.user);
-
-  const uid = req.user.userId;
-  if (!uid) {
-    return res.status(401).json({
-      ResponseCode: "401",
-      Result: "false",
-      ResponseMsg: "User ID not provided",
-    });
-  }
-
-  console.log("Fetching orders for user ID:", uid);
-  const { storeId, orderId } = req.body;
-
-  if (!orderId) {
-    return res.status(400).json({ message: "Order ID is required!" });
-  }
-  if (!storeId) {
-    return res.status(400).json({ message: "Store ID is required!" });
-  }
-
-  try {
-    const order = await SubscribeOrder.findOne({
-      where: { id: orderId, store_id: storeId },
-      include:[
-        {
-          model:SubscribeOrderProduct,
-          as:"orderProducts",
-          include:[
-            {
-              model:Product,
-              as:"productDetails",
-              attributes:["id",
-                  "title",
-                  "description",
-                  "normal_price",
-                  "mrp_price",
-                  "img",]
-            }
-          ]
-        },
-        {
-          model: User,
-          as: "user",
-          attributes: ["id", "name", "mobile","email"],
-          include: [
+  const ViewSubscribeOrderById = asyncHandler(async (req, res) => {
+    console.log("Decoded User:", req.user);
+  
+    const uid = req.user.userId;
+    if (!uid) {
+      return res.status(401).json({
+        ResponseCode: "401",
+        Result: "false",
+        ResponseMsg: "User ID not provided",
+      });
+    }
+  
+    console.log("Fetching orders for user ID:", uid);
+    const { storeId, orderId } = req.body;
+  
+    if (!orderId) {
+      return res.status(400).json({ message: "Order ID is required!" });
+    }
+    if (!storeId) {
+      return res.status(400).json({ message: "Store ID is required!" });
+    }
+  
+    try {
+      const order = await SubscribeOrder.findOne({
+        where: { id: orderId, store_id: storeId },
+        include: [
+          {
+            model: SubscribeOrderProduct,
+            as: "orderProducts",
+            include: [
+              {
+                model: Product,
+                as: "productDetails",
+                attributes: ["id", "title", "description", "normal_price", "mrp_price", "img"],
+              },
+            ],
+          },
+          {
+            model: User,
+            as: "user",
+            attributes: ["id", "name", "mobile", "email"],
+            include: [
               {
                 model: Address,
                 as: "addresses",
@@ -171,29 +166,38 @@ const ViewSubscribeOrderById = asyncHandler(async (req, res) => {
                 ],
               },
             ],
-        },
-      ]
-    });
-
-    if (!order) {
-      return res.status(404).json({ message: "Order not found!" });
-    }
-
-    return res
-      .status(200)
-      .json({ message: "Order fetched successfully!",
-        Data:{
+          },
+        ],
+      });
+  
+      if (!order) {
+        return res.status(404).json({ message: "Order not found!" });
+      }
+  
+      return res.status(200).json({
+        message: "Order fetched successfully!",
+        Data: {
           ...order.dataValues,
-          delivered_dates:JSON.parse(order.delivered_dates || "[]")
-        }
-         });
-  } catch (error) {
-    console.error("Error fetching order by ID:", error.message);
-    return res
-      .status(500)
-      .json({ message: "Internal server error: " + error.message });
-  }
-});
+          delivered_dates: safeParseJSON(order.delivered_dates),
+        },
+      });
+    } catch (error) {
+      console.error("Error fetching order by ID:", error.message);
+      return res.status(500).json({ message: "Internal server error: " + error.message });
+    }
+  });
+  
+  // Safe JSON parsing function
+  const safeParseJSON = (data) => {
+    try {
+      return data ? JSON.parse(data) : [];
+    } catch (error) {
+      console.error("Error parsing delivered_dates:", error.message);
+      return [];
+    }
+  };
+  
+
 
 const AssignOrderToRider = asyncHandler(async (req, res) => {
   console.log("Decoded User:", req.user);

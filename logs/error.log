@@ -34,3 +34,4 @@
 {"level":"error","message":"Admin created successfully","service":"kine_milk_server","timestamp":"2025-03-06T06:45:08.000Z"}
 {"level":"error","message":"Invalid password","service":"kine_milk_server","timestamp":"2025-03-06T06:46:24.276Z"}
 {"level":"error","message":"Invalid password","service":"kine_milk_server","timestamp":"2025-03-06T06:50:50.564Z"}
+{"level":"error","message":"Admin created successfully","service":"kine_milk_server","timestamp":"2025-03-06T07:10:27.960Z"}

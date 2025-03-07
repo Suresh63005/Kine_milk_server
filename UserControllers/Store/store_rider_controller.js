@@ -5,53 +5,6 @@ const logger = require("../../utils/logger");
 const { Op } = require('sequelize');
 const {deliveryFirebase} = require('../../config/firebase-config');
 
-// const AddRider = asyncHandler(async (req, res) => {
-//     console.log("Decoded User:", req.user);
-  
-//     const uid = req.user.userId;
-//     if (!uid) {
-//       return res.status(400).json({
-//         ResponseCode: "401",
-//         Result: "false",
-//         ResponseMsg: "User ID not provided",
-//       });
-//     }
-  
-//     console.log("Fetching products for user ID:", uid);
-//     console.log(req.body, "************************** BODY CHECK");
-
-//     const { store_id, title, email, mobile, password, ccode, status,rdate } = req.body;
-
-//     if (!store_id || !title || !email || !mobile || !password || !ccode || !status || !rdate) {
-//         return res.status(400).json({ success: false, message: "All fields are required" });
-//     }
-
-//     try {
-//         let imageUrl = null;
-//         if (req.file) {
-//             console.log("File detected:", req.file);
-//             imageUrl = await uploadToS3(req.file, "rider-images");
-//         }
-
-//         const newRider = await Rider.create({
-//             store_id,
-//             title,
-//             email,
-//             mobile,
-//             password,
-//             ccode,
-//             status,
-//             img: imageUrl,
-//             rdate: new Date(),
-//         });
-
-//         res.status(200).json({ success: true, message: "Rider added successfully", rider: newRider });
-//     } catch (error) {
-//         console.error("Error adding rider:", error);
-//         res.status(500).json({ success: false, message: "Error adding rider", error: error.message });
-//     }
-// });
-
 const AddRider = asyncHandler(async (req, res) => {
   console.log("Decoded User:", req.user);
 
@@ -67,9 +20,9 @@ const AddRider = asyncHandler(async (req, res) => {
   console.log("Fetching products for user ID:", uid);
   console.log(req.body, "************************** BODY CHECK");
 
-  const { store_id, title, email, mobile, password, ccode, status, rdate } = req.body;
+  const { store_id, title, email, mobile, ccode, status, rdate } = req.body;
 
-  if (!store_id || !title || !email || !mobile || !password || !ccode || !status || !rdate) {
+  if (!store_id || !title || !email || !mobile || !ccode || !status || !rdate) {
       return res.status(400).json({ success: false, message: "All fields are required" });
   }
 
@@ -106,7 +59,6 @@ const AddRider = asyncHandler(async (req, res) => {
           title,
           email,
           mobile,
-          password,
           ccode,
           status,
           img: imageUrl,
@@ -135,7 +87,7 @@ const EditRider = asyncHandler(async (req, res) => {
   
     console.log("Fetching products for user ID:", uid);
     const { riderId } = req.params;
-    let { store_id, title, email, mobile, password, ccode, status, rdate } = req.body;
+    let { store_id, title, email, mobile, ccode, status, rdate } = req.body;
 
     console.log(req.body, "************ BODY CHECK ************");
 
@@ -158,7 +110,6 @@ const EditRider = asyncHandler(async (req, res) => {
             title,
             email,
             mobile,
-            password,
             ccode,
             status,
             img: imageUrl,
