@@ -6,6 +6,7 @@ const router = express.Router();
 
 router.post('/',isAuthenticated,addFavorite);
 router.get('/:store_id',isAuthenticated,getFavorites);
+
 router.delete('/',isAuthenticated,removeFavorite);
 
 
