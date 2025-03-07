@@ -93,92 +93,114 @@ const asyncHandler = require('../../middlewares/errorHandler');
 // });
 
 const PostProductReview = asyncHandler(async (req, res) => {
-    const uid = req.user.userId; 
-    if (!uid) {
-      return res.status(401).json({ message: "Unauthorized! User not found." });
-    }
-  
-    const { orderId, rateText, totalRate } = req.body;
-    if (!orderId || !rateText || !totalRate) {
-      return res.status(400).json({ message: "All Fields Required!" });
-    }
-  
-    try {
-      const order = await NormalOrder.findOne({
-        where: { id: orderId, uid: uid },
-        attributes: ['id', 'status'],
-        include: [
-          {
-            model: NormalOrderProduct,
-            as: "NormalProducts",
-            attributes: ['product_id'],  
-            include: [
-              {
-                model: Product,
-                as: "ProductDetails",
-                attributes: ['id', 'title', 'cat_id']
-              }
-            ]
-          }
-        ]
-      });
-      
-      console.log("Fetched Order:", order);
-        
-      if (!order) {
-        return res.status(403).json({ message: "Order not found or does not belong to you!" });
-      }
-          
-      if (!order.NormalProducts || order.NormalProducts.length === 0) {
-        return res.status(404).json({ message: "Order has no associated product!" });
-      }
-          
-      if (order.status !== 'Completed') {
-        return res.status(403).json({ message: `You can only review delivered products! Current status: ${order.status}` });
-      }
-  
-      const productIds = order.NormalProducts.map(p => p.product_id);
-      if (!productIds.length) {
-        return res.status(404).json({ message: "No products found in this order!" });
-      }
+  const uid = req.user.userId; 
+  if (!uid) {
+    return res.status(401).json({ message: "Unauthorized! User not found." });
+  }
 
-      const product = await Product.findOne({
-        where: { id: productIds[0] }, 
-        attributes: ['id', 'title', 'img', 'description', 'normal_price', 'mrp_price', 'discount', 'cat_id']
-      });
-  
-      console.log("Fetched Product Data:", product);
-  
-      if (!product) {
-        return res.status(404).json({ message: "Product not found!" });
-      }
-  
-      const newReview = await ProductReivew.create({
-        user_id: uid,
-        product_id: productIds[0],
-        category_id: product.cat_id,
-        rating: totalRate,
-        review: rateText,
-        status: 1
-      });
-  
-      const customer = await User.findOne({
-        where: { id: uid },
-        attributes: ['id', 'name', 'email']
-      });
-  
-      return res.status(200).json({ 
-        message: "Review submitted successfully!",
-        review: newReview,
-        customer,
-        product
-      });
-  
-    } catch (error) {
-      console.error("Error posting review:", error);
-      return res.status(500).json({ message: "Error posting review: " + error.message });
+  const { storeId, orderId, reviews } = req.body;
+  if (!orderId || !storeId || !reviews || !Array.isArray(reviews) || reviews.length === 0) {
+    return res.status(400).json({ message: "All Fields Required! Provide orderId, storeId and at least one review." });
+  }
+
+  try {
+    // Fetch the order with its associated products
+    const order = await NormalOrder.findOne({
+      where: { id: orderId, uid: uid },
+      attributes: ['id', 'status'],
+      include: [
+        {
+          model: NormalOrderProduct,
+          as: "NormalProducts",
+          attributes: ['product_id']
+        }
+      ]
+    });
+      
+    console.log("Fetched Order:", order);
+      
+    if (!order) {
+      return res.status(403).json({ message: "Order not found or does not belong to you!" });
     }
+        
+    if (!order.NormalProducts || order.NormalProducts.length === 0) {
+      return res.status(404).json({ message: "Order has no associated product!" });
+    }
+        
+    if (order.status !== 'Completed') {
+      return res.status(403).json({ message: `You can only review delivered products! Current status: ${order.status}` });
+    }
+
+    // Extract product IDs from the order
+    const orderProductIds = order.NormalProducts.map(p => p.product_id);
+
+    // Validate that each review's productId is part of the order
+    for (const r of reviews) {
+      if (!orderProductIds.includes(r.productId)) {
+        return res.status(400).json({ message: `Product ${r.productId} is not part of this order!` });
+      }
+    }
+
+    const createdReviews = await Promise.all(
+      reviews.map(async (r) => {
+        // Fetch product details for each review (excluding the non-existent rating column)
+        const product = await Product.findOne({
+          where: { id: r.productId },
+          attributes: ['id', 'title', 'img', 'description', 'normal_price', 'mrp_price', 'discount', 'cat_id']
+        });
+  
+        if (!product) {
+          throw new Error(`Product with id ${r.productId} not found`);
+        }
+  
+        // Create the review entry in ProductReview table
+        const newReview = await ProductReivew.create({
+          user_id: uid,
+          product_id: r.productId,
+          store_id: storeId,
+          category_id: product.cat_id,
+          rating: r.totalRate,
+          review: r.rateText,
+          status: 1
+        });
+  
+        // Recalculate the average rating for this product based on all approved reviews
+        const allReviews = await ProductReivew.findAll({
+          where: { product_id: r.productId, status: 1 },
+          attributes: ['rating']
+        });
+        const totalRatings = allReviews.reduce((sum, rev) => sum + rev.rating, 0);
+        const avgRating = totalRatings / allReviews.length;
+  
+        // Attach the computed average rating to the product data (without updating the Product table)
+        const productData = product.toJSON();
+        productData.avgRating = avgRating;
+  
+        return {
+          review: newReview,
+          product: productData
+        };
+      })
+    );
+  
+    // Fetch customer information once
+    const customer = await User.findOne({
+      where: { id: uid },
+      attributes: ['id', 'name', 'email','img']
+    });
+  
+    return res.status(200).json({ 
+      message: "Reviews submitted successfully!",
+      reviews: createdReviews,
+      customer
+    });
+  
+  } catch (error) {
+    console.error("Error posting review:", error);
+    return res.status(500).json({ message: "Error posting review: " + error.message });
+  }
 });
+
 
 const PostDeliveryBoyReview = asyncHandler (async (req, res) => {
     
