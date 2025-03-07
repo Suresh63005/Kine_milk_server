@@ -6,128 +6,124 @@ const { DeliverySearchSchema, upsertCouponSchema, CouponDeleteSchema, getCouponB
 const { PutObjectCommand } = require("@aws-sdk/client-s3");
 const s3 = require("../config/awss3Config");
 const uploadToS3 = require("../config/fileUpload.aws");
+const Joi = require("joi");
+
 
 const upsertCoupon = async (req, res) => {
-    const store_id=1;
-    const {
-      id,
-      title,
-      status,
-      coupon_code,
-      subtitle,
-      expire_date,
-      min_amt,
-      coupon_val,
-      description,
-    } = req.body;
-    console.log(req.body)
+  let {
+    id,
+    coupon_title,
+    status,
+    coupon_code,
+    subtitle,
+    expire_date,
+    min_amt,
+    coupon_val,
+    description,
+  } = req.body;
 
-    const { error } = upsertCouponSchema.validate({
-      id,
-      title,
-      status,
-      coupon_code,
-      subtitle,
-      expire_date,
-      min_amt,
-      coupon_val,
-      description,
+  console.log(req.body.coupon_title, "this is coupon code");
+
+  // Convert status from integer (0,1) to boolean (false, true)
+  if (status !== undefined) {
+    status = status == 1 ? true : false;
+  }
+
+  try {
+    let imageUrl;
+    if (req.file) {
+      imageUrl = await uploadToS3(req.file, "image");
+      imageUrl = JSON.stringify(imageUrl); // Convert image URL to string
+    }
+
+    let coupon;
+    if (id) {
+      coupon = await Coupon.findByPk(id);
+      if (!coupon) {
+        console.error("Coupon not found");
+        return res.status(404).json({
+          ResponseCode: "404",
+          Result: "false",
+          ResponseMsg: "Coupon not found.",
+        });
+      }
+
+      await coupon.update({
+        coupon_title,
+        coupon_img: imageUrl, // Ensure it's stringified
+        status,
+        coupon_code,
+        subtitle,
+        expire_date,
+        min_amt,
+        coupon_val,
+        description,
+      });
+
+      console.info("Coupon updated successfully:", coupon);
+      return res.status(200).json({
+        ResponseCode: "200",
+        Result: "true",
+        ResponseMsg: "Coupon updated successfully.",
+        coupon,
+      });
+    } else {
+      // Ensure image is uploaded for new coupons
+      if (!req.file) {
+        console.error("Image is required for a new coupon.");
+        return res.status(400).json({
+          ResponseCode: "400",
+          Result: "false",
+          ResponseMsg: "Image is required for a new coupon.",
+        });
+      }
+
+      coupon = await Coupon.create({
+        coupon_img: imageUrl, // Already stringified above
+        coupon_title,
+        status,
+        coupon_code,
+        subtitle,
+        expire_date,
+        min_amt,
+        coupon_val,
+        description,
+      });
+
+      console.info("Coupon created successfully:", coupon);
+      return res.status(201).json({
+        ResponseCode: "201",
+        Result: "true",
+        ResponseMsg: "Coupon created successfully.",
+        coupon,
+      });
+    }
+  } catch (error) {
+    console.error("Error processing request:", error);
+    return res.status(500).json({
+      ResponseCode: "500",
+      Result: "false",
+      ResponseMsg: "Internal Server Error",
     });
-  
-    if (error) {
-      logger.error(error)
-      return res.status(400).json({
-        ResponseCode: "400",
-        Result: "false",
-        ResponseMsg: error.details[0].message,
-      });
-    }
-  
-    try {
-      let imageUrl;
-      if (req.file) {
-        imageUrl = await uploadToS3(req.file, "image");
-      }
-  
-      let coupon;
-      if (id) {
-        coupon = await Coupon.findByPk(id);
-        if (!coupon) {
-          logger.error("coupon not found")
-          return res.status(404).json({
-            ResponseCode: "404",
-            Result: "false",
-            ResponseMsg: "Coupon not found.",
-          });
-        }
-  
-        await coupon.update({
-          title,
-          coupon_img: imageUrl || coupon.coupon_img,
-          status,
-          coupon_code,
-          subtitle,
-          expire_date,
-          min_amt,
-          coupon_val,
-          description,
-          store_id
-        });
-  
-        logger.info("Coupon updated successfully:", coupon);
-        return res.status(200).json({
-          ResponseCode: "200",
-          Result: "true",
-          ResponseMsg: "Coupon updated successfully.",
-          coupon,
-        });
-      } else {
-        // Create a new coupon
-        if (!req.file) {
-          logger.error('Image is required for a new coupon.')
-          return res.status(400).json({
-            ResponseCode: "400",
-            Result: "false",
-            ResponseMsg: "Image is required for a new coupon.",
-          });
-        }
-  
-        coupon = await Coupon.create({
-          coupon_img: imageUrl,
-          title,
-          status,
-          coupon_code,
-          subtitle,
-          expire_date,
-          min_amt,
-          coupon_val,
-          description,
-          store_id
-        });
-  
-        logger.info("Coupon created successfully:", coupon);
-        return res.status(201).json({
-          ResponseCode: "201",
-          Result: "true",
-          ResponseMsg: "Coupon created successfully.",
-          coupon,
-        });
-      }
-    } catch (error) {
-      logger.error("Error processing request:", error);
-      return res.status(500).json({
-        ResponseCode: "500",
-        Result: "false",
-        ResponseMsg: "Internal Server Error",
-      });
-    }
+  }
 };
+
+
+
+
+
    
-const getAllCoupon=asynHandler(async(req,res,next)=>{
-    const CouponDetails=await Coupon.findAll();
-    logger.info("sucessfully get all Coupon");
+const getAllCoupon = async (req, res, next) => {
+  try {
+    const CouponDetails = await Coupon.findAll();
+
+    logger.info("Successfully retrieved all coupons");
     res.status(200).json(CouponDetails);
-});
+  } catch (error) {
+    logger.error("Error retrieving coupons:", error);
+    res.status(500).json({ message: "Failed to retrieve coupons", error });
+  }
+};
 
 const getCouponCount=asynHandler(async(req,res)=>{
     const CouponCount=await Coupon.count();
@@ -137,11 +133,11 @@ const getCouponCount=asynHandler(async(req,res)=>{
 });
 
 const getCouponById=asynHandler(async(req,res)=>{
-    const {error}=getCouponByIdSchema.validate(req.params)
-    if (error) {
-        logger.error(error.details[0].message)
-        return res.status(400).json({ error: error.details[0].message });
-    }
+    // const {error}=getCouponByIdSchema.validate(req.params)
+    // if (error) {
+    //     logger.error(error.details[0].message)
+    //     return res.status(400).json({ error: error.details[0].message });
+    // }
 
     const {id}=req.params;
     const CouponById=await Coupon.findOne({where:{id:id}});

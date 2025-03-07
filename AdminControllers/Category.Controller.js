@@ -69,21 +69,23 @@ const upsertCategory = asyncHandler(async (req, res) => {
     cover,
   });
 
-  return res.status(201).json({
-    ResponseCode: "201",
+  return res.status(200).json({
+    ResponseCode: "200",
     Result: "true",
     ResponseMsg: "Category created successfully.",
     category: newCategory,
   });
 });
 
-
-
 const getAllCategories = asyncHandler(async (req, res, next) => {
-  const categories = await Category.findAll();
-  logger.info("sucessfully get all categories");
-  res.status(200).json(categories);
-
+  try {
+    const categories = await Category.findAll();
+    logger.info("sucessfully get all categories");
+    res.status(200).json({message:"Categories Fetched Successfully!",categories});
+  } catch (error) {
+    console.error("Error Occurs While Fettching Categories",error)
+    return res.status(500).json({message:"Internal Server Error",error})
+  }
 });
 
 const getCategoryCount = asyncHandler(async (req, res) => {
@@ -180,6 +182,7 @@ const searchCategory = asyncHandler(async (req, res) => {
 });
 
 const toggleCategoryStatus = asyncHandler(async (req, res) => {
+  console.log(req.body)
   const { id, value } = req.body;
 
   const category = await Category.findByPk(id);

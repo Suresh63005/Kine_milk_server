@@ -7,8 +7,10 @@ const Address = require("../../Models/Address");
 const upSertAddress = async (req, res) => {
     try {
       const { id,  lats, longs, address, landmark, r_instruction, a_type } = req.body;
-    //   const uid = req.user.id;
-      const uid = 112345678;
+      const uid = req.user.userId;
+
+      console.log(uid)
+      
       
       if (!uid || !lats || !longs || !address || !a_type) {
         return res.status(400).json({
@@ -33,7 +35,7 @@ const upSertAddress = async (req, res) => {
         
         await Address.update(
           {
-            uid,
+            uid:uid,
             a_lat: lats,
             a_long: longs,
             address,
@@ -53,7 +55,7 @@ const upSertAddress = async (req, res) => {
       } else {
         // Create a new address
         const newAddress = await Address.create({
-          uid,
+          uid:uid,
           a_lat: lats,
           a_long: longs,
           address,
@@ -62,8 +64,8 @@ const upSertAddress = async (req, res) => {
           a_type,
         });
   
-        return res.status(201).json({
-          ResponseCode: "201",
+        return res.status(200).json({
+          ResponseCode: "200",
           Result: "true",
           ResponseMsg: "Address Saved Successfully!",
           data: newAddress,
@@ -84,8 +86,9 @@ const upSertAddress = async (req, res) => {
 
  const getAddress = async (req, res) => {
 
-    // const uid = req.user.uid;
-    const uid = 112345678;
+    const uid = req.user.userId;
+
+    
     try {
       const addresses = await Address.findAll({where:{uid:uid}});
       res.status(200).json({

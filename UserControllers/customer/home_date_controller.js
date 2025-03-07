@@ -3,6 +3,8 @@ const User = require("../../Models/User");
 const Banner = require("../../Models/Banner");
 const Category = require("../../Models/Category");
 const Product = require("../../Models/Product");
+const Store = require("../../Models/Store");
+const ProductInventory = require("../../Models/ProductInventory");
 
 
 // Function to calculate distance
@@ -20,29 +22,72 @@ const Product = require("../../Models/Product");
 
 // Home API
 const homeAPI = async (req, res) => {
+    const { pincode } = req.params;
+
     try {
         
+        const banners = await Banner.findAll({
+            where: { status: 1 },
+            attributes: ["id", "img"]
+        });
 
-        const banners = await Banner.findAll({ where: { status: 1 } });
-        const categories = await Category.findAll({ where: { status: 1 } });
+       
+        const categories = await Category.findAll({
+            where: { status: 1 },
+            attributes: ["id", "title", "img"]
+        });
 
-        
-        let categoryProducts = {};
-        for (const category of categories) {
-            const products = await Product.findAll({
-                where: { status: 1, category_id: category?.id },
-                order: [["createdAt", "DESC"]], 
-                limit: 5
+       
+        const store = await Store.findOne({
+            where: { status: 1, pincode: pincode },
+            attributes: ["id", "title", "rimg", "full_address"]
+        });
+
+        if (!store) {
+            return res.json({
+                ResponseCode: "400",
+                Result: "false",
+                ResponseMsg: "No store for your pincode!",
             });
-
-            categoryProducts[category?.name] = products; 
         }
 
+        // Fetch all products for the store
+        const productInventory = await ProductInventory.findAll({
+            where: { status: 1, store_id: store.id },
+            attributes:["id","product_id"],
+            include: [
+                {
+                    model: Product, 
+                    as:"inventoryProducts",
+                    attributes: ["id", "cat_id", "title","mrp_price","img","description","subscribe_price","normal_price",]
+                }
+            ]
+        });
+
+        
+        const categoryProducts = [];
+
+        // Iterate through each category and filter products belonging to that category
+        for (const category of categories) {
+            const productsInCategory = productInventory.filter(
+                (productItem) => productItem.inventoryProducts.cat_id === category.id
+            );
+
+            
+                categoryProducts.push({
+                    name: category.title,
+                    items: productsInCategory
+                });
+            
+        }
+
+        // Return the response
         return res.json({
             ResponseCode: "200",
             Result: "true",
             ResponseMsg: "Home Data Get Successfully!",
             HomeData: {
+                store: store,
                 Banlist: banners,
                 Catlist: categories,
                 CategoryProducts: categoryProducts,
@@ -58,6 +103,9 @@ const homeAPI = async (req, res) => {
         });
     }
 };
+
+
+
 
 
 module.exports = {homeAPI};

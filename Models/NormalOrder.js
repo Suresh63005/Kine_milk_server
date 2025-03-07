@@ -3,6 +3,7 @@ const { DataTypes } = require("sequelize");
 
 const NormalOrder = sequelize.define(
   "NormalOrder",
+  
   {
    id: {
       type: DataTypes.UUID,
@@ -15,10 +16,6 @@ const NormalOrder = sequelize.define(
       allowNull: false,
     },
     uid: {
-      type: DataTypes.UUID,
-      allowNull: false,
-    },
-    product_id: {
       type: DataTypes.UUID,
       allowNull: false,
     },
@@ -137,6 +134,15 @@ const NormalOrder = sequelize.define(
       type: DataTypes.TEXT,
       defaultValue: null,
     },
+    delivery_images: {
+      type: DataTypes.JSON,
+      defaultValue: null,
+    },
+    feedback:{
+      type:DataTypes.TEXT,
+      allowNull:true
+    },
+    
   },
   { tableName: "tbl_normal_order", timestamps: true, paranoid: true }
 );

@@ -16,15 +16,15 @@ const Rider = sequelize.define(
     },
     title: {
       type: DataTypes.TEXT,
-      allowNull: false,
+      allowNull: true,
     },
     email: {
       type: DataTypes.TEXT,
-      allowNull: false,
+      allowNull: true,
     },
     ccode: {
       type: DataTypes.TEXT,
-      allowNull: false,
+      allowNull: true,
     },
     mobile: {
       type: DataTypes.TEXT,
@@ -32,11 +32,11 @@ const Rider = sequelize.define(
     },
     password: {
       type: DataTypes.TEXT,
-      allowNull: false,
+      allowNull: true,
     },
     img: {
       type: DataTypes.TEXT("long"),
-      allowNull: false,
+      allowNull: true,
     },
     rdate: {
       type: DataTypes.DATE,
@@ -50,56 +50,4 @@ const Rider = sequelize.define(
   { tableName: "tbl_rider", timestamps: true, paranoid: true }
 );
 
-<<<<<<< HEAD
-
-const Rider = sequelize.define('Rider', {
-  id: {
-    type: DataTypes.INTEGER,
-    primaryKey: true,
-    autoIncrement: true,
-    allowNull: false,
-  },
-  store_id: {
-    type: DataTypes.INTEGER,
-    allowNull: false,
-  },
-  img: {
-    type: DataTypes.TEXT,
-    allowNull: true,
-  },
-  name: {
-    type: DataTypes.TEXT,
-    allowNull: false,
-  },
-  email: {
-    type: DataTypes.TEXT,
-    allowNull: false,
-  },
-  mobile: {
-    type: DataTypes.TEXT,
-    allowNull: false,
-  },
-  password: {
-    type: DataTypes.TEXT,
-    allowNull: false,
-  },
-  rdate: {
-    type: DataTypes.DATEONLY, 
-    allowNull: false,
-  },
-  status: {
-    type: DataTypes.INTEGER,
-    allowNull: false,
-  },
-}, {
-  tableName: 'tbl_rider', 
-
-  timestamps: true,
-
-
-});
-
 module.exports = Rider;
-=======
-module.exports = Rider;
->>>>>>> b2fe3a94414dc641db2556705db01886cbb43ba8

@@ -98,6 +98,7 @@ const verifyMobile = asyncHandler(async (req, res) => {
 
     try {
         const userRecord = await admin.auth().getUserByPhoneNumber(mobile);
+        
         if (!userRecord) {
             return res.status(404).json({ message: "Mobile number not found!" });
         }
@@ -148,6 +149,11 @@ const verifyEmail = asyncHandler(async(req,res)=>{
         }
         return res.status(500).json({ message: "Error verifying email: " + error.message });
     }
+})
+
+
+const acountDelete = asyncHandler(async(req,res)=>{
+    
 })
 
 module.exports = {otpLogin,verifyOtp,verifyMobile,verifyEmail}

@@ -23,6 +23,10 @@ const Cart = sequelize.define(
       allowNull: true,
       defaultValue: 1,
     },
+    orderType:{
+      type: DataTypes.ENUM("Normal", "Subscription"),
+      allowNull: false,
+    }
   },
   { tableName: "tbl_cart", timestamps: true, paranoid: true }
 );

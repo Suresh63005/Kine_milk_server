@@ -1,12 +1,11 @@
 const Cart = require("../../Models/Cart");
+const Product = require("../../Models/Product");
 
 const upsertCart = async (req, res) => {
     try {
-      const { uid, product_id, quantity } = req.body;
+      const { uid, product_id, quantity,orderType } = req.body;
 
-
-  
-      if (!uid || !product_id ) {
+      if (!uid || !product_id || !orderType ) {
         return res.status(400).json({
           ResponseCode: "400",
           Result: "false",
@@ -14,33 +13,31 @@ const upsertCart = async (req, res) => {
         });
       }
   
-     
       const existingCartItem = await Cart.findOne({
-        where: { uid, product_id },
+        where: { uid, product_id,orderType },
       });
   
       if (existingCartItem) {
-        
         await Cart.update(
           { quantity: existingCartItem.quantity + quantity },
           { where: { uid, product_id } }
         );
-  
         return res.status(200).json({
           ResponseCode: "200",
           Result: "true",
           ResponseMsg: "Cart updated successfully!",
+          
         });
       } else {
-        
         const newCartItem = await Cart.create({
           uid,
           product_id,
           quantity,
+          orderType
         });
   
-        return res.status(201).json({
-          ResponseCode: "201",
+        return res.status(200).json({
+          ResponseCode: "200",
           Result: "true",
           ResponseMsg: "Item added to cart!",
           data: newCartItem,
@@ -59,11 +56,12 @@ const upsertCart = async (req, res) => {
 
   const getCartByUser = async (req, res) => {
     try {
-    //   const uid  = req.user.id;
-      const uid  = "2dfd7d77-e6f6-43f9-8cc1-c7f29fbd91b6";
+      const uid  = req.user.userId;
+      const {orderType} = req.params;
 
-      console.log(uid)
-  
+
+    
+
       if (!uid) {
         return res.status(400).json({
           ResponseCode: "400",
@@ -72,7 +70,16 @@ const upsertCart = async (req, res) => {
         });
       }
   
-      const cartItems = await Cart.findAll({ where: { uid } });
+      const cartItems = await Cart.findAll({ 
+        where: { uid, orderType },
+        include: [
+          {
+              model: Product,
+              attributes: ["id", "title", "img","normal_price","subscribe_price", "description"],
+              as: "CartproductDetails" 
+          }
+      ]
+      });
   
       return res.status(200).json({
         ResponseCode: "200",
@@ -90,9 +97,46 @@ const upsertCart = async (req, res) => {
       });
     }
   }
+
+  const deleteCart = async (req, res) => {
+    const { id } = req.params;
+    const uid = req.user.userId;
+try {
+  
+  const cartItem = await Cart.destroy({ where: { id,uid },force:true });
+
+  if(!cartItem){
+    return res.status(404).json({
+      ResponseCode: "404",
+      Result: "false",
+      ResponseMsg: "Cart item not found!",
+    })
+  }
+
+  return res.status(200).json({
+    ResponseCode: "200",
+    Result: "true",
+    ResponseMsg: "Cart item deleted successfully!",
+  })
+
+
+
+} catch (error) {
+  
+  console.error("Error deleting cart item:", error);
+  res.status(500).json({
+    ResponseCode: "500",
+    Result: "false",
+    ResponseMsg: "Server Error",
+    error: error.message,
+  })
+}
+
+  }
   
 
   module.exports = {
     upsertCart,
-    getCartByUser
+    getCartByUser,
+    deleteCart
   }

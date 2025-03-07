@@ -4,7 +4,7 @@ const { DataTypes } = require("sequelize");
 const User = sequelize.define(
   "User",
   {
-   id: {
+    id: {
       type: DataTypes.UUID,
       allowNull: false,
       defaultValue: DataTypes.UUIDV4,
@@ -26,6 +26,10 @@ const User = sequelize.define(
       type: DataTypes.TEXT,
       allowNull: false,
     },
+    img: {
+      type: DataTypes.TEXT,
+      allowNull: true,
+    },
     refercode: {
       type: DataTypes.TEXT,
       allowNull: true,
@@ -42,9 +46,9 @@ const User = sequelize.define(
       type: DataTypes.DATE,
       allowNull: false,
     },
-    store_id:{
-      type:DataTypes.INTEGER,
-      allowNull:true
+    store_id: {
+      type: DataTypes.INTEGER,
+      allowNull: true,
     },
     status: {
       type: DataTypes.INTEGER,
@@ -55,6 +59,10 @@ const User = sequelize.define(
       type: DataTypes.FLOAT,
       allowNull: true,
       defaultValue: 0,
+    },
+    one_subscription:{
+      type:DataTypes.TEXT,
+      allowNull:true
     },
   },
   { tableName: "tbl_user", timestamps: true, paranoid: true }
