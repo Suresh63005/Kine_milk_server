@@ -104,7 +104,6 @@ const PostProductReview = asyncHandler(async (req, res) => {
   }
 
   try {
-    // Fetch the order with its associated products
     const order = await NormalOrder.findOne({
       where: { id: orderId, uid: uid },
       attributes: ['id', 'status'],
@@ -131,10 +130,8 @@ const PostProductReview = asyncHandler(async (req, res) => {
       return res.status(403).json({ message: `You can only review delivered products! Current status: ${order.status}` });
     }
 
-    // Extract product IDs from the order
     const orderProductIds = order.NormalProducts.map(p => p.product_id);
 
-    // Validate that each review's productId is part of the order
     for (const r of reviews) {
       if (!orderProductIds.includes(r.productId)) {
         return res.status(400).json({ message: `Product ${r.productId} is not part of this order!` });
@@ -143,7 +140,6 @@ const PostProductReview = asyncHandler(async (req, res) => {
 
     const createdReviews = await Promise.all(
       reviews.map(async (r) => {
-        // Fetch product details for each review (excluding the non-existent rating column)
         const product = await Product.findOne({
           where: { id: r.productId },
           attributes: ['id', 'title', 'img', 'description', 'normal_price', 'mrp_price', 'discount', 'cat_id']
@@ -153,7 +149,6 @@ const PostProductReview = asyncHandler(async (req, res) => {
           throw new Error(`Product with id ${r.productId} not found`);
         }
   
-        // Create the review entry in ProductReview table
         const newReview = await ProductReivew.create({
           user_id: uid,
           product_id: r.productId,
@@ -164,7 +159,6 @@ const PostProductReview = asyncHandler(async (req, res) => {
           status: 1
         });
   
-        // Recalculate the average rating for this product based on all approved reviews
         const allReviews = await ProductReivew.findAll({
           where: { product_id: r.productId, status: 1 },
           attributes: ['rating']
@@ -172,7 +166,6 @@ const PostProductReview = asyncHandler(async (req, res) => {
         const totalRatings = allReviews.reduce((sum, rev) => sum + rev.rating, 0);
         const avgRating = totalRatings / allReviews.length;
   
-        // Attach the computed average rating to the product data (without updating the Product table)
         const productData = product.toJSON();
         productData.avgRating = avgRating;
   
@@ -183,7 +176,6 @@ const PostProductReview = asyncHandler(async (req, res) => {
       })
     );
   
-    // Fetch customer information once
     const customer = await User.findOne({
       where: { id: uid },
       attributes: ['id', 'name', 'email','img']
@@ -288,4 +280,58 @@ const gteDeliveryBoyReview = asyncHandler (async (req, res) => {
     }
 })
 
-module.exports = { PostProductReview,PostDeliveryBoyReview };
+const FetchMyReviewsOnProducts = asyncHandler(async(req,res)=>{
+  const uid = req.user.userId;
+  if(!uid){
+    return res.status(401).json({message:"Unauthorized! User not found."})
+  }
+  try {
+    const reviews = await ProductReivew.findAll({
+      where:{user_id:uid},
+      attributes:['id','rating','review'],
+      include:[
+        {
+          model:Product,
+          as:'product',
+          attributes:['id','title','img','description','normal_price','mrp_price','discount']
+        }
+      ]
+    })
+    if(reviews.length===0){
+      return res.status(404).json({message:"No Reviews Found!"})
+    }
+    return res.status(200).json({message:"Reviews fetched successfully",reviews})
+  } catch (error) {
+    console.error("Error Occurs while fetching reviews:", error);
+    return res.status(500).json({ message: "Internal server error" + error.message });
+   }
+})
+
+const FetchMyReviewsOnDeliveryBoys = asyncHandler(async(req,res)=>{
+  const uid = req.user.userId;
+  if(!uid){
+    return res.status(401).json({message:"Unauthorized! User not found."})
+  }
+  try {
+    const reviews = await Review.findAll({
+      where:{user_id:uid},
+      attributes:['id','rating','review'],
+      include:[
+        {
+          model:Rider,
+          as:'rider',
+          attributes:['id','title','img']
+        }
+      ]
+    })
+    if(reviews.length===0){
+      return res.status(404).json({message:"No Reviews Found!"})
+    }
+    return res.status(200).json({message:"Reviews fetched successfully",reviews})
+  } catch (error) {
+    console.error("Error Occurs while fetching reviews:", error);
+    return res.status(500).json({ message: "Internal server error" + error.message });
+  }
+})
+
+module.exports = { PostProductReview,PostDeliveryBoyReview,FetchMyReviewsOnProducts,FetchMyReviewsOnDeliveryBoys };
