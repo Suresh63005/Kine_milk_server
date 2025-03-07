@@ -5,7 +5,8 @@ const { isAuthenticated } = require('../../middlewares/authMiddleware');
 const router = express.Router();
 
 router.post('/',isAuthenticated,addFavorite);
-router.get('/',isAuthenticated,getFavorites);
+router.get('/:store_id',isAuthenticated,getFavorites);
+
 router.delete('/',isAuthenticated,removeFavorite);
 
 
