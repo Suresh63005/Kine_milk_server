@@ -159,6 +159,8 @@ app.get("/", (req, res) => {
   });
 
 app.listen(PORT, () => {
+  
   console.log(`Server is Running on PORT http://localhost:${PORT}`);
+
   console.log(`Swagger docs available at http://localhost:${PORT}/api-docs`);
 });
