@@ -35,3 +35,11 @@
 {"level":"error","message":"Invalid password","service":"kine_milk_server","timestamp":"2025-03-06T06:46:24.276Z"}
 {"level":"error","message":"Invalid password","service":"kine_milk_server","timestamp":"2025-03-06T06:50:50.564Z"}
 {"level":"error","message":"Admin created successfully","service":"kine_milk_server","timestamp":"2025-03-06T07:10:27.960Z"}
+{"level":"error","message":"ID must be a number.","service":"kine_milk_server","timestamp":"2025-03-07T05:32:10.008Z"}
+{"level":"error","message":"Admin not found","service":"kine_milk_server","timestamp":"2025-03-07T09:41:39.525Z"}
+{"level":"error","message":"Admin not found","service":"kine_milk_server","timestamp":"2025-03-07T09:41:39.568Z"}
+{"level":"error","message":"Admin not found","service":"kine_milk_server","timestamp":"2025-03-07T10:01:16.596Z"}
+{"level":"error","message":"Admin not found","service":"kine_milk_server","timestamp":"2025-03-07T10:01:16.649Z"}
+{"level":"error","message":"Admin created successfully","service":"kine_milk_server","timestamp":"2025-03-07T10:54:32.508Z"}
+{"level":"error","message":"ID must be a number","service":"kine_milk_server","timestamp":"2025-03-07T12:37:22.054Z"}
+{"level":"error","message":"ID must be a number","service":"kine_milk_server","timestamp":"2025-03-07T12:44:41.789Z"}

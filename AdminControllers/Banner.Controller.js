@@ -67,7 +67,16 @@ const upsertBanner = asyncHandler(async (req, res, next) => {
     }
   });
   
-  
+const fetchbannerbyid = async (req,res)=>{
+  const {id} =req.params
+  try{
+    let banner;
+    banner = await Banner.findByPk(id)
+  }
+  catch(error){
+    res.status(500).json({message: "server error at fetch banner"})
+  }
+}
 const fetchBanners = asyncHandler(async(req, res, next)=>{
    try {
     const banners = await Banner.findAll();
