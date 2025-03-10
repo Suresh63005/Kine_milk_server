@@ -24,7 +24,6 @@ const Store = require("./Store");
 const SubscribeOrder = require("./SubscribeOrder");
 const SubscribeOrderProduct = require("./SubscribeOrderProduct");
 const User = require("./User");
-
 // const ProductImage = require("./productImages");
 
 // const Store = require("./Store");

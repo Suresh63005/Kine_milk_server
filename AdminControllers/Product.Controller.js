@@ -149,16 +149,16 @@ const getAllProducts = asyncHandler(async (req, res, next) => {
 
 
 
- try {
-  
-  const Products = await Product.findAll();
-  logger.info("successfully get all products");
-  res.status(200).json(Products);
+  try {
 
- } catch (error) {
-  console.log(error)
+    const Products = await Product.findAll();
+    logger.info("successfully get all products");
+    res.status(200).json(Products);
 
- }
+  } catch (error) {
+    console.log(error)
+
+  }
 });
 
 const getProductCount = asyncHandler(async (req, res) => {
@@ -243,7 +243,7 @@ const toggleproductStatus = async (req, res) => {
   console.log("Request received:", req.body);
 
   const { id, value } = req.body;
-  console.log(req.body,"ssssssssssssssssssssssssss")
+  console.log(req.body, "ssssssssssssssssssssssssss")
 
   try {
     const product = await Product.findByPk(id);

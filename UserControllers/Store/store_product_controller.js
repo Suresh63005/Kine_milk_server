@@ -607,7 +607,14 @@ const ViewDeliveryBoyReviews = asyncHandler(async (req, res) => {
       return res.status(404).json({ message: "Rider not found for this store." });
     }
 
-    const reviews = await Review.findAll({ where: { rider_id: riderId } });
+    const reviews = await Review.findAll({ where: { rider_id: riderId },
+      include: [
+        {
+          model: User,
+          as: "user",
+          attributes: ["name","img"],
+        },
+      ], });
 
     if (!reviews.length) {
       return res.status(404).json({ message: "No reviews found for this store." });
@@ -615,13 +622,6 @@ const ViewDeliveryBoyReviews = asyncHandler(async (req, res) => {
 
     const ratingStats = await Review.findAll({
       where: { rider_id: rider.id },
-      include: [
-        {
-          model: User,
-          as: "user",
-          attributes: ["name"],
-        },
-      ],
       attributes: [
         [Sequelize.fn('AVG', Sequelize.col("rating")), "average_rating"],
         [Sequelize.fn('COUNT', Sequelize.col("Tbl_reviews.id")), "review"], // Specify table name

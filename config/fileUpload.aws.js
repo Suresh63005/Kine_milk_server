@@ -33,7 +33,7 @@ const uploadToS3 = async (file, folderName = "uploads") => {
       await s3.send(command);
       return `https://${s3Params.Bucket}.s3.${process.env.AWS_REGION}.amazonaws.com/${s3Params.Key}`;
     } catch (error) {
-      console.error(`Error uploading ${file.originalname} to S3:`, error);
+      console.error(`Error uploading ${file.originalname} to S3:, error`);
       throw new Error(`Failed to upload file ${file.originalname} to S3.`);
     }
   });
