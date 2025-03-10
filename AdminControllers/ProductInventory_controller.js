@@ -76,11 +76,81 @@ const addInventory = async (req, res) => {
   }
 };
 
-const ProductInventoryList = asynHandler(async(req,res)=>{
-  
+const getProductInventoryById=async(req,res,next)=>{
+  const {id}=req.params;
+  try {
+    const productInv=await ProductInventory.findByPk(id);
+    if(!productInv){
+      return res.status(404).json({message:"Product Inventory not found"})
+    }
+    res.status(200).json(productInv)
+  } catch (error) {
+      console.log(error)
+  }
+}
+const ProductInventoryList = asynHandler(async (req, res) => {
+  try {
+    const productInv = await ProductInventory.findAll({
+      include: [
+        
+        {
+          model: Product,
+          as: "inventoryProducts",
+        }
+      ]
+    });
+    res.status(200).json(productInv)
+  } catch (error) {
+    console.log(error)
+  }
 })
 
+const toggleProductInventoryStatus=async (req,res)=>{
+  const  {id ,value}=req.body;
+  try {
+    const productInv=await ProductInventory.findByPk(id);
+    if(!productInv){
+      return res.status(404).json({message:"Product Inventory not found"})
+    }
+    productInv.status=value;
+    await productInv.save();
+    res.status(200).json({
+      message:"Product Inventory status updated successfully",
+      updatedStatus:productInv.status
+    })
+  } catch (error) {
+      res.status(500).json({message:"Internal Server Error"})
+  }
+}
 
+const deleteProductInventory = async (req, res) => {
+  const { id } = req.params;
+  const { forceDelete } = req.body;
+  try {
+    const productInv = await ProductInventory.findByPk(id);
+    if (!productInv) {
+      return res.status(404).json({ message: "Product Inventory not found" });
+    }
+    if (productInv.deletedAt && forceDelete !== true) {
+      return res.status(400).json({ message: "Product Inventory already deleted" });
+    }
+    if (forceDelete === true) {
+      await productInv.destroy({ force: true });
+      return res
+        .status(200)
+        .json({ message: "Product Inventory permanently deleted successfully" });
+    }
+    await productInv.destroy();
+    return res.status(200).json({ message: "Product Inventory soft deleted successfully" });
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({ message: "Internal Server Error" });
+  }
+};
 module.exports = {
   addInventory,
+  getProductInventoryById,
+  ProductInventoryList,
+  toggleProductInventoryStatus,
+  deleteProductInventory
 };
