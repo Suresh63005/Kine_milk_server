@@ -8,6 +8,9 @@ router.post("/upsert-banner",upload.single('img'), bannerController.upsertBanner
 router.get("/fetch-banners", bannerController.fetchBanners);
 router.get("/getbannerbyid/:id", bannerController.fetchBannersById);
 router.patch("/toggle-status",bannerController.toggleBannerStatus);
-router.delete("/delete/:id",bannerController.deleteBanner);
+
+router.get("/getbannerbyid/:id",bannerController.fetchbannerbyid),
+router.delete("/deletebannerbyid/:id",bannerController.deletebannerbyid),
+
 
 module.exports = router;
