@@ -109,7 +109,7 @@ app.use("/normalorder",require("./AdminRoutes/NormalOrder.route"))
 app.use("/banner",require('./AdminRoutes/Banner.route'))
 app.use("/store",require('./AdminRoutes/Store.route'))
 app.use("/user",require("./AdminRoutes/User.route"))
-app.use("/product_inventory",upload.none(),require('./AdminRoutes/ProductInventory_route'))
+app.use("/productinventory",require('./AdminRoutes/ProductInventory_route'))
 app.use("/notifications",require('./UserRoutes/notification_route'));
 
 
