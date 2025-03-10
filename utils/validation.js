@@ -713,7 +713,7 @@ const upsertCouponSchema = Joi.object({
 
 
 const bannerUpsertSchema = Joi.object({
-  id: Joi.number().integer().positive().optional(),
+  id: Joi.optional(),
   status: Joi.number().integer().valid(0, 1).required().messages({
     'number.base': 'Status must be a number.',
     'any.required': 'Status is required.',

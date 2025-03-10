@@ -5,6 +5,7 @@ const uploadToS3 = require("../config/fileUpload.aws");
 const { PutObjectCommand } = require("@aws-sdk/client-s3");
 const {bannerUpsertSchema,bannerListSchema}=require('../utils/validation');
 const logger = require('../utils/logger');
+const { loggers } = require("winston");
 
 const upsertBanner = asyncHandler(async (req, res, next) => {
     try {
@@ -71,9 +72,15 @@ const fetchbannerbyid = async (req,res)=>{
   const {id} =req.params
   try{
     let banner;
-    banner = await Banner.findByPk(id)
+    banner = await Banner.findByPk(id);
+    if(!banner){
+      return res.status(404).json({respone: "banner not found"})
+    }
+    logger.info(`banner fetched by by this ${id}`)
+    res.status(200).json(banner)
   }
   catch(error){
+    logger.error(`Error fetching banner by ID: ${id} - ${error.message}`);
     res.status(500).json({message: "server error at fetch banner"})
   }
 }
@@ -87,6 +94,46 @@ const fetchBanners = asyncHandler(async(req, res, next)=>{
     return res.status(400).json({message:"Failed to fetch Banners"})
    }
 })
+
+const deletebannerbyid = async (req, res) => {
+  const { id } = req.params;
+  const { forceDelete } = req.body;
+
+  try {
+    
+    const banner = await Banner.findOne({ where: { id }, paranoid: false });
+
+    if (!banner) {
+      logger.error(`Banner with ID ${id} not found`);
+      return res.status(404).json({ error: "Banner not found" });
+    }
+
+    
+    if (banner.deletedAt && forceDelete !== "true") {
+      logger.error(`Banner ID ${id} is already soft-deleted`);
+      return res.status(400).json({
+        error: "Banner is already soft-deleted. Use forceDelete=true to permanently delete it.",
+      });
+    }
+
+    
+    if (forceDelete === "true") {
+      await Banner.destroy({ where: { id }, force: true });
+      logger.info(`Banner with ID ${id} permanently deleted`);
+      return res.status(200).json({ message: "Banner permanently deleted successfully" });
+    }
+
+    
+    await Banner.destroy({ where: { id } });
+    logger.info(`Banner with ID ${id} soft-deleted`);
+    return res.status(200).json({ message: "Banner soft deleted successfully" });
+
+  } catch (error) {
+    logger.error(`Error deleting banner with ID ${id}: ${error.message}`);
+    return res.status(500).json({ error: "Internal Server Error" });
+  }
+};
+
 
 const toggleBannerStatus = asyncHandler(async(req, res)=>{
     console.log("Request received:", req.body);
@@ -109,4 +156,4 @@ const toggleBannerStatus = asyncHandler(async(req, res)=>{
         res.status(500).json({ message: "Internal server error." });    
     }
 })
-  module.exports = {upsertBanner, fetchBanners, toggleBannerStatus}
+  module.exports = {upsertBanner, fetchBanners, toggleBannerStatus,fetchbannerbyid,deletebannerbyid}
