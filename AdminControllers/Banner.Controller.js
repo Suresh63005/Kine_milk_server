@@ -9,15 +9,15 @@ const { loggers } = require("winston");
 
 const upsertBanner = asyncHandler(async (req, res, next) => {
     try {
-      // Validate other fields except img
-      const { error } = bannerUpsertSchema.validate({
-        id: req.body.id,
-        status: req.body.status
-      });
-  
-      if (error) {
-        return res.status(400).json({ error: error.details[0].message });
-      }
+  //     // Validate other fields except img
+  //     const { error } = bannerUpsertSchema.validate({
+  //       id: req.body.id,
+  //       status: req.body.status
+  //     });
+  // console.log(req.body)
+  //     if (error) {
+  //       return res.status(400).json({ error: error.details[0].message });
+  //     }
   
       const { id, status } = req.body;
       let imageUrl;
@@ -95,6 +95,7 @@ const fetchBanners = asyncHandler(async(req, res, next)=>{
    }
 })
 
+
 const deletebannerbyid = async (req, res) => {
   const { id } = req.params;
   const { forceDelete } = req.body;
@@ -135,6 +136,7 @@ const deletebannerbyid = async (req, res) => {
 };
 
 
+
 const toggleBannerStatus = asyncHandler(async(req, res)=>{
     console.log("Request received:", req.body);
     const {id, value}= req.body;
@@ -156,4 +158,9 @@ const toggleBannerStatus = asyncHandler(async(req, res)=>{
         res.status(500).json({ message: "Internal server error." });    
     }
 })
+
   module.exports = {upsertBanner, fetchBanners, toggleBannerStatus,fetchbannerbyid,deletebannerbyid}
+
+
+
+
