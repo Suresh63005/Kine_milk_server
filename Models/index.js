@@ -13,6 +13,7 @@ const ProductInventory = require("./ProductInventory");
 const ProductReivew = require("./ProductReview");
 const Review = require("./review");
 const Rider = require("./Rider");
+const Time = require("./Time")
 // const User = require("./User");
 // const PaymentList = require("./PaymentList");
 // const Coupon = require('./Coupon');
@@ -69,8 +70,6 @@ NormalOrder.belongsTo(Product, { foreignKey: "product_id", as: "ordered_product"
 // NormalOrder.belongsTo(Coupon, { as: "coupon", foreignKey: "cou_id" });
 // Coupon.hasMany(NormalOrder, { as: "orders", foreignKey: "cou_id"});
 
-// NormalOrder.belongsTo(Rider, { as: "rider", foreignKey: "rid" });
-// Rider.hasMany(NormalOrder, { as: "orders", foreignKey: "rid"});
 
 // SubscribeOrder.belongsTo(Admin, { as: "admin", foreignKey: "store_id" });
 // Admin.hasMany(SubscribeOrder, { as: "suborders", foreignKey: "store_id"});
@@ -87,8 +86,8 @@ NormalOrder.belongsTo(Product, { foreignKey: "product_id", as: "ordered_product"
 // SubscribeOrder.belongsTo(Coupon, { as: "coupon", foreignKey: "cou_id" });
 // Coupon.hasMany(SubscribeOrder, { as: "suborders", foreignKey: "cou_id"});
 
-// // SubscribeOrder.belongsTo(Rider, { as: "rider", foreignKey: "rid" });
-// // Rider.hasMany(SubscribeOrder, { as: "suborders", foreignKey: "rid"});
+SubscribeOrder.belongsTo(Rider, { as: "subrider", foreignKey: "rid" });
+Rider.hasMany(SubscribeOrder, { as: "suborders", foreignKey: "rid"});
 
 // ProductAttribute.belongsTo(Product, {as:"products", foreignKey:"product_id"});
 // Product.hasMany(ProductAttribute, {as:"attributes", foreignKey:"product_id"});
@@ -129,6 +128,13 @@ Rider.hasMany(Review, { foreignKey: "rider_id", as: "reviews" });
 
 Review.belongsTo(User, { foreignKey: "user_id", as: "user" });
 User.hasMany(Review, { foreignKey: "user_id", as: "reviews" });
+
+NormalOrder.belongsTo(Rider, {foreignKey: "rid", as: "riders" });
+Rider.hasMany(NormalOrder, { as: "orders"});
+
+SubscribeOrder.belongsTo(Time,{foreignKey: "timeslot_id", as: "timeslots" });
+Time.hasMany(SubscribeOrder, { foreignKey: "timeslot_id", as: "timeslots" });
+
 
 
 
