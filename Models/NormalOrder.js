@@ -75,7 +75,7 @@ const NormalOrder = sequelize.define(
     rid: {
       type: DataTypes.UUID,
       allowNull: false,
-      defaultValue: 0,
+      
     },
     wall_amt: {
       type: DataTypes.FLOAT,

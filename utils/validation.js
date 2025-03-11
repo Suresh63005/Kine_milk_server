@@ -602,7 +602,7 @@ const upsertTimeSchema = Joi.object({
 })
 
 const getTimeIdBySchema = Joi.object({
-  id: Joi.number().integer().required().messages({
+  id: Joi.required().messages({
     "number.base": "ID must be a number.",
     "number.integer": "ID must be an integer.",
     "any.required": "ID is required.",
@@ -610,7 +610,7 @@ const getTimeIdBySchema = Joi.object({
 });
 
 const DeleteTimeSchema = Joi.object({
-  id: Joi.number().integer().required().messages({
+  id: Joi.required().messages({
     "number.base": "ID must be a number.",
     "number.integer": "ID must be an integer.",
     "any.required": "ID is required.",
