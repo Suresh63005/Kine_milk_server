@@ -50,7 +50,7 @@ const FetchAllSubscribeOrders = asyncHandler(async (req, res) => {
                     {
                         model:Product,
                         as:"productDetails",
-                        attributes:["id","title","description","subscribe_price","normal_price","mrp_price"]
+                        attributes:["id","title","description","subscribe_price","normal_price","mrp_price","weight"]
                     }
                 ]
             },
@@ -123,7 +123,7 @@ const ViewSubscribeOrderDetails = asyncHandler(async(req,res)=>{
                         {
                             model:Product,
                             as:"productDetails",
-                            attributes: ["id", "title", "description", "normal_price", "mrp_price", "img"],
+                            attributes: ["id", "title", "description", "normal_price", "mrp_price", "img","weight"],
                         }
                     ]
                 },

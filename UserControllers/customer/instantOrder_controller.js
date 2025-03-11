@@ -11,6 +11,11 @@ const User = require("../../Models/User");
 const ProductReview = require("../../Models/ProductReview");
 const Address = require("../../Models/Address");
 
+const generateOrderId = ()=>{
+  const randomNum = Math.floor(100000 + Math.random() * 900000)
+  return `#${randomNum}`
+}
+
 
 const instantOrder =  async (req, res) => {
     const {
@@ -74,6 +79,7 @@ const instantOrder =  async (req, res) => {
           tax: tax || 0,
           o_total,
           a_note,
+          order_id:generateOrderId()
         },
         
       );
@@ -141,7 +147,7 @@ const instantOrder =  async (req, res) => {
         ResponseCode: "200",
         Result: "true",
         ResponseMsg: "Instant Order created successfully!",
-        order_id: order.id,
+        order_id: order.order_id,
         o_total,
         items: orderItems,
       });

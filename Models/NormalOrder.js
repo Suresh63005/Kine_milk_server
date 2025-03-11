@@ -142,6 +142,10 @@ const NormalOrder = sequelize.define(
       type:DataTypes.TEXT,
       allowNull:true
     },
+    order_id:{
+      type:DataTypes.TEXT,
+      allowNull:true
+    }
     
   },
   { tableName: "tbl_normal_order", timestamps: true, paranoid: true }
