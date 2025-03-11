@@ -6,6 +6,11 @@ const Notification = require("../../Models/Notification");
 const NormalOrder = require("../../Models/NormalOrder");
 const User = require("../../Models/User");
 
+const generateOrderId = ()=>{
+  const randomNum = Math.floor(100000 + Math.random() * 900000)
+  return `#${randomNum}`
+}
+
 
 const subscribeOrder =  async (req, res) => {
     const {
@@ -76,6 +81,7 @@ const subscribeOrder =  async (req, res) => {
           tax: tax || 0,
           o_total,
           a_note,
+          order_id:generateOrderId()
         },
         
       );
@@ -145,7 +151,7 @@ const subscribeOrder =  async (req, res) => {
         ResponseCode: "200",
         Result: "true",
         ResponseMsg: "Order created successfully!",
-        order_id: order.id,
+        order_id: order.order_id,
         o_total,
         items: orderItems,
       });

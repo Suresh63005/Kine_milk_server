@@ -62,6 +62,10 @@ const Product = sequelize.define(
     date:{
       type:DataTypes.DATEONLY,
       allowNull:true
+    },
+    weight:{
+      type:DataTypes.STRING,
+      allowNull:true
     }
   },
   {
