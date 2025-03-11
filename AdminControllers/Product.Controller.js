@@ -45,8 +45,7 @@ const upsertProduct = async (req, res) => {
     }
 
     let imageUrl = null;
-    let extraImageUrls = [];
-
+ 
     if (req.files?.img) {
       imageUrl = await uploadToS3(req.files.img[0], "images");
     }

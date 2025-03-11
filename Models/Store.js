@@ -174,7 +174,11 @@ const Store = sequelize.define(
     owner_name:{
       type:DataTypes.TEXT,
       allowNull:false
-    }
+    },
+    one_subscription: {
+      type: DataTypes.TEXT,
+      allowNull: true,
+    },
   },
   { tableName: "tbl_store", timestamps: true, paranoid: true }
 );

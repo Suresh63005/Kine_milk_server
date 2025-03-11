@@ -428,7 +428,7 @@ const getFaqIdBySchema = Joi.object({
 });
 
 const FaqDeleteSchema = Joi.object({
-  id: Joi.number().integer().required().messages({
+  id: Joi.required().messages({
     "number.base": "ID must be a number.",
     "number.integer": "ID must be an integer.",
     "any.required": "ID is required.",
@@ -516,7 +516,7 @@ const upsertRiderSchema = Joi.object({
 });
 
 const getRiderIdBySchema = Joi.object({
-  id: Joi.number().integer().required().messages({
+  id: Joi.required().messages({
     "number.base": "ID must be a number.",
     "number.integer": "ID must be an integer.",
     "any.required": "ID is required.",
@@ -524,7 +524,7 @@ const getRiderIdBySchema = Joi.object({
 });
 
 const RiderDeleteSchema = Joi.object({
-  id: Joi.number().integer().required().messages({
+  id: Joi.required().messages({
     "number.base": "ID must be a number.",
     "number.integer": "ID must be an integer.",
     "any.required": "ID is required.",
