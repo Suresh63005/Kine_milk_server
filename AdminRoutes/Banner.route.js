@@ -6,10 +6,12 @@ const adminMiddleware = require('../middlewares/adminMiddleware');
 
 router.post("/upsert-banner",upload.single('img'), bannerController.upsertBanner);
 router.get("/fetch-banners", bannerController.fetchBanners);
+
 router.get("/getbannerbyid/:id", bannerController.fetchbannerbyid);
+
 router.patch("/toggle-status",bannerController.toggleBannerStatus);
 
-router.get("/getbannerbyid/:id",bannerController.fetchbannerbyid),
+
 router.delete("/deletebannerbyid/:id",bannerController.deletebannerbyid),
 
 

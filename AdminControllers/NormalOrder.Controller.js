@@ -2,16 +2,27 @@ const NorOrder=require("../Models/NormalOrder");
 const {Op}=require("sequelize")
 const asynHandler = require("../middlewares/errorHandler");
 const logger = require("../utils/logger");
+const User = require("../Models/User")
+const Rider = require("../Models/Rider"); 
 const { getNorOrderIdBySchema, NorOrderDeleteSchema, NorOrderSearchSchema } = require("../utils/validation");
 
 const getAllNorOrders = asynHandler(async (req, res, next) => {
-  const { status } = req.params;
+  const { store_id, status } = req.params;
 
   // Define the valid statuses
   const validStatuses = ['Pending', 'Processing', 'Completed', 'Cancelled', 'On Route'];
 
   try {
-    // Check if the provided status is valid
+    // Validate store_id
+    if (!store_id) {
+      return res.status(400).json({
+        ResponseCode: "400",
+        Result: "false",
+        ResponseMsg: "store_id is required.",
+      });
+    }
+
+    // Validate status
     if (!status || !validStatuses.includes(status)) {
       return res.status(400).json({
         ResponseCode: "400",
@@ -20,14 +31,31 @@ const getAllNorOrders = asynHandler(async (req, res, next) => {
       });
     }
 
-    // Fetch orders where the status matches the provided value
-    const NorOrders = await NorOrder.findAll({ where: { status } });
+    // Fetch orders with user details using include
+    const NorOrders = await NorOrder.findAll({
+      where: { store_id, status },
+      include: [
+        {
+          model: User,  // Assuming User is the correct model name
+          as: "user",   // Alias must match the one defined in the relationship
+          attributes: ["id", "name"], // Select only needed fields
+        },
+        
+          {
+            model: Rider,  
+            attributes: ["id", "title"], 
+            as:"riders"
+          }
+        
+        
+      ],
+    });
 
-    logger.info(`Successfully fetched orders with status: ${status}`);
+    logger.info(`Successfully fetched orders for store_id: ${store_id} with status: ${status}`);
     res.status(200).json({
       ResponseCode: "200",
       Result: "true",
-      ResponseMsg: `Fetched orders with status: ${status}`,
+      ResponseMsg: `Fetched orders for store_id: ${store_id} with status: ${status}`,
       data: NorOrders,
     });
   } catch (error) {
@@ -40,6 +68,7 @@ const getAllNorOrders = asynHandler(async (req, res, next) => {
     });
   }
 });
+
 
 
 

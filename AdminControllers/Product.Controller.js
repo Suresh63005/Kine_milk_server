@@ -21,6 +21,7 @@ const upsertProduct = async (req, res) => {
       discount,
       out_of_stock,
       subscription_required,
+      weight
     } = req.body;
 
     console.log("Request body:", req.body);
@@ -35,7 +36,8 @@ const upsertProduct = async (req, res) => {
       !mrp_price ||
       !discount ||
       !out_of_stock ||
-      !subscription_required
+      !subscription_required ||
+      !weight
     ) {
       return res.status(400).json({
         ResponseCode: "400",
@@ -45,8 +47,7 @@ const upsertProduct = async (req, res) => {
     }
 
     let imageUrl = null;
-    let extraImageUrls = [];
-
+ 
     if (req.files?.img) {
       imageUrl = await uploadToS3(req.files.img[0], "images");
     }
@@ -80,6 +81,7 @@ const upsertProduct = async (req, res) => {
         discount,
         out_of_stock,
         subscription_required,
+        weight
       });
 
       // Clear existing images
@@ -115,6 +117,7 @@ const upsertProduct = async (req, res) => {
         discount,
         out_of_stock,
         subscription_required,
+        weight
       });
 
       // Add extra images if any

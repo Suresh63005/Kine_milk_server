@@ -74,6 +74,7 @@ const FetchAllInstantDeliveryOrdersByStatus = asyncHandler(async (req, res) => {
                   "normal_price",
                   "mrp_price",
                   "img",
+                  "weight"
                 ],
               },
             ],
@@ -216,6 +217,7 @@ const ViewOrderDetails = asyncHandler(async (req, res) => {
                 "normal_price",
                 "mrp_price",
                 "img",
+                "weight"
               ],
             },
           ],
