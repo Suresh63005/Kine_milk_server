@@ -46,6 +46,10 @@ const Rider = sequelize.define(
       type: DataTypes.INTEGER,
       allowNull: false,
     },
+    one_subscription: {
+      type: DataTypes.TEXT,
+      allowNull: true,
+    },
   },
   { tableName: "tbl_rider", timestamps: true, paranoid: true }
 );

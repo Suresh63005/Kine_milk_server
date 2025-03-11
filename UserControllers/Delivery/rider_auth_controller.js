@@ -157,5 +157,93 @@ const DeleteRiderProfile = asyncHandler(async (req, res) => {
   }
 });
 
+const UpdateOneSignalSubscription = asyncHandler(async(req,res)=>{
+  console.log("Decoded User: ", req.user);
+  const riderId = req.user?.riderId;
+  const {one_subscription}=req.body;
+  
+  if (!riderId) {
+    return res.status(401).json({
+      ResponseCode: "401",
+      Result: "false",
+      ResponseMsg: "Unauthorized, rider not found",
+    });
+  }
 
-module.exports = { VerifyRiderMobile,EditRiderProfile,DeleteRiderProfile };
+  if (!one_subscription) {
+    return res.status(400).json({
+        ResponseCode: "400",
+        Result: "false",
+        ResponseMsg: "OneSignal subscription is required",
+    });
+  }
+  try {
+    const rider = await Rider.findByPk(riderId)
+    if(!rider){
+      return res.status(404).json({
+        ResponseCode:"404",
+        Result:"false",
+        ResponseMsg:"Rider Not Found"
+      })
+    }
+    await rider.update({one_subscription})
+    return res.status(200).json({
+      ResponseCode:"200",
+      Result:"true",
+      ResponseMsg:"OneSignal subscription updateed successfully"
+    })
+  } catch (error) {
+    console.error("Error updating OneSignal subscription:", error);
+    return res.status(500).json({
+      ResponseCode: "500",
+      Result: "false",
+      ResponseMsg: "Internal server error: " + error.message,
+    })
+  }
+})
+
+const RemoveOneSignalId = asyncHandler(async(req,res)=>{
+  console.log("Decoded User: ", req.user);
+  const riderId = req.user?.riderId;
+  
+  if (!riderId) {
+    return res.status(401).json({
+      ResponseCode: "401",
+      Result: "false",
+      ResponseMsg: "Unauthorized, rider not found",
+    });
+  }
+  try {
+    const rider = await Rider.findByPk(riderId);
+    if(!rider){
+      return res.status(404).json({
+        ResponseCode:"404",
+        Result:"false",
+        ResponseMsg:"Rider not found"
+      })
+    }
+    if(!rider.one_subscription){
+      return res.status(200).json({
+        ResponseCode:"200",
+        Result:"true",
+        ResponseMsg:"OneSignal subscription is already removed"
+      })
+    }
+    await user.update({one_subscription:null});
+    return res.status(200).json({
+      ResponseCode:"200",
+      Result:"true",
+      ResponseMsg:"OneSignal Subscription removed successfully"
+    })
+  } catch (error) {
+    console.error("Error removing OneSignal ID:", error);
+      return res.status(500).json({
+        ResponseCode: "500",
+        Result: "false",
+        ResponseMsg: "Internal server error: " + error.message,
+      }); 
+  }
+})
+
+
+module.exports = { VerifyRiderMobile,EditRiderProfile,DeleteRiderProfile,UpdateOneSignalSubscription,RemoveOneSignalId };
