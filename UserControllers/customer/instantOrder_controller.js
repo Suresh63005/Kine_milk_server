@@ -8,6 +8,8 @@ const NormalOrder = require("../../Models/NormalOrder");
 const NormalOrderProduct = require("../../Models/NormalOrderProduct");
 const Notification = require("../../Models/Notification");
 const User = require("../../Models/User");
+const ProductReview = require("../../Models/ProductReview");
+const Address = require("../../Models/Address");
 
 
 const instantOrder =  async (req, res) => {
@@ -179,7 +181,15 @@ const instantOrder =  async (req, res) => {
               {
                 model: Product,
                 as: "ProductDetails", // Ensure 'productDetails' alias is correct in the model associations
-                attributes: ["id", "title","img","subscribe_price", "description"] // Specify the fields you need
+                attributes: ["id", "title","img","subscribe_price", "description"] ,// Specify the fields you need
+                include:[
+
+                  {
+                    model:ProductReview,
+                    as:"ProductReviews",
+                    attributes:["id","rating","review","createdAt"]
+                  }
+                ]
               }
             ],
             attributes:["pquantity",]
@@ -206,43 +216,79 @@ const instantOrder =  async (req, res) => {
   };
 
   const getOrderDetails = async (req, res) => {
+    const uid = req.user.userId;
+  
+    // Check if userId exists
+    if (!uid) {
+      return res.status(401).json({
+        ResponseCode: "401",
+        Result: "false",
+        ResponseMsg: "Unauthorized: User not found!",
+      });
+    }
+  
     try {
       const { id } = req.params;
   
-      
-      const order = await NormalOrder.findOne({ where: { id } });
-
-      const orderDetails  = await NormalOrder.findOne({
-        where: { id },
+      // Combine both queries in one to reduce database calls
+      const order = await NormalOrder.findOne({
+        where: { id, uid: uid },
         include: [
           {
+            model: User,
+            as: "user",
+            attributes: ["id", "name", "mobile", "email"],
+            include: [
+              {
+                model: Address,
+                as: "addresses",
+                attributes: [
+                  "id",
+                  "uid",
+                  "address",
+                  "landmark",
+                  "r_instruction",
+                  "a_type",
+                  "a_lat",
+                  "a_long",
+                ],
+              },
+            ],
+          },
+          {
             model: NormalOrderProduct,
-            as: "NormalProducts", 
+            as: "NormalProducts",
             include: [
               {
                 model: Product,
-                as: "ProductDetails", 
-              }
+                as: "ProductDetails",
+              },
             ],
-            
-          }
+          },
         ],
-        order: [["createdAt", "DESC"]], 
-        
+        order: [["createdAt", "DESC"]],
       });
   
+      // Check if order exists
       if (!order) {
-        return res.status(404).json({ success: false, message: "Order not found" });
+        return res.status(404).json({
+          ResponseCode: "404",
+          Result: "false",
+          ResponseMsg: "Order not found",
+        });
       }
   
+      // Return successful response
       res.status(200).json({
         ResponseCode: "200",
         Result: "true",
         ResponseMsg: "Instant Order details fetched successfully!",
-        orderDetails
+        orderDetails: order,
       });
+  
     } catch (error) {
-      console.error("Error fetching order details:", error);
+      console.error("Error fetching order details:", error.message);
+  
       res.status(500).json({
         ResponseCode: "500",
         Result: "false",
@@ -251,8 +297,7 @@ const instantOrder =  async (req, res) => {
       });
     }
   };
-
-
+  
   const cancelOrder = async (req, res) => {
     try {
       const { id } = req.body;

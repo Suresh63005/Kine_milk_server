@@ -115,7 +115,11 @@ User.hasMany(SubscribeOrder, { as: "suborders", foreignKey: "uid" });
 ProductImage.belongsTo(Product,{foreignKey:'product_id',as:'product'})
 
 ProductReivew.belongsTo(Product, { foreignKey: 'product_id', as: 'product' });
-
+Product.hasMany(ProductReivew, {
+    foreignKey: 'product_id',
+    as: 'ProductReviews'
+  });
+  
 User.hasMany(ProductReivew, { foreignKey: "user_id", as: "UserReviews" });
 ProductReivew.belongsTo(User, { foreignKey: "user_id", as: "UserDetails" });
 
