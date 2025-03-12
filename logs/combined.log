@@ -1,0 +1,223 @@
+{"level":"error","message":"Error fetching NormalOrders: Rider is not associated to NormalOrder!","name":"SequelizeEagerLoadingError","service":"kine_milk_server","stack":"SequelizeEagerLoadingError: Rider is not associated to NormalOrder!\n    at NormalOrder._getIncludedAssociation (C:\\Akhil Diddi\\KINE_MILK\\Kine_milk_server\\node_modules\\sequelize\\lib\\model.js:565:13)\n    at NormalOrder._validateIncludedElement (C:\\Akhil Diddi\\KINE_MILK\\Kine_milk_server\\node_modules\\sequelize\\lib\\model.js:502:53)\n    at C:\\Akhil Diddi\\KINE_MILK\\Kine_milk_server\\node_modules\\sequelize\\lib\\model.js:421:37\n    at Array.map (<anonymous>)\n    at NormalOrder._validateIncludedElements (C:\\Akhil Diddi\\KINE_MILK\\Kine_milk_server\\node_modules\\sequelize\\lib\\model.js:417:39)\n    at NormalOrder.findAll (C:\\Akhil Diddi\\KINE_MILK\\Kine_milk_server\\node_modules\\sequelize\\lib\\model.js:1124:12)\n    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)\n    at async C:\\Akhil Diddi\\KINE_MILK\\Kine_milk_server\\AdminControllers\\NormalOrder.Controller.js:35:23","timestamp":"2025-03-11T07:19:14.264Z"}
+{"level":"error","message":"Error fetching NormalOrders: Rider is not associated to NormalOrder!","name":"SequelizeEagerLoadingError","service":"kine_milk_server","stack":"SequelizeEagerLoadingError: Rider is not associated to NormalOrder!\n    at NormalOrder._getIncludedAssociation (C:\\Akhil Diddi\\KINE_MILK\\Kine_milk_server\\node_modules\\sequelize\\lib\\model.js:565:13)\n    at NormalOrder._validateIncludedElement (C:\\Akhil Diddi\\KINE_MILK\\Kine_milk_server\\node_modules\\sequelize\\lib\\model.js:502:53)\n    at C:\\Akhil Diddi\\KINE_MILK\\Kine_milk_server\\node_modules\\sequelize\\lib\\model.js:421:37\n    at Array.map (<anonymous>)\n    at NormalOrder._validateIncludedElements (C:\\Akhil Diddi\\KINE_MILK\\Kine_milk_server\\node_modules\\sequelize\\lib\\model.js:417:39)\n    at NormalOrder.findAll (C:\\Akhil Diddi\\KINE_MILK\\Kine_milk_server\\node_modules\\sequelize\\lib\\model.js:1124:12)\n    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)\n    at async C:\\Akhil Diddi\\KINE_MILK\\Kine_milk_server\\AdminControllers\\NormalOrder.Controller.js:35:23","timestamp":"2025-03-11T07:19:14.284Z"}
+{"level":"error","message":"Error fetching NormalOrders: Rider is not associated to NormalOrder!","name":"SequelizeEagerLoadingError","service":"kine_milk_server","stack":"SequelizeEagerLoadingError: Rider is not associated to NormalOrder!\n    at NormalOrder._getIncludedAssociation (C:\\Akhil Diddi\\KINE_MILK\\Kine_milk_server\\node_modules\\sequelize\\lib\\model.js:565:13)\n    at NormalOrder._validateIncludedElement (C:\\Akhil Diddi\\KINE_MILK\\Kine_milk_server\\node_modules\\sequelize\\lib\\model.js:502:53)\n    at C:\\Akhil Diddi\\KINE_MILK\\Kine_milk_server\\node_modules\\sequelize\\lib\\model.js:421:37\n    at Array.map (<anonymous>)\n    at NormalOrder._validateIncludedElements (C:\\Akhil Diddi\\KINE_MILK\\Kine_milk_server\\node_modules\\sequelize\\lib\\model.js:417:39)\n    at NormalOrder.findAll (C:\\Akhil Diddi\\KINE_MILK\\Kine_milk_server\\node_modules\\sequelize\\lib\\model.js:1124:12)\n    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)\n    at async C:\\Akhil Diddi\\KINE_MILK\\Kine_milk_server\\AdminControllers\\NormalOrder.Controller.js:35:23","timestamp":"2025-03-11T07:19:16.897Z"}
+{"level":"error","message":"Error fetching NormalOrders: Rider is not associated to NormalOrder!","name":"SequelizeEagerLoadingError","service":"kine_milk_server","stack":"SequelizeEagerLoadingError: Rider is not associated to NormalOrder!\n    at NormalOrder._getIncludedAssociation (C:\\Akhil Diddi\\KINE_MILK\\Kine_milk_server\\node_modules\\sequelize\\lib\\model.js:565:13)\n    at NormalOrder._validateIncludedElement (C:\\Akhil Diddi\\KINE_MILK\\Kine_milk_server\\node_modules\\sequelize\\lib\\model.js:502:53)\n    at C:\\Akhil Diddi\\KINE_MILK\\Kine_milk_server\\node_modules\\sequelize\\lib\\model.js:421:37\n    at Array.map (<anonymous>)\n    at NormalOrder._validateIncludedElements (C:\\Akhil Diddi\\KINE_MILK\\Kine_milk_server\\node_modules\\sequelize\\lib\\model.js:417:39)\n    at NormalOrder.findAll (C:\\Akhil Diddi\\KINE_MILK\\Kine_milk_server\\node_modules\\sequelize\\lib\\model.js:1124:12)\n    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)\n    at async C:\\Akhil Diddi\\KINE_MILK\\Kine_milk_server\\AdminControllers\\NormalOrder.Controller.js:35:23","timestamp":"2025-03-11T07:19:16.906Z"}
+{"level":"info","message":"Successfully fetched orders for store_id: 17baa262-d189-41db-9bef-0c44bb3fcf58 with status: Pending","service":"kine_milk_server","timestamp":"2025-03-11T07:31:40.113Z"}
+{"level":"info","message":"Successfully fetched orders for store_id: 17baa262-d189-41db-9bef-0c44bb3fcf58 with status: Pending","service":"kine_milk_server","timestamp":"2025-03-11T07:31:40.230Z"}
+{"level":"error","message":"Internal Server Error","service":"kine_milk_server","timestamp":"2025-03-11T07:34:31.841Z"}
+{"level":"error","message":"Internal Server Error","service":"kine_milk_server","timestamp":"2025-03-11T07:35:30.221Z"}
+{"level":"info","message":"FAQ created successfully","service":"kine_milk_server","timestamp":"2025-03-11T09:31:54.342Z"}
+{"level":"info","message":"sucessfully get all Faq's","service":"kine_milk_server","timestamp":"2025-03-11T09:31:56.513Z"}
+{"level":"info","message":"sucessfully get all Faq's","service":"kine_milk_server","timestamp":"2025-03-11T09:31:56.575Z"}
+{"level":"info","message":"sucessfully get all Faq's","service":"kine_milk_server","timestamp":"2025-03-11T09:32:12.787Z"}
+{"level":"info","message":"sucessfully get all Faq's","service":"kine_milk_server","timestamp":"2025-03-11T09:32:12.821Z"}
+{"level":"error","message":"ID must be a number.","service":"kine_milk_server","timestamp":"2025-03-11T09:33:58.092Z"}
+{"level":"error","message":"ID must be a number.","service":"kine_milk_server","timestamp":"2025-03-11T09:34:02.590Z"}
+{"level":"error","message":"ID must be a number.","service":"kine_milk_server","timestamp":"2025-03-11T09:34:02.599Z"}
+{"level":"info","message":"sucessfully get all Faq's","service":"kine_milk_server","timestamp":"2025-03-11T09:34:04.664Z"}
+{"level":"info","message":"sucessfully get all Faq's","service":"kine_milk_server","timestamp":"2025-03-11T09:34:04.712Z"}
+{"level":"error","message":"ID must be a number.","service":"kine_milk_server","timestamp":"2025-03-11T09:34:06.439Z"}
+{"level":"error","message":"ID must be a number.","service":"kine_milk_server","timestamp":"2025-03-11T09:34:06.444Z"}
+{"level":"info","message":"Faq found","service":"kine_milk_server","timestamp":"2025-03-11T09:35:12.776Z"}
+{"level":"info","message":"Faq found","service":"kine_milk_server","timestamp":"2025-03-11T09:35:12.826Z"}
+{"level":"info","message":"sucessfully get all Faq's","service":"kine_milk_server","timestamp":"2025-03-11T09:35:21.762Z"}
+{"level":"info","message":"sucessfully get all Faq's","service":"kine_milk_server","timestamp":"2025-03-11T09:35:21.800Z"}
+{"level":"info","message":"Faq soft-deleted","service":"kine_milk_server","timestamp":"2025-03-11T09:35:32.989Z"}
+{"level":"error","message":"Faq not found","service":"kine_milk_server","timestamp":"2025-03-11T09:35:49.870Z"}
+{"level":"error","message":"Faq not found","service":"kine_milk_server","timestamp":"2025-03-11T09:35:49.923Z"}
+{"level":"info","message":"sucessfully get all Faq's","service":"kine_milk_server","timestamp":"2025-03-11T09:39:44.840Z"}
+{"level":"info","message":"sucessfully get all Faq's","service":"kine_milk_server","timestamp":"2025-03-11T09:39:44.885Z"}
+{"level":"info","message":"sucessfully get all Faq's","service":"kine_milk_server","timestamp":"2025-03-11T09:40:17.171Z"}
+{"level":"info","message":"sucessfully get all Faq's","service":"kine_milk_server","timestamp":"2025-03-11T09:40:17.201Z"}
+{"level":"info","message":"sucessfully get all Faq's","service":"kine_milk_server","timestamp":"2025-03-11T09:40:19.679Z"}
+{"level":"info","message":"sucessfully get all Faq's","service":"kine_milk_server","timestamp":"2025-03-11T09:40:19.713Z"}
+{"level":"info","message":"sucessfully get all Faq's","service":"kine_milk_server","timestamp":"2025-03-11T09:40:28.004Z"}
+{"level":"info","message":"sucessfully get all Faq's","service":"kine_milk_server","timestamp":"2025-03-11T09:40:28.030Z"}
+{"level":"info","message":"sucessfully get all Faq's","service":"kine_milk_server","timestamp":"2025-03-11T09:40:38.514Z"}
+{"level":"info","message":"sucessfully get all Faq's","service":"kine_milk_server","timestamp":"2025-03-11T09:40:38.544Z"}
+{"level":"info","message":"sucessfully get all Faq's","service":"kine_milk_server","timestamp":"2025-03-11T09:41:30.018Z"}
+{"level":"info","message":"sucessfully get all Faq's","service":"kine_milk_server","timestamp":"2025-03-11T09:41:30.045Z"}
+{"level":"info","message":"sucessfully get all Faq's","service":"kine_milk_server","timestamp":"2025-03-11T09:41:35.209Z"}
+{"level":"info","message":"sucessfully get all Faq's","service":"kine_milk_server","timestamp":"2025-03-11T09:41:35.239Z"}
+{"level":"info","message":"FAQ created successfully","service":"kine_milk_server","timestamp":"2025-03-11T09:42:03.657Z"}
+{"level":"info","message":"sucessfully get all Faq's","service":"kine_milk_server","timestamp":"2025-03-11T09:42:05.760Z"}
+{"level":"info","message":"sucessfully get all Faq's","service":"kine_milk_server","timestamp":"2025-03-11T09:42:05.792Z"}
+{"level":"info","message":"Faq soft-deleted","service":"kine_milk_server","timestamp":"2025-03-11T09:42:08.918Z"}
+{"level":"info","message":"FAQ created successfully","service":"kine_milk_server","timestamp":"2025-03-11T09:42:16.643Z"}
+{"level":"info","message":"sucessfully get all Faq's","service":"kine_milk_server","timestamp":"2025-03-11T09:42:18.729Z"}
+{"level":"info","message":"sucessfully get all Faq's","service":"kine_milk_server","timestamp":"2025-03-11T09:42:18.763Z"}
+{"level":"error","message":"Internal Server Error","service":"kine_milk_server","timestamp":"2025-03-11T09:42:21.953Z"}
+{"level":"error","message":"Internal Server Error","service":"kine_milk_server","timestamp":"2025-03-11T09:42:59.417Z"}
+{"level":"error","message":"Internal Server Error","service":"kine_milk_server","timestamp":"2025-03-11T09:43:19.470Z"}
+{"level":"error","message":"Internal Server Error","service":"kine_milk_server","timestamp":"2025-03-11T09:43:56.732Z"}
+{"level":"error","message":"Internal Server Error","service":"kine_milk_server","timestamp":"2025-03-11T09:44:33.133Z"}
+{"level":"error","message":"Internal Server Error","service":"kine_milk_server","timestamp":"2025-03-11T09:45:00.831Z"}
+{"level":"error","message":"Internal Server Error","service":"kine_milk_server","timestamp":"2025-03-11T09:45:24.407Z"}
+{"level":"error","message":"Internal Server Error","service":"kine_milk_server","timestamp":"2025-03-11T09:46:44.591Z"}
+{"level":"error","message":"Internal Server Error","service":"kine_milk_server","timestamp":"2025-03-11T09:47:01.211Z"}
+{"level":"info","message":"Successfully retrieved all coupons","service":"kine_milk_server","timestamp":"2025-03-11T10:30:56.777Z"}
+{"level":"info","message":"Successfully retrieved all coupons","service":"kine_milk_server","timestamp":"2025-03-11T10:30:56.838Z"}
+{"level":"info","message":"successfully get all products","service":"kine_milk_server","timestamp":"2025-03-11T10:32:24.098Z"}
+{"level":"info","message":"successfully get all products","service":"kine_milk_server","timestamp":"2025-03-11T10:32:24.141Z"}
+{"level":"info","message":"successfully get all products","service":"kine_milk_server","timestamp":"2025-03-11T10:33:34.889Z"}
+{"level":"info","message":"successfully get all products","service":"kine_milk_server","timestamp":"2025-03-11T10:33:34.950Z"}
+{"level":"info","message":"Successfully retrieved all coupons","service":"kine_milk_server","timestamp":"2025-03-11T10:35:28.541Z"}
+{"level":"info","message":"Successfully retrieved all coupons","service":"kine_milk_server","timestamp":"2025-03-11T10:35:28.597Z"}
+{"level":"info","message":"successfully get all products","service":"kine_milk_server","timestamp":"2025-03-11T10:36:02.794Z"}
+{"level":"info","message":"successfully get all products","service":"kine_milk_server","timestamp":"2025-03-11T10:36:02.847Z"}
+{"level":"info","message":"successfully get all products","service":"kine_milk_server","timestamp":"2025-03-11T10:40:11.778Z"}
+{"level":"info","message":"successfully get all products","service":"kine_milk_server","timestamp":"2025-03-11T10:40:11.820Z"}
+{"level":"info","message":"successfully get all products","service":"kine_milk_server","timestamp":"2025-03-11T10:40:14.110Z"}
+{"level":"info","message":"successfully get all products","service":"kine_milk_server","timestamp":"2025-03-11T10:40:14.139Z"}
+{"level":"info","message":"successfully get all products","service":"kine_milk_server","timestamp":"2025-03-11T10:40:15.711Z"}
+{"level":"info","message":"successfully get all products","service":"kine_milk_server","timestamp":"2025-03-11T10:40:15.739Z"}
+{"level":"info","message":"successfully get all products","service":"kine_milk_server","timestamp":"2025-03-11T10:40:31.369Z"}
+{"level":"info","message":"successfully get all products","service":"kine_milk_server","timestamp":"2025-03-11T10:40:31.410Z"}
+{"level":"info","message":"Successfully retrieved all coupons","service":"kine_milk_server","timestamp":"2025-03-11T10:46:22.799Z"}
+{"level":"info","message":"Successfully retrieved all coupons","service":"kine_milk_server","timestamp":"2025-03-11T10:46:22.829Z"}
+{"level":"info","message":"sucessfully get all Faq's","service":"kine_milk_server","timestamp":"2025-03-11T10:46:56.932Z"}
+{"level":"info","message":"sucessfully get all Faq's","service":"kine_milk_server","timestamp":"2025-03-11T10:46:56.975Z"}
+{"level":"info","message":"sucessfully get all Faq's","service":"kine_milk_server","timestamp":"2025-03-11T10:47:01.104Z"}
+{"level":"info","message":"sucessfully get all Faq's","service":"kine_milk_server","timestamp":"2025-03-11T10:47:01.130Z"}
+{"level":"info","message":"sucessfully get all Faq's","service":"kine_milk_server","timestamp":"2025-03-11T10:47:02.566Z"}
+{"level":"info","message":"sucessfully get all Faq's","service":"kine_milk_server","timestamp":"2025-03-11T10:47:02.592Z"}
+{"level":"info","message":"sucessfully get all categories","service":"kine_milk_server","timestamp":"2025-03-11T10:47:35.605Z"}
+{"level":"info","message":"sucessfully get all categories","service":"kine_milk_server","timestamp":"2025-03-11T10:47:35.634Z"}
+{"level":"info","message":"successfully get all products","service":"kine_milk_server","timestamp":"2025-03-11T10:48:05.442Z"}
+{"level":"info","message":"successfully get all products","service":"kine_milk_server","timestamp":"2025-03-11T10:48:05.479Z"}
+{"level":"info","message":"successfully get all products","service":"kine_milk_server","timestamp":"2025-03-11T10:48:08.937Z"}
+{"level":"info","message":"successfully get all products","service":"kine_milk_server","timestamp":"2025-03-11T10:48:08.971Z"}
+{"level":"info","message":"successfully get all products","service":"kine_milk_server","timestamp":"2025-03-11T10:48:12.344Z"}
+{"level":"info","message":"successfully get all products","service":"kine_milk_server","timestamp":"2025-03-11T10:48:12.375Z"}
+{"level":"info","message":"successfully get all products","service":"kine_milk_server","timestamp":"2025-03-11T10:53:58.487Z"}
+{"level":"info","message":"successfully get all products","service":"kine_milk_server","timestamp":"2025-03-11T10:53:58.519Z"}
+{"level":"info","message":"Successfully retrieved all coupons","service":"kine_milk_server","timestamp":"2025-03-11T10:54:51.532Z"}
+{"level":"info","message":"Successfully retrieved all coupons","service":"kine_milk_server","timestamp":"2025-03-11T10:54:51.570Z"}
+{"level":"info","message":"successfully get all products","service":"kine_milk_server","timestamp":"2025-03-11T10:54:59.328Z"}
+{"level":"info","message":"successfully get all products","service":"kine_milk_server","timestamp":"2025-03-11T10:54:59.375Z"}
+{"level":"info","message":"successfully get all products","service":"kine_milk_server","timestamp":"2025-03-11T10:55:03.033Z"}
+{"level":"info","message":"successfully get all products","service":"kine_milk_server","timestamp":"2025-03-11T10:55:03.065Z"}
+{"level":"info","message":"Successfully retrieved all coupons","service":"kine_milk_server","timestamp":"2025-03-11T10:55:15.234Z"}
+{"level":"info","message":"Successfully retrieved all coupons","service":"kine_milk_server","timestamp":"2025-03-11T10:55:15.260Z"}
+{"0":"1","1":"7","10":"1","11":"8","12":"9","13":"-","14":"4","15":"1","16":"d","17":"b","18":"-","19":"9","2":"b","20":"b","21":"e","22":"f","23":"-","24":"0","25":"c","26":"4","27":"4","28":"b","29":"b","3":"a","30":"3","31":"f","32":"c","33":"f","34":"5","35":"8","4":"a","5":"2","6":"6","7":"2","8":"-","9":"d","level":"info","message":"Successfully fetched all riders for store_id:","service":"kine_milk_server","timestamp":"2025-03-11T10:55:18.755Z"}
+{"0":"1","1":"7","10":"1","11":"8","12":"9","13":"-","14":"4","15":"1","16":"d","17":"b","18":"-","19":"9","2":"b","20":"b","21":"e","22":"f","23":"-","24":"0","25":"c","26":"4","27":"4","28":"b","29":"b","3":"a","30":"3","31":"f","32":"c","33":"f","34":"5","35":"8","4":"a","5":"2","6":"6","7":"2","8":"-","9":"d","level":"info","message":"Successfully fetched all riders for store_id:","service":"kine_milk_server","timestamp":"2025-03-11T10:55:18.791Z"}
+{"level":"info","message":"Successfully fetched orders for store_id: 17baa262-d189-41db-9bef-0c44bb3fcf58 with status: Pending","service":"kine_milk_server","timestamp":"2025-03-11T10:55:25.828Z"}
+{"level":"info","message":"Successfully fetched orders for store_id: 17baa262-d189-41db-9bef-0c44bb3fcf58 with status: Pending","service":"kine_milk_server","timestamp":"2025-03-11T10:55:25.922Z"}
+{"level":"info","message":"Successfully fetched orders for store_id: 17baa262-d189-41db-9bef-0c44bb3fcf58 with status: Completed","service":"kine_milk_server","timestamp":"2025-03-11T10:55:27.260Z"}
+{"level":"info","message":"Successfully fetched orders for store_id: 17baa262-d189-41db-9bef-0c44bb3fcf58 with status: Completed","service":"kine_milk_server","timestamp":"2025-03-11T10:55:27.298Z"}
+{"level":"info","message":"Successfully fetched orders for store_id: 17baa262-d189-41db-9bef-0c44bb3fcf58 with status: Cancelled","service":"kine_milk_server","timestamp":"2025-03-11T10:55:28.123Z"}
+{"level":"info","message":"Successfully fetched orders for store_id: 17baa262-d189-41db-9bef-0c44bb3fcf58 with status: Cancelled","service":"kine_milk_server","timestamp":"2025-03-11T10:55:28.155Z"}
+{"level":"info","message":"Successfully fetched orders for store_id: 17baa262-d189-41db-9bef-0c44bb3fcf58 with status: Pending","service":"kine_milk_server","timestamp":"2025-03-11T10:55:30.625Z"}
+{"level":"info","message":"Successfully fetched orders for store_id: 17baa262-d189-41db-9bef-0c44bb3fcf58 with status: Pending","service":"kine_milk_server","timestamp":"2025-03-11T10:55:30.660Z"}
+{"level":"info","message":"Successfully fetched orders for store_id: 17baa262-d189-41db-9bef-0c44bb3fcf58 with status: Completed","service":"kine_milk_server","timestamp":"2025-03-11T10:55:31.448Z"}
+{"level":"info","message":"Successfully fetched orders for store_id: 17baa262-d189-41db-9bef-0c44bb3fcf58 with status: Completed","service":"kine_milk_server","timestamp":"2025-03-11T10:55:31.481Z"}
+{"level":"info","message":"Successfully fetched orders for store_id: 17baa262-d189-41db-9bef-0c44bb3fcf58 with status: Cancelled","service":"kine_milk_server","timestamp":"2025-03-11T10:55:32.484Z"}
+{"level":"info","message":"Successfully fetched orders for store_id: 17baa262-d189-41db-9bef-0c44bb3fcf58 with status: Cancelled","service":"kine_milk_server","timestamp":"2025-03-11T10:55:32.517Z"}
+{"level":"info","message":"successfully get all products","service":"kine_milk_server","timestamp":"2025-03-11T10:55:36.034Z"}
+{"level":"info","message":"successfully get all products","service":"kine_milk_server","timestamp":"2025-03-11T10:55:36.064Z"}
+{"level":"info","message":"successfully get all products","service":"kine_milk_server","timestamp":"2025-03-11T10:55:44.762Z"}
+{"level":"info","message":"successfully get all products","service":"kine_milk_server","timestamp":"2025-03-11T10:55:44.792Z"}
+{"level":"info","message":"Successfully retrieved all coupons","service":"kine_milk_server","timestamp":"2025-03-11T10:55:46.452Z"}
+{"level":"info","message":"Successfully retrieved all coupons","service":"kine_milk_server","timestamp":"2025-03-11T10:55:46.482Z"}
+{"level":"info","message":"successfully get all products","service":"kine_milk_server","timestamp":"2025-03-11T10:55:48.225Z"}
+{"level":"info","message":"successfully get all products","service":"kine_milk_server","timestamp":"2025-03-11T10:55:48.259Z"}
+{"level":"info","message":"successfully get all products","service":"kine_milk_server","timestamp":"2025-03-11T10:59:41.689Z"}
+{"level":"info","message":"successfully get all products","service":"kine_milk_server","timestamp":"2025-03-11T10:59:41.727Z"}
+{"level":"info","message":"Successfully fetched orders for store_id: 17baa262-d189-41db-9bef-0c44bb3fcf58 with status: Pending","service":"kine_milk_server","timestamp":"2025-03-11T11:01:59.818Z"}
+{"level":"info","message":"Successfully fetched orders for store_id: 17baa262-d189-41db-9bef-0c44bb3fcf58 with status: Pending","service":"kine_milk_server","timestamp":"2025-03-11T11:01:59.859Z"}
+{"level":"info","message":"successfully get all products","service":"kine_milk_server","timestamp":"2025-03-11T11:03:03.883Z"}
+{"level":"info","message":"successfully get all products","service":"kine_milk_server","timestamp":"2025-03-11T11:03:03.927Z"}
+{"level":"info","message":"Successfully retrieved all coupons","service":"kine_milk_server","timestamp":"2025-03-11T11:05:50.640Z"}
+{"level":"info","message":"successfully get all products","service":"kine_milk_server","timestamp":"2025-03-11T11:09:08.461Z"}
+{"level":"info","message":"successfully get all products","service":"kine_milk_server","timestamp":"2025-03-11T11:09:08.488Z"}
+{"level":"info","message":"successfully get all products","service":"kine_milk_server","timestamp":"2025-03-11T11:09:35.357Z"}
+{"level":"info","message":"successfully get all products","service":"kine_milk_server","timestamp":"2025-03-11T11:09:35.388Z"}
+{"level":"info","message":"successfully get all products","service":"kine_milk_server","timestamp":"2025-03-11T11:09:38.345Z"}
+{"level":"info","message":"successfully get all products","service":"kine_milk_server","timestamp":"2025-03-11T11:09:38.372Z"}
+{"level":"info","message":"successfully get all products","service":"kine_milk_server","timestamp":"2025-03-11T11:12:18.668Z"}
+{"level":"info","message":"successfully get all products","service":"kine_milk_server","timestamp":"2025-03-11T11:14:00.191Z"}
+{"level":"info","message":"Successfully retrieved all coupons","service":"kine_milk_server","timestamp":"2025-03-11T11:14:00.195Z"}
+{"level":"info","message":"successfully get all products","service":"kine_milk_server","timestamp":"2025-03-11T11:14:00.223Z"}
+{"level":"info","message":"Successfully retrieved all coupons","service":"kine_milk_server","timestamp":"2025-03-11T11:14:00.228Z"}
+{"level":"info","message":"successfully get all products","service":"kine_milk_server","timestamp":"2025-03-11T11:14:21.223Z"}
+{"level":"info","message":"Successfully retrieved all coupons","service":"kine_milk_server","timestamp":"2025-03-11T11:14:21.226Z"}
+{"level":"info","message":"Successfully retrieved all coupons","service":"kine_milk_server","timestamp":"2025-03-11T11:14:28.110Z"}
+{"level":"info","message":"Successfully retrieved all coupons","service":"kine_milk_server","timestamp":"2025-03-11T11:14:30.102Z"}
+{"level":"info","message":"Successfully retrieved all coupons","service":"kine_milk_server","timestamp":"2025-03-11T11:14:36.126Z"}
+{"level":"info","message":"successfully get all products","service":"kine_milk_server","timestamp":"2025-03-11T11:15:49.194Z"}
+{"level":"info","message":"Successfully retrieved all coupons","service":"kine_milk_server","timestamp":"2025-03-11T11:15:49.215Z"}
+{"level":"info","message":"successfully get all products","service":"kine_milk_server","timestamp":"2025-03-11T11:16:12.207Z"}
+{"level":"info","message":"Successfully retrieved all coupons","service":"kine_milk_server","timestamp":"2025-03-11T11:16:12.212Z"}
+{"level":"info","message":"successfully get all products","service":"kine_milk_server","timestamp":"2025-03-11T11:16:12.237Z"}
+{"level":"info","message":"Successfully retrieved all coupons","service":"kine_milk_server","timestamp":"2025-03-11T11:16:12.241Z"}
+{"level":"info","message":"successfully get all products","service":"kine_milk_server","timestamp":"2025-03-11T11:16:51.200Z"}
+{"level":"info","message":"Successfully retrieved all coupons","service":"kine_milk_server","timestamp":"2025-03-11T11:16:51.203Z"}
+{"level":"info","message":"successfully get all products","service":"kine_milk_server","timestamp":"2025-03-11T11:16:55.123Z"}
+{"level":"info","message":"Successfully retrieved all coupons","service":"kine_milk_server","timestamp":"2025-03-11T11:16:55.127Z"}
+{"level":"info","message":"successfully get all products","service":"kine_milk_server","timestamp":"2025-03-11T11:17:10.217Z"}
+{"level":"info","message":"Successfully retrieved all coupons","service":"kine_milk_server","timestamp":"2025-03-11T11:17:10.221Z"}
+{"level":"info","message":"successfully get all products","service":"kine_milk_server","timestamp":"2025-03-11T11:18:38.183Z"}
+{"level":"info","message":"Successfully retrieved all coupons","service":"kine_milk_server","timestamp":"2025-03-11T11:18:38.186Z"}
+{"level":"info","message":"Successfully retrieved all coupons","service":"kine_milk_server","timestamp":"2025-03-11T11:46:01.326Z"}
+{"level":"info","message":"successfully get all products","service":"kine_milk_server","timestamp":"2025-03-11T11:46:01.336Z"}
+{"level":"info","message":"successfully get all products","service":"kine_milk_server","timestamp":"2025-03-11T11:46:04.463Z"}
+{"level":"info","message":"Successfully retrieved all coupons","service":"kine_milk_server","timestamp":"2025-03-11T11:46:04.465Z"}
+{"level":"info","message":"successfully get all products","service":"kine_milk_server","timestamp":"2025-03-11T11:46:04.510Z"}
+{"level":"info","message":"Successfully retrieved all coupons","service":"kine_milk_server","timestamp":"2025-03-11T11:46:04.513Z"}
+{"level":"info","message":"successfully get all products","service":"kine_milk_server","timestamp":"2025-03-11T11:46:52.171Z"}
+{"level":"info","message":"Successfully retrieved all coupons","service":"kine_milk_server","timestamp":"2025-03-11T11:46:52.178Z"}
+{"level":"info","message":"successfully get all products","service":"kine_milk_server","timestamp":"2025-03-11T11:46:54.100Z"}
+{"level":"info","message":"Successfully retrieved all coupons","service":"kine_milk_server","timestamp":"2025-03-11T11:46:54.104Z"}
+{"level":"info","message":"successfully get all products","service":"kine_milk_server","timestamp":"2025-03-11T11:46:57.781Z"}
+{"level":"info","message":"Successfully retrieved all coupons","service":"kine_milk_server","timestamp":"2025-03-11T11:46:57.794Z"}
+{"level":"info","message":"successfully get all products","service":"kine_milk_server","timestamp":"2025-03-11T11:47:42.171Z"}
+{"level":"info","message":"Successfully retrieved all coupons","service":"kine_milk_server","timestamp":"2025-03-11T11:47:42.188Z"}
+{"level":"info","message":"Successfully retrieved all coupons","service":"kine_milk_server","timestamp":"2025-03-11T11:47:43.807Z"}
+{"level":"info","message":"successfully get all products","service":"kine_milk_server","timestamp":"2025-03-11T11:47:43.811Z"}
+{"level":"info","message":"successfully get all products","service":"kine_milk_server","timestamp":"2025-03-11T11:54:07.027Z"}
+{"level":"info","message":"Successfully retrieved all coupons","service":"kine_milk_server","timestamp":"2025-03-11T11:54:07.054Z"}
+{"level":"info","message":"successfully get all products","service":"kine_milk_server","timestamp":"2025-03-11T11:54:07.088Z"}
+{"level":"info","message":"Successfully retrieved all coupons","service":"kine_milk_server","timestamp":"2025-03-11T11:54:07.110Z"}
+{"level":"info","message":"successfully get all products","service":"kine_milk_server","timestamp":"2025-03-11T11:57:43.006Z"}
+{"level":"info","message":"Successfully retrieved all coupons","service":"kine_milk_server","timestamp":"2025-03-11T11:57:43.032Z"}
+{"level":"info","message":"successfully get all products","service":"kine_milk_server","timestamp":"2025-03-11T11:57:43.063Z"}
+{"level":"info","message":"Successfully retrieved all coupons","service":"kine_milk_server","timestamp":"2025-03-11T11:57:43.070Z"}
+{"level":"info","message":"successfully get all products","service":"kine_milk_server","timestamp":"2025-03-11T12:01:03.457Z"}
+{"level":"info","message":"Successfully retrieved all coupons","service":"kine_milk_server","timestamp":"2025-03-11T12:01:03.516Z"}
+{"level":"info","message":"successfully get all products","service":"kine_milk_server","timestamp":"2025-03-11T12:01:03.566Z"}
+{"level":"info","message":"Successfully retrieved all coupons","service":"kine_milk_server","timestamp":"2025-03-11T12:01:03.578Z"}
+{"level":"info","message":"successfully get all products","service":"kine_milk_server","timestamp":"2025-03-11T12:07:00.801Z"}
+{"level":"info","message":"Successfully retrieved all coupons","service":"kine_milk_server","timestamp":"2025-03-11T12:07:00.811Z"}
+{"level":"info","message":"successfully get all products","service":"kine_milk_server","timestamp":"2025-03-11T12:07:00.847Z"}
+{"level":"info","message":"Successfully retrieved all coupons","service":"kine_milk_server","timestamp":"2025-03-11T12:07:00.855Z"}
+{"level":"info","message":"successfully get all products","service":"kine_milk_server","timestamp":"2025-03-11T12:13:43.039Z"}
+{"level":"info","message":"Successfully retrieved all coupons","service":"kine_milk_server","timestamp":"2025-03-11T12:13:43.060Z"}
+{"level":"info","message":"successfully get all products","service":"kine_milk_server","timestamp":"2025-03-11T12:13:43.087Z"}
+{"level":"info","message":"Successfully retrieved all coupons","service":"kine_milk_server","timestamp":"2025-03-11T12:13:43.096Z"}
+{"level":"info","message":"successfully get all products","service":"kine_milk_server","timestamp":"2025-03-11T12:13:44.151Z"}
+{"level":"info","message":"Successfully retrieved all coupons","service":"kine_milk_server","timestamp":"2025-03-11T12:13:44.160Z"}
+{"level":"info","message":"successfully get all products","service":"kine_milk_server","timestamp":"2025-03-11T12:15:40.618Z"}
+{"level":"info","message":"Successfully retrieved all coupons","service":"kine_milk_server","timestamp":"2025-03-11T12:15:40.636Z"}
+{"level":"info","message":"successfully get all products","service":"kine_milk_server","timestamp":"2025-03-11T12:15:40.667Z"}
+{"level":"info","message":"Successfully retrieved all coupons","service":"kine_milk_server","timestamp":"2025-03-11T12:15:40.676Z"}
+{"level":"info","message":"successfully get all products","service":"kine_milk_server","timestamp":"2025-03-11T12:29:58.227Z"}
+{"level":"info","message":"Successfully retrieved all coupons","service":"kine_milk_server","timestamp":"2025-03-11T12:29:58.238Z"}
+{"level":"info","message":"successfully get all products","service":"kine_milk_server","timestamp":"2025-03-11T12:29:58.268Z"}
+{"level":"info","message":"Successfully retrieved all coupons","service":"kine_milk_server","timestamp":"2025-03-11T12:29:58.274Z"}
+{"level":"info","message":"successfully get all products","service":"kine_milk_server","timestamp":"2025-03-11T12:30:02.187Z"}
+{"level":"info","message":"Successfully retrieved all coupons","service":"kine_milk_server","timestamp":"2025-03-11T12:30:02.230Z"}
+{"level":"info","message":"successfully get all products","service":"kine_milk_server","timestamp":"2025-03-11T12:30:02.259Z"}
+{"level":"info","message":"Successfully retrieved all coupons","service":"kine_milk_server","timestamp":"2025-03-11T12:30:02.272Z"}
+{"level":"info","message":"successfully get all products","service":"kine_milk_server","timestamp":"2025-03-11T12:53:59.103Z"}
+{"level":"info","message":"Successfully retrieved all coupons","service":"kine_milk_server","timestamp":"2025-03-11T12:53:59.121Z"}
+{"level":"info","message":"successfully get all products","service":"kine_milk_server","timestamp":"2025-03-11T12:53:59.150Z"}
+{"level":"info","message":"Successfully retrieved all coupons","service":"kine_milk_server","timestamp":"2025-03-11T12:53:59.159Z"}
+{"level":"info","message":"successfully get all products","service":"kine_milk_server","timestamp":"2025-03-11T12:54:10.009Z"}
+{"level":"info","message":"Successfully retrieved all coupons","service":"kine_milk_server","timestamp":"2025-03-11T12:54:10.026Z"}
+{"level":"info","message":"successfully get all products","service":"kine_milk_server","timestamp":"2025-03-11T12:54:10.063Z"}
+{"level":"info","message":"Successfully retrieved all coupons","service":"kine_milk_server","timestamp":"2025-03-11T12:54:10.072Z"}
+{"level":"info","message":"successfully get all products","service":"kine_milk_server","timestamp":"2025-03-11T12:54:45.283Z"}
+{"level":"info","message":"Successfully retrieved all coupons","service":"kine_milk_server","timestamp":"2025-03-11T12:54:45.301Z"}
+{"level":"info","message":"successfully get all products","service":"kine_milk_server","timestamp":"2025-03-11T12:54:45.338Z"}
+{"level":"info","message":"Successfully retrieved all coupons","service":"kine_milk_server","timestamp":"2025-03-11T12:54:45.346Z"}
+{"level":"info","message":"Store signed in successfully","service":"kine_milk_server","timestamp":"2025-03-11T12:56:16.043Z"}

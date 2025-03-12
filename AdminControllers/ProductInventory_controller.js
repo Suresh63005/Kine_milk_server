@@ -2,16 +2,19 @@ const asynHandler = require("../middlewares/errorHandler");
 const Product = require("../Models/Product");
 const ProductInventory = require("../Models/ProductInventory");
 const Store = require("../Models/Store");
+const Coupons = require("../Models/Coupon");
+const Coupon = require("../Models/Coupon");
 
 const addInventory = async (req, res) => {
-  const { store_id, product_id, date, quantity, total } = req.body;
+  const { store_id, product_id, date, quantity, total,coupons } = req.body;
   console.log(req.body)
+  console.log(coupons,"cccccccccccccccccccoupons")
   try {
-    if (!store_id || !product_id || !date || !quantity) {
+    if (!store_id || !product_id || !date || !quantity|| !coupons) {
       return res.status(400).json({
         ResponseCode: "400",
         Result: "false",
-        ResponseMsg: "All fields (store_id, product_id, date, quantity, total) are required.",
+        ResponseMsg: "All fields (store_id, product_id, date, quantity, total,coupons) are required.",
       });
     }
     
@@ -40,6 +43,7 @@ const addInventory = async (req, res) => {
     if (inventory) {
       inventory.quantity = quantity || inventory.quantity;
       inventory.total = total || inventory.total;
+      inventory.Coupons = coupons || inventory.Coupons
       await inventory.save();
 
       return res.status(200).json({
@@ -55,6 +59,7 @@ const addInventory = async (req, res) => {
         date,
         quantity,
         total,
+        Coupons:coupons,
         status: 1
       });
 
@@ -92,18 +97,22 @@ const ProductInventoryList = asynHandler(async (req, res) => {
   try {
     const productInv = await ProductInventory.findAll({
       include: [
-        
         {
           model: Product,
           as: "inventoryProducts",
-        }
+        },
+        
       ]
     });
+
+
     res.status(200).json(productInv)
   } catch (error) {
     console.log(error)
   }
 })
+
+
 
 const toggleProductInventoryStatus=async (req,res)=>{
   const  {id ,value}=req.body;
