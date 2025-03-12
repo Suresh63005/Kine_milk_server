@@ -10,6 +10,7 @@ const Notification = require("../../Models/Notification");
 const User = require("../../Models/User");
 const ProductReview = require("../../Models/ProductReview");
 const Address = require("../../Models/Address");
+const Time = require("../../Models/Time");
 
 const generateOrderId = ()=>{
   const randomNum = Math.floor(100000 + Math.random() * 900000)
@@ -271,6 +272,11 @@ const instantOrder =  async (req, res) => {
               },
             ],
           },
+          {
+            model: Time,
+            as: "timeslot",
+            attributes:["id","mintime","maxtime"]
+          }
         ],
         order: [["createdAt", "DESC"]],
       });

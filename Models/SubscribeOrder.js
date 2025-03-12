@@ -113,7 +113,6 @@ const SubscribeOrder = sequelize.define(
     rid: {
       type: DataTypes.UUID,
       allowNull: true,
-      
     },
     wall_amt: {
       type: DataTypes.FLOAT,
