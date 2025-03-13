@@ -106,6 +106,12 @@ Product.hasMany(ProductInventory, { foreignKey: "product_id", as: "inventoryProd
 Address.belongsTo(User, { foreignKey: 'uid', as: 'user' });
 User.hasMany(Address, { foreignKey: 'uid', as: 'addresses' });
 
+NormalOrder.belongsTo(Address,{foreignKey:'address_id',as:"instOrdAddress"});
+Address.hasMany(NormalOrder,{foreignKey:'address_id',as:"instOrdAddress"});
+
+SubscribeOrder.belongsTo(Address,{foreignKey:'address_id',as:"subOrdAddress"});
+Address.hasMany(SubscribeOrder,{foreignKey:'address_id',as:"subOrdAddress"});
+
 Favorite.belongsTo(Product, { foreignKey: "pid", as: "favproducts" });
 Product.belongsTo(Favorite, { foreignKey: "pid", as: "favproducts" });
 
@@ -134,6 +140,10 @@ Rider.hasMany(NormalOrder, { foreignKey: "rid", as: "orders"});
 
 SubscribeOrder.belongsTo(Time,{foreignKey: "timeslot_id", as: "timeslots" });
 Time.hasMany(SubscribeOrder, { foreignKey: "timeslot_id", as: "timeslots" });
+
+
+NormalOrder.belongsTo(Time,{foreignKey: "timeslot_id", as: "timeslot" });
+Time.hasMany(NormalOrder, { foreignKey: "timeslot_id", as: "timeslot" });
 
 
 
