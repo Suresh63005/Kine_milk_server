@@ -99,6 +99,8 @@ sequelize
   });
 //Admin Routes
 app.use('/admin', require('./AdminRoutes/Auth_route'))
+app.use("/storedash",require("./AdminRoutes/StoreDashboard.route"))
+app.use("/admindash",require("./AdminRoutes/Dashboard.route"))
 app.use('/settings', require("./AdminRoutes/Settings.route"))
 app.use("/category",require("./AdminRoutes/Category.route"))
 app.use("/product",require("./AdminRoutes/Product.route"))

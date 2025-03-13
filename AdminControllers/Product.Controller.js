@@ -36,8 +36,8 @@ const upsertProduct = async (req, res) => {
       !mrp_price ||
       !discount ||
       !out_of_stock ||
-      !subscription_required ||
-      !weight
+      !subscription_required
+      // !weight
     ) {
       return res.status(400).json({
         ResponseCode: "400",
@@ -47,16 +47,14 @@ const upsertProduct = async (req, res) => {
     }
 
     let imageUrl = null;
+   
+
  
     if (req.files?.img) {
       imageUrl = await uploadToS3(req.files.img[0], "images");
     }
 
-    if (req.files?.extraImages) {
-      extraImageUrls = await Promise.all(
-        req.files.extraImages.map((file) => uploadToS3(file, "extra-images"))
-      );
-    }
+   
 
     let product;
     if (id) {
@@ -81,20 +79,10 @@ const upsertProduct = async (req, res) => {
         discount,
         out_of_stock,
         subscription_required,
-        weight
+        // weight
       });
 
-      // Clear existing images
-      await ProductImage.destroy({ where: { product_id: id } });
-
-      // Add new images if any
-      if (extraImageUrls.length > 0) {
-        const newImages = extraImageUrls.map((img) => ({
-          product_id: id,
-          img,
-        }));
-        await ProductImage.bulkCreate(newImages);
-      }
+     
 
       console.log("Product updated successfully:", product);
       return res.status(200).json({
@@ -117,17 +105,10 @@ const upsertProduct = async (req, res) => {
         discount,
         out_of_stock,
         subscription_required,
-        weight
+        // weight
       });
 
-      // Add extra images if any
-      if (extraImageUrls.length > 0) {
-        const newImages = extraImageUrls.map((img) => ({
-          product_id: product.id,
-          img,
-        }));
-        await ProductImage.bulkCreate(newImages);
-      }
+     
 
       console.log("Product created successfully:", product);
       return res.status(200).json({
@@ -188,38 +169,18 @@ const getProductById = asyncHandler(async (req, res) => {
 
 const deleteProduct = asyncHandler(async (req, res) => {
   const { id } = req.params;
-  const { forceDelete } = req.body;
 
-  const Product = await Product.findOne({ where: { id }, paranoid: false });
 
-  if (!Product) {
+  const product = await Product.findOne({ where: { id }, paranoid: false });
+
+  if (!product) {
     logger.error("");
     return res.status(404).json({ error: "Product not found" });
   }
 
-  if (Product.deletedAt && forceDelete !== "true") {
-    logger.error(
-      "Product is already soft-deleted. Use forceDelete=true to permanently delete it."
-    );
-    return res
-      .status(400)
-      .json({
-        error:
-          "Product is already soft-deleted. Use forceDelete=true to permanently delete it.",
-      });
-  }
-
-  if (forceDelete === "true") {
-    await Product.destroy({ force: true });
-    logger.info("Product permanently deleted successfully");
-    return res
-      .status(200)
-      .json({ message: "Product permanently deleted successfully" });
-  }
-
-  await Product.destroy();
-  logger.info("Product soft deleted successfully");
-  return res.status(200).json({ message: "Product soft deleted successfully" });
+  await Product.destroy({where:{id}});
+  logger.info("Product deleted successfully");
+  return res.status(200).json({ message: "Product deleted successfully" });
 });
 
 const searchProduct = asyncHandler(async (req, res) => {
@@ -233,13 +194,13 @@ const searchProduct = asyncHandler(async (req, res) => {
     whereClause.title = { [Sequelize.Op.like]: `%${title.trim()}%` };
   }
 
-  const Product = await Product.findAll({ where: whereClause });
+  const product = await Product.findAll({ where: whereClause });
 
-  if (Product.length === 0) {
+  if (product.length === 0) {
     logger.error("No matching admins found");
     return res.status(404).json({ error: "No matching admins found" });
   }
-  res.status(200).json(Product);
+  res.status(200).json(product);
 });
 
 const toggleproductStatus = async (req, res) => {

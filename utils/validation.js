@@ -58,7 +58,7 @@ const getCategoryByIdSchema = Joi.object({
 });
 
 const categoryDeleteSchema = Joi.object({
-  id: Joi.number().integer().required().messages({
+  id: Joi.required().messages({
     "number.base": "ID must be a number.",
     "number.integer": "ID must be an integer.",
     "any.required": "ID is required.",
