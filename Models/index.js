@@ -14,6 +14,7 @@ const ProductReivew = require("./ProductReview");
 const Review = require("./review");
 const Rider = require("./Rider");
 const Time = require("./Time")
+const Coupon = require("./Coupon")
 // const User = require("./User");
 // const PaymentList = require("./PaymentList");
 // const Coupon = require('./Coupon');
@@ -135,8 +136,10 @@ Rider.hasMany(Review, { foreignKey: "rider_id", as: "reviews" });
 Review.belongsTo(User, { foreignKey: "user_id", as: "user" });
 User.hasMany(Review, { foreignKey: "user_id", as: "reviews" });
 
+
 NormalOrder.belongsTo(Rider, {foreignKey: "rid", as: "riders" });
 Rider.hasMany(NormalOrder, { foreignKey: "rid", as: "orders"});
+
 
 SubscribeOrder.belongsTo(Time,{foreignKey: "timeslot_id", as: "timeslots" });
 Time.hasMany(SubscribeOrder, { foreignKey: "timeslot_id", as: "timeslots" });
@@ -144,6 +147,8 @@ Time.hasMany(SubscribeOrder, { foreignKey: "timeslot_id", as: "timeslots" });
 
 NormalOrder.belongsTo(Time,{foreignKey: "timeslot_id", as: "timeslot" });
 Time.hasMany(NormalOrder, { foreignKey: "timeslot_id", as: "timeslot" });
+
+
 
 
 

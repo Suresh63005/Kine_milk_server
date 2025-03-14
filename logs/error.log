@@ -49,3 +49,49 @@
 {"level":"error","message":"ID must be a number.","service":"kine_milk_server","timestamp":"2025-03-11T06:08:10.712Z"}
 {"level":"error","message":"ID must be a number.","service":"kine_milk_server","timestamp":"2025-03-11T06:08:28.465Z"}
 {"level":"error","message":"ID must be a number.","service":"kine_milk_server","timestamp":"2025-03-11T06:08:54.484Z"}
+{"level":"error","message":"Error fetching NormalOrders: Rider is not associated to NormalOrder!","name":"SequelizeEagerLoadingError","service":"kine_milk_server","stack":"SequelizeEagerLoadingError: Rider is not associated to NormalOrder!\n    at NormalOrder._getIncludedAssociation (C:\\Akhil Diddi\\KINE_MILK\\Kine_milk_server\\node_modules\\sequelize\\lib\\model.js:565:13)\n    at NormalOrder._validateIncludedElement (C:\\Akhil Diddi\\KINE_MILK\\Kine_milk_server\\node_modules\\sequelize\\lib\\model.js:502:53)\n    at C:\\Akhil Diddi\\KINE_MILK\\Kine_milk_server\\node_modules\\sequelize\\lib\\model.js:421:37\n    at Array.map (<anonymous>)\n    at NormalOrder._validateIncludedElements (C:\\Akhil Diddi\\KINE_MILK\\Kine_milk_server\\node_modules\\sequelize\\lib\\model.js:417:39)\n    at NormalOrder.findAll (C:\\Akhil Diddi\\KINE_MILK\\Kine_milk_server\\node_modules\\sequelize\\lib\\model.js:1124:12)\n    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)\n    at async C:\\Akhil Diddi\\KINE_MILK\\Kine_milk_server\\AdminControllers\\NormalOrder.Controller.js:35:23","timestamp":"2025-03-11T07:19:14.264Z"}
+{"level":"error","message":"Error fetching NormalOrders: Rider is not associated to NormalOrder!","name":"SequelizeEagerLoadingError","service":"kine_milk_server","stack":"SequelizeEagerLoadingError: Rider is not associated to NormalOrder!\n    at NormalOrder._getIncludedAssociation (C:\\Akhil Diddi\\KINE_MILK\\Kine_milk_server\\node_modules\\sequelize\\lib\\model.js:565:13)\n    at NormalOrder._validateIncludedElement (C:\\Akhil Diddi\\KINE_MILK\\Kine_milk_server\\node_modules\\sequelize\\lib\\model.js:502:53)\n    at C:\\Akhil Diddi\\KINE_MILK\\Kine_milk_server\\node_modules\\sequelize\\lib\\model.js:421:37\n    at Array.map (<anonymous>)\n    at NormalOrder._validateIncludedElements (C:\\Akhil Diddi\\KINE_MILK\\Kine_milk_server\\node_modules\\sequelize\\lib\\model.js:417:39)\n    at NormalOrder.findAll (C:\\Akhil Diddi\\KINE_MILK\\Kine_milk_server\\node_modules\\sequelize\\lib\\model.js:1124:12)\n    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)\n    at async C:\\Akhil Diddi\\KINE_MILK\\Kine_milk_server\\AdminControllers\\NormalOrder.Controller.js:35:23","timestamp":"2025-03-11T07:19:14.284Z"}
+{"level":"error","message":"Error fetching NormalOrders: Rider is not associated to NormalOrder!","name":"SequelizeEagerLoadingError","service":"kine_milk_server","stack":"SequelizeEagerLoadingError: Rider is not associated to NormalOrder!\n    at NormalOrder._getIncludedAssociation (C:\\Akhil Diddi\\KINE_MILK\\Kine_milk_server\\node_modules\\sequelize\\lib\\model.js:565:13)\n    at NormalOrder._validateIncludedElement (C:\\Akhil Diddi\\KINE_MILK\\Kine_milk_server\\node_modules\\sequelize\\lib\\model.js:502:53)\n    at C:\\Akhil Diddi\\KINE_MILK\\Kine_milk_server\\node_modules\\sequelize\\lib\\model.js:421:37\n    at Array.map (<anonymous>)\n    at NormalOrder._validateIncludedElements (C:\\Akhil Diddi\\KINE_MILK\\Kine_milk_server\\node_modules\\sequelize\\lib\\model.js:417:39)\n    at NormalOrder.findAll (C:\\Akhil Diddi\\KINE_MILK\\Kine_milk_server\\node_modules\\sequelize\\lib\\model.js:1124:12)\n    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)\n    at async C:\\Akhil Diddi\\KINE_MILK\\Kine_milk_server\\AdminControllers\\NormalOrder.Controller.js:35:23","timestamp":"2025-03-11T07:19:16.897Z"}
+{"level":"error","message":"Error fetching NormalOrders: Rider is not associated to NormalOrder!","name":"SequelizeEagerLoadingError","service":"kine_milk_server","stack":"SequelizeEagerLoadingError: Rider is not associated to NormalOrder!\n    at NormalOrder._getIncludedAssociation (C:\\Akhil Diddi\\KINE_MILK\\Kine_milk_server\\node_modules\\sequelize\\lib\\model.js:565:13)\n    at NormalOrder._validateIncludedElement (C:\\Akhil Diddi\\KINE_MILK\\Kine_milk_server\\node_modules\\sequelize\\lib\\model.js:502:53)\n    at C:\\Akhil Diddi\\KINE_MILK\\Kine_milk_server\\node_modules\\sequelize\\lib\\model.js:421:37\n    at Array.map (<anonymous>)\n    at NormalOrder._validateIncludedElements (C:\\Akhil Diddi\\KINE_MILK\\Kine_milk_server\\node_modules\\sequelize\\lib\\model.js:417:39)\n    at NormalOrder.findAll (C:\\Akhil Diddi\\KINE_MILK\\Kine_milk_server\\node_modules\\sequelize\\lib\\model.js:1124:12)\n    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)\n    at async C:\\Akhil Diddi\\KINE_MILK\\Kine_milk_server\\AdminControllers\\NormalOrder.Controller.js:35:23","timestamp":"2025-03-11T07:19:16.906Z"}
+{"level":"error","message":"Internal Server Error","service":"kine_milk_server","timestamp":"2025-03-11T07:34:31.841Z"}
+{"level":"error","message":"Internal Server Error","service":"kine_milk_server","timestamp":"2025-03-11T07:35:30.221Z"}
+{"level":"error","message":"ID must be a number.","service":"kine_milk_server","timestamp":"2025-03-11T09:33:58.092Z"}
+{"level":"error","message":"ID must be a number.","service":"kine_milk_server","timestamp":"2025-03-11T09:34:02.590Z"}
+{"level":"error","message":"ID must be a number.","service":"kine_milk_server","timestamp":"2025-03-11T09:34:02.599Z"}
+{"level":"error","message":"ID must be a number.","service":"kine_milk_server","timestamp":"2025-03-11T09:34:06.439Z"}
+{"level":"error","message":"ID must be a number.","service":"kine_milk_server","timestamp":"2025-03-11T09:34:06.444Z"}
+{"level":"error","message":"Faq not found","service":"kine_milk_server","timestamp":"2025-03-11T09:35:49.870Z"}
+{"level":"error","message":"Faq not found","service":"kine_milk_server","timestamp":"2025-03-11T09:35:49.923Z"}
+{"level":"error","message":"Internal Server Error","service":"kine_milk_server","timestamp":"2025-03-11T09:42:21.953Z"}
+{"level":"error","message":"Internal Server Error","service":"kine_milk_server","timestamp":"2025-03-11T09:42:59.417Z"}
+{"level":"error","message":"Internal Server Error","service":"kine_milk_server","timestamp":"2025-03-11T09:43:19.470Z"}
+{"level":"error","message":"Internal Server Error","service":"kine_milk_server","timestamp":"2025-03-11T09:43:56.732Z"}
+{"level":"error","message":"Internal Server Error","service":"kine_milk_server","timestamp":"2025-03-11T09:44:33.133Z"}
+{"level":"error","message":"Internal Server Error","service":"kine_milk_server","timestamp":"2025-03-11T09:45:00.831Z"}
+{"level":"error","message":"Internal Server Error","service":"kine_milk_server","timestamp":"2025-03-11T09:45:24.407Z"}
+{"level":"error","message":"Internal Server Error","service":"kine_milk_server","timestamp":"2025-03-11T09:46:44.591Z"}
+{"level":"error","message":"Internal Server Error","service":"kine_milk_server","timestamp":"2025-03-11T09:47:01.211Z"}
+{"level":"error","message":"ID must be a number.","service":"kine_milk_server","timestamp":"2025-03-12T09:39:04.249Z"}
+{"level":"error","message":"ID must be a number.","service":"kine_milk_server","timestamp":"2025-03-12T09:39:21.918Z"}
+{"level":"error","message":"Internal Server Error","service":"kine_milk_server","timestamp":"2025-03-12T10:03:25.583Z"}
+{"level":"error","message":"Internal Server Error","service":"kine_milk_server","timestamp":"2025-03-12T10:03:58.519Z"}
+{"level":"error","message":"Internal Server Error","service":"kine_milk_server","timestamp":"2025-03-12T10:04:51.797Z"}
+{"level":"error","message":"Internal Server Error","service":"kine_milk_server","timestamp":"2025-03-12T10:06:12.854Z"}
+{"level":"error","message":"Internal Server Error","service":"kine_milk_server","timestamp":"2025-03-12T10:08:33.085Z"}
+{"level":"error","message":"Internal Server Error","service":"kine_milk_server","timestamp":"2025-03-12T10:09:00.956Z"}
+{"level":"error","message":"Product not found","service":"kine_milk_server","timestamp":"2025-03-12T10:11:48.046Z"}
+{"level":"error","message":"Product not found","service":"kine_milk_server","timestamp":"2025-03-12T10:11:48.108Z"}
+{"level":"error","message":"Invalid password","service":"kine_milk_server","timestamp":"2025-03-12T10:44:27.922Z"}
+{"level":"error","message":"Invalid password","service":"kine_milk_server","timestamp":"2025-03-12T10:44:32.221Z"}
+{"level":"error","message":"Invalid  password","service":"kine_milk_server","timestamp":"2025-03-12T12:44:09.142Z"}
+{"level":"error","message":"Invalid  password","service":"kine_milk_server","timestamp":"2025-03-13T05:42:23.185Z"}
+{"level":"error","message":"Invalid  password","service":"kine_milk_server","timestamp":"2025-03-13T05:42:49.833Z"}
+{"level":"error","message":"Invalid  password","service":"kine_milk_server","timestamp":"2025-03-13T05:42:52.775Z"}
+{"level":"error","message":"Invalid  password","service":"kine_milk_server","timestamp":"2025-03-13T05:42:53.001Z"}
+{"level":"error","message":"Invalid  password","service":"kine_milk_server","timestamp":"2025-03-13T05:42:59.631Z"}
+{"level":"error","message":"Invalid password","service":"kine_milk_server","timestamp":"2025-03-13T06:40:52.817Z"}
+{"level":"error","message":"Invalid password","service":"kine_milk_server","timestamp":"2025-03-13T16:21:19.670Z"}
+{"level":"error","message":"Invalid password","service":"kine_milk_server","timestamp":"2025-03-13T16:21:24.102Z"}
+{"level":"error","message":"Invalid password","service":"kine_milk_server","timestamp":"2025-03-14T04:32:33.444Z"}
+{"level":"error","message":"Invalid password","service":"kine_milk_server","timestamp":"2025-03-14T04:32:51.406Z"}
+{"level":"error","message":"Invalid password","service":"kine_milk_server","timestamp":"2025-03-14T04:32:59.017Z"}

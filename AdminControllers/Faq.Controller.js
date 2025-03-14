@@ -15,7 +15,8 @@ const upsertFaq = asynHandler(async (req, res) => {
     //   });
     // }
   
-    const { id, question, answer, status, store_id } = req.body;
+    const { id, question, answer, status } = req.body;
+    const {store_id} = req.params
 
       if (id) {
         const faq = await Faq.findByPk(id);
@@ -138,34 +139,47 @@ const searchFaq=asynHandler(async(req,res)=>{
         res.status(200).json(Faq)
 });
 
-const toggleFaqStatus = asynHandler(async (req, res) => {
+// Adjust based on your Sequelize setup
+const toggleFaqStatus = async (req, res) => {
+  try {
     console.log("Request received:", req.body);
-    const { error } = FaqStatusSchema.validate(req.body, { abortEarly: false });
-    if (error) {
+
+    const { id, value } = req.body;
+
+    if (!id || value === undefined) {
       return res.status(400).json({
         ResponseCode: "400",
         Result: "false",
-        ResponseMsg: error.details.map((detail) => detail.message).join(", "),
+        error: "FAQ ID and status value are required.",
       });
     }
-  
-    const { id, value } = req.body;
-      const faq = await Faq .findByPk(id);
-  
-      if (!faq) {
-        console.log("faq not found");
-        return res.status(404).json({ message: "faq not found." });
-      }
-  
-      faq.status = value;
-      await faq.save();
-  
-      console.log("faq updated successfully:", faq);
-      res.status(200).json({
-        message: "faq status updated successfully.",
-        updatedStatus: faq.status,
-      });
-});
+
+    const faq = await Faq.findByPk(id);
+
+    if (!faq) {
+      console.log("FAQ not found");
+      return res.status(404).json({ message: "FAQ not found." });
+    }
+
+    faq.status = value;
+    await faq.save();
+
+    console.log("FAQ status updated successfully:", faq);
+    res.status(200).json({
+      message: "FAQ status updated successfully.",
+      updatedStatus: faq.status,
+    });
+  } catch (error) {
+    console.error("Error updating FAQ status:", error);
+    res.status(500).json({
+      ResponseCode: "500",
+      Result: "false",
+      error: "An error occurred while updating FAQ status.",
+    });
+  }
+};
+
+
 
 module.exports={
     upsertFaq,

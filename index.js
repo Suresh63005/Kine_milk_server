@@ -99,6 +99,8 @@ sequelize
   });
 //Admin Routes
 app.use('/admin', require('./AdminRoutes/Auth_route'))
+app.use("/storedash",require("./AdminRoutes/StoreDashboard.route"))
+app.use("/admindash",require("./AdminRoutes/Dashboard.route"))
 app.use('/settings', require("./AdminRoutes/Settings.route"))
 app.use("/category",require("./AdminRoutes/Category.route"))
 app.use("/product",require("./AdminRoutes/Product.route"))
@@ -155,6 +157,8 @@ app.use("/subscribe-delivery",require('./UserRoutes/Delivery/subcribe_delivery_o
 app.use("/u_settings", require("./UserRoutes/customer/settings_route"));
 app.use("/order-delivered",require('./UserRoutes/Delivery/order_delivered_routes'));
 
+{/** settings */}
+app.use("/policies", require("./UserRoutes/SettingsRoutes/Settings.route"))
 
 app.get("/", (req, res) => {
     res.send("Server is Running");

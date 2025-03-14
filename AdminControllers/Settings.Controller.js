@@ -24,7 +24,9 @@ const UpsertSettings = async (req, res) => {
         cancellation_policy,
       } = req.body;
   
-      console.log(req.body, "Request Body");
+      console.log(terms_conditions,
+        privacy_policy,
+        cancellation_policy, "Request Body");
   
       let imageUrl = null;
       console.log(req.file, "Uploaded File"); // Use req.file, not req.files
