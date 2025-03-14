@@ -1,6 +1,7 @@
 const { Model } = require("firebase-admin/machine-learning");
 const Favorite = require("../../Models/Favorite");
 const Product = require("../../Models/Product");
+const Category = require("../../Models/Category");
 
 const addFavorite = async (req, res) => {
     try {
@@ -42,7 +43,14 @@ const addFavorite = async (req, res) => {
         include:[{
           model: Product,
           as: "favproducts",
-        },]
+          include:[
+            {
+              model: Category,
+              as:"category"
+            }
+          ]
+        },
+      ]
       });
   
       res.status(200).json({

@@ -135,6 +135,7 @@ app.use("/u_fav", require("./UserRoutes/customer/fav_route"));
 app.use("/u_timeslot", require("./UserRoutes/customer/timeslot_route"));
 app.use("/reviews",require('./UserRoutes/customer/customer_review_routes'))
 app.use("/u_wallet", require("./UserRoutes/customer/wallet_route"));
+app.use("/u_customersupport", require("./UserRoutes/customer/customerSupport_route"));
 
 {/** Stores */}
 
@@ -156,6 +157,8 @@ app.use("/subscribe-delivery",require('./UserRoutes/Delivery/subcribe_delivery_o
 app.use("/u_settings", require("./UserRoutes/customer/settings_route"));
 app.use("/order-delivered",require('./UserRoutes/Delivery/order_delivered_routes'));
 
+{/** settings */}
+app.use("/policies", require("./UserRoutes/SettingsRoutes/Settings.route"))
 
 app.get("/", (req, res) => {
     res.send("Server is Running");
