@@ -8,27 +8,17 @@ const s3 = require("../config/awss3Config");
 const uploadToS3 = require("../config/fileUpload.aws");
 
 const upsertRider = async (req, res) => {
-  
-  // Validate incoming data with Joi
-  // const { error, value } = upsertRiderSchema.validate(req.body, { abortEarly: false });
-  // if (error) {
-  //   return res.status(400).json({
-  //     ResponseCode: "400",
-  //     Result: "false",
-  //     ResponseMsg: error.details.map((detail) => detail.message).join(", "),
-  //   });
-  // }
-
-  const { id, store_id,  title, email, mobile, password, rdate, status,ccode } = req.body;
-  console.log(req.body);  
   try {
-    let imageUrl; 
+    const { id, store_id, title, email, mobile, password, rdate, status, ccode } = req.body;
+    console.log(req.body);  
 
-    if (req.file) {
-      imageUrl = await uploadToS3(req.file, "image");
+    let imageUrl = null; 
+    if (req.file) { 
+      // Pass file correctly to uploadToS3
+      imageUrl = await uploadToS3(req.file, "img");
     }
 
-    const storeId = store_id || 1; 
+    const storeId = store_id ; 
     const riderDate = rdate || new Date().toISOString().split('T')[0]; 
 
     if (id) {
@@ -66,31 +56,31 @@ const upsertRider = async (req, res) => {
         return res.status(400).json({
           ResponseCode: "400",
           Result: "false",
-          ResponseMsg: "Image is required for a new Product.",
+          ResponseMsg: "Image is required for a new Rider.",
         });
       }
-      // check email
-  const existingRider = await Rider.findOne({ where: { email } });
-  logger.error("Email is already in use.")
-    if (existingRider && existingRider.id !== id) { 
-      return res.status(400).json({
-        ResponseCode: "400",
-        Result: "false",
-        ResponseMsg: "Email is already in use.",
-      });
-    }
 
-    const mobileCheck=await Rider.findOne({where:{mobile}});
-    logger.error("mobile is already in use.")
-    if(mobileCheck && mobileCheck.id !== id){
-      return res.status(400).json({
-        ResponseCode:"400",
-        Result:"false",
-        ResponseMsg:"Mobile is already in use.",
-      })
+      // Check email uniqueness
+      const existingRider = await Rider.findOne({ where: { email } });
+      if (existingRider) { 
+        return res.status(400).json({
+          ResponseCode: "400",
+          Result: "false",
+          ResponseMsg: "Email is already in use.",
+        });
+      }
 
-    }
-      // Create new rider if ID is not provided
+      // Check mobile uniqueness
+      const mobileCheck = await Rider.findOne({ where: { mobile } });
+      if (mobileCheck) {
+        return res.status(400).json({
+          ResponseCode: "400",
+          Result: "false",
+          ResponseMsg: "Mobile is already in use.",
+        });
+      }
+
+      // Create new rider
       const newRider = await Rider.create({
         title,
         email,
@@ -120,12 +110,42 @@ const upsertRider = async (req, res) => {
     });
   }
 };
+
   
+const getAllRidersbyStoreid = async (req, res, next) => {
+  const { store_id } = req.params; // Get store_id from request params
+
+  if (!store_id) {
+      return res.status(400).json({
+          ResponseCode: "400",
+          Result: "false",
+          ResponseMsg: "store_id is required",
+      });
+  }
+
+  try {
+      const riders = await Rider.findAll({
+          where: { store_id }, // Filter by store_id
+      });
+
+      logger.info("Successfully fetched all riders for store_id:", store_id);
+      res.status(200).json(riders);
+  } catch (error) {
+      logger.error("Error fetching riders:", error);
+      res.status(500).json({
+          ResponseCode: "500",
+          Result: "false",
+          ResponseMsg: "Internal server error",
+          details: error.message,
+      });
+  }
+};
 const getAllRiders=asynHandler(async(req,res,next)=>{
-    const Riders=await Rider.findAll();
-    logger.info("sucessfully get all Rider's");
-    res.status(200).json(Riders);
+  const Riders=await Rider.findAll();
+  logger.info("sucessfully get all Rider's");
+  res.status(200).json(Riders);
 });
+
 
 const getRiderCount=asynHandler(async(req,res)=>{
     const RiderCount=await Rider.count();
@@ -247,8 +267,9 @@ const toggleRiderStatus = async (req, res) => {
 };
 
 module.exports={
+  getAllRiders,
     upsertRider,
-    getAllRiders,
+    getAllRidersbyStoreid,
     getRiderCount,
     getRiderById,
     deleteRider,

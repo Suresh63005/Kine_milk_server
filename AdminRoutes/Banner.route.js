@@ -4,8 +4,15 @@ const upload = require('../utils/multerConfig');
 const bannerController = require('../AdminControllers/Banner.Controller');
 const adminMiddleware = require('../middlewares/adminMiddleware');
 
-router.post("/upsert-banner", adminMiddleware.isAdmin,upload.single('img'), bannerController.upsertBanner);
+router.post("/upsert-banner",upload.single('img'), bannerController.upsertBanner);
 router.get("/fetch-banners", bannerController.fetchBanners);
+
+router.get("/getbannerbyid/:id", bannerController.fetchbannerbyid);
+
 router.patch("/toggle-status",bannerController.toggleBannerStatus);
+
+
+router.delete("/deletebannerbyid/:id",bannerController.deletebannerbyid),
+
 
 module.exports = router;

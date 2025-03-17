@@ -18,7 +18,7 @@ const updateAdminSchema = Joi.object({
 })
 
 const deleteAdminSchema = Joi.object({
-  id: Joi.number().integer().required().messages({
+  id: Joi.required().messages({
     "number.base": "ID must be a number",
     "number.integer": "ID must be an integer",
     "any.required": "ID is required",
@@ -58,7 +58,7 @@ const getCategoryByIdSchema = Joi.object({
 });
 
 const categoryDeleteSchema = Joi.object({
-  id: Joi.number().integer().required().messages({
+  id: Joi.required().messages({
     "number.base": "ID must be a number.",
     "number.integer": "ID must be an integer.",
     "any.required": "ID is required.",
@@ -108,6 +108,7 @@ const categoryToggleStatus=Joi.object({
     "any.required":"value required"
   })
 })
+
 // for product
 const getProductByIdSchema = Joi.object({
   id: Joi.number().integer().required().messages({
@@ -164,11 +165,38 @@ const upsertProductSchema = Joi.object({
     "any.required": "Category ID is required.",
   }),
 
+  discount: Joi.number().required().messages({
+    "number.base": "Discount must be a valid number.",
+    "any.required": "Discount is required.",
+  }),
+
+  normal_price: Joi.string().pattern(/^(\d+(\.\d{1,2})?)$/).required().messages({
+    "string.pattern.base": "Normal price must be a valid number with up to two decimal places (e.g., 11.00, 11).",
+    "any.required": "Normal price is required.",
+  }),
+
+  subscribe_price: Joi.string().pattern(/^(\d+(\.\d{1,2})?)$/).optional().messages({
+    "string.pattern.base": "Subscription price must be a valid number with up to two decimal places (e.g., 11.00, 11).",
+  }),
+
+  subscription_required: Joi.string().valid(0,1).required().messages({
+    "any.only": "Subscription required must be 'yes' or 'no'.",
+    "any.required": "Subscription required is required.",
+  }),
+
+  outOf_Stock: Joi.string().valid(0,1).required().messages({
+    "any.only": "Out of Stock must be 'yes' or 'no'.",
+    "any.required": "Out of Stock status is required.",
+  }),
+
   description: Joi.string().trim().required().messages({
     "string.base": "Description must be a string.",
     "any.required": "Description is required.",
   }),
-});
+  ext_img: Joi.string().trim().optional().messages({
+    "string.base": "multiple image URL must be a string.",
+  }),
+})
 
 const productToggleStatusSchema=Joi.object({
   id:Joi.number().integer().required().messages({
@@ -392,7 +420,7 @@ const upsertFaqSchema = Joi.object({
 });
 
 const getFaqIdBySchema = Joi.object({
-  id: Joi.number().integer().required().messages({
+  id: Joi.required().messages({
     "number.base": "ID must be a number.",
     "number.integer": "ID must be an integer.",
     "any.required": "ID is required.",
@@ -400,7 +428,7 @@ const getFaqIdBySchema = Joi.object({
 });
 
 const FaqDeleteSchema = Joi.object({
-  id: Joi.number().integer().required().messages({
+  id: Joi.required().messages({
     "number.base": "ID must be a number.",
     "number.integer": "ID must be an integer.",
     "any.required": "ID is required.",
@@ -488,7 +516,7 @@ const upsertRiderSchema = Joi.object({
 });
 
 const getRiderIdBySchema = Joi.object({
-  id: Joi.number().integer().required().messages({
+  id: Joi.required().messages({
     "number.base": "ID must be a number.",
     "number.integer": "ID must be an integer.",
     "any.required": "ID is required.",
@@ -496,7 +524,7 @@ const getRiderIdBySchema = Joi.object({
 });
 
 const RiderDeleteSchema = Joi.object({
-  id: Joi.number().integer().required().messages({
+  id: Joi.required().messages({
     "number.base": "ID must be a number.",
     "number.integer": "ID must be an integer.",
     "any.required": "ID is required.",
@@ -574,7 +602,7 @@ const upsertTimeSchema = Joi.object({
 })
 
 const getTimeIdBySchema = Joi.object({
-  id: Joi.number().integer().required().messages({
+  id: Joi.required().messages({
     "number.base": "ID must be a number.",
     "number.integer": "ID must be an integer.",
     "any.required": "ID is required.",
@@ -582,7 +610,7 @@ const getTimeIdBySchema = Joi.object({
 });
 
 const DeleteTimeSchema = Joi.object({
-  id: Joi.number().integer().required().messages({
+  id: Joi.required().messages({
     "number.base": "ID must be a number.",
     "number.integer": "ID must be an integer.",
     "any.required": "ID is required.",
@@ -713,7 +741,7 @@ const upsertCouponSchema = Joi.object({
 
 
 const bannerUpsertSchema = Joi.object({
-  id: Joi.number().integer().positive().optional(),
+  id: Joi.optional(),
   status: Joi.number().integer().valid(0, 1).required().messages({
     'number.base': 'Status must be a number.',
     'any.required': 'Status is required.',

@@ -5,6 +5,8 @@ const SubscribeOrderProduct = require("../../Models/SubscribeOrderProduct");
 const Notification = require("../../Models/Notification");
 const NormalOrder = require("../../Models/NormalOrder");
 const User = require("../../Models/User");
+const Time = require("../../Models/Time");
+const Address = require("../../Models/Address");
 
 const generateOrderId = ()=>{
   const randomNum = Math.floor(100000 + Math.random() * 900000)
@@ -195,10 +197,19 @@ const subscribeOrder =  async (req, res) => {
               }
             ],
             attributes:["pquantity",]
+          },
+          {
+            model: Address,
+            as:"subOrdAddress"
+          },
+          {
+            model: Time,
+            as:"timeslots",
+            attributes: ["id", "mintime","maxtime"]
           }
         ],
         order: [["createdAt", "DESC"]], 
-        attributes: ["id", "uid", "status", "createdAt"], 
+        
       });
       
   
@@ -220,59 +231,56 @@ const subscribeOrder =  async (req, res) => {
   };
 
   const getOrderDetails = async (req, res) => {
-    const {id} = req.params;
+    const { id } = req.params;
+  
     try {
-
-      const orderDetails  = await SubscribeOrder.findOne({
+      const orderDetails = await SubscribeOrder.findOne({
         where: { id },
         include: [
           {
             model: SubscribeOrderProduct,
-            as: "orderProducts", 
+            as: "orderProducts",
             include: [
               {
                 model: Product,
-                as: "productDetails", 
-                
-              }
+                as: "productDetails",
+              },
             ],
-            
+          },
+          {
+            model: Time,
+            as:"timeslots",
+            attributes: ["id", "mintime","maxtime"]
           }
         ],
-        order: [["createdAt", "DESC"]], 
-        
+        order: [["createdAt", "DESC"]],
       });
-
-      if(!orderDetails){
-        console.error("Error fetching order details:", error);
   
-        res.status(404).json({
+      if (!orderDetails) {
+        return res.status(404).json({
           ResponseCode: "404",
           Result: "false",
           ResponseMsg: "Order Not Found",
-          error: error.message,
         });
       }
-
+  
       return res.status(200).json({
         ResponseCode: "200",
         Result: "true",
         ResponseMsg: "Instant Order fetched successfully!",
-        orderDetails
+        orderDetails,
       });
-      
     } catch (error) {
-      console.error("Error  order:", error);
+      console.error("Error fetching order:", error.message);
   
-      res.status(500).json({
+      return res.status(500).json({
         ResponseCode: "500",
         Result: "false",
-        ResponseMsg: "Server Error",
-        error: error.message,
+        ResponseMsg: "Internal Server Error",
       });
     }
-
-  }
+  };
+  
 
   const cancelOrder = async (req, res) => {
     try {

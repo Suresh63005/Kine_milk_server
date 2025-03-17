@@ -99,6 +99,8 @@ sequelize
   });
 //Admin Routes
 app.use('/admin', require('./AdminRoutes/Auth_route'))
+app.use("/storedash",require("./AdminRoutes/StoreDashboard.route"))
+app.use("/admindash",require("./AdminRoutes/Dashboard.route"))
 app.use('/settings', require("./AdminRoutes/Settings.route"))
 app.use("/category",require("./AdminRoutes/Category.route"))
 app.use("/product",require("./AdminRoutes/Product.route"))
@@ -111,10 +113,11 @@ app.use("/rider",require("./AdminRoutes/Rider.route"))
 app.use("/faq",require("./AdminRoutes/Faq.route"))
 app.use("/time",require("./AdminRoutes/Time.route"))
 app.use("/normalorder",require("./AdminRoutes/NormalOrder.route"))
+app.use("/subscribeorders",require("./AdminRoutes/Subscribeorder.router"))
 app.use("/banner",require('./AdminRoutes/Banner.route'))
 app.use("/store",require('./AdminRoutes/Store.route'))
 app.use("/user",require("./AdminRoutes/User.route"))
-app.use("/product_inventory",upload.none(),require('./AdminRoutes/ProductInventory_route'))
+app.use("/productinventory",require('./AdminRoutes/ProductInventory_route'))
 app.use("/notifications",require('./UserRoutes/notification_route'));
 
 
@@ -132,6 +135,7 @@ app.use("/u_fav", require("./UserRoutes/customer/fav_route"));
 app.use("/u_timeslot", require("./UserRoutes/customer/timeslot_route"));
 app.use("/reviews",require('./UserRoutes/customer/customer_review_routes'))
 app.use("/u_wallet", require("./UserRoutes/customer/wallet_route"));
+app.use("/u_customersupport", require("./UserRoutes/customer/customerSupport_route"));
 
 {/** Stores */}
 
@@ -153,13 +157,16 @@ app.use("/subscribe-delivery",require('./UserRoutes/Delivery/subcribe_delivery_o
 app.use("/u_settings", require("./UserRoutes/customer/settings_route"));
 app.use("/order-delivered",require('./UserRoutes/Delivery/order_delivered_routes'));
 
+{/** settings */}
+app.use("/policies", require("./UserRoutes/SettingsRoutes/Settings.route"))
 
 app.get("/", (req, res) => {
     res.send("Server is Running");
   });
 
 app.listen(PORT, () => {
-  console.log(`Server is Running on PORT http://localhost:${PORT}`);
   
+  console.log(`Server is Running on PORT http://localhost:${PORT}`);
+
   console.log(`Swagger docs available at http://localhost:${PORT}/api-docs`);
 });

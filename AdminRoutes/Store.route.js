@@ -12,5 +12,7 @@ router.get("/fetch",storeController.fetchStores);
 router.get("/fetch/:id",storeController.fetchStoreById);
 router.delete("/delete/:id",storeController.deleteStore);
 router.patch("/toggle-status",storeController.toggleStoreStatus)
+router.put('/update-email-password/:store_id', storeController.updateStoreEmailPassword);
+
 
 module.exports = router;

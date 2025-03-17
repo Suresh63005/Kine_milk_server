@@ -82,71 +82,73 @@ const loginAdmin = asynHandler(async (req, res) => {
     logger.error(error.details[0].message);
     return res.status(400).json({ error: error.details[0].message });
   }
-  const { email, password, role } = req.body;
 
+  const { email, password, role } = req.body;
   console.log(req.body);
 
   if (!email || !password || !role) {
-    logger.error('All fields are required')
+    logger.error('All fields are required');
     return res.status(400).json({ error: "All fields are required" });
   }
 
-  
-  if(role === 'admin'){
-   const admin = await Admin.findOne({ where: { email } });
+  if (role === 'admin') {
+    const admin = await Admin.findOne({ where: { email } });
 
-
-     if (!admin) {
+    if (!admin) {
       logger.error("Invalid Email");
-      return res.status(401).json({ error: "Invalid Email " });
-    }
-  
-    const isMatch = await bcrypt.compare(password, admin.password);
-    if (!isMatch) {
-      logger.error("Invalid password");
-      return res.status(401).json({ error: "Invalid  password" });
-    }
-  
-  
-    const token = generateToken(admin);
-  
-    res.cookie("token", token, { httpOnly: true });
-  
-    req.session.admin = admin;
-    logger.info("Admin signed in successfully");
-    res.status(200).json({
-      message: "Admin signed in successfully",
-      admin,
-      role:"admin",
-      token,
-    });
-  }
-  else if(role === "store"){
-
-    const store = await Store.findOne({ where: { email } });
-
-    if (!store) {
-      logger.error("Invalid Email ");
       return res.status(401).json({ error: "Invalid Email" });
     }
 
+    const isMatch = await bcrypt.compare(password, admin.password);
+    if (!isMatch) {
+      logger.error("Invalid password");
+      return res.status(401).json({ error: "Invalid password" });
+    }
 
-     if(store.password !== password) {
-      logger.error("Invalid  password");
-      return res.status(401).json({ error: "Invalid  password" });
-     }
-     const token = generateTokenforstore(store);
-     res.cookie("token", token, { httpOnly: true });
-     req.session.store = store;
-     logger.info("Store signed in successfully");
-     res.status(200).json({
-       message: "Store signed in successfully",
-       store,
-       role:"store",
-       token,
-     });
+    const token = generateToken(admin);
+    res.cookie("token", token, { httpOnly: true });
+
+    req.session.admin = admin;
+    logger.info("Admin signed in successfully");
+    return res.status(200).json({
+      message: "Admin signed in successfully",
+      admin,
+      role: "admin",
+      token,
+    });
+  } 
+  
+  else if (role === "store") {
+    const store = await Store.findOne({ where: { email } });
+
+    if (!store) {
+      logger.error("Invalid Email");
+      return res.status(401).json({ error: "Invalid Email" });
+    }
+
+    // ✅ Use bcrypt.compare() for hashed password check
+    const isMatch = await bcrypt.compare(password, store.password);
+    if (!isMatch) {
+      logger.error("Invalid password");
+      return res.status(401).json({ error: "Invalid password" });
+    }
+
+    const token = generateTokenforstore(store);
+    res.cookie("token", token, { httpOnly: true });
+
+    req.session.store = store;
+    logger.info("Store signed in successfully");
+    return res.status(200).json({
+      message: "Store signed in successfully",
+      store,
+      role: "store",
+      token,
+    });
   }
+
+  return res.status(400).json({ error: "Invalid role" });
 });
+
 
 // Update Admin Controller
 const updateAdmin = async (req, res) => {

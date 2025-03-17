@@ -10,6 +10,8 @@ const Notification = require("../../Models/Notification");
 const User = require("../../Models/User");
 const ProductReview = require("../../Models/ProductReview");
 const Address = require("../../Models/Address");
+const Time = require("../../Models/Time");
+const Review = require("../../Models/review");
 
 const generateOrderId = ()=>{
   const randomNum = Math.floor(100000 + Math.random() * 900000)
@@ -168,9 +170,7 @@ const instantOrder =  async (req, res) => {
     try {
       const { uid, status } = req.body;
 
-      console.log()
-  
-      
+     
       const validStatuses = ["Pending", "Processing", "Completed", "Cancelled", "On Route"];
       if (!validStatuses.includes(status)) {
         return res.status(400).json({ success: false, message: "Invalid order status" });
@@ -182,7 +182,7 @@ const instantOrder =  async (req, res) => {
         include: [
           {
             model: NormalOrderProduct,
-            as: "NormalProducts", // Ensure 'orderProducts' alias is correct in the model associations
+            as: "NormalProducts", 
             include: [
               {
                 model: Product,
@@ -196,10 +196,25 @@ const instantOrder =  async (req, res) => {
                     attributes:["id","rating","review","createdAt"]
                   }
                 ]
-              }
+              },
+             
+             
             ],
             attributes:["pquantity",]
-          }
+          },
+           {
+                model: Address,
+                as:'instOrdAddress'
+              },
+              {
+                model: Time,
+                as: "timeslot",
+                attributes:["id","mintime","maxtime"]
+              },
+              {
+                model:Review,
+                as:"normalorderdeliveryreview",
+              }
         ],
         order: [["createdAt", "DESC"]],
       });
@@ -271,6 +286,11 @@ const instantOrder =  async (req, res) => {
               },
             ],
           },
+          {
+            model: Time,
+            as: "timeslot",
+            attributes:["id","mintime","maxtime"]
+          }
         ],
         order: [["createdAt", "DESC"]],
       });
