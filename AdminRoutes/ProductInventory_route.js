@@ -4,7 +4,7 @@ const { addInventory } = require('../AdminControllers/ProductInventory_controlle
 const router = express.Router();
 
 
-router.post("/",addInventory);
+router.post("/upsert",addInventory);
 
 
 module.exports = router;
