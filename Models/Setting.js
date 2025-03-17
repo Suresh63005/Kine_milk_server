@@ -58,6 +58,18 @@ const Setting = sequelize.define(
       type: DataTypes.BIGINT,
       allowNull: false,
     },
+    privacy_policy: {
+      type: DataTypes.TEXT("long"), 
+      allowNull: false,
+    },
+    terms_conditions: {
+      type: DataTypes.TEXT("long"), 
+      allowNull: false,
+    },
+    cancellation_policy: {
+      type: DataTypes.TEXT("long"), 
+      allowNull: false,
+    },
   },
   { tableName: "tbl_setting", timestamps: true, paranoid: true }
 );

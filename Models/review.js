@@ -25,6 +25,10 @@ const Review = sequelize.define(
       type: DataTypes.UUID,
       allowNull: false,
     },
+    order_id:{
+      type:DataTypes.UUID,
+      allowNull:false,
+    },
     rating: {
       type: DataTypes.INTEGER,
       allowNull: false,
