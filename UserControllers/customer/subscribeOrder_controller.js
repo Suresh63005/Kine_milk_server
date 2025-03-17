@@ -8,6 +8,7 @@ const User = require("../../Models/User");
 const Time = require("../../Models/Time");
 const Address = require("../../Models/Address");
 const Review = require("../../Models/review");
+const ProductReview = require("../../Models/ProductReview");
 
 const generateOrderId = ()=>{
   const randomNum = Math.floor(100000 + Math.random() * 900000)
@@ -194,7 +195,14 @@ const subscribeOrder =  async (req, res) => {
               {
                 model: Product,
                 as: "productDetails", // Ensure 'productDetails' alias is correct in the model associations
-                attributes: ["id", "title","img","subscribe_price", "description"] // Specify the fields you need
+                attributes: ["id", "title","img","subscribe_price", "description"], // Specify the fields you need
+                include:[
+                  {
+                    model:ProductReview,
+                    as:"ProductReviews",
+                    attributes:["id","rating","review","createdAt"]
+                  }
+                ]
               }
             ],
             attributes:["pquantity",]
