@@ -148,6 +148,9 @@ Time.hasMany(SubscribeOrder, { foreignKey: "timeslot_id", as: "timeslots" });
 NormalOrder.belongsTo(Time,{foreignKey: "timeslot_id", as: "timeslot" });
 Time.hasMany(NormalOrder, { foreignKey: "timeslot_id", as: "timeslot" });
 
+Review.belongsTo(NormalOrder,{foreignKey:"order_id",as:"normalorderdeliveryreview"});
+NormalOrder.hasMany(Review,{foreignKey:"order_id",as:"normalorderdeliveryreview"});
+
 
 
 
