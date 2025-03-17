@@ -7,6 +7,7 @@ const NormalOrder = require("../../Models/NormalOrder");
 const User = require("../../Models/User");
 const Time = require("../../Models/Time");
 const Address = require("../../Models/Address");
+const Review = require("../../Models/review");
 
 const generateOrderId = ()=>{
   const randomNum = Math.floor(100000 + Math.random() * 900000)
@@ -206,6 +207,10 @@ const subscribeOrder =  async (req, res) => {
             model: Time,
             as:"timeslots",
             attributes: ["id", "mintime","maxtime"]
+          },
+          {
+            model: Review,
+            as:"suborderdeliveryreview"
           }
         ],
         order: [["createdAt", "DESC"]], 
