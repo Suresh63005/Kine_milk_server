@@ -202,7 +202,7 @@ const PostDeliveryBoyReview = asyncHandler (async (req, res) => {
         return res.status(401).json({ message: "Unauthorized! User not found." });
     }
 
-    const{rider_id,rating,review,store_id,order_id} = req.body;
+    const{rider_id,rating,review,store_id,order_id,order_type} = req.body;
 
     if (!rider_id || !rating || !review || !store_id || !order_id) {
         return res.status(400).json({ message: "All Fields Required!" });
@@ -221,7 +221,8 @@ const PostDeliveryBoyReview = asyncHandler (async (req, res) => {
             rating: rating,
             review: review,
             store_id:store_id,
-            order_id:order_id
+            order_id:order_id,
+            order_type:order_type
 
         });
 
