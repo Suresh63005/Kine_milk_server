@@ -200,7 +200,7 @@ const subscribeOrder =  async (req, res) => {
                   {
                     model:ProductReview,
                     as:"ProductReviews",
-                    attributes:["id","rating","review","createdAt"]
+                    
                   }
                 ]
               }
