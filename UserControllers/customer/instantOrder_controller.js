@@ -1,6 +1,6 @@
 
 
-const { Sequelize } = require("sequelize");
+const { Sequelize, Op } = require("sequelize");
 
 const Product = require("../../Models/Product");
 
@@ -419,11 +419,67 @@ const instantOrder =  async (req, res) => {
     }
   };
   
-
+  const getRecommendedProducts = async (req, res) => {
+    const uid = req.user.userId;
+  
+    if (!uid) {
+      return res.status(400).json({
+        ResponseCode: "400",
+        Result: "false",
+        ResponseMsg: "User ID is required!",
+      });
+    }
+  
+    try {
+      // Fetch the user's recent orders
+      const recentOrders = await NormalOrder.findAll({
+        where: { uid },
+        include: [
+          {
+            model: NormalOrderProduct,
+            include: [Product],
+          },
+        ],
+        order: [['odate', 'DESC']],
+        limit: 5,
+      });
+  
+      const categories = new Set();
+      recentOrders.forEach(order => {
+        order.NormalOrderProducts.forEach(item => {
+          categories.add(item.Product.category);
+        });
+      });
+  
+      const recommendedProducts = await Product.findAll({
+        where: {
+          category: Array.from(categories),
+        },
+        limit: 10,
+      });
+  
+      res.status(200).json({
+        ResponseCode: "200",
+        Result: "true",
+        ResponseMsg: "Recommended products fetched successfully!",
+        recommendedProducts,
+      });
+    } catch (error) {
+      console.error("Error fetching recommended products:", error);
+  
+      res.status(500).json({
+        ResponseCode: "500",
+        Result: "false",
+        ResponseMsg: "Server Error",
+        error: error.message,
+      });
+    }
+  };  
 
   module.exports = {
     instantOrder,
     getOrdersByStatus,
     getOrderDetails,
-    cancelOrder
+    cancelOrder,
+    getRecommendedProducts
   };

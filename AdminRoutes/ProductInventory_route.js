@@ -5,9 +5,11 @@ const upload = require('../utils/multerConfig');
 const router = express.Router();
 
 
+router.post("/upsert",addInventory);
 router.post("/upsert-productinv",upload.none(),ProductInventory.addInventory);
 router.get("/getproductinv/:id",ProductInventory.getProductInventoryById);
 router.get("/getallproductinv",ProductInventory.ProductInventoryList)
 router.patch("/toggle-status/",ProductInventory.toggleProductInventoryStatus)
 router.delete("/delete/:id",ProductInventory.deleteProductInventory)
+
 module.exports = router;
