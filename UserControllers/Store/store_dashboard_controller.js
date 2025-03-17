@@ -35,24 +35,40 @@ const StoreDashboardAPI = asyncHandler(async (req, res) => {
     const startOfDay = moment().startOf("day").toDate();
     const endOfDay = moment().endOf("day").toDate();
 
-    // Today Summary
-    const totalOrders = await NormalOrder.count({
-      where: { store_id: storeId, status: "On Route", createdAt: { [Op.between]: [startOfDay, endOfDay] } },
+    // Total Orders 
+    const totalNormalOrders = await NormalOrder.count({
+      where:{store_id:storeId, createdAt:{[Op.between]:[startOfDay,endOfDay]}}
+    })
+    const totalSubscribeOrders = await SubscribeOrder.count({
+      where: { store_id: storeId, createdAt: { [Op.between]: [startOfDay, endOfDay] } },
     });
-    const openOrders = await NormalOrder.count({
-      where: { store_id: storeId, status: "Processing", createdAt: { [Op.between]: [startOfDay, endOfDay] } },
-    });
-    const closedOrders = await NormalOrder.count({
-      where: { store_id: storeId, status: "Completed", createdAt: { [Op.between]: [startOfDay, endOfDay] } },
-    });
+    const totalOrders = totalNormalOrders + totalSubscribeOrders;
+
+    // Open Orders
+    const openNormalOrders = await NormalOrder.count({
+      where:{store_id:storeId,status:"On Route",createdAt:{[Op.between]:startOfDay,endOfDay}}
+    })
+    const openSubscribeOrders = await SubscribeOrder.count({
+      where:{store_id:storeId,status:"Active",createdAt:{[Op.between]:[startOfDay,endOfDay]}}
+    })
+    const openOrders = openNormalOrders + openSubscribeOrders;
+
+    // Closed Orders 
+    const closedNormalOrders = await NormalOrder.count({
+      where:{store_id:storeId,status:"Completed",createdAt:{[Op.between]:[startOfDay,endOfDay]}}
+    })
+    const closedSubscribeOrders = await SubscribeOrder.count({
+      where:{store_id:storeId,status:"Completed",createdAt:{[Op.between]:[startOfDay,endOfDay]}}
+    })
+    const closedOrders = closedNormalOrders + closedSubscribeOrders;
 
     const products = await ProductInventory.count({ where: { store_id: storeId } });
     const deliveryBoys = await Rider.count({ where: { store_id: storeId } });
     const instantOrders = await NormalOrder.count({
-      where: { store_id: storeId },
+      where: { store_id: storeId,status:"On Route" },
     });
     const subscriptionOrders = await SubscribeOrder.count({
-      where: { store_id: storeId },
+      where: { store_id: storeId, status:"Active" },
     });
 
     return res.status(200).json({
