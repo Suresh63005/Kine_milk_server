@@ -10,7 +10,7 @@ const addInventory = async (req, res) => {
   console.log(req.body)
   
   try {
-    if (!store_id || !product_id || !date || !quantity|| !coupons) {
+    if (!store_id || !product_id || !date || !quantity) {
       return res.status(400).json({
         ResponseCode: "400",
         Result: "false",
