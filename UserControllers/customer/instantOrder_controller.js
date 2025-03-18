@@ -189,7 +189,6 @@ const instantOrder =  async (req, res) => {
                 as: "ProductDetails", // Ensure 'productDetails' alias is correct in the model associations
                 attributes: ["id", "title","img","subscribe_price", "description"] ,// Specify the fields you need
                 include:[
-
                   {
                     model:ProductReview,
                     as:"ProductReviews",
