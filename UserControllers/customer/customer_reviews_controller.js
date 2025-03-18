@@ -153,6 +153,7 @@ const PostProductReview = asyncHandler(async (req, res) => {
           user_id: uid,
           product_id: r.productId,
           store_id: storeId,
+          order_id:orderId,
           category_id: product.cat_id,
           rating: r.totalRate,
           review: r.rateText,

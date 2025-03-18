@@ -23,6 +23,10 @@ const ProductReview = sequelize.define(
       type:DataTypes.UUID,
       allowNull:false
     },
+    order_id:{
+      type:DataTypes.UUID,
+      allowNull:false
+    },
     category_id:{
       type: DataTypes.UUID,
       allowNull: false,
