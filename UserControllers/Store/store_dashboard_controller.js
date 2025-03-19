@@ -65,10 +65,10 @@ const StoreDashboardAPI = asyncHandler(async (req, res) => {
     const products = await ProductInventory.count({ where: { store_id: storeId } });
     const deliveryBoys = await Rider.count({ where: { store_id: storeId } });
     const instantOrders = await NormalOrder.count({
-      where: { store_id: storeId,status:"On Route" },
+      where: { store_id: storeId,status:{[Op.or]:['Pending','Processing','On Route']} },
     });
     const subscriptionOrders = await SubscribeOrder.count({
-      where: { store_id: storeId, status:"Active" },
+      where: { store_id: storeId, status:{[Op.or]:['Pending','Active']} },
     });
 
     return res.status(200).json({
