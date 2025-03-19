@@ -77,13 +77,18 @@ const upsertStore = asyncHandler(async (req, res) => {
     }
    
     
-
+    
     let store;
     if (id) {
       store = await Store.findByPk(id);
       if (!store) {
         return res.status(404).json({ ResponseCode: "404", Result: "false", ResponseMsg: "Store not found." });
       }
+      let hashedPassword = store.password;
+    if (password) {
+      const salt = await bcrypt.genSalt(10);
+      hashedPassword = await bcrypt.hash(password, salt);
+    }
       await store.update({
         title,
         status,
@@ -109,7 +114,7 @@ const upsertStore = asyncHandler(async (req, res) => {
         email,
         rstatus,
         mobile,
-        password,
+        password:hashedPassword,
         sdesc,
         cancle_policy,
         charge_type,
@@ -130,6 +135,8 @@ const upsertStore = asyncHandler(async (req, res) => {
       
       return res.status(200).json({ message: "Store updated successfully!", store });
     } else {
+      const salt = await bcrypt.genSalt(10);
+      const hashedPassword = await bcrypt.hash(password, salt);
       // **Create new store**
       store = await Store.create({
         title,
@@ -156,7 +163,7 @@ const upsertStore = asyncHandler(async (req, res) => {
         email,
         rstatus,
         mobile,
-        password,
+        password:hashedPassword,
         sdesc,
         cancle_policy,
         charge_type,
