@@ -67,15 +67,17 @@ const homeAPI = async (req, res) => {
         
         const categoryProducts = [];
 
+ 
+
         // Iterate through each category and filter products belonging to that category
         for (const category of categories) {
             const productsInCategory = productInventory.filter(
-                (productItem) => productItem.inventoryProducts.cat_id === category.id
+                (productItem) => productItem.inventoryProducts?.cat_id === category?.id
             );
 
             
-                categoryProducts.push({
-                    name: category.title,
+                categoryProducts?.push({
+                    name: category?.title,
                     items: productsInCategory
                 });
             
