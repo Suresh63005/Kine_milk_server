@@ -11,7 +11,7 @@ const Category = sequelize.define(
       defaultValue: DataTypes.UUIDV4,
     },
     title: {
-      type: DataTypes.TEXT,
+      type: DataTypes.TEXT, 
       allowNull: false,
     },
     img: {
