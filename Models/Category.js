@@ -1,5 +1,5 @@
-const sequelize = require("../config/db");
 const { DataTypes } = require("sequelize");
+const sequelize = require("../config/db");
 
 const Category = sequelize.define(
   "Category",
@@ -11,7 +11,7 @@ const Category = sequelize.define(
       defaultValue: DataTypes.UUIDV4,
     },
     title: {
-      type: DataTypes.TEXT,
+      type: DataTypes.TEXT, 
       allowNull: false,
     },
     img: {
@@ -24,7 +24,7 @@ const Category = sequelize.define(
     },
     cover: {
       type: DataTypes.TEXT,
-      allowNull: false,
+      allowNull: true,
     },
   },
   { tableName: "tbl_category", timestamps: true, paranoid: true }
