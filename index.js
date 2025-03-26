@@ -72,7 +72,7 @@ app.use(express.urlencoded({ extended: true }));
 
 app.use(
   cors({
-    origin: ["http://localhost:3000","http://localhost:3001","http://localhost:3002"],
+    origin: ["http://localhost:3000","http://localhost:3001","http://localhost:3002","https://kine-milk-client.vercel.app"],
     credentials: true,
     allowedHeaders: ["Content-Type", "Authorization"]
   })

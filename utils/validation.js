@@ -85,7 +85,7 @@ const upsertCategorySchema = Joi.object({
     "string.base": "Title must be a string.",
     "any.required": "Title is required.",
   }),
-  cover: Joi.string().trim().required().messages({
+  cover: Joi.string().trim().optional().messages({
     "string.base": "cover must be a string.",
     "any.required": "cover is required.",
   }),
