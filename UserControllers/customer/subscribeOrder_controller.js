@@ -10,15 +10,12 @@ const Address = require("../../Models/Address");
 const Review = require("../../Models/review");
 const ProductReview = require("../../Models/ProductReview");
 const WalletReport = require("../../Models/WalletReport");
+const db = require('../../config/db');
 
 const generateOrderId = ()=>{
   const randomNum = Math.floor(100000 + Math.random() * 900000)
   return `#${randomNum}`
 }
-
-const generateTransactionNo = () => `TRX-${Math.floor(100000 + Math.random() * 900000)}`;
-
-
 
 const subscribeOrder =  async (req, res) => {
     const {
@@ -51,21 +48,20 @@ const subscribeOrder =  async (req, res) => {
         ResponseMsg: "Missing required fields!",
       });
     }
-  
+  const t = await db.transaction()
     try {
       // Start a transaction
 
 
-      const user = await User.findByPk(uid);
-
-      if(!user){
-        return res.status(400).json({
-          ResponseCode: "400",
-          Result: "false",
-          ResponseMsg: "User not found",
-          });
-      }
-      
+      const user = await User.findByPk(uid, { transaction: t });
+    if (!user) {
+      await t.rollback();
+      return res.status(400).json({
+        ResponseCode: "400",
+        Result: "false",
+        ResponseMsg: "User not found",
+      });
+    }
       const odate = new Date();
   
       // Create the order
@@ -90,7 +86,7 @@ const subscribeOrder =  async (req, res) => {
           a_note,
           order_id:generateOrderId()
         },
-        
+        {transaction:t}
       );
   
      console.log(order,"from ordder")
@@ -108,15 +104,25 @@ const subscribeOrder =  async (req, res) => {
               pquantity: item.quantity,
               price: itemPrice,
             },
-            
+            {transaction:t}
           );
         })
       );
 
       const updatedAmount = user.wallet - o_total;
-      user.wallet = updatedAmount;
-      user.save();
-      
+      if (updatedAmount < 0) {
+        await t.rollback();
+        return res.status(400).json({
+          ResponseCode: "400",
+          Result: "false",
+          ResponseMsg: "Insufficient wallet balance!",
+        });
+      }
+      // user.wallet = updatedAmount;
+      // user.save();
+      // await user.save({ transaction });
+      await user.update({ wallet: updatedAmount }, { transaction: t });
+
       await WalletReport.create({
         uid,
         amt:o_total,
@@ -125,7 +131,7 @@ const subscribeOrder =  async (req, res) => {
         tdate:new Date(),
         transaction_type: "Debited",
         status:1
-      })
+      },{transaction:t})
 
       console.log("Wallet updated successfully!")
 
@@ -156,18 +162,13 @@ const subscribeOrder =  async (req, res) => {
         console.log(error);
       }
 
-      await Notification.create(
-{
-    uid, 
-    datetime: new Date(),
+      await Notification.create({
+        uid,
+        datetime: new Date(),
         title: "Order Confirmed",
         description: `Your order created  Order ID ${order.id} .`,
-}
-      )
-
-     
-  
-     
+      },{transaction:t});
+      await t.commit();
   
       res.status(200).json({
         ResponseCode: "200",
@@ -178,6 +179,7 @@ const subscribeOrder =  async (req, res) => {
         items: orderItems,
       });
     } catch (error) {
+      await transaction.rollback();
       console.error("Error creating order:", error);
   
       res.status(500).json({

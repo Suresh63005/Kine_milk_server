@@ -11,6 +11,7 @@ const User = require("../../Models/User");
 const Address = require("../../Models/Address");
 const sequelize = require("../../config/db");
 const ProductInvetory = require('../../Models/ProductInventory');
+const Time = require("../../Models/Time");
 
 const ListAllInstantOrders = asyncHandler(async (req, res) => {
 
@@ -138,6 +139,24 @@ const FetchAllInstantOrdersByStatus = asyncHandler(async (req, res) => {
             where: queryFilter,
             order: [["createdAt", "DESC"]],
             include:[
+              {
+                model:Time,
+                as:"timeslot",
+                attributes:['mintime','maxtime'],
+                required:false
+              },
+              {
+                model: NormalOrderProduct,
+                as: "NormalProducts", 
+                attributes: ["id", "product_id", "pquantity", "price"], 
+                include: [
+              {
+                model: Product,
+                as: "ProductDetails", 
+                attributes: ["id", "title", "description", "normal_price", "mrp_price", "img","weight"],
+              },
+            ],
+              },
                 {
                     model:User,
                     as:"user",
@@ -258,6 +277,13 @@ const ViewInstantOrderById = asyncHandler(async (req, res) => {
       const instantOrder = await NormalOrder.findOne({
         where: { id: orderId, store_id: storeId },
         include: [
+          {
+            model:Time,
+            as:"timeslot",
+            attributes:["mintime","maxtime"],
+            where:{store_id:storeId},
+            required:false
+          },
           {
             model: NormalOrderProduct,
             as: "NormalProducts", 
