@@ -5,6 +5,7 @@ const asyncHandler = require("../../middlewares/errorHandler");
 const SubscribeOrder = require("../../Models/SubscribeOrder");
 const User = require("../../Models/User");
 const Address = require("../../Models/Address");
+const Time = require("../../Models/Time");
 
 const DeliveryDashboard = asyncHandler(async (req, res) => {
   console.log("Decoded User:", req.user);
@@ -21,7 +22,6 @@ const DeliveryDashboard = asyncHandler(async (req, res) => {
   try {
     console.log("Fetching rider details for ID:", riderId);
 
-    // Fetch rider details including store association
     const rider = await Rider.findOne({
       where: { id: riderId },
       attributes: ["id", "store_id", "title"],
@@ -65,8 +65,6 @@ const DeliveryDashboard = asyncHandler(async (req, res) => {
             model: User,
             as: "user",
             attributes: ["id", "name", "mobile", "email"],
-            on: { "$user.id$": { [Op.eq]: Sequelize.col("NormalOrder.uid") } },
-
             include: [
               {
                 model: Address,
@@ -84,18 +82,20 @@ const DeliveryDashboard = asyncHandler(async (req, res) => {
               },
             ],
           },
+          {
+            model: Time,
+            as: "timeslot",
+            attributes: ["id","minTime", "maxTime"],
+          },
         ],
       }),
       SubscribeOrder.findAll({
-        where: { store_id, rid: riderId, status: "Processing" },
+        where: { store_id, rid: riderId, status: "Active" },
         include: [
           {
             model: User,
             as: "user",
             attributes: ["id", "name", "mobile", "email"],
-            on: {
-              "$user.id$": { [Op.eq]: Sequelize.col("SubscribeOrder.uid") },
-            },
             include: [
               {
                 model: Address,
@@ -113,9 +113,15 @@ const DeliveryDashboard = asyncHandler(async (req, res) => {
               },
             ],
           },
+          {
+            model: Time,
+            as: "timeslots",
+            attributes: ["id","minTime", "maxTime"],
+          },
         ],
       }),
     ]);
+
     const orderDetails = [...assignedInstantOrders, ...assignedSubscribeOrders];
 
     return res.status(200).json({

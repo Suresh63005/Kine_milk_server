@@ -9,11 +9,15 @@ const Time = require("../../Models/Time");
 const Address = require("../../Models/Address");
 const Review = require("../../Models/review");
 const ProductReview = require("../../Models/ProductReview");
+const WalletReport = require("../../Models/WalletReport");
 
 const generateOrderId = ()=>{
   const randomNum = Math.floor(100000 + Math.random() * 900000)
   return `#${randomNum}`
 }
+
+const generateTransactionNo = () => `TRX-${Math.floor(100000 + Math.random() * 900000)}`;
+
 
 
 const subscribeOrder =  async (req, res) => {
@@ -62,7 +66,6 @@ const subscribeOrder =  async (req, res) => {
           });
       }
       
-
       const odate = new Date();
   
       // Create the order
@@ -110,6 +113,21 @@ const subscribeOrder =  async (req, res) => {
         })
       );
 
+      const updatedAmount = user.wallet - o_total;
+      user.wallet = updatedAmount;
+      user.save();
+      
+      await WalletReport.create({
+        uid,
+        amt:o_total,
+        message:`Order placed. ₹${o_total} has been deducted from your wallet.`,
+        transaction_no:"null",
+        tdate:new Date(),
+        transaction_type: "Debited",
+        status:1
+      })
+
+      console.log("Wallet updated successfully!")
 
       try {
         const notificationContent = {
