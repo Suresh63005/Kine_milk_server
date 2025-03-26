@@ -96,3 +96,18 @@
 {"level":"error","message":"Invalid password","service":"kine_milk_server","timestamp":"2025-03-14T04:32:51.406Z"}
 {"level":"error","message":"Invalid password","service":"kine_milk_server","timestamp":"2025-03-14T04:32:59.017Z"}
 {"level":"error","message":"\"role\" must be one of [admin, store]","service":"kine_milk_server","timestamp":"2025-03-18T05:24:06.917Z"}
+{"level":"error","message":"Invalid password","service":"kine_milk_server","timestamp":"2025-03-20T04:24:57.982Z"}
+{"level":"error","message":"\"role\" must be one of [admin, store]","service":"kine_milk_server","timestamp":"2025-03-24T05:39:27.629Z"}
+{"level":"error","message":"\"role\" must be one of [admin, store]","service":"kine_milk_server","timestamp":"2025-03-24T05:39:35.583Z"}
+{"level":"error","message":"\"role\" must be one of [admin, store]","service":"kine_milk_server","timestamp":"2025-03-24T05:39:40.573Z"}
+{"level":"error","message":"\"role\" must be one of [admin, store]","service":"kine_milk_server","timestamp":"2025-03-24T05:40:24.078Z"}
+{"level":"error","message":"\"role\" must be one of [admin, store]","service":"kine_milk_server","timestamp":"2025-03-24T05:40:25.116Z"}
+{"level":"error","message":"\"role\" must be one of [admin, store]","service":"kine_milk_server","timestamp":"2025-03-24T05:40:25.322Z"}
+{"level":"error","message":"\"role\" must be one of [admin, store]","service":"kine_milk_server","timestamp":"2025-03-24T05:40:28.410Z"}
+{"level":"error","message":"\"role\" must be one of [admin, store]","service":"kine_milk_server","timestamp":"2025-03-24T05:40:41.302Z"}
+{"level":"error","message":"Invalid Email","service":"kine_milk_server","timestamp":"2025-03-24T05:43:02.677Z"}
+{"level":"error","message":"Invalid password","service":"kine_milk_server","timestamp":"2025-03-24T06:00:49.256Z"}
+{"level":"error","message":"Invalid Email","service":"kine_milk_server","timestamp":"2025-03-24T06:03:49.294Z"}
+{"level":"error","message":"\"password\" length must be at least 6 characters long","service":"kine_milk_server","timestamp":"2025-03-24T06:04:06.634Z"}
+{"level":"error","message":"Invalid password","service":"kine_milk_server","timestamp":"2025-03-24T06:04:17.302Z"}
+{"level":"error","message":"Invalid Email","service":"kine_milk_server","timestamp":"2025-03-25T05:25:24.460Z"}
