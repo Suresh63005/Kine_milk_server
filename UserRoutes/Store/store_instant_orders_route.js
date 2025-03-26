@@ -7,5 +7,7 @@ router.get("/all/:storeId",authMiddleware.isAuthenticated,storeInstantOrders.Lis
 router.post("/assign-order",storeInstantOrders.AssignOrderToRider);
 router.post("/order-status",authMiddleware.isAuthenticated,storeInstantOrders.FetchAllInstantOrdersByStatus);
 router.post("/view-order",authMiddleware.isAuthenticated,storeInstantOrders.ViewInstantOrderById);
+router.get("/get-recommendedProducts",authMiddleware.isAuthenticated,storeInstantOrders.getRecommendedProducts);
+router.get("/near-by-store-products",authMiddleware.isAuthenticated,storeInstantOrders.getNearByProducts)
 
 module.exports = router;

@@ -64,6 +64,14 @@ const homeAPI = async (req, res) => {
             ]
         });
 
+        if(!productInventory){
+            return res.json({
+                ResponseCode: "400",
+                Result: "false",
+                ResponseMsg: "No products available in store.",
+              });
+        }
+
         
         const categoryProducts = [];
 

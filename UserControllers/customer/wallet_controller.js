@@ -71,23 +71,54 @@ const updateWallet = async (req,res) =>{
             ResponseMsg: "User not found",
             });
     }
-  user.wallet = user.wallet + amount;
+//   user.wallet = user.wallet + amount;
+user.wallet = (user.wallet || 0) + amount;
   user.save();
 
-  const wallet = await WalletReport.create({
-    tdate:new Date(),
-    uid:userId,
-    amt:amount,
-    message:message,
-    transaction_no:transaction_no,
+  const existingReport = await WalletReport.findOne({ where: { uid: userId }, order: [['tdate', 'DESC']] });
 
-  });
+
+//   const wallet = await WalletReport.create({
+//     tdate:new Date(),
+//     uid:userId,
+//     amt:amount,
+//     message:message,
+//     transaction_no:transaction_no,
+
+//   });
+
+let walletReport;
+
+if (existingReport) {
+    await WalletReport.update(
+      {
+        amt: existingReport.amt + amount,
+        message,
+        transaction_no,
+        tdate: new Date(),
+        transaction_type: "Credited",
+      },
+      {
+        where: { uid: userId }
+      }
+    );
+    walletReport = existingReport
+  } else {
+    walletReport=await WalletReport.create({
+      tdate: new Date(),
+      uid: userId,
+      amt: amount,
+      message,
+      transaction_no,
+      transaction_type: "Credited",
+    });
+  }
 
   return res.status(200).json({
     ResponseCode: "200",
     Result: "true",
     ResponseMsg: "Wallet updated successfully",
-    wallet
+    walletReport
     });
 
 
@@ -105,10 +136,40 @@ const updateWallet = async (req,res) =>{
 
 }
 
-
+const WalletReportHistory = async (req, res) => {
+  const uid = req.user.userId;
+  if (!uid) {
+    return res.status(401).json({ message: "Unauthorized: User not found!" });
+  }
+  try {
+    const walletHistory = await WalletReport.findAll({ where: { uid: uid },order:[['tdate','DESC']] });
+    if (!walletHistory || walletHistory.length === 0) {
+        return res.status(404).json({
+            ResponseCode:"400",
+            Result:"false",
+            ResponseMsg:"No wallet history found!"
+        })
+    }
+    
+    return res.status(200).json({
+        ResponseCode:"200",
+        Result:"true",
+        ResponseMsg:"Wallet history fetched successfully!",
+        walletHistory
+    })
+  } catch (error) {
+    console.log("Error fetching wallet history: ",error);
+    return res.status(500).json({
+        ResponseCode:"500",
+        Result:"false",
+        ResponseMsg:"Internal server error"
+    })
+  }
+};
 
 
 module.exports = {
     getWallet,
-    updateWallet
+    updateWallet,
+    WalletReportHistory
 }

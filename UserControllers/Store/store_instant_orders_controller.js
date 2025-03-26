@@ -9,9 +9,10 @@ const Rider = require("../../Models/Rider");
 const NormalOrderProduct = require("../../Models/NormalOrderProduct");
 const User = require("../../Models/User");
 const Address = require("../../Models/Address");
+const sequelize = require("../../config/db");
+const ProductInvetory = require('../../Models/ProductInventory');
 
 const ListAllInstantOrders = asyncHandler(async (req, res) => {
-    console.log("Decoded User:", req.user);
 
     const { storeId } = req.params;
 
@@ -183,7 +184,9 @@ const FetchAllInstantOrdersByStatus = asyncHandler(async (req, res) => {
 
 const AssignOrderToRider = asyncHandler(async (req, res) => {
     
-    const uid = "3aacc235-d219-4566-a00c-787765609da1";
+    // const uid = "3aacc235-d219-4566-a00c-787765609da1";
+    const uid = req.user?.userId; 
+
 
     if (!uid) {
         return res.status(400).json({
@@ -298,5 +301,150 @@ const ViewInstantOrderById = asyncHandler(async (req, res) => {
   });
   
 
+  const getRecommendedProducts = async (req, res) => {
+    console.log("Reached getRecommendedProducts API");
+    
+    const uid = req.user?.id; // Use authenticated user ID
+    console.log("Authenticated User ID:", uid);
+  
+    if (!uid) {
+      return res.status(400).json({
+        ResponseCode: "400",
+        Result: "false",
+        ResponseMsg: "User not authenticated",
+      });
+    }
+  
+    try {
+      const recentOrders = await NormalOrder.findAll({
+        where: { uid },
+        include: [
+          {
+            model: NormalOrderProduct,
+            as: 'NormalProducts', // Ensure correct alias
+            attributes: ['product_id'],
+          },
+        ],
+        order: [['createdAt', 'DESC']],
+        limit: 10,
+      });
+  
+      if (!recentOrders.length) {
+        return res.status(200).json({
+          ResponseCode: "200",
+          Result: "true",
+          ResponseMsg: "No recent purchases found",
+          recommendedProducts: [],
+        });
+      }
+  
+      const productIds = [...new Set(recentOrders.flatMap(order => 
+        order.NormalProducts.map(op => op.product_id) // Fix alias here
+      ))];
+  
+      const purchasedProducts = await Product.findAll({
+        where: { id: productIds },
+        attributes: ['cat_id'],
+      });
+  
+      const categoryIds = [...new Set(purchasedProducts.map(p => p.cat_id))];
+  
+      const recommendedProducts = await Product.findAll({
+        where: { cat_id: categoryIds, id: { [Op.notIn]: productIds } },
+        attributes: ['id', 'title', 'normal_price', 'img'],
+        limit: 10,
+      });
+  
+      return res.status(200).json({
+        ResponseCode: "200",
+        Result: "true",
+        ResponseMsg: "Recommended products fetched successfully",
+        recommendedProducts,
+      });
+  
+    } catch (error) {
+      console.error("Error fetching recommended products:", error);
+      return res.status(500).json({
+        ResponseCode: "500",
+        Result: "false",
+        ResponseMsg: "Server Error",
+        error: error.message,
+      });
+    }
+  };
+  
+  const getNearByProducts = async(req,res)=>{
+    const uid = req.user.userId;
+    if(!uid){
+      return res.status(401).json({message:"Unauthorized: User not found!"})
+    }
+    try {
+      const userAddress = await Address.findOne({where:{uid:uid}})
+      if (!userAddress) {
+        return res.status(404).json({
+          ResponseCode: "404",
+          Result: "false",
+          ResponseMsg: "User address not found",
+        });
+      }
+      const userLat = parseFloat(userAddress.a_lat);
+      const userLong = parseFloat(userAddress.a_long);
+      const distanceQuery = `
+        (6371 * acos(
+          cos(radians(${userLat})) *
+          cos(radians(CAST(lats AS DOUBLE))) *
+          cos(radians(CAST(longs AS DOUBLE)) - radians(${userLong})) +
+          sin(radians(${userLat})) *
+          sin(radians(CAST(lats AS DOUBLE)))
+        ))`;
+  
+      const stores = await Store.findAll({
+        where: sequelize.literal(`${distanceQuery} <= 10`),
+      });
+      if (stores.length === 0) {
+        return res.status(404).json({
+          ResponseCode: "404",
+          Result: "false",
+          ResponseMsg: "No stores found within 10km range",
+        });
+      }
+  
+      const storeIds = stores.map(store => store.id);
+  
+      const products = await ProductInvetory.findAll({
+        where: { store_id: { [Op.in]: storeIds } },
+        include:
+        [
+          {
+            model:Product,
+            as:"inventoryProducts",
+            attributes:["id","title","img"]
+          }
+        ]
+      });
+  
+      res.status(200).json({
+        ResponseCode: "200",
+        Result: "true",
+        ResponseMsg: "Products fetched successfully",
+        products,
+      });
+    } catch (error) {
+      console.error("Error fetching nearby products:", error);
+      res.status(500).json({
+        ResponseCode: "500",
+        Result: "false",
+        ResponseMsg: "Server Error",
+        error: error.message,
+      });
+    }
+  }
 
-module.exports = {ListAllInstantOrders,AssignOrderToRider,FetchAllInstantOrdersByStatus,ViewInstantOrderById}
+module.exports = {
+  ListAllInstantOrders,
+  AssignOrderToRider,
+  FetchAllInstantOrdersByStatus,
+  ViewInstantOrderById,
+  getRecommendedProducts,
+  getNearByProducts
+};

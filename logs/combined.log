@@ -956,3 +956,7 @@
 {"level":"info","message":"Successfully retrieved all users","service":"kine_milk_server","timestamp":"2025-03-14T06:29:46.517Z"}
 {"level":"info","message":"sucessfully get all categories","service":"kine_milk_server","timestamp":"2025-03-14T07:10:08.517Z"}
 {"level":"info","message":"sucessfully get all categories","service":"kine_milk_server","timestamp":"2025-03-14T07:10:08.550Z"}
+{"level":"error","message":"Internal Server Error","service":"kine_milk_server","timestamp":"2025-03-24T06:11:49.945Z"}
+{"level":"error","message":"Internal Server Error","service":"kine_milk_server","timestamp":"2025-03-24T06:12:12.456Z"}
+{"level":"error","message":"Internal Server Error","service":"kine_milk_server","timestamp":"2025-03-24T06:13:16.392Z"}
+{"level":"error","message":"Internal Server Error","service":"kine_milk_server","timestamp":"2025-03-24T06:14:31.118Z"}

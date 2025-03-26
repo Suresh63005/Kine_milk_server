@@ -100,109 +100,131 @@ const EditStoreProfile = asyncHandler(async (req, res) => {
   }
 });
 
+
 // const verifyMobile = asyncHandler(async (req, res) => {
-  
-//   const { mobile } = req.body;
-//   console.log("Received mobile number:", mobile);
+//   let { mobile } = req.body;
 
 //   if (!mobile) {
-//       return res.status(400).json({ message: "Mobile number is required!" });
+//     return res.status(400).json({ message: "Mobile number is required!" });
+//   }
+
+//   // Ensure mobile number is in correct format
+//   if (!mobile.startsWith("+")) {
+//     mobile = `+${mobile}`;
 //   }
 
 //   try {
-//     console.log("checking mobile number:", mobile);
-//       const userRecord = await storeFirebase.auth().getUserByPhoneNumber(mobile);
-//       if (!userRecord) {
-//           return res.status(404).json({ message: "Mobile number not found!" });
-//       }
+//     console.log("Checking mobile number:", mobile);
 
-//       const store = await Store.findOne({where:{mobile:mobile}})
+//     let userRecord;
 
-//       const token = jwt.sign(
-//           { userId: userRecord.uid, mobile: userRecord.phoneNumber },
-//           process.env.JWT_SECRET,
-//           { expiresIn: "7d" }
-//       );
-
-//       return res.status(200).json({
-//           message: "Mobile number verified successfully!",
-//           mobile: userRecord.phoneNumber,
-//           token,
-//           store
-//       });
-//   } catch (error) {
-//       console.error("Error verifying mobile number:", error.message);
-
+//     try {
+//       // Fetch user from Firebase
+//       userRecord = await storeFirebase.auth().getUserByPhoneNumber(mobile);
+//     } catch (error) {
 //       if (error.code === "auth/user-not-found") {
-//           return res.status(404).json({ message: "Mobile number not found!" });
+//         console.log("User not found in Firebase, creating new user...");
+//         userRecord = await storeFirebase.auth().createUser({
+//           phoneNumber: mobile,
+//         });
+//       } else {
+//         throw error;
 //       }
+//     }
 
-//       return res.status(500).json({ message: "Error verifying mobile number: " + error.message });
+//     // 🔹 Remove country code before querying database
+//     const mobileWithoutCountryCode = mobile.replace(/^\+91/, "");
+
+//     // Fetch store details from database
+//     const store = await Store.findOne({ where: { mobile: mobileWithoutCountryCode } });
+
+//     if (!store) {
+//       console.warn(`Store not found for mobile: ${mobileWithoutCountryCode}`);
+//     }
+
+//     // Generate JWT token
+//     const token = jwt.sign(
+//       { userId: userRecord.uid, mobile: userRecord.phoneNumber },
+//       process.env.JWT_SECRET,
+//       { expiresIn: "7d" }
+//     );
+
+//     return res.status(200).json({
+//       message: "Mobile number verified successfully!",
+//       mobile: userRecord.phoneNumber,
+//       token,
+//       store,
+//     });
+
+//   } catch (error) {
+//     console.error("Error verifying mobile number:", error);
+//     return res.status(500).json({ message: "Error verifying mobile number: " + error.message });
 //   }
 // });
+
 
 const verifyMobile = asyncHandler(async (req, res) => {
   let { mobile } = req.body;
 
   if (!mobile) {
-    return res.status(400).json({ message: "Mobile number is required!" });
+      return res.status(400).json({ message: "Mobile number is required!" });
   }
 
   // Ensure mobile number is in correct format
   if (!mobile.startsWith("+")) {
-    mobile = `+${mobile}`;
+      mobile = `+${mobile}`;
   }
 
   try {
-    console.log("Checking mobile number:", mobile);
+      console.log("Checking mobile number:", mobile);
 
-    let userRecord;
+      let userRecord;
 
-    try {
-      // Fetch user from Firebase
-      userRecord = await storeFirebase.auth().getUserByPhoneNumber(mobile);
-    } catch (error) {
-      if (error.code === "auth/user-not-found") {
-        console.log("User not found in Firebase, creating new user...");
-        userRecord = await storeFirebase.auth().createUser({
-          phoneNumber: mobile,
-        });
-      } else {
-        throw error;
+      try {
+          // Fetch user from Firebase
+          userRecord = await storeFirebase.auth().getUserByPhoneNumber(mobile);
+      } catch (error) {
+          if (error.code === "auth/user-not-found") {
+              console.log("User not found in Firebase, creating new user...");
+              userRecord = await storeFirebase.auth().createUser({
+                  phoneNumber: mobile,
+              });
+          } else {
+              throw error;
+          }
       }
-    }
 
-    // 🔹 Remove country code before querying database
-    const mobileWithoutCountryCode = mobile.replace(/^\+91/, "");
+      // 🔹 Remove country code before querying database
+      const mobileWithoutCountryCode = mobile.replace(/^\+91/, "");
 
-    // Fetch store details from database
-    const store = await Store.findOne({ where: { mobile: mobileWithoutCountryCode } });
+      // Fetch store details from database
+      const store = await Store.findOne({ where: { mobile: mobileWithoutCountryCode } });
 
-    if (!store) {
-      console.warn(`Store not found for mobile: ${mobileWithoutCountryCode}`);
-    }
+      if (!store) {
+          console.warn(`Store not found for mobile: ${mobileWithoutCountryCode}`);
+      }
 
-    // Generate JWT token
-    const token = jwt.sign(
-      { userId: userRecord.uid, mobile: userRecord.phoneNumber },
-      process.env.JWT_SECRET,
-      { expiresIn: "7d" }
-    );
+      // Generate JWT token with storeId if store exists
+      const tokenPayload = {
+          userId: userRecord.uid,
+          mobile: userRecord.phoneNumber,
+          storeId: store ? store.id : null, // Include storeId if store exists
+      };
 
-    return res.status(200).json({
-      message: "Mobile number verified successfully!",
-      mobile: userRecord.phoneNumber,
-      token,
-      store,
-    });
+      const token = jwt.sign(tokenPayload, process.env.JWT_SECRET, { expiresIn: "7d" });
+
+      return res.status(200).json({
+          message: "Mobile number verified successfully!",
+          mobile: userRecord.phoneNumber,
+          token,
+          store,
+      });
 
   } catch (error) {
-    console.error("Error verifying mobile number:", error);
-    return res.status(500).json({ message: "Error verifying mobile number: " + error.message });
+      console.error("Error verifying mobile number:", error);
+      return res.status(500).json({ message: "Error verifying mobile number: " + error.message });
   }
 });
-
-
 
 const ListAllUsers = async()=>{
   const listUsersResult = await storeFirebase.auth().listUsers();

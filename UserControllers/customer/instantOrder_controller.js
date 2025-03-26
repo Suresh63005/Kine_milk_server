@@ -12,6 +12,8 @@ const ProductReview = require("../../Models/ProductReview");
 const Address = require("../../Models/Address");
 const Time = require("../../Models/Time");
 const Review = require("../../Models/review");
+const Store = require("../../Models/Store");
+const sequelize = require("../../config/db");
 
 const generateOrderId = ()=>{
   const randomNum = Math.floor(100000 + Math.random() * 900000)
@@ -35,6 +37,7 @@ const instantOrder =  async (req, res) => {
       store_id,
       address_id,
       a_note,
+      trans_id
     } = req.body;
 
     console.log(req.body);
@@ -81,7 +84,8 @@ const instantOrder =  async (req, res) => {
           tax: tax || 0,
           o_total,
           a_note,
-          order_id:generateOrderId()
+          order_id:generateOrderId(),
+          trans_id
         },
         
       );
@@ -419,67 +423,145 @@ const instantOrder =  async (req, res) => {
     }
   };
   
-  const getRecommendedProducts = async (req, res) => {
-    const uid = req.user.userId;
-  
-    if (!uid) {
-      return res.status(400).json({
-        ResponseCode: "400",
-        Result: "false",
-        ResponseMsg: "User ID is required!",
-      });
-    }
-  
-    try {
-      // Fetch the user's recent orders
-      const recentOrders = await NormalOrder.findAll({
-        where: { uid },
-        include: [
-          {
-            model: NormalOrderProduct,
-            include: [Product],
-          },
-        ],
-        order: [['odate', 'DESC']],
-        limit: 5,
-      });
-  
-      const categories = new Set();
-      recentOrders.forEach(order => {
-        order.NormalOrderProducts.forEach(item => {
-          categories.add(item.Product.category);
-        });
-      });
-  
-      const recommendedProducts = await Product.findAll({
-        where: {
-          category: Array.from(categories),
+
+const getRecommendedProducts = async(req,res)=>{
+  console.log("Reached getRecommendedProducts API");
+  // const uid = '8333f3ff-98fa-4df5-956c-4b58aabce493';
+const uid = req.user?.id;
+
+  if (!uid) {
+    return res.status(400).json({
+      ResponseCode: "400",
+      Result: "false",
+      ResponseMsg: "User not authenticated",
+    });
+  }
+
+  try {
+    // Fetch recent orders for the user
+    const recentOrders = await NormalOrder.findAll({
+      where: { uid:uid },
+      include: [
+        {
+          model: NormalOrderProduct,
+          as: 'NormalProducts',
+          attributes: ['product_id'],
         },
-        limit: 10,
-      });
-  
-      res.status(200).json({
+      ],
+      order: [['createdAt', 'DESC']],
+      limit: 10,
+    });
+
+    if (!recentOrders.length) {
+      return res.status(200).json({
         ResponseCode: "200",
         Result: "true",
-        ResponseMsg: "Recommended products fetched successfully!",
-        recommendedProducts,
-      });
-    } catch (error) {
-      console.error("Error fetching recommended products:", error);
-  
-      res.status(500).json({
-        ResponseCode: "500",
-        Result: "false",
-        ResponseMsg: "Server Error",
-        error: error.message,
+        ResponseMsg: "No recent purchases found",
+        recommendedProducts: [],
       });
     }
-  };  
+
+    // Extract product IDs from recent orders
+    const productIds = [...new Set(recentOrders.flatMap(order => 
+      order.orderProducts.map(op => op.product_id)
+    ))];
+
+    // Find similar products based on the category of purchased products
+    const purchasedProducts = await Product.findAll({
+      where: { id: productIds },
+      attributes: ['cat_id'],
+    });
+
+    const categoryIds = [...new Set(purchasedProducts.map(p => p.category_id))];
+
+    const recommendedProducts = await Product.findAll({
+      where: { category_id: categoryIds, id: { [Op.notIn]: productIds } },
+      attributes: ['id', 'name', 'normal_price', 'image'],
+      limit: 10,
+    });
+
+    return res.status(200).json({
+      ResponseCode: "200",
+      Result: "true",
+      ResponseMsg: "Recommended products fetched successfully",
+      recommendedProducts,
+    });
+
+  } catch (error) {
+    console.error("Error fetching recommended products:", error);
+    return res.status(500).json({
+      ResponseCode: "500",
+      Result: "false",
+      ResponseMsg: "Server Error",
+      error: error.message,
+    });
+  }
+}
+
+const getNearByProducts = async(req,res)=>{
+  const uid = req.user.userId;
+  if(!uid){
+    return res.status(401).json({message:"Unauthorized: User not found!"})
+  }
+  try {
+    const userAddress = await Address.findOne({where:{uid:uid}})
+    if (!userAddress) {
+      return res.status(404).json({
+        ResponseCode: "404",
+        Result: "false",
+        ResponseMsg: "User address not found",
+      });
+    }
+    const userLat = parseFloat(userAddress.a_lat);
+    const userLong = parseFloat(userAddress.a_long);
+    const distanceQuery = `
+      (6371 * acos(
+        cos(radians(${userLat})) *
+        cos(radians(CAST(lats AS DOUBLE))) *
+        cos(radians(CAST(longs AS DOUBLE)) - radians(${userLong})) +
+        sin(radians(${userLat})) *
+        sin(radians(CAST(lats AS DOUBLE)))
+      ))`;
+
+    const stores = await Store.findAll({
+      where: sequelize.literal(`${distanceQuery} <= 10`),
+    });
+    if (stores.length === 0) {
+      return res.status(404).json({
+        ResponseCode: "404",
+        Result: "false",
+        ResponseMsg: "No stores found within 10km range",
+      });
+    }
+
+    const storeIds = stores.map(store => store.id);
+
+    const products = await Product.findAll({
+      where: { store_id: { [Op.in]: storeIds } },
+    });
+
+    res.status(200).json({
+      ResponseCode: "200",
+      Result: "true",
+      ResponseMsg: "Products fetched successfully",
+      products,
+    });
+  } catch (error) {
+    console.error("Error fetching nearby products:", error);
+    res.status(500).json({
+      ResponseCode: "500",
+      Result: "false",
+      ResponseMsg: "Server Error",
+      error: error.message,
+    });
+  }
+}
 
   module.exports = {
     instantOrder,
     getOrdersByStatus,
     getOrderDetails,
     cancelOrder,
-    getRecommendedProducts
+    getRecommendedProducts,
+    getNearByProducts
   };
