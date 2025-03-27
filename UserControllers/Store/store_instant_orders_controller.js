@@ -17,7 +17,7 @@ const ListAllInstantOrders = asyncHandler(async (req, res) => {
 
     const { storeId } = req.params;
 
-    const uid = req.user.userId;
+    const uid = req.user.storeId;
     if (!uid) {
         return res.status(400).json({
             ResponseCode: "401",
@@ -100,7 +100,7 @@ const ListAllInstantOrders = asyncHandler(async (req, res) => {
 
 const FetchAllInstantOrdersByStatus = asyncHandler(async (req, res) => {
     console.log("Decoded User:", req.user);
-    const uid = req.user?.userId; 
+    const uid = req.user?.storeId; 
 
     if (!uid) {
         return res.status(401).json({
@@ -204,7 +204,7 @@ const FetchAllInstantOrdersByStatus = asyncHandler(async (req, res) => {
 const AssignOrderToRider = asyncHandler(async (req, res) => {
     
     // const uid = "3aacc235-d219-4566-a00c-787765609da1";
-    const uid = req.user?.userId; 
+    const uid = req.user?.storeId; 
 
 
     if (!uid) {
@@ -291,7 +291,7 @@ const AssignOrderToRider = asyncHandler(async (req, res) => {
 
 const ViewInstantOrderById = asyncHandler(async (req, res) => {
     console.log("Decoded User:", req.user);
-    const uid = req.user.userId;
+    const uid = req.user.storeId;
     if (!uid) {
       return res.status(400).json({
         ResponseCode: "401",
