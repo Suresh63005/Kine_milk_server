@@ -6,6 +6,7 @@ const asyncHandler = require("../../middlewares/errorHandler");
 const Address = require("../../Models/Address");
 const SubscribeOrderProduct = require("../../Models/SubscribeOrderProduct");
 const Product = require("../../Models/Product");
+const Time = require("../../Models/Time");
 
 const FetchSubscribeOrdersByStatus = asyncHandler(async (req, res) => {
     console.log("Decoded User:", req.user);
@@ -48,6 +49,12 @@ const FetchSubscribeOrdersByStatus = asyncHandler(async (req, res) => {
         where: queryFilter,
         order: [["createdAt", "DESC"]],
         include: [
+          {
+            model:Time,
+            as:"timeslots",
+            attributes:["mintime","maxtime"],
+            required:false
+          },
           {
             model: SubscribeOrderProduct,
             as: "orderProducts",
@@ -135,6 +142,13 @@ const FetchSubscribeOrdersByStatus = asyncHandler(async (req, res) => {
       const order = await SubscribeOrder.findOne({
         where: { id: orderId, store_id: storeId },
         include: [
+          {
+            model:Time,
+            as:"timeslots",
+            attributes:["mintime","maxtime"],
+            where:{store_id:storeId},
+            required:false
+          },
           {
             model: SubscribeOrderProduct,
             as: "orderProducts",

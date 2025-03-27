@@ -64,7 +64,7 @@ const homeAPI = async (req, res) => {
             ]
         });
 
-        if(!productInventory){
+        if(!productInventory || productInventory.length === 0){
             return res.json({
                 ResponseCode: "400",
                 Result: "false",
@@ -72,6 +72,18 @@ const homeAPI = async (req, res) => {
               });
         }
 
+        const outOfStockProducts = productInventory.filter(item => item.quantity === 0);
+        if(outOfStockProducts.length > 0){
+            return res.json({
+                ResponseCode: "400",
+                Result: "false",
+                ResponseMsg: "Some products are out of stock.",
+                OutOfStockProducts: outOfStockProducts.map(p => ({
+                    product_id: p.product_id,
+                    title: p.inventoryProducts.title
+                }))
+            });
+        }
         
         const categoryProducts = [];
 
