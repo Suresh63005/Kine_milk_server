@@ -59,7 +59,7 @@ const DeliveryDashboard = asyncHandler(async (req, res) => {
         where: { store_id, rid: riderId, status: "Completed" },
       }),
       NormalOrder.findAll({
-        where: { store_id, rid: riderId, status: "On Route" },
+        where: { store_id, rid: riderId, status:{[Op.or]:['On Route','Processing']} },
         include: [
           {
             model: User,
@@ -90,7 +90,7 @@ const DeliveryDashboard = asyncHandler(async (req, res) => {
         ],
       }),
       SubscribeOrder.findAll({
-        where: { store_id, rid: riderId, status: "Active" },
+        where: { store_id, rid: riderId, status:{[Op.or]:['Pending','Active']} },
         include: [
           {
             model: User,

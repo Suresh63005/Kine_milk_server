@@ -269,10 +269,53 @@ const UpdateOneSignalSubscription = asyncHandler(async(req,res)=>{
   }
 })
 
+const RemoveOneSignalId = asyncHandler(async(req,res)=>{
+  console.log("Decoded User: ", req.user);
+  const uid = req.user?.storeId
+  const {one_subscription}=req.body;
+  if(!uid){
+    return res.status(401).json({
+      ResponseCode: "401",
+      Result: "false",
+      ResponseMsg: "Unauthorized, rider not found",
+    });
+  }
+  try {
+    const store = await Store.findByPk(uid);
+    if(!user){
+      return res.status(404).json({
+        ResponseCode: "404",
+        Result: "false",
+        ResponseMsg: "User not found",
+      })
+    }
+    if(!store.one_subscription){
+      return res.status(200).json({
+        ResponseCode: "200",
+        Result: "true",
+        ResponseMsg: "OneSignal subscription is already removed",
+      });
+    }
+    await store.update({one_subscription:null})
+    return res.status(200).json({
+      ResponseCode: "200",
+      Result: "true",
+      ResponseMsg: "OneSignal subscription removed successfully",
+    })
+  } catch (error) {
+    console.error("Error removing OneSignal ID:", error);
+    return res.status(500).json({
+      ResponseCode: "500",
+      Result: "false",
+      ResponseMsg: "Internal server error: " + error.message,
+    }); 
+  }
+})
+
 const ListAllUsers = async()=>{
   const listUsersResult = await storeFirebase.auth().listUsers();
   console.log("All Firebase Users:", listUsersResult.users.map(user => user.phoneNumber));
 }
 ListAllUsers();
 
-module.exports = { StoreProfile, EditStoreProfile,verifyMobile };
+module.exports = { StoreProfile, EditStoreProfile,verifyMobile,UpdateOneSignalSubscription,RemoveOneSignalId };

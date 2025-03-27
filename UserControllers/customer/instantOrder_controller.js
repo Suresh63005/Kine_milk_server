@@ -74,6 +74,16 @@ const instantOrder = async (req, res) => {
       });
     }
 
+    const store = await Store.findByPk(store_id,{transaction})
+    if (!store) {
+      await transaction.rollback();
+      return res.status(400).json({
+        ResponseCode: "400",
+        Result: "false",
+        ResponseMsg: "Store not found",
+      });
+    }
+
     // Create the order
     const order = await NormalOrder.create(
       {
@@ -153,15 +163,55 @@ const instantOrder = async (req, res) => {
       console.log(error);
     }
 
-    await Notification.create(
-      {
+    try {
+      const storeNotificationContent = {
+        app_id:process.env.ONESIGNAL_APP_ID,
+        include_player_ids:[store.one_subscription],
+        data:{store_id:store.id,type:"new order received"},
+        contents:{
+          en:`New order received! Order ID:${order.id}`
+        },
+        headings:{en:"New Order Alert"}
+      }
+      const storeResponse = await axios.post(
+        "https://onesignal.com/api/v1/notifications",
+        storeNotificationContent,
+        {
+          headers: {
+            "Content-Type": "application/json; charset=utf-8",
+            Authorization: `Basic ${process.env.ONESIGNAL_API_KEY}`,
+          },
+        }
+      )
+      console.log(storeResponse.data, "store notification sent");
+    } catch (error) {
+      console.log("Store notification error:", error);
+    }
+
+    // await Notification.create(
+    //   {
+    //     uid,
+    //     datetime: new Date(),
+    //     title: "Order Instant Confirmed",
+    //     description: `Your order created  Order ID ${order.id} .`,
+    //   },
+    //   { transaction }
+    // );
+
+    await Promise.all([
+      Notification.create({
         uid,
         datetime: new Date(),
         title: "Order Instant Confirmed",
-        description: `Your order created  Order ID ${order.id} .`,
-      },
-      { transaction }
-    );
+        description: `Your order created Order ID ${order.id}.`,
+      },{transaction}),
+      Notification.create({
+        uid:store.id,
+        datetime: new Date(),
+        title: "New Order Received",
+        description: `A new order has been placed. Order ID: ${order.order_id}.`,
+      },{transaction})
+    ])
     await transaction.commit();
     res.status(200).json({
       ResponseCode: "200",

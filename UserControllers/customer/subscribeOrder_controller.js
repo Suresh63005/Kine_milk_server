@@ -11,6 +11,7 @@ const Review = require("../../Models/review");
 const ProductReview = require("../../Models/ProductReview");
 const WalletReport = require("../../Models/WalletReport");
 const db = require("../../config/db");
+const Store = require("../../Models/Store");
 
 const generateOrderId = () => {
   const randomNum = Math.floor(100000 + Math.random() * 900000);
@@ -70,6 +71,16 @@ const subscribeOrder = async (req, res) => {
         ResponseCode: "400",
         Result: "false",
         ResponseMsg: "User not found",
+      });
+    }
+
+    const store = await Store.findByPk(store_id,{transaction:t})
+    if(!store){
+      await t.rollback();
+      return res.status(400).json({
+        ResponseCode: "400",
+        Result: "false",
+        ResponseMsg: "Store not found",
       });
     }
     const odate = new Date();
@@ -177,15 +188,61 @@ const subscribeOrder = async (req, res) => {
       console.log(error);
     }
 
-    await Notification.create(
-      {
-        uid,
-        datetime: new Date(),
-        title: "Order Confirmed",
-        description: `Your order created  Order ID ${order.id} .`,
-      },
-      { transaction: t }
-    );
+    try {
+      const storeNotificationContent = {
+        app_id:process.env.ONESIGNAL_APP_ID,
+        include_player_ids:[store.one_subscription],
+        data:{store_id:store.id,type:"new subscription order received"},
+        contents:{
+          en:`New subscription order received! Order ID:${order.id}`
+        },
+        headings:{en:"New Subscription Order Alert"}
+      }
+      const storeResponse = await axios.post(
+        "https://onesignal.com/api/v1/notifications",
+        storeNotificationContent,
+        {
+          headers: {
+            "Content-Type": "application/json; charset=utf-8",
+            Authorization: `Basic ${process.env.ONESIGNAL_API_KEY}`,
+          },
+        }
+      )
+      console.log(storeResponse.data, "store notification sent");
+    } catch (error) {
+      console.log("Store notification error:", error);
+    }
+
+    await Promise.all([
+      Notification.create(
+        {
+          uid,
+          datetime: new Date(),
+          title: "Subscription Order Confirmed",
+          description: `Your subscription order created Order ID ${order.id}.`,
+        },
+        { transaction: t }
+      ),
+      Notification.create(
+        {
+          uid: store.id,
+          datetime: new Date(),
+          title: "New Subscription Order Received",
+          description: `A new subscription order has been placed. Order ID: ${order.id}.`,
+        },
+        { transaction: t }
+      ),
+    ]);
+
+    // await Notification.create(
+    //   {
+    //     uid,
+    //     datetime: new Date(),
+    //     title: "Order Confirmed",
+    //     description: `Your order created  Order ID ${order.id} .`,
+    //   },
+    //   { transaction: t }
+    // );
     await t.commit();
 
     res.status(200).json({

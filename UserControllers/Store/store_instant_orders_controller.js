@@ -245,6 +245,40 @@ const AssignOrderToRider = asyncHandler(async (req, res) => {
 
         const updatedOrder = await NormalOrder.findOne({ where: { id: order_id } });
 
+        try {
+          const riderNotificationContent = {
+            app_id: process.env.ONESIGNAL_APP_ID,
+            include_player_ids: [rider.one_subscription],
+            data: { rider_id: rider.id, type: "order assigned" },
+            contents: {
+              en: `You have been assigned a new order! Order ID: ${updatedOrder.order_id}`,
+            },
+            headings: { en: "New Order Assignment" },
+          };
+    
+          const riderResponse = await axios.post(
+            "https://onesignal.com/api/v1/notifications",
+            riderNotificationContent,
+            {
+              headers: {
+                "Content-Type": "application/json; charset=utf-8",
+                Authorization: `Basic ${process.env.ONESIGNAL_API_KEY}`,
+              },
+            }
+          );
+          console.log(riderResponse.data, "rider notification sent");
+        } catch (error) {
+          console.log("Rider notification error:", error);
+        }
+
+        await Notification.create(
+          {
+            uid: rider.id, 
+            datetime: new Date(),
+            title: "New Order Assigned",
+            description: `You have been assigned Order ID ${updatedOrder.order_id}.`,
+          },)
+
         return res.status(200).json({
             message: "Order assigned to rider successfully!",
             order: updatedOrder
