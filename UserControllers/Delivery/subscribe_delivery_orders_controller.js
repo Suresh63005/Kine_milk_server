@@ -6,6 +6,7 @@ const SubscribeOrder = require("../../Models/SubscribeOrder");
 const SubscribeOrderProduct = require("../../Models/SubscribeOrderProduct");
 const User = require("../../Models/User");
 const Address = require("../../Models/Address");
+const Notification = require("../../Models/Notification");
 
 const FetchAllSubscribeOrders = asyncHandler(async (req, res) => {
   console.log("Decoded User:", req.user);
@@ -264,7 +265,7 @@ const AcceptSubscriptionOrder = asyncHandler(async(req,res)=>{
         });
       }
 
-      const user = await User.findByPk(order.id);
+      const user = await User.findByPk(order.uid);
       if (!user) {
         return res.status(404).json({
           success: false,
