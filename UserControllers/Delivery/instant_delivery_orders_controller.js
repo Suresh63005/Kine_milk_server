@@ -149,12 +149,65 @@ const AcceptInstantOrders = asyncHandler(async (req, res) => {
       });
     }
 
+    const user = await User.findByPk(order.uid)
+    if (!user) {
+      return res.status(404).json({
+        success: false,
+        message: "User not found for this order!",
+      });
+    }
+
     await NormalOrder.update(
       { status: "On Route" },
       { where: { id: order_id } }
     );
 
     const updatedOrder = await NormalOrder.findOne({ where: { id: order_id } });
+
+    try {
+      const userNotificationContent = {
+        app_id: process.env.ONESIGNAL_APP_ID,
+        include_player_ids: [user.one_subscription], 
+        data: { user_id: user.id, type: "order accepted" },
+        contents: {
+          en: `${user.name}, Your order (ID: ${updatedOrder.order_id}) is now on the way!`,
+        },
+        headings: { en: "Order On Route" },
+      };
+
+      const userResponse = await axios.post(
+        "https://onesignal.com/api/v1/notifications",
+        userNotificationContent,
+        {
+          headers: {
+            "Content-Type": "application/json; charset=utf-8",
+            Authorization: `Basic ${process.env.ONESIGNAL_API_KEY}`,
+          },
+        }
+      );
+      console.log(userResponse.data, "user notification sent");
+    } catch (error) {
+      console.log("User notification error:", error);
+    }
+
+    await Promise.all([
+      Notification.create(
+        {
+          uid: user.id, 
+          datetime: new Date(),
+          title: "Order On Route",
+          description: `Your order (ID: ${updatedOrder.order_id}) has been accepted and is on the way!`,
+        },
+      ),
+      Notification.create(
+        {
+          uid: order.store_id,
+          datetime: new Date(),
+          title: "Order Accepted by Rider",
+          description: `Order (ID: ${updatedOrder.order_id}) has been accepted by the rider and is on the way.`,
+        },
+      )
+    ])
 
     return res.status(200).json({
       success: true,

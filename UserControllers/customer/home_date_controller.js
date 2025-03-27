@@ -5,6 +5,7 @@ const Category = require("../../Models/Category");
 const Product = require("../../Models/Product");
 const Store = require("../../Models/Store");
 const ProductInventory = require("../../Models/ProductInventory");
+const Notification = require("../../Models/Notification");
 
 
 // Function to calculate distance
@@ -59,7 +60,14 @@ const homeAPI = async (req, res) => {
                 {
                     model: Product, 
                     as:"inventoryProducts",
-                    attributes: ["id", "cat_id", "title","mrp_price","img","description","subscribe_price","normal_price",]
+                    attributes: ["id", "cat_id", "title","mrp_price","img","description","subscribe_price","normal_price","weight"],
+                    include:[
+                        {
+                            model:Category,
+                            as:"category",
+                            attributes:['id','title']
+                        }
+                    ]
                 }
             ]
         });
@@ -77,7 +85,7 @@ const homeAPI = async (req, res) => {
             return res.json({
                 ResponseCode: "400",
                 Result: "false",
-                ResponseMsg: "Some products are out of stock.",
+                ResponseMsg: "Out of stock.",
                 OutOfStockProducts: outOfStockProducts.map(p => ({
                     product_id: p.product_id,
                     title: p.inventoryProducts.title

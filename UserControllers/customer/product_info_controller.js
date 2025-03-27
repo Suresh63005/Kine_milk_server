@@ -1,6 +1,7 @@
 const { where } = require("sequelize");
 const Product = require("../../Models/Product");
 const ProductImage = require("../../Models/productImages");
+const Category = require("../../Models/Category");
 
 const productInfo = async (req, res) => {
     try {
@@ -16,14 +17,22 @@ const productInfo = async (req, res) => {
         }
 
         // Fetch the product
-        const product = await Product.findOne({where:{id:pid},include: [
+        const product = await Product.findOne({
+          where: { id: pid },
+          include: [
+            {
+                model:Category,
+                as:"category",
+                attributes:["id","title"]
+            },
             {
               model: ProductImage,
               as: "extraImages",
               attributes: ["img"],
-              required:true
+              required: true,
             },
-          ],});
+          ],
+        });
 
         if (!product) {
             return res.status(404).json({
