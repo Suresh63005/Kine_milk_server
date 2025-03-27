@@ -59,7 +59,11 @@ const DeliveryDashboard = asyncHandler(async (req, res) => {
         where: { store_id, rid: riderId, status: "Completed" },
       }),
       NormalOrder.findAll({
-        where: { store_id, rid: riderId, status:{[Op.or]:['On Route','Processing']} },
+        where: {
+          store_id,
+          rid: riderId,
+          status: { [Op.or]: ["On Route", "Processing"] },
+        },
         include: [
           {
             model: User,
@@ -85,12 +89,16 @@ const DeliveryDashboard = asyncHandler(async (req, res) => {
           {
             model: Time,
             as: "timeslot",
-            attributes: ["id","minTime", "maxTime"],
+            attributes: ["id", "minTime", "maxTime"],
           },
         ],
       }),
       SubscribeOrder.findAll({
-        where: { store_id, rid: riderId, status:{[Op.or]:['Pending','Active']} },
+        where: {
+          store_id,
+          rid: riderId,
+          status: { [Op.or]: ["Pending", "Active"] },
+        },
         include: [
           {
             model: User,
@@ -116,12 +124,13 @@ const DeliveryDashboard = asyncHandler(async (req, res) => {
           {
             model: Time,
             as: "timeslots",
-            attributes: ["id","minTime", "maxTime"],
+            attributes: ["id", "minTime", "maxTime"],
           },
         ],
       }),
     ]);
-
+    const activeOrders = activeInstantOrders + activeSubscribeOrders;
+    const completedOrders = completedInstantOrders + completedSubscribeOrders;
     const orderDetails = [...assignedInstantOrders, ...assignedSubscribeOrders];
 
     return res.status(200).json({
@@ -129,14 +138,8 @@ const DeliveryDashboard = asyncHandler(async (req, res) => {
       Result: "true",
       ResponseMsg: "Delivery Dashboard Fetched Successfully",
       rider,
-      instant_orders: {
-        activeInstantOrders,
-        completedInstantOrders,
-      },
-      subscription_orders: {
-        activeSubscribeOrders,
-        completedSubscribeOrders,
-      },
+      activeOrders,
+      completedOrders,
       order_details: orderDetails,
     });
   } catch (error) {

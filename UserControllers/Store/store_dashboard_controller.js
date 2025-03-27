@@ -11,7 +11,7 @@ const Notification = require("../../Models/Notification");
 
 const StoreDashboardAPI = asyncHandler(async (req, res) => {
   try {
-    const uid = req.user.userId;
+    const uid = req.user.storeId;
 
     if (!uid) {
       return res.status(400).json({ message: "Unauthorized! user not found." });
@@ -102,7 +102,7 @@ const StoreDashboardAPI = asyncHandler(async (req, res) => {
 
 const NotificationsAPI = async(req,res)=>{
   console.log("Decoded User: ",req.user)
-  const uid = req.user?.userId;
+  const uid = req.user?.userId || req.user?.riderId || req.user?.storeId;
   if(!uid){
       return res.status(401).json({
           ResponseCode:"401",
