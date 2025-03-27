@@ -129,9 +129,20 @@ const DeliveryDashboard = asyncHandler(async (req, res) => {
         ],
       }),
     ]);
+
+    const formattedInstantOrders = assignedInstantOrders.map(order => ({
+      ...order.toJSON(),
+      orderType: "NormalOrder",
+    }));
+    const formattedSubscribeOrders = assignedSubscribeOrders.map(order => ({
+      ...order.toJSON(),
+      orderType: "SubscribeOrder",
+    }));
+
     const activeOrders = activeInstantOrders + activeSubscribeOrders;
     const completedOrders = completedInstantOrders + completedSubscribeOrders;
-    const orderDetails = [...assignedInstantOrders, ...assignedSubscribeOrders];
+    // const orderDetails = [...assignedInstantOrders, ...assignedSubscribeOrders];
+    const orderDetails = [...formattedInstantOrders,...formattedSubscribeOrders]
 
     return res.status(200).json({
       ResponseCode: "200",
