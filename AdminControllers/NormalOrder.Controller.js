@@ -3,7 +3,8 @@ const {Op}=require("sequelize")
 const asynHandler = require("../middlewares/errorHandler");
 const logger = require("../utils/logger");
 const User = require("../Models/User")
-const Rider = require("../Models/Rider"); 
+const Rider = require("../Models/Rider");
+const TimeSlot = require("../Models/Time")
 const { getNorOrderIdBySchema, NorOrderDeleteSchema, NorOrderSearchSchema } = require("../utils/validation");
 
 const getAllNorOrders = asynHandler(async (req, res, next) => {
@@ -45,6 +46,11 @@ const getAllNorOrders = asynHandler(async (req, res, next) => {
             model: Rider,  
             attributes: ["id", "title"], 
             as:"riders"
+          },
+          {
+            model: TimeSlot,  
+            attributes: ["id", "mintime","maxtime"], 
+            as:"timeslot"
           }
         
         

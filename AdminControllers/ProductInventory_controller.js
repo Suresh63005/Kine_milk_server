@@ -4,20 +4,23 @@ const ProductInventory = require("../Models/ProductInventory");
 const Store = require("../Models/Store");
 const Coupons = require("../Models/Coupon");
 const Coupon = require("../Models/Coupon");
+const WeightOption = require("../Models/WeightOption")
+const StoreWeightOption = require("../Models/StoreWeightOption")
 
-const addInventory = async (req, res) => {
-  const { store_id, product_id, date, quantity, total,coupons } = req.body;
-  console.log(req.body)
-  
+const upsertInventory = async (req, res) => {
+  const { store_id, product_id, date, weightOptions, coupons } = req.body;
+  console.log(req.body);
+
   try {
-    if (!store_id || !product_id || !date || !quantity) {
+    // Validation
+    if (!store_id || !product_id || !weightOptions || weightOptions.length === 0) {
       return res.status(400).json({
         ResponseCode: "400",
         Result: "false",
-        ResponseMsg: "All fields (store_id, product_id, date, quantity, total,coupons) are required.",
+        ResponseMsg: "All fields (store_id, product_id, weightOptions) are required.",
       });
     }
-    
+
     const store = await Store.findOne({ where: { id: store_id } });
     if (!store) {
       return res.status(404).json({
@@ -26,7 +29,7 @@ const addInventory = async (req, res) => {
         ResponseMsg: "Store not found.",
       });
     }
-    
+
     const product = await Product.findOne({ where: { id: product_id } });
     if (!product) {
       return res.status(404).json({
@@ -35,42 +38,69 @@ const addInventory = async (req, res) => {
         ResponseMsg: "Product not found.",
       });
     }
-    
+
     let inventory = await ProductInventory.findOne({
-      where: { store_id, product_id }
+      where: { store_id, product_id },
     });
 
     if (inventory) {
-      inventory.quantity = quantity || inventory.quantity;
-      inventory.total = total || inventory.total;
-      inventory.Coupons = coupons || inventory.Coupons
+      // Update existing inventory
+      inventory.date = date || inventory.date;
+      inventory.Coupons = coupons || inventory.Coupons;
       await inventory.save();
+
+      // Delete existing weight options and replace with new ones
+      await StoreWeightOption.destroy({ where: { product_inventory_id: inventory.id } });
+      const weightOptionRecords = weightOptions.map((option) => ({
+        product_inventory_id: inventory.id,
+        product_id,
+        weight: option.weight,
+        quantity: option.quantity,
+        unit_price: option.unit_price,
+        total: option.total, // Individual total for each weight option
+      }));
+      await StoreWeightOption.bulkCreate(weightOptionRecords);
 
       return res.status(200).json({
         ResponseCode: "200",
         Result: "true",
-        ResponseMsg: "Product inventory already exists, so it has been updated.",
-        inventory,
+        ResponseMsg: "Product inventory updated successfully.",
+        inventory: {
+          ...inventory.toJSON(),
+          storeWeightOptions: weightOptionRecords,
+        },
       });
     } else {
+      // Create new inventory
       inventory = await ProductInventory.create({
         store_id,
         product_id,
-        date,
-        quantity,
-        total,
-        Coupons:coupons,
-        status: 1
+        date: date || new Date().toISOString().split("T")[0],
+        Coupons: coupons,
+        status: 1,
       });
+
+      // Create associated weight options
+      const weightOptionRecords = weightOptions.map((option) => ({
+        product_inventory_id: inventory.id,
+        product_id,
+        weight: option.weight,
+        quantity: option.quantity,
+        unit_price: option.unit_price,
+        total: option.total, // Individual total for each weight option
+      }));
+      await StoreWeightOption.bulkCreate(weightOptionRecords);
 
       return res.status(201).json({
         ResponseCode: "201",
         Result: "true",
         ResponseMsg: "Product inventory created successfully.",
-        inventory,
+        inventory: {
+          ...inventory.toJSON(),
+          storeWeightOptions: weightOptionRecords,
+        },
       });
     }
-    
   } catch (error) {
     console.error("Error processing inventory upsert:", error);
     return res.status(500).json({
@@ -85,12 +115,16 @@ const getProductInventoryById = async (req, res, next) => {
   const { id } = req.params;
 
   try {
-    // Fetch the product inventory by ID
+    // Fetch the product inventory by ID with associated Product and StoreWeightOptions
     const productInv = await ProductInventory.findByPk(id, {
       include: [
         {
           model: Product,
           as: "inventoryProducts", // Include the Product model
+        },
+        {
+          model: StoreWeightOption,
+          as: "storeWeightOptions", // Include the StoreWeightOption model
         },
       ],
     });
@@ -103,7 +137,7 @@ const getProductInventoryById = async (req, res, next) => {
     const allCoupons = await Coupon.findAll();
 
     // Extract the coupon IDs from the inventory's Coupons field
-    const couponIds = productInv.Coupons || []; // Use Coupons instead of coupons
+    const couponIds = productInv.Coupons || [];
 
     // Find the corresponding coupon details from the allCoupons array
     const coupons = couponIds
@@ -111,7 +145,7 @@ const getProductInventoryById = async (req, res, next) => {
         const coupon = allCoupons.find((c) => c.id === couponId);
         return coupon
           ? {
-              id: coupon.id, // Include the coupon ID
+              id: coupon.id,
               coupon_title: coupon.coupon_title,
               coupon_value: coupon.coupon_val,
               // Add other coupon fields if needed
@@ -120,10 +154,11 @@ const getProductInventoryById = async (req, res, next) => {
       })
       .filter(Boolean);
 
-    
+    // Prepare the response
     const response = {
       ...productInv.toJSON(),
-      coupons, 
+      coupons,
+      storeWeightOptions: productInv.storeWeightOptions, // Already included via association
     };
 
     res.status(200).json(response);
@@ -134,27 +169,30 @@ const getProductInventoryById = async (req, res, next) => {
 };
 const ProductInventoryList = async (req, res) => {
   try {
-    
+    // Fetch all product inventories with associated Product and StoreWeightOptions
     const productInv = await ProductInventory.findAll({
       include: [
         {
           model: Product,
-          as: "inventoryProducts", 
+          as: "inventoryProducts",
+        },
+        {
+          model: StoreWeightOption,
+          as: "storeWeightOptions",
         },
       ],
     });
 
-   
+    // Fetch all coupons from the Coupons model
     const allCoupons = await Coupon.findAll();
 
-    
-    const response = await Promise.all(
-      productInv.map(async (inventory) => {
-        
-        const couponIds = inventory.Coupons || []; // Use Coupons instead of coupons
+    // Map each inventory with its coupons and weight options
+    const response = productInv.map((inventory) => {
+      const couponIds = inventory.Coupons || [];
 
-        // Find the corresponding coupon details from the allCoupons array
-        const coupons = couponIds.map((couponId) => {
+      // Find the corresponding coupon details from the allCoupons array
+      const coupons = couponIds
+        .map((couponId) => {
           const coupon = allCoupons.find((c) => c.id === couponId);
           return coupon
             ? {
@@ -164,15 +202,16 @@ const ProductInventoryList = async (req, res) => {
                 // Add other coupon fields if needed
               }
             : null;
-        }).filter(Boolean); // Remove null values (invalid coupon IDs)
+        })
+        .filter(Boolean);
 
-        // Return the inventory with the mapped coupons
-        return {
-          ...inventory.toJSON(),
-          coupons, // Append the mapped coupons
-        };
-      })
-    );
+      // Return the inventory with mapped coupons and weight options
+      return {
+        ...inventory.toJSON(),
+        coupons,
+        storeWeightOptions: inventory.storeWeightOptions, // Already included via association
+      };
+    });
 
     res.status(200).json(response);
   } catch (error) {
@@ -224,10 +263,73 @@ const deleteProductInventory = async (req, res) => {
     return res.status(500).json({ message: "Internal Server Error" });
   }
 };
+
+ // Ensure WeightOption model is imported
+
+const getProductsbyStore = async (req, res, next) => {
+  try {
+    const { store_id } = req.params;
+
+    if (!store_id) {
+      return res.status(400).json({ message: "Store ID is required" });
+    }
+
+    // Fetch categories associated with the store_id
+    const store = await Store.findOne({
+      where: { id: store_id },
+      attributes: ["catid"], // Assuming 'catid' contains category IDs in JSON format
+    });
+
+    if (!store || !store.catid) {
+      return res.status(404).json({ message: "Store not found or no categories linked" });
+    }
+
+    // Parse catid properly (Handles cases where it's stored as JSON or CSV)
+    let categoryIds;
+    try {
+      categoryIds = JSON.parse(store.catid); // Try parsing as JSON
+    } catch (error) {
+      categoryIds = store.catid.split(",").map((id) => id.trim()); // Fallback to CSV
+    }
+
+    if (!Array.isArray(categoryIds) || categoryIds.length === 0) {
+      return res.status(200).json({ message: "No categories found for this store", products: [] });
+    }
+
+    // Fetch all product details that belong to these category IDs, including weight options
+    const products = await Product.findAll({
+      where: {
+        cat_id: categoryIds, // Sequelize automatically converts array to IN condition
+      },
+      include: [
+        {
+          model: WeightOption,
+          as: "weightOptions", // Assuming the association alias is 'weightOptions'
+          attributes: ["weight", "subscribe_price", "normal_price", "mrp_price"], // Select relevant fields
+        },
+      ],
+      attributes: { exclude: [] }, // Fetch all columns of Product
+    });
+
+    console.info("Successfully retrieved products by store with weight options");
+    res.status(200).json({ products });
+  } catch (error) {
+    console.error("Error fetching products:", error);
+    res.status(500).json({ message: "Internal Server Error" });
+  }
+};
+
+module.exports = { getProductsbyStore };
+
+
+
+
+
 module.exports = {
-  addInventory,
+  upsertInventory,
   getProductInventoryById,
   ProductInventoryList,
   toggleProductInventoryStatus,
-  deleteProductInventory
+  deleteProductInventory,
+  getProductsbyStore,
 };
