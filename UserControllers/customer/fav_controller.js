@@ -46,7 +46,8 @@ const addFavorite = async (req, res) => {
           include:[
             {
               model: Category,
-              as:"category"
+              as:"category",
+              attributes:["id","title"]
             }
           ]
         },

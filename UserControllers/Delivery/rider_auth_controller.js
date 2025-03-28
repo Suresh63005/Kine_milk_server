@@ -229,7 +229,7 @@ const RemoveOneSignalId = asyncHandler(async(req,res)=>{
         ResponseMsg:"OneSignal subscription is already removed"
       })
     }
-    await user.update({one_subscription:null});
+    await rider.update({one_subscription:null});
     return res.status(200).json({
       ResponseCode:"200",
       Result:"true",

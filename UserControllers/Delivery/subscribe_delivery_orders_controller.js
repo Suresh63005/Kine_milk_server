@@ -6,6 +6,7 @@ const SubscribeOrder = require("../../Models/SubscribeOrder");
 const SubscribeOrderProduct = require("../../Models/SubscribeOrderProduct");
 const User = require("../../Models/User");
 const Address = require("../../Models/Address");
+const Notification = require("../../Models/Notification");
 
 const FetchAllSubscribeOrders = asyncHandler(async (req, res) => {
   console.log("Decoded User:", req.user);
@@ -236,4 +237,105 @@ const CompleteSubscriptionOrder = asyncHandler(async (req, res) => {
 });
 
 
-module.exports = {FetchAllSubscribeOrders,ViewSubscribeOrderDetails,CompleteSubscriptionOrder}
+const AcceptSubscriptionOrder = asyncHandler(async(req,res)=>{
+    console.log("Decoded User:", req.user);
+
+    const riderId = req.user?.riderId;
+    if (!riderId) {
+      return res.status(400).json({
+        success: false,
+        message: "Rider ID not found in token",
+      });
+    }
+    const {orderId}=req.body;
+    if(!orderId){
+        return res.status(400).json({
+            success:false,
+            message:"Order ID is required!"
+        })
+    }
+    try {
+      const order = await SubscribeOrder.findOne({
+        where: { id: orderId, rid: riderId, status: "Pending" },
+      });
+      if (!order) {
+        return res.status(404).json({
+          success: false,
+          message: "Order not found or already processed!",
+        });
+      }
+
+      const user = await User.findByPk(order.uid);
+      if (!user) {
+        return res.status(404).json({
+          success: false,
+          message: "User not found for this order!",
+        });
+      }
+
+      await SubscribeOrder.update(
+        { status: "Active" },
+        { where: { id: orderId } }
+      );
+
+      const updatedOrder = await SubscribeOrder.findOne({
+        where: { id: orderId },
+      });
+
+      try {
+        const userNotificationContent = {
+          app_id: process.env.ONESIGNAL_APP_ID,
+          include_player_ids: [user.one_subscription],
+          data: { user_id: user.id, type: "order accepted" },
+          contents: {
+            en: `${user.name}, Your order (ID: ${updatedOrder.order_id}) is now on the way!`,
+          },
+          headings: { en: "Order On Route" },
+        };
+
+        const userResponse = await axios.post(
+          "https://onesignal.com/api/v1/notifications",
+          userNotificationContent,
+          {
+            headers: {
+              "Content-Type": "application/json; charset=utf-8",
+              Authorization: `Basic ${process.env.ONESIGNAL_API_KEY}`,
+            },
+          }
+        );
+        console.log(userResponse.data, "user notification sent");
+      } catch (error) {
+        console.log("User notification error:", error);
+      }
+
+      await Promise.all([
+        Notification.create({
+          uid: user.id,
+          datetime: new Date(),
+          title: "Order On Route",
+          description: `Your order (ID: ${updatedOrder.order_id}) has been accepted and is on the way!`,
+        }),
+        Notification.create({
+          uid: order.store_id,
+          datetime: new Date(),
+          title: "Order Accepted by Rider",
+          description: `Order (ID: ${updatedOrder.order_id}) has been accepted by the rider and is on the way.`,
+        }),
+      ]);
+
+      return res.status(200).json({
+        success: true,
+        message: "Order accepted successfully! Status updated to 'Active'.",
+        order: updatedOrder,
+      });
+    } catch (error) {
+      console.error("Error accepting order:", error.message);
+      return res.status(500).json({
+        success: false,
+        message: "Internal server error: " + error.message,
+      });
+    }
+})
+
+
+module.exports = {FetchAllSubscribeOrders,ViewSubscribeOrderDetails,CompleteSubscriptionOrder,AcceptSubscriptionOrder}

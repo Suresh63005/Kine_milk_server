@@ -100,109 +100,217 @@ const EditStoreProfile = asyncHandler(async (req, res) => {
   }
 });
 
+
 // const verifyMobile = asyncHandler(async (req, res) => {
-  
-//   const { mobile } = req.body;
-//   console.log("Received mobile number:", mobile);
+//   let { mobile } = req.body;
 
 //   if (!mobile) {
-//       return res.status(400).json({ message: "Mobile number is required!" });
+//     return res.status(400).json({ message: "Mobile number is required!" });
+//   }
+
+//   // Ensure mobile number is in correct format
+//   if (!mobile.startsWith("+")) {
+//     mobile = `+${mobile}`;
 //   }
 
 //   try {
-//     console.log("checking mobile number:", mobile);
-//       const userRecord = await storeFirebase.auth().getUserByPhoneNumber(mobile);
-//       if (!userRecord) {
-//           return res.status(404).json({ message: "Mobile number not found!" });
-//       }
+//     console.log("Checking mobile number:", mobile);
 
-//       const store = await Store.findOne({where:{mobile:mobile}})
+//     let userRecord;
 
-//       const token = jwt.sign(
-//           { userId: userRecord.uid, mobile: userRecord.phoneNumber },
-//           process.env.JWT_SECRET,
-//           { expiresIn: "7d" }
-//       );
-
-//       return res.status(200).json({
-//           message: "Mobile number verified successfully!",
-//           mobile: userRecord.phoneNumber,
-//           token,
-//           store
-//       });
-//   } catch (error) {
-//       console.error("Error verifying mobile number:", error.message);
-
+//     try {
+//       // Fetch user from Firebase
+//       userRecord = await storeFirebase.auth().getUserByPhoneNumber(mobile);
+//     } catch (error) {
 //       if (error.code === "auth/user-not-found") {
-//           return res.status(404).json({ message: "Mobile number not found!" });
+//         console.log("User not found in Firebase, creating new user...");
+//         userRecord = await storeFirebase.auth().createUser({
+//           phoneNumber: mobile,
+//         });
+//       } else {
+//         throw error;
 //       }
+//     }
 
-//       return res.status(500).json({ message: "Error verifying mobile number: " + error.message });
+//     // 🔹 Remove country code before querying database
+//     const mobileWithoutCountryCode = mobile.replace(/^\+91/, "");
+
+//     // Fetch store details from database
+//     const store = await Store.findOne({ where: { mobile: mobileWithoutCountryCode } });
+
+//     if (!store) {
+//       console.warn(`Store not found for mobile: ${mobileWithoutCountryCode}`);
+//     }
+
+//     // Generate JWT token
+//     const token = jwt.sign(
+//       { userId: userRecord.uid, mobile: userRecord.phoneNumber },
+//       process.env.JWT_SECRET,
+//       { expiresIn: "7d" }
+//     );
+
+//     return res.status(200).json({
+//       message: "Mobile number verified successfully!",
+//       mobile: userRecord.phoneNumber,
+//       token,
+//       store,
+//     });
+
+//   } catch (error) {
+//     console.error("Error verifying mobile number:", error);
+//     return res.status(500).json({ message: "Error verifying mobile number: " + error.message });
 //   }
 // });
+
 
 const verifyMobile = asyncHandler(async (req, res) => {
   let { mobile } = req.body;
 
   if (!mobile) {
-    return res.status(400).json({ message: "Mobile number is required!" });
+      return res.status(400).json({ message: "Mobile number is required!" });
   }
 
   // Ensure mobile number is in correct format
   if (!mobile.startsWith("+")) {
-    mobile = `+${mobile}`;
+      mobile = `+${mobile}`;
   }
 
   try {
-    console.log("Checking mobile number:", mobile);
+      console.log("Checking mobile number:", mobile);
 
-    let userRecord;
+      let userRecord;
 
-    try {
-      // Fetch user from Firebase
-      userRecord = await storeFirebase.auth().getUserByPhoneNumber(mobile);
-    } catch (error) {
-      if (error.code === "auth/user-not-found") {
-        console.log("User not found in Firebase, creating new user...");
-        userRecord = await storeFirebase.auth().createUser({
-          phoneNumber: mobile,
-        });
-      } else {
-        throw error;
+      try {
+          // Fetch user from Firebase
+          userRecord = await storeFirebase.auth().getUserByPhoneNumber(mobile);
+      } catch (error) {
+          if (error.code === "auth/user-not-found") {
+              console.log("User not found in Firebase, creating new user...");
+              userRecord = await storeFirebase.auth().createUser({
+                  phoneNumber: mobile,
+              });
+          } else {
+              throw error;
+          }
       }
-    }
 
-    // 🔹 Remove country code before querying database
-    const mobileWithoutCountryCode = mobile.replace(/^\+91/, "");
+      // 🔹 Remove country code before querying database
+      const mobileWithoutCountryCode = mobile.replace(/^\+91/, "");
 
-    // Fetch store details from database
-    const store = await Store.findOne({ where: { mobile: mobileWithoutCountryCode } });
+      // Fetch store details from database
+      const store = await Store.findOne({ where: { mobile: mobileWithoutCountryCode } });
 
-    if (!store) {
-      console.warn(`Store not found for mobile: ${mobileWithoutCountryCode}`);
-    }
+      if (!store) {
+          console.warn(`Store not found for mobile: ${mobileWithoutCountryCode}`);
+      }
 
-    // Generate JWT token
-    const token = jwt.sign(
-      { userId: userRecord.uid, mobile: userRecord.phoneNumber },
-      process.env.JWT_SECRET,
-      { expiresIn: "7d" }
-    );
+      // Generate JWT token with storeId if store exists
+      const tokenPayload = {
+          userId: userRecord.uid,
+          mobile: userRecord.phoneNumber,
+          storeId: store ? store.id : null, // Include storeId if store exists
+      };
 
-    return res.status(200).json({
-      message: "Mobile number verified successfully!",
-      mobile: userRecord.phoneNumber,
-      token,
-      store,
-    });
+      const token = jwt.sign(tokenPayload, process.env.JWT_SECRET, { expiresIn: "7d" });
+
+      return res.status(200).json({
+          message: "Mobile number verified successfully!",
+          mobile: userRecord.phoneNumber,
+          token,
+          store,
+      });
 
   } catch (error) {
-    console.error("Error verifying mobile number:", error);
-    return res.status(500).json({ message: "Error verifying mobile number: " + error.message });
+      console.error("Error verifying mobile number:", error);
+      return res.status(500).json({ message: "Error verifying mobile number: " + error.message });
   }
 });
 
+const UpdateOneSignalSubscription = asyncHandler(async(req,res)=>{
+  console.log("Decoded User: ", req.user);
+  const uid = req.user?.storeId
+  const {one_subscription}=req.body;
+  if(!uid){
+    return res.status(401).json({
+      ResponseCode: "401",
+      Result: "false",
+      ResponseMsg: "Unauthorized, rider not found",
+    });
+  }
+  if (!one_subscription) {
+    return res.status(400).json({
+        ResponseCode: "400",
+        Result: "false",
+        ResponseMsg: "OneSignal subscription is required",
+    });
+  }
+  try {
+    const store = await Store.findByPk(uid);
+    if(!store){
+      return res.status(404).json({
+        ResponseCode:"404",
+        Result:"false",
+        ResponseMsg:"Store Not Found"
+      })
+    }
+    await store.update({one_subscription})
+    return res.status(200).json({
+      ResponseCode:"200",
+      Result:"true",
+      ResponseMsg:"OneSignal subscription updateed successfully"
+    })
+  } catch (error) {
+    console.error("Error updating OneSignal subscription:", error);
+    return res.status(500).json({
+      ResponseCode: "500",
+      Result: "false",
+      ResponseMsg: "Internal server error: " + error.message,
+    })
+  }
+})
 
+const RemoveOneSignalId = asyncHandler(async(req,res)=>{
+  console.log("Decoded User: ", req.user);
+  const uid = req.user?.storeId
+  const {one_subscription}=req.body;
+  if(!uid){
+    return res.status(401).json({
+      ResponseCode: "401",
+      Result: "false",
+      ResponseMsg: "Unauthorized, rider not found",
+    });
+  }
+  try {
+    const store = await Store.findByPk(uid);
+    if(!user){
+      return res.status(404).json({
+        ResponseCode: "404",
+        Result: "false",
+        ResponseMsg: "User not found",
+      })
+    }
+    if(!store.one_subscription){
+      return res.status(200).json({
+        ResponseCode: "200",
+        Result: "true",
+        ResponseMsg: "OneSignal subscription is already removed",
+      });
+    }
+    await store.update({one_subscription:null})
+    return res.status(200).json({
+      ResponseCode: "200",
+      Result: "true",
+      ResponseMsg: "OneSignal subscription removed successfully",
+    })
+  } catch (error) {
+    console.error("Error removing OneSignal ID:", error);
+    return res.status(500).json({
+      ResponseCode: "500",
+      Result: "false",
+      ResponseMsg: "Internal server error: " + error.message,
+    }); 
+  }
+})
 
 const ListAllUsers = async()=>{
   const listUsersResult = await storeFirebase.auth().listUsers();
@@ -210,4 +318,4 @@ const ListAllUsers = async()=>{
 }
 ListAllUsers();
 
-module.exports = { StoreProfile, EditStoreProfile,verifyMobile };
+module.exports = { StoreProfile, EditStoreProfile,verifyMobile,UpdateOneSignalSubscription,RemoveOneSignalId };
