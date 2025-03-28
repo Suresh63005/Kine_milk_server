@@ -256,7 +256,7 @@ const AcceptSubscriptionOrder = asyncHandler(async(req,res)=>{
     }
     try {
       const order = await SubscribeOrder.findOne({
-        where: { id: orderId, rid: riderId, status: "Pending" },
+        where: { id: orderId, rid: riderId, status: "Processing" },
       });
       if (!order) {
         return res.status(404).json({

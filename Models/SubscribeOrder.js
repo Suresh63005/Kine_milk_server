@@ -119,7 +119,7 @@ const SubscribeOrder = sequelize.define(
       allowNull: true,
     },
     status: {
-      type: DataTypes.ENUM("Pending", "Active", "Completed", "Cancelled"),
+      type: DataTypes.ENUM("Pending", "Active","Processing", "Completed", "Cancelled"),
       allowNull: false,
       defaultValue: "Pending",
     },
