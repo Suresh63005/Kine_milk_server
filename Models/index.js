@@ -113,8 +113,8 @@ Address.hasMany(NormalOrder,{foreignKey:'address_id',as:"instOrdAddress"});
 SubscribeOrder.belongsTo(Address,{foreignKey:'address_id',as:"subOrdAddress"});
 Address.hasMany(SubscribeOrder,{foreignKey:'address_id',as:"subOrdAddress"});
 
-// Favorite.belongsTo(Product, { foreignKey: "pid", as: "favproducts" });
-// Product.belongsTo(Favorite, { foreignKey: "pid", as: "favproducts" });
+Favorite.belongsTo(Product, { foreignKey: "pid", as: "favproducts" });
+Product.belongsTo(Favorite, { foreignKey: "pid", as: "favproducts" });
 
 SubscribeOrder.belongsTo(User, { as: "user", foreignKey: "uid" });
 User.hasMany(SubscribeOrder, { as: "suborders", foreignKey: "uid" });
