@@ -167,8 +167,8 @@ const FetchAllInstantDeliveryOrdersByStatus = asyncHandler(async (req, res) => {
     let subscribeOrderStatusFilter;
 
     if (status === "active") {
-      normalOrderStatusFilter = { [Op.in]: ["Pending", "Processing", "On Route"] };
-      subscribeOrderStatusFilter = { [Op.in]: ["Pending", "Active"] };
+      normalOrderStatusFilter = { [Op.in]: ["Processing", "On Route"] };
+      subscribeOrderStatusFilter = { [Op.in]: ["Processing", "Active"] };
     } else if (status === "completed") {
       normalOrderStatusFilter = "Completed";
       subscribeOrderStatusFilter = "Completed";

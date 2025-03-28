@@ -242,7 +242,7 @@ const AssignOrderToRider = asyncHandler(async (req, res) => {
       return res.status(404).json({ message: "Rider not found! OR inactive!" });
     }
     await SubscribeOrder.update(
-      { rid: rider_id, status: "Pending" },
+      { rid: rider_id, status: "Processing" },
       { where: { id: order_id } }
     );
     const updatedOrder = await SubscribeOrder.findOne({

@@ -53,7 +53,7 @@ const DeliveryDashboard = asyncHandler(async (req, res) => {
         where: { store_id, rid: riderId, status: "Completed" },
       }),
       SubscribeOrder.count({
-        where: { store_id, rid: riderId, status: "Pending" },
+        where: { store_id, rid: riderId, status: "Active" },
       }),
       SubscribeOrder.count({
         where: { store_id, rid: riderId, status: "Completed" },
@@ -97,7 +97,7 @@ const DeliveryDashboard = asyncHandler(async (req, res) => {
         where: {
           store_id,
           rid: riderId,
-          status: { [Op.or]: ["Pending", "Active"] },
+          status: { [Op.or]: ["Processing", "Active"] },
         },
         include: [
           {
