@@ -32,8 +32,8 @@ const User = require("./User");
 
 
 
-Product.belongsTo(Category, { as: "category", foreignKey: "cat_id" });
-Category.hasMany(Product, { as: "products", foreignKey: "cat_id" });
+// Product.belongsTo(Category, { as: "category", foreignKey: "cat_id" });
+// Category.hasMany(Product, { as: "products", foreignKey: "cat_id" });
 
 
 ProductImage.belongsTo(Product, { as: "extraImages", foreignKey: "product_id" });
@@ -113,8 +113,8 @@ Address.hasMany(NormalOrder,{foreignKey:'address_id',as:"instOrdAddress"});
 SubscribeOrder.belongsTo(Address,{foreignKey:'address_id',as:"subOrdAddress"});
 Address.hasMany(SubscribeOrder,{foreignKey:'address_id',as:"subOrdAddress"});
 
-Favorite.belongsTo(Product, { foreignKey: "pid", as: "favproducts" });
-Product.belongsTo(Favorite, { foreignKey: "pid", as: "favproducts" });
+// Favorite.belongsTo(Product, { foreignKey: "pid", as: "favproducts" });
+// Product.belongsTo(Favorite, { foreignKey: "pid", as: "favproducts" });
 
 SubscribeOrder.belongsTo(User, { as: "user", foreignKey: "uid" });
 User.hasMany(SubscribeOrder, { as: "suborders", foreignKey: "uid" });
@@ -155,8 +155,36 @@ Review.belongsTo(SubscribeOrder,{foreignKey:"order_id",constraints: false, scope
 SubscribeOrder.hasMany(Review,{foreignKey:"order_id",constraints: false,as:"suborderdeliveryreview"});
 
 
+const WeightOption = require("./WeightOption");
 
 
+Product.hasMany(WeightOption, {
+  foreignKey: "product_id",
+  as: "weightOptions",
+});
+WeightOption.belongsTo(Product, {
+  foreignKey: "product_id",
+  as: "product",
+});
 
+const StoreWeightOption = require("./StoreWeightOption")
+ProductInventory.hasMany(StoreWeightOption, {
+  foreignKey: "product_inventory_id",
+  as: "storeWeightOptions",
+});
 
+StoreWeightOption.belongsTo(ProductInventory, {
+  foreignKey: "product_inventory_id",
+  as: "productInventory",
+});
+
+ProductInventory.belongsTo(Product, {
+  foreignKey: "product_id",
+  as: "inventoryProduct",
+});
+
+Product.hasMany(ProductInventory, {
+  foreignKey: "product_id",
+  as: "productInventories",
+});
 

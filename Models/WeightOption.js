@@ -1,8 +1,8 @@
 const sequelize = require("../config/db");
 const { DataTypes } = require("sequelize");
 
-const ProductInventory = sequelize.define(
-  "ProductInventory",
+const WeightOption = sequelize.define(
+  "WeightOption",
   {
     id: {
       type: DataTypes.UUID,
@@ -10,36 +10,36 @@ const ProductInventory = sequelize.define(
       defaultValue: DataTypes.UUIDV4,
       primaryKey: true,
     },
-    store_id: {
-      type: DataTypes.UUID,
-      allowNull: false,
-    },
     product_id: {
       type: DataTypes.UUID,
       allowNull: false,
+      references: {
+        model: "Product",
+        key: "id",
+      },
     },
-    date: {
-      type: DataTypes.DATEONLY,
+    weight: {
+      type: DataTypes.STRING,
       allowNull: false,
     },
-    total: {
-      type: DataTypes.BIGINT,
-      defaultValue: 0,
+    subscribe_price: {
+      type: DataTypes.FLOAT,
+      allowNull: false,
     },
-    Coupons: {
-      type: DataTypes.JSON,
-      defaultValue: [],
+    normal_price: {
+      type: DataTypes.FLOAT,
+      allowNull: false,
     },
-    status: {
-      type: DataTypes.INTEGER,
+    mrp_price: {
+      type: DataTypes.FLOAT,
       allowNull: false,
     },
   },
   {
-    tableName: "tbl_productInventory",
+    tableName: "tbl_WeightOption",
     timestamps: true,
     paranoid: true,
   }
 );
 
-module.exports = ProductInventory;
+module.exports = WeightOption;

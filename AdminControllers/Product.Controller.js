@@ -4,7 +4,7 @@ const asyncHandler = require("../middlewares/errorHandler");
 const logger = require("../utils/logger");
 const uploadToS3 = require("../config/fileUpload.aws");
 const Store = require("../Models/Store");
-
+const WeightOption = require("../Models/WeightOption")
 const ProductImage = require("../Models/productImages");
 
 const upsertProduct = async (req, res) => {
@@ -15,29 +15,23 @@ const upsertProduct = async (req, res) => {
       status,
       cat_id,
       description,
-      subscribe_price,
-      normal_price,
-      mrp_price,
-      discount,
       out_of_stock,
       subscription_required,
-      weight
+      weightOptions, 
     } = req.body;
 
     console.log("Request body:", req.body);
+
 
     // Validate required fields
     if (
       !title ||
       !status ||
       !cat_id ||
-      !subscribe_price ||
-      !normal_price ||
-      !mrp_price ||
-      !discount ||
+      !description ||
       !out_of_stock ||
-      !subscription_required
-      // !weight
+      !subscription_required ||
+      !weightOptions
     ) {
       return res.status(400).json({
         ResponseCode: "400",
@@ -46,18 +40,50 @@ const upsertProduct = async (req, res) => {
       });
     }
 
-    let imageUrl = null;
-   
+    // Parse weightOptions (since it's sent as a JSON string)
+    let parsedWeightOptions;
+    try {
+      parsedWeightOptions = JSON.parse(weightOptions);
+    } catch (error) {
+      return res.status(400).json({
+        ResponseCode: "400",
+        Result: "false",
+        ResponseMsg: "Invalid weightOptions format. Must be a valid JSON string.",
+      });
+    }
 
- 
+    // Validate weightOptions
+    if (!Array.isArray(parsedWeightOptions) || parsedWeightOptions.length === 0) {
+      return res.status(400).json({
+        ResponseCode: "400",
+        Result: "false",
+        ResponseMsg: "At least one weight option is required.",
+      });
+    }
+
+    for (const option of parsedWeightOptions) {
+      if (
+        !option.weight ||
+        !option.subscribe_price ||
+        !option.normal_price ||
+        !option.mrp_price
+      ) {
+        return res.status(400).json({
+          ResponseCode: "400",
+          Result: "false",
+          ResponseMsg: "All fields in weight options (weight, subscribe_price, normal_price, mrp_price) are required.",
+        });
+      }
+    }
+
+    let imageUrl = null;
     if (req.files?.img) {
       imageUrl = await uploadToS3(req.files.img[0], "images");
     }
-
-   
-
+    console.log(imageUrl)
     let product;
     if (id) {
+      // Update existing product
       product = await Product.findByPk(id);
       if (!product) {
         return res.status(404).json({
@@ -73,16 +99,22 @@ const upsertProduct = async (req, res) => {
         status,
         cat_id,
         description,
-        subscribe_price,
-        normal_price,
-        mrp_price,
-        discount,
         out_of_stock,
         subscription_required,
-        // weight
       });
 
-     
+      // Delete existing weight options
+      await WeightOption.destroy({ where: { product_id: id } });
+
+      // Create new weight options
+      const weightOptionEntries = parsedWeightOptions.map((option) => ({
+        product_id: id,
+        weight: option.weight,
+        subscribe_price: parseFloat(option.subscribe_price),
+        normal_price: parseFloat(option.normal_price),
+        mrp_price: parseFloat(option.mrp_price),
+      }));
+      await WeightOption.bulkCreate(weightOptionEntries);
 
       console.log("Product updated successfully:", product);
       return res.status(200).json({
@@ -99,16 +131,19 @@ const upsertProduct = async (req, res) => {
         status,
         cat_id,
         description,
-        subscribe_price,
-        normal_price,
-        mrp_price,
-        discount,
         out_of_stock,
         subscription_required,
-        // weight
       });
 
-     
+      // Create weight options
+      const weightOptionEntries = parsedWeightOptions.map((option) => ({
+        product_id: product.id,
+        weight: option.weight,
+        subscribe_price: parseFloat(option.subscribe_price),
+        normal_price: parseFloat(option.normal_price),
+        mrp_price: parseFloat(option.mrp_price),
+      }));
+      await WeightOption.bulkCreate(weightOptionEntries);
 
       console.log("Product created successfully:", product);
       return res.status(200).json({
@@ -129,21 +164,19 @@ const upsertProduct = async (req, res) => {
 };
 
 
-const getAllProducts = asyncHandler(async (req, res, next) => {
-
-
-
+const getAllProducts = async (req, res) => {
   try {
-
-    const Products = await Product.findAll();
-    logger.info("successfully get all products");
-    res.status(200).json(Products);
-
+    const products = await Product.findAll({
+      include: [{ model: WeightOption, as: "weightOptions" }], // Assuming association is set
+    });
+    res.status(200).json(products);
   } catch (error) {
+    res.status(500).json({ error: error.message });
     console.log(error)
-
   }
-});
+};
+
+
 
 const getProductCount = asyncHandler(async (req, res) => {
   const ProductCount = await Product.count();
@@ -153,18 +186,53 @@ const getProductCount = asyncHandler(async (req, res) => {
 });
 
 const getProductById = asyncHandler(async (req, res) => {
-  // const {error}=getproductByIdSchema.validate(req.params)
+  // Uncomment and use Joi validation if needed
+  // const { error } = getproductByIdSchema.validate(req.params);
   // if (error) {
-  //     logger.error(error.details[0].message)
-  //     return res.status(400).json({ error: error.details[0].message });
+  //   logger.error(error.details[0].message);
+  //   return res.status(400).json({ error: error.details[0].message });
   // }
+
   const { id } = req.params;
-  const product = await Product.findOne({ where: { id: id } });
+
+  // Fetch product with associated weightOptions
+  const product = await Product.findOne({
+    where: { id: id },
+    include: [
+      {
+        model: WeightOption,
+        as: "weightOptions", // Alias for the association (ensure this matches your model definition)
+        attributes: ["weight", "subscribe_price", "normal_price", "mrp_price"], // Select specific fields
+      },
+    ],
+  });
+
   if (!product) {
     logger.error("Product not found");
-    return res.status(404).json({ error: "Product not found" });
+    return res.status(404).json({
+      ResponseCode: "404",
+      Result: "false",
+      ResponseMsg: "Product not found",
+    });
   }
-  res.status(200).json(product);
+
+  // Format the response to match your API style
+  res.status(200).json({
+    ResponseCode: "200",
+    Result: "true",
+    ResponseMsg: "Product retrieved successfully",
+    data: {
+      id: product.id,
+      title: product.title,
+      img: product.img,
+      status: product.status,
+      cat_id: product.cat_id,
+      description: product.description,
+      out_of_stock: product.out_of_stock,
+      subscription_required: product.subscription_required,
+      weightOptions: product.weightOptions, // Included from the association
+    },
+  });
 });
 
 const deleteProduct = asyncHandler(async (req, res) => {
