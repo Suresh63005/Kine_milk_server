@@ -17,11 +17,11 @@ const upsertProduct = async (req, res) => {
       description,
       out_of_stock,
       subscription_required,
-      weightOptions, 
+      weightOptions,
+      discount,
     } = req.body;
 
     console.log("Request body:", req.body);
-
 
     // Validate required fields
     if (
@@ -80,7 +80,8 @@ const upsertProduct = async (req, res) => {
     if (req.files?.img) {
       imageUrl = await uploadToS3(req.files.img[0], "images");
     }
-    console.log(imageUrl)
+    console.log(imageUrl);
+
     let product;
     if (id) {
       // Update existing product
@@ -101,6 +102,7 @@ const upsertProduct = async (req, res) => {
         description,
         out_of_stock,
         subscription_required,
+        discount: discount || product.discount,
       });
 
       // Delete existing weight options
@@ -124,6 +126,16 @@ const upsertProduct = async (req, res) => {
         product,
       });
     } else {
+      // Check for duplicate title only when creating a new product
+      const existingProduct = await Product.findOne({ where: { title } });
+      if (existingProduct) {
+        return res.status(409).json({
+          ResponseCode: "409",
+          Result: "false",
+          ResponseMsg: "Product with this title already exists.",
+        });
+      }
+
       // Create new product
       product = await Product.create({
         title,
@@ -133,6 +145,7 @@ const upsertProduct = async (req, res) => {
         description,
         out_of_stock,
         subscription_required,
+        discount: discount || "",
       });
 
       // Create weight options

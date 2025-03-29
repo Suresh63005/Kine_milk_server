@@ -12,7 +12,7 @@ const FAQ = sequelize.define(
     },
     store_id: {
       type: DataTypes.UUID,
-      allowNull: false,
+      allowNull: true,
     },
     question: {
       type: DataTypes.TEXT,
