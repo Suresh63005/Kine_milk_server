@@ -8,7 +8,7 @@ const WeightOption = require("../Models/WeightOption")
 const StoreWeightOption = require("../Models/StoreWeightOption")
 
 const upsertInventory = async (req, res) => {
-  const { store_id, product_id, date, weightOptions, coupons } = req.body;
+  const { id, store_id, product_id, date, weightOptions, coupons } = req.body;
   console.log(req.body);
 
   try {
@@ -39,12 +39,31 @@ const upsertInventory = async (req, res) => {
       });
     }
 
-    let inventory = await ProductInventory.findOne({
-      where: { store_id, product_id },
-    });
+    // Check if product already exists for this store (only for create, not update)
+    if (!id) {
+      const existingInventory = await ProductInventory.findOne({
+        where: { store_id, product_id },
+      });
+      if (existingInventory) {
+        return res.status(409).json({
+          ResponseCode: "409",
+          Result: "false",
+          ResponseMsg: "This product is already added. Please go to the product list and modify it.",
+        });
+      }
+    }
 
-    if (inventory) {
+    let inventory;
+    if (id) {
       // Update existing inventory
+      inventory = await ProductInventory.findOne({ where: { id } });
+      if (!inventory) {
+        return res.status(404).json({
+          ResponseCode: "404",
+          Result: "false",
+          ResponseMsg: "Inventory not found.",
+        });
+      }
       inventory.date = date || inventory.date;
       inventory.Coupons = coupons || inventory.Coupons;
       await inventory.save();
@@ -57,7 +76,7 @@ const upsertInventory = async (req, res) => {
         weight: option.weight,
         quantity: option.quantity,
         unit_price: option.unit_price,
-        total: option.total, // Individual total for each weight option
+        total: option.total,
       }));
       await StoreWeightOption.bulkCreate(weightOptionRecords);
 
@@ -80,14 +99,13 @@ const upsertInventory = async (req, res) => {
         status: 1,
       });
 
-      // Create associated weight options
       const weightOptionRecords = weightOptions.map((option) => ({
         product_inventory_id: inventory.id,
         product_id,
         weight: option.weight,
         quantity: option.quantity,
         unit_price: option.unit_price,
-        total: option.total, // Individual total for each weight option
+        total: option.total,
       }));
       await StoreWeightOption.bulkCreate(weightOptionRecords);
 

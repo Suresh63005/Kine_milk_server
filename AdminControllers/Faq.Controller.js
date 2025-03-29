@@ -4,50 +4,70 @@ const asynHandler = require("../middlewares/errorHandler");
 const logger = require("../utils/logger");
 const { getFaqIdBySchema, FaqDeleteSchema, FaqSearchSchema, upsertFaqSchema, FaqStatusSchema } = require("../utils/validation");
 
-const upsertFaq = asynHandler(async (req, res) => {
-    // const { error, value } = upsertFaqSchema.validate(req.body, { abortEarly: false });
-    // if (error) {
-    //   logger.error(error)
-    //   return res.status(400).json({
-    //     ResponseCode: "400",
-    //     Result: "false",
-    //     ResponseMsg: error.details.map((detail) => detail.message).join(", "),
-    //   });
-    // }
-  
-    const { id, question, answer, status } = req.body;
-    const {store_id} = req.params
+const upsertFaq = async (req, res) => {
+  const { id, question, answer, status } = req.body;
 
-      if (id) {
-        const faq = await Faq.findByPk(id);
-        if (!faq) {
-          logger.error('faq not found')
+  // Basic validation
+  if (!question || !answer || !status) {
+    logger.error("Missing required fields");
+    return res.status(400).json({
+      ResponseCode: "400",
+      Result: "false",
+      ResponseMsg: "All fields (question, answer, status) are required",
+    });
+  }
+
+  try {
+    if (id) {
+      // Update existing FAQ
+      const faq = await Faq.findByPk(id);
+      if (!faq) {
+        logger.error("FAQ not found");
         return res.status(404).json({
           ResponseCode: "404",
           Result: "false",
           ResponseMsg: "FAQ not found",
         });
-        }
-  
-        await faq.update({
-            question,
-            answer,
-            status,
-            store_id
-          });
-  
-        res.status(200).json({ message: "FAQ updated successfully", faq });
-      } else {
-        const faq = await Faq.create({
-          question,
-          answer,
-          status,
-          store_id
-        });
-        logger.info('FAQ created successfully')
-        res.status(200).json({ message: "FAQ created successfully", faq });
       }
-});
+
+      await faq.update({
+        question,
+        answer,
+        status,
+      });
+
+      logger.info("FAQ updated successfully");
+      return res.status(200).json({
+        ResponseCode: "200",
+        Result: "true",
+        ResponseMsg: "FAQ updated successfully",
+        faq,
+      });
+    } else {
+      // Create new FAQ
+      const faq = await Faq.create({
+        question,
+        answer,
+        status,
+      });
+
+      logger.info("FAQ created successfully");
+      return res.status(200).json({
+        ResponseCode: "200",
+        Result: "true",
+        ResponseMsg: "FAQ created successfully",
+        faq,
+      });
+    }
+  } catch (error) {
+    logger.error("Error upserting FAQ:", error);
+    return res.status(500).json({
+      ResponseCode: "500",
+      Result: "false",
+      ResponseMsg: "Internal Server Error",
+    });
+  }
+};
 
 const getAllFaqs=asynHandler(async(req,res,next)=>{
     const Faqs=await Faq.findAll();

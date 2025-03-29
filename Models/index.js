@@ -32,8 +32,8 @@ const User = require("./User");
 
 
 
-// Product.belongsTo(Category, { as: "category", foreignKey: "cat_id" });
-// Category.hasMany(Product, { as: "products", foreignKey: "cat_id" });
+Product.belongsTo(Category, { as: "category", foreignKey: "cat_id" });
+Category.hasMany(Product, { as: "products", foreignKey: "cat_id" });
 
 
 ProductImage.belongsTo(Product, { as: "extraImages", foreignKey: "product_id" });
