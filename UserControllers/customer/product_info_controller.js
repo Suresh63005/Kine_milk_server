@@ -29,7 +29,7 @@ const productInfo = async (req, res) => {
               model: ProductImage,
               as: "extraImages",
               attributes: ["img"],
-              required: true,
+              required: false,
             },
           ],
         });
