@@ -22,6 +22,10 @@ const SubscribeOrderProduct = sequelize.define(
       allowNull: false,
       references: { model: Product, key: "id" },
     },
+    weight_id: {
+      type: DataTypes.UUID,
+      allowNull: true,
+    },
     pquantity: {
       type: DataTypes.INTEGER,
       allowNull: false,

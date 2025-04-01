@@ -240,3 +240,23 @@ Product.hasMany(ProductInventory, {
   foreignKey: "product_id",
   as: "productInventories",
 });
+
+NormalOrderProduct.belongsTo(WeightOption,{
+  foreignKey:"weight_id",
+  as:"productWeight"
+})
+
+WeightOption.hasMany(NormalOrderProduct,{
+  foreignKey:"weight_id",
+  as:"productWeight"
+})
+
+SubscribeOrderProduct.belongsTo(WeightOption,{
+  foreignKey:"weight_id",
+  as:"subscribeProductWeight",
+})
+
+WeightOption.hasMany(SubscribeOrderProduct,{
+  foreignKey:"weight_id",
+  as:"subscribeProductWeight",
+})
