@@ -45,7 +45,7 @@ const addFavorite = async (req, res) => {
           {
             model:WeightOption,
             as:"cartProductsWeight",
-            attributes:['id','normal_price','subscribe_price','mrp_price']
+            attributes:['id','normal_price','subscribe_price','mrp_price','weight'],
           },
           {
           model: Product,

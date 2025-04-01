@@ -124,7 +124,7 @@ const ViewSubscribeOrderDetails = asyncHandler(async(req,res)=>{
                         {
                             model:Product,
                             as:"productDetails",
-                            attributes: ["id", "title", "description", "normal_price", "mrp_price", "img","weight"],
+                            attributes: ["id", "title", "description", "img"],
                         }
                     ]
                 },
@@ -201,7 +201,7 @@ const CompleteSubscriptionOrder = asyncHandler(async (req, res) => {
             });
         }
 
-        let deliveredDates = order.delivered_dates || []; // Ensure it's an array
+        let deliveredDates = order.delivered_dates || [];
 
         // Convert to array if it's stored as a string (MySQL TEXT issue)
         if (typeof deliveredDates === "string") {

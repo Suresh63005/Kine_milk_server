@@ -447,10 +447,7 @@ const ViewOrderDetails = asyncHandler(async (req, res) => {
                 "id",
                 "title",
                 "description",
-                "normal_price",
-                "mrp_price",
                 "img",
-                "weight"
               ],
             },
           ],

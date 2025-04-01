@@ -156,7 +156,7 @@ const FetchSubscribeOrdersByStatus = asyncHandler(async (req, res) => {
               {
                 model: Product,
                 as: "productDetails",
-                attributes: ["id", "title", "description", "normal_price", "mrp_price", "img","weight"],
+                attributes: ["id", "title", "description","img"],
               },
             ],
           },
