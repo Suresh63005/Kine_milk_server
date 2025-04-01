@@ -13,18 +13,10 @@ const StoreWeightOption = sequelize.define(
     product_inventory_id: {
       type: DataTypes.UUID,
       allowNull: false,
-      references: {
-        model: "tbl_productInventory",
-        key: "id",
-      },
     },
     product_id: {
       type: DataTypes.UUID,
       allowNull: false,
-      references: {
-        model: "Product",
-        key: "id",
-      },
     },
     weight: {
       type: DataTypes.STRING,
