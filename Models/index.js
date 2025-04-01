@@ -260,3 +260,13 @@ WeightOption.hasMany(SubscribeOrderProduct,{
   foreignKey:"weight_id",
   as:"subscribeProductWeight",
 })
+
+Favorite.belongsTo(WeightOption,{
+  foreignKey:"weight_id",
+  as:"cartProductsWeight",
+})
+
+WeightOption.hasMany(Favorite,{
+  foreignKey:"weight_id",
+  as:"cartProductsWeight"
+})

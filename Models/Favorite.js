@@ -4,7 +4,7 @@ const { DataTypes } = require("sequelize");
 const Favorite = sequelize.define(
   "Favorite",
   {
-   id: {
+    id: {
       type: DataTypes.UUID,
       allowNull: false,
       defaultValue: DataTypes.UUIDV4,
@@ -14,15 +14,18 @@ const Favorite = sequelize.define(
       type: DataTypes.UUID,
       allowNull: false,
     },
-    pid:{
+    pid: {
       type: DataTypes.UUID,
       allowNull: false,
+    },
+    weight_id: {
+      type: DataTypes.UUID,
+      allowNull: true,
     },
     store_id: {
       type: DataTypes.UUID,
       allowNull: false,
     },
-    
   },
   { tableName: "tbl_fav", timestamps: true, paranoid: true }
 );
