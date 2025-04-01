@@ -12,6 +12,7 @@ const Time = require("../../Models/Time");
 const Review = require("../../Models/review");
 const Store = require("../../Models/Store");
 const sequelize = require("../../config/db");
+const WeightOption = require("../../Models/WeightOption");
 
 const generateOrderId = () => {
   const randomNum = Math.floor(100000 + Math.random() * 900000);
@@ -111,10 +112,13 @@ const instantOrder = async (req, res) => {
     const orderItems = await Promise.all(
       products.map(async (item) => {
         const product = await Product.findByPk(item.product_id);
+
         if (!product)
           throw new Error(`Product with ID ${item.product_id} not found`);
 
-        const itemPrice = product.normal_price * item.quantity;
+        const weight = await WeightOption.findByPk(item.weight_id);
+
+        const itemPrice = weight.normal_price * item.quantity;
 
         return NormalOrderProduct.create(
           {
@@ -122,6 +126,8 @@ const instantOrder = async (req, res) => {
             product_id: item.product_id,
             pquantity: item.quantity,
             price: itemPrice,
+            weight_id:item.weight_id
+
           },
           { transaction }
         );
@@ -258,13 +264,17 @@ const getOrdersByStatus = async (req, res) => {
           as: "NormalProducts",
           include: [
             {
+              model:WeightOption,
+              as:"productWeight",
+              attributes:["id","normal_price","subscribe_price","mrp_price"]
+            },
+            {
               model: Product,
               as: "ProductDetails", // Ensure 'productDetails' alias is correct in the model associations
               attributes: [
                 "id",
                 "title",
                 "img",
-                "subscribe_price",
                 "description",
               ], // Specify the fields you need
               include: [
@@ -293,6 +303,8 @@ const getOrdersByStatus = async (req, res) => {
       ],
       order: [["createdAt", "DESC"]],
     });
+
+    
 
     res.status(200).json({
       ResponseCode: "200",

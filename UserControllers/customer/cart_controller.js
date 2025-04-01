@@ -2,13 +2,14 @@ const Cart = require("../../Models/Cart");
 const Product = require("../../Models/Product");
 const User = require("../../Models/User");
 const cron = require('node-cron');
+const WeightOption = require("../../Models/WeightOption");
 
 
 const upsertCart = async (req, res) => {
     try {
-      const { uid, product_id, quantity,orderType } = req.body;
+      const { uid, product_id, quantity,orderType,weight_id } = req.body;
 
-      if (!uid || !product_id || !orderType ) {
+      if (!uid || !product_id || !orderType || !weight_id ) {
         return res.status(400).json({
           ResponseCode: "400",
           Result: "false",
@@ -17,7 +18,7 @@ const upsertCart = async (req, res) => {
       }
   
       const existingCartItem = await Cart.findOne({
-        where: { uid, product_id,orderType },
+        where: { uid, product_id,orderType,weight_id },
       });
   
       if (existingCartItem) {
@@ -36,7 +37,8 @@ const upsertCart = async (req, res) => {
           uid,
           product_id,
           quantity,
-          orderType
+          orderType,
+          weight_id
         });
   
         return res.status(200).json({
@@ -78,8 +80,12 @@ const upsertCart = async (req, res) => {
         include: [
           {
               model: Product,
-              attributes: ["id", "title", "img","normal_price","subscribe_price", "description"],
-              as: "CartproductDetails" 
+              attributes: ["id", "title", "img", "description"],
+              as: "CartproductDetails"
+          },{
+            model:WeightOption,
+            as:"cartweight",
+            attributes:["weight","subscribe_price","normal_price","mrp_price"]
           }
       ]
       });

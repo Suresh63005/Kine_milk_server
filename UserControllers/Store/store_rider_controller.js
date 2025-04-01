@@ -8,7 +8,7 @@ const {deliveryFirebase} = require('../../config/firebase-config');
 const AddRider = asyncHandler(async (req, res) => {
   console.log("Decoded User:", req.user);
 
-  const uid = req.user?.userId;
+  const uid = req.user?.storeId;
   if (!uid) {
       return res.status(400).json({
           ResponseCode: "401",
@@ -76,7 +76,7 @@ const AddRider = asyncHandler(async (req, res) => {
 const EditRider = asyncHandler(async (req, res) => {
     console.log("Decoded User:", req.user);
   
-    const uid = req.user.userId;
+    const uid = req.user.storeId;
     if (!uid) {
       return res.status(400).json({
         ResponseCode: "401",
@@ -126,7 +126,7 @@ const EditRider = asyncHandler(async (req, res) => {
 const GetStoreRiderById = asyncHandler(async (req, res) => {
     console.log("Decoded User:", req.user);
   
-    const uid = req.user.userId;
+    const uid = req.user.storeId;
     if (!uid) {
       return res.status(400).json({
         ResponseCode: "401",
@@ -154,7 +154,7 @@ const GetStoreRiderById = asyncHandler(async (req, res) => {
 const SearchRiderByTitle = asyncHandler(async (req, res) => {
   console.log("Decoded User:", req.user);
 
-  const uid = req.user?.userId;
+  const uid = req.user?.storeId;
   if (!uid) {
       return res.status(400).json({
           ResponseCode: "401",
@@ -221,7 +221,7 @@ const SearchRiderByTitle = asyncHandler(async (req, res) => {
 
   const GetAllStoreRiders = asyncHandler(async(req,res)=>{
     console.log("Decoded User:", req.user);
-    const uid = req.user.userId;
+    const uid = req.user.storeId;
     if (!uid) {
       return res.status(400).json({
         ResponseCode: "401",

@@ -12,6 +12,7 @@ const ProductReview = require("../../Models/ProductReview");
 const WalletReport = require("../../Models/WalletReport");
 const db = require("../../config/db");
 const Store = require("../../Models/Store");
+const WeightOption = require("../../Models/WeightOption");
 
 const generateOrderId = () => {
   const randomNum = Math.floor(100000 + Math.random() * 900000);
@@ -114,10 +115,13 @@ const subscribeOrder = async (req, res) => {
     const orderItems = await Promise.all(
       products.map(async (item) => {
         const product = await Product.findByPk(item.product_id);
+
+        const weight = await WeightOption.findByPk(item.weight_id)
+
         if (!product)
           throw new Error(`Product with ID ${item.product_id} not found`);
 
-        const itemPrice = product.subscribe_price * item.quantity;
+        const itemPrice = weight.subscribe_price * item.quantity;
 
         return SubscribeOrderProduct.create(
           {
@@ -125,6 +129,7 @@ const subscribeOrder = async (req, res) => {
             product_id: item.product_id,
             pquantity: item.quantity,
             price: itemPrice,
+            weight_id:item.weight_id
           },
           { transaction: t }
         );
@@ -287,13 +292,17 @@ const getOrdersByStatus = async (req, res) => {
           as: "orderProducts", // Ensure 'orderProducts' alias is correct in the model associations
           include: [
             {
+              model:WeightOption,
+              as:"subscribeProductWeight",
+              attributes:["id","normal_price","subscribe_price","mrp_price"]
+            },
+            {
               model: Product,
               as: "productDetails", // Ensure 'productDetails' alias is correct in the model associations
               attributes: [
                 "id",
                 "title",
                 "img",
-                "subscribe_price",
                 "description",
               ], // Specify the fields you need
               include: [
@@ -322,6 +331,7 @@ const getOrdersByStatus = async (req, res) => {
       ],
       order: [["createdAt", "DESC"]],
     });
+
 
     res.status(200).json({
       ResponseCode: "200",
