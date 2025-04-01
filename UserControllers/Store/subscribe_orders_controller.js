@@ -11,7 +11,7 @@ const Time = require("../../Models/Time");
 const FetchSubscribeOrdersByStatus = asyncHandler(async (req, res) => {
     console.log("Decoded User:", req.user);
   
-    const uid = req.user.userId;
+    const uid = req.user.storeId;
     if (!uid) {
       return res.status(400).json({
         ResponseCode: "401",
