@@ -2,10 +2,11 @@ const { Model } = require("firebase-admin/machine-learning");
 const Favorite = require("../../Models/Favorite");
 const Product = require("../../Models/Product");
 const Category = require("../../Models/Category");
+const WeightOption = require("../../Models/WeightOption");
 
 const addFavorite = async (req, res) => {
     try {
-      const { pid, store_id } = req.body;
+      const { pid, store_id,weight_id } = req.body;
 
       const uid = req.user.userId;
 
@@ -17,7 +18,7 @@ const addFavorite = async (req, res) => {
           ResponseMsg: "You already have this product in your favorites"});
       }
   
-      const favorite = await Favorite.create({ uid,pid, store_id });
+      const favorite = await Favorite.create({ uid,pid, store_id,weight_id });
 
       res.status(200).json({
         ResponseCode: "200",
@@ -40,7 +41,13 @@ const addFavorite = async (req, res) => {
       const uid = req.user.userId;
   
       const favorites = await Favorite.findAll({ where: { uid ,store_id},
-        include:[{
+        include:[
+          {
+            model:WeightOption,
+            as:"cartProductsWeight",
+            attributes:['id','normal_price','subscribe_price','mrp_price']
+          },
+          {
           model: Product,
           as: "favproducts",
           include:[
@@ -74,7 +81,7 @@ const addFavorite = async (req, res) => {
       const uid = req.user.userId;
   
       const deleted = await Favorite.destroy({
-        where: { uid,pid, store_id },
+        where: { uid,pid, store_id,weight_id },
       });
   
       if (!deleted) {
