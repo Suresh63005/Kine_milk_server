@@ -8,6 +8,7 @@ const ProductInventory = require("../../Models/ProductInventory");
 const Notification = require("../../Models/Notification");
 const { Op } = require("sequelize");
 const StoreWeightOption = require("../../Models/StoreWeightOption");
+const WeightOption = require("../../Models/WeightOption");
 
 
 // Function to calculate distance
@@ -228,11 +229,6 @@ const homeAPI = async (req, res) => {
       attributes: ["id", "product_id"],
       include: [
         {
-          model: StoreWeightOption,
-          as:"storeWeightOptions"
-        }
-        ,
-        {
           model: Product,
           as: "inventoryProducts",
           attributes: [
@@ -249,6 +245,11 @@ const homeAPI = async (req, res) => {
               as: "category",
               attributes: ["id", "title"],
             },
+            {
+              model: WeightOption,
+              as: "weightOptions", 
+              attributes: ["id","weight", "subscribe_price", "normal_price", "mrp_price"], 
+            }
           ],
         },
       ],

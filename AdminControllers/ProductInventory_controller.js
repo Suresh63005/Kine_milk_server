@@ -21,6 +21,17 @@ const upsertInventory = async (req, res) => {
       });
     }
 
+    // Validate weightOptions
+    for (const option of weightOptions) {
+      if (!option.weight || option.weight.trim() === "") {
+        return res.status(400).json({
+          ResponseCode: "400",
+          Result: "false",
+          ResponseMsg: "Weight is required for all weight options.",
+        });
+      }
+    }
+
     const store = await Store.findOne({ where: { id: store_id } });
     if (!store) {
       return res.status(404).json({
@@ -39,7 +50,6 @@ const upsertInventory = async (req, res) => {
       });
     }
 
-    // Check if product already exists for this store (only for create, not update)
     if (!id) {
       const existingInventory = await ProductInventory.findOne({
         where: { store_id, product_id },
@@ -55,7 +65,6 @@ const upsertInventory = async (req, res) => {
 
     let inventory;
     if (id) {
-      // Update existing inventory
       inventory = await ProductInventory.findOne({ where: { id } });
       if (!inventory) {
         return res.status(404).json({
@@ -68,7 +77,6 @@ const upsertInventory = async (req, res) => {
       inventory.Coupons = coupons || inventory.Coupons;
       await inventory.save();
 
-      // Delete existing weight options and replace with new ones
       await StoreWeightOption.destroy({ where: { product_inventory_id: inventory.id } });
       const weightOptionRecords = weightOptions.map((option) => ({
         product_inventory_id: inventory.id,
@@ -90,7 +98,6 @@ const upsertInventory = async (req, res) => {
         },
       });
     } else {
-      // Create new inventory
       inventory = await ProductInventory.create({
         store_id,
         product_id,
@@ -336,10 +343,6 @@ const getProductsbyStore = async (req, res, next) => {
     res.status(500).json({ message: "Internal Server Error" });
   }
 };
-
-module.exports = { getProductsbyStore };
-
-
 
 
 

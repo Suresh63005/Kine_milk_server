@@ -11,6 +11,7 @@ const upsertRider = async (req, res) => {
   try {
     const { id, store_id, title, email, mobile, password, rdate, status, ccode } = req.body;
     console.log(req.body);  
+    console.log(req.file,"ffffffffffffile")
 
     let imageUrl = null; 
     if (req.file) { 
