@@ -2,6 +2,7 @@ const { where } = require("sequelize");
 const Product = require("../../Models/Product");
 const ProductImage = require("../../Models/productImages");
 const Category = require("../../Models/Category");
+const WeightOption = require("../../Models/WeightOption");
 
 const productInfo = async (req, res) => {
     try {
@@ -31,6 +32,11 @@ const productInfo = async (req, res) => {
               attributes: ["img"],
               required: false,
             },
+            {
+                model: WeightOption,
+                as: "weightOptions", // Alias for the association (ensure this matches your model definition)
+                attributes: ["weight", "subscribe_price", "normal_price", "mrp_price"], // Select specific fields
+              }
           ],
         });
 
