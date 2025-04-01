@@ -323,3 +323,5 @@
 {"level":"info","message":"Successfully fetched orders for store_id: 17baa262-d189-41db-9bef-0c44bb3fcf58 with status: Completed","service":"kine_milk_server","timestamp":"2025-03-29T09:14:53.796Z"}
 {"level":"info","message":"Successfully retrieved all coupons","service":"kine_milk_server","timestamp":"2025-03-29T09:16:55.579Z"}
 {"level":"info","message":"Successfully retrieved all coupons","service":"kine_milk_server","timestamp":"2025-03-29T09:16:55.612Z"}
+{"level":"error","message":"Invalid Email","service":"kine_milk_server","timestamp":"2025-04-01T05:23:30.834Z"}
+{"level":"info","message":"Admin signed in successfully","service":"kine_milk_server","timestamp":"2025-04-01T05:23:35.877Z"}
