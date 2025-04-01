@@ -322,7 +322,7 @@ const ViewInstantOrderById = asyncHandler(async (req, res) => {
           {
             model: NormalOrderProduct,
             as: "NormalProducts", 
-            attributes: ["id", "product_id", "pquantity", "price"], // Include `product_id` here
+            attributes: ["id", "product_id", "pquantity", "price"], 
             include: [
               {
                 model: Product,
