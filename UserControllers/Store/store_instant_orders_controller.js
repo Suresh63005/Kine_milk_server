@@ -12,6 +12,7 @@ const Address = require("../../Models/Address");
 const sequelize = require("../../config/db");
 const ProductInvetory = require('../../Models/ProductInventory');
 const Time = require("../../Models/Time");
+const Notification = require("../../Models/Notification");
 
 const ListAllInstantOrders = asyncHandler(async (req, res) => {
 
@@ -153,7 +154,7 @@ const FetchAllInstantOrdersByStatus = asyncHandler(async (req, res) => {
               {
                 model: Product,
                 as: "ProductDetails", 
-                attributes: ["id", "title", "description", "normal_price", "mrp_price", "img","weight"],
+                attributes: ["id", "title", "description"],
               },
             ],
               },
@@ -411,7 +412,7 @@ const ViewInstantOrderById = asyncHandler(async (req, res) => {
   
       const recommendedProducts = await Product.findAll({
         where: { cat_id: categoryIds, id: { [Op.notIn]: productIds } },
-        attributes: ['id', 'title', 'normal_price', 'img'],
+        attributes: ['id', 'title', 'img'],
         limit: 10,
       });
   
