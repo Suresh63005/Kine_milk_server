@@ -8,6 +8,7 @@ const ProductInventory = require("../../Models/ProductInventory");
 const Notification = require("../../Models/Notification");
 const { Op } = require("sequelize");
 const StoreWeightOption = require("../../Models/StoreWeightOption");
+const WeightOption = require("../../Models/WeightOption");
 
 
 // Function to calculate distance
