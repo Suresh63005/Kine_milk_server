@@ -14,6 +14,7 @@ const ProductInvetory = require('../../Models/ProductInventory');
 const Time = require("../../Models/Time");
 const Notification = require("../../Models/Notification");
 const WeightOption = require("../../Models/WeightOption");
+const Category = require("../../Models/Category");
 
 const ListAllInstantOrders = asyncHandler(async (req, res) => {
 
@@ -415,6 +416,11 @@ const ViewInstantOrderById = asyncHandler(async (req, res) => {
         where: { cat_id: categoryIds, id: { [Op.notIn]: productIds } },
         // attributes: ['id', 'title', 'img'],
         include: [
+          {
+            model:Category,
+            as:"category",
+            attributes:["id","title"]
+          },
           {
             model: WeightOption,
             as: "weightOptions",
