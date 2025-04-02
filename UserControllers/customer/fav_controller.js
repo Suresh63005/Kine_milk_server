@@ -127,7 +127,7 @@ const addFavorite = async (req, res) => {
       const uid = req.user.userId;
   
       const deleted = await Favorite.destroy({
-        where: { uid,pid, store_id,weight_id },
+        where: { uid,pid, store_id },
       });
   
       if (!deleted) {
