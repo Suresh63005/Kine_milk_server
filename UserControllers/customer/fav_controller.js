@@ -3,35 +3,72 @@ const Favorite = require("../../Models/Favorite");
 const Product = require("../../Models/Product");
 const Category = require("../../Models/Category");
 const WeightOption = require("../../Models/WeightOption");
+const ProductInventory = require("../../Models/ProductInventory");
+const StoreWeightOption = require("../../Models/StoreWeightOption");
 
 const addFavorite = async (req, res) => {
-    try {
-      const { pid, store_id,weight_id } = req.body;
+  try {
+    const { pid: inventoryId, store_id } = req.body;
+    const uid = req.user.userId;
 
-      const uid = req.user.userId;
+    console.log("Request:", { inventoryId, store_id, uid });
 
-      const existingFav = await Favorite.findOne({where:{uid,pid, store_id}});
-
-      if(existingFav){
-        return res.status(400).json({
-          ResponseCode: "200",
-          ResponseMsg: "You already have this product in your favorites"});
-      }
-  
-      const favorite = await Favorite.create({ uid,pid, store_id,weight_id });
-
-      res.status(200).json({
-        ResponseCode: "200",
-        Result: "true",
-        ResponseMsg: "Favorite added successfully!",
-        favorite
+    if (!inventoryId || !store_id || !uid) {
+      return res.status(400).json({
+        ResponseCode: "400",
+        Result: "false",
+        ResponseMsg: "Inventory ID, store ID, and user ID are required",
       });
-
-    } catch (error) {
-      console.error("Error adding favorite:", error);
-      res.status(500).json({ Result: false, ResponseMsg: "Server error", error });
     }
-  };
+
+    const inventory = await ProductInventory.findOne({
+      where: { id: inventoryId, store_id: store_id },
+    });
+    console.log("Inventory:", inventory ? inventory.toJSON() : null);
+
+    if (!inventory || inventory.quantity === 0) {
+      return res.status(404).json({
+        ResponseCode: "404",
+        Result: "false",
+        ResponseMsg: "Product is not available in this store",
+      });
+    }
+
+    const existingFav = await Favorite.findOne({
+      where: { uid, store_id, pid: inventory.id },
+    });
+    console.log("Existing Favorite:", existingFav ? existingFav.toJSON() : null);
+
+    if (existingFav) {
+      return res.status(400).json({
+        ResponseCode: "400", // Corrected from "200"
+        Result: "false",
+        ResponseMsg: "You already have this product in your favorites",
+      });
+    }
+
+    const favorite = await Favorite.create({
+      uid,
+      store_id,
+      pid: inventory.id,
+    });
+    console.log("Created Favorite:", favorite.toJSON());
+
+    res.status(200).json({
+      ResponseCode: "200",
+      Result: "true",
+      ResponseMsg: "Favorite added successfully!",
+      favorite,
+    });
+  } catch (error) {
+    console.error("Error adding favorite:", error);
+    res.status(500).json({
+      Result: "false",
+      ResponseMsg: "Server error",
+      error,
+    });
+  }
+};
   
   
   const getFavorites = async (req, res) => {
@@ -41,23 +78,54 @@ const addFavorite = async (req, res) => {
       const uid = req.user.userId;
   
       const favorites = await Favorite.findAll({ where: { uid ,store_id},
-        include:[
-          {
-            model:WeightOption,
-            as:"cartProductsWeight",
-            attributes:['id','normal_price','subscribe_price','mrp_price','weight'],
-          },
-          {
-          model: Product,
-          as: "favproducts",
+      //   include:[
+      //     {
+
+      //     model: Product,
+      //     as: "favproducts",
+      //     include:[
+      //       {
+      //         model: Category,
+      //         as:"category",
+      //         attributes:["id","title"]
+      //       },
+      //       {
+      //         model:WeightOption,
+      //         as:"weightOptions",
+      //         attributes:['id','normal_price','subscribe_price','mrp_price','weight'],
+      //       },
+      //     ]
+      //   },
+      // ]
+      include:[
+        {
+          model:ProductInventory,
+          as:"inventory",
           include:[
             {
-              model: Category,
-              as:"category",
-              attributes:["id","title"]
+              model:Product,
+              as:"inventoryProduct",
+              include:[
+                {
+                  model:Category,
+                  as:"category",
+                  attributes:["id","title"],
+                }
+              ]
+            },
+            {
+              model:StoreWeightOption,
+              as:"storeWeightOptions",
+              include:[
+                {
+                  model:WeightOption,
+                  as:"weightOptions",
+                  attributes:["id","normal_price","subscribe_price","mrp_price","weight"],
+                }
+              ]
             }
           ]
-        },
+        }
       ]
       });
   
