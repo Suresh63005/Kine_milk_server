@@ -1,5 +1,20 @@
-{"level":"error","message":"Internal Server Error","service":"kine_milk_server","timestamp":"2025-04-01T12:47:13.897Z"}
-{"level":"error","message":"Internal Server Error","service":"kine_milk_server","timestamp":"2025-04-01T12:47:42.769Z"}
-{"level":"error","message":"Internal Server Error","service":"kine_milk_server","timestamp":"2025-04-01T12:49:12.502Z"}
-{"level":"error","message":"Internal Server Error","service":"kine_milk_server","timestamp":"2025-04-01T12:49:42.758Z"}
-{"level":"error","message":"Internal Server Error","service":"kine_milk_server","timestamp":"2025-04-01T12:50:06.856Z"}
+{"level":"info","message":"Successfully retrieved all ProductImages","service":"kine_milk_server","timestamp":"2025-04-02T12:15:39.428Z"}
+{"level":"info","message":"Successfully retrieved all ProductImages","service":"kine_milk_server","timestamp":"2025-04-02T12:15:39.488Z"}
+{"level":"info","message":"Successfully retrieved all coupons","service":"kine_milk_server","timestamp":"2025-04-02T12:22:34.749Z"}
+{"level":"info","message":"Successfully retrieved all coupons","service":"kine_milk_server","timestamp":"2025-04-02T12:22:34.808Z"}
+{"level":"info","message":"Successfully retrieved all coupons","service":"kine_milk_server","timestamp":"2025-04-02T12:24:17.023Z"}
+{"level":"info","message":"Successfully retrieved all coupons","service":"kine_milk_server","timestamp":"2025-04-02T12:24:17.051Z"}
+{"level":"info","message":"Successfully retrieved all coupons","service":"kine_milk_server","timestamp":"2025-04-02T12:24:36.005Z"}
+{"level":"info","message":"Successfully retrieved all coupons","service":"kine_milk_server","timestamp":"2025-04-02T12:24:36.077Z"}
+{"level":"info","message":"Successfully retrieved all coupons","service":"kine_milk_server","timestamp":"2025-04-02T12:24:55.980Z"}
+{"level":"info","message":"Successfully retrieved all coupons","service":"kine_milk_server","timestamp":"2025-04-02T12:24:56.061Z"}
+{"level":"info","message":"Successfully retrieved all coupons","service":"kine_milk_server","timestamp":"2025-04-02T12:26:20.662Z"}
+{"level":"info","message":"Successfully retrieved all coupons","service":"kine_milk_server","timestamp":"2025-04-02T12:26:20.701Z"}
+{"level":"info","message":"Successfully retrieved all coupons","service":"kine_milk_server","timestamp":"2025-04-02T12:27:30.871Z"}
+{"level":"info","message":"Successfully retrieved all coupons","service":"kine_milk_server","timestamp":"2025-04-02T12:27:30.918Z"}
+{"level":"info","message":"Successfully retrieved all coupons","service":"kine_milk_server","timestamp":"2025-04-02T12:30:34.575Z"}
+{"level":"info","message":"Successfully retrieved all coupons","service":"kine_milk_server","timestamp":"2025-04-02T12:30:34.639Z"}
+{"level":"info","message":"Successfully retrieved all coupons","service":"kine_milk_server","timestamp":"2025-04-02T12:30:46.760Z"}
+{"level":"info","message":"Successfully retrieved all coupons","service":"kine_milk_server","timestamp":"2025-04-02T12:30:46.802Z"}
+{"level":"info","message":"Successfully retrieved all coupons","service":"kine_milk_server","timestamp":"2025-04-02T12:32:01.345Z"}
+{"level":"info","message":"Successfully retrieved all coupons","service":"kine_milk_server","timestamp":"2025-04-02T12:32:01.397Z"}

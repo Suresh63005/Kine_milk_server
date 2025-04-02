@@ -241,6 +241,20 @@ Product.hasMany(ProductInventory, {
   as: "productInventories",
 });
 
+
+// In StoreWeightOption model
+StoreWeightOption.belongsTo(WeightOption, {
+  foreignKey: 'weight_id',
+  as: 'weightOption'
+});
+
+// In WeightOption model
+WeightOption.hasMany(StoreWeightOption, {
+  foreignKey: 'weight_id',
+  as: 'storeWeightOption'
+});
+
+
 NormalOrderProduct.belongsTo(WeightOption,{
   foreignKey:"weight_id",
   as:"productWeight"
@@ -270,5 +284,5 @@ ProductInventory.hasMany(Favorite, {
   as: "favorites",
 });
 
-StoreWeightOption.belongsTo(WeightOption, { foreignKey: "weight_id", as: "weightOptions" });
-WeightOption.hasMany(StoreWeightOption, { foreignKey: "weight_id", as: "storeWeightOptions" });
+// StoreWeightOption.belongsTo(WeightOption, { foreignKey: "weight_id", as: "weightOptions" });
+// WeightOption.hasMany(StoreWeightOption, { foreignKey: "weight_id", as: "storeWeightOptions" });

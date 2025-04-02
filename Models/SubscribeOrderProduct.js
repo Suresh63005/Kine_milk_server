@@ -34,7 +34,7 @@ const SubscribeOrderProduct = sequelize.define(
       type: DataTypes.INTEGER,
       allowNull: false,
     },
-    
+
   },
   { tableName: "tbl_subscribe_order_product", timestamps: true, paranoid: true }
 );

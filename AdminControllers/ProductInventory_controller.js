@@ -23,11 +23,11 @@ const upsertInventory = async (req, res) => {
 
     // Validate weightOptions
     for (const option of weightOptions) {
-      if (!option.weight || option.weight.trim() === "") {
+      if (!option.weight_id) {
         return res.status(400).json({
           ResponseCode: "400",
           Result: "false",
-          ResponseMsg: "Weight is required for all weight options.",
+          ResponseMsg: "Weight ID is required for all weight options.",
         });
       }
     }
@@ -81,9 +81,8 @@ const upsertInventory = async (req, res) => {
       const weightOptionRecords = weightOptions.map((option) => ({
         product_inventory_id: inventory.id,
         product_id,
-        weight: option.weight,
+        weight_id: option.weight_id,
         quantity: option.quantity,
-        unit_price: option.unit_price,
         total: option.total,
       }));
       await StoreWeightOption.bulkCreate(weightOptionRecords);
@@ -109,9 +108,8 @@ const upsertInventory = async (req, res) => {
       const weightOptionRecords = weightOptions.map((option) => ({
         product_inventory_id: inventory.id,
         product_id,
-        weight: option.weight,
+        weight_id: option.weight_id,
         quantity: option.quantity,
-        unit_price: option.unit_price,
         total: option.total,
       }));
       await StoreWeightOption.bulkCreate(weightOptionRecords);
@@ -140,16 +138,13 @@ const getProductInventoryById = async (req, res, next) => {
   const { id } = req.params;
 
   try {
-    // Fetch the product inventory by ID with associated Product and StoreWeightOptions
     const productInv = await ProductInventory.findByPk(id, {
       include: [
-        {
-          model: Product,
-          as: "inventoryProducts", // Include the Product model
-        },
+        { model: Product, as: "inventoryProducts" },
         {
           model: StoreWeightOption,
-          as: "storeWeightOptions", // Include the StoreWeightOption model
+          as: "storeWeightOptions",
+          include: [{ model: WeightOption, as: "weightOption" }],
         },
       ],
     });
@@ -158,89 +153,135 @@ const getProductInventoryById = async (req, res, next) => {
       return res.status(404).json({ message: "Product Inventory not found" });
     }
 
-    // Fetch all coupons from the Coupons model
     const allCoupons = await Coupon.findAll();
+    
+    // Handle different coupon ID formats
+    let couponIds = [];
+    if (Array.isArray(productInv.Coupons)) {
+      couponIds = productInv.Coupons;
+    } else if (typeof productInv.Coupons === 'string') {
+      try {
+        couponIds = JSON.parse(productInv.Coupons);
+      } catch (e) {
+        console.error("Failed to parse Coupons field:", productInv.Coupons);
+        couponIds = [];
+      }
+    }
 
-    // Extract the coupon IDs from the inventory's Coupons field
-    const couponIds = productInv.Coupons || [];
+    const coupons = couponIds.map((couponId) => {
+      const coupon = allCoupons.find((c) => c.id === couponId);
+      return coupon ? {
+        id: coupon.id,
+        coupon_title: coupon.coupon_title,
+        coupon_value: coupon.coupon_val,
+      } : null;
+    }).filter(Boolean);
 
-    // Find the corresponding coupon details from the allCoupons array
-    const coupons = couponIds
-      .map((couponId) => {
-        const coupon = allCoupons.find((c) => c.id === couponId);
-        return coupon
-          ? {
-              id: coupon.id,
-              coupon_title: coupon.coupon_title,
-              coupon_value: coupon.coupon_val,
-              // Add other coupon fields if needed
-            }
-          : null;
-      })
-      .filter(Boolean);
-
-    // Prepare the response
     const response = {
       ...productInv.toJSON(),
       coupons,
-      storeWeightOptions: productInv.storeWeightOptions, // Already included via association
+      storeWeightOptions: productInv.storeWeightOptions.map((option) => ({
+        ...option.toJSON(),
+        weight: option.weightOption?.weight,
+        normal_price: option.weightOption?.normal_price || null,
+        subscription_price: option.weightOption?.subscribe_price || null,
+        mrp_price: option.weightOption?.mrp_price || null,
+      })),
     };
 
     res.status(200).json(response);
   } catch (error) {
-    console.log(error);
+    console.error("Error in getProductInventoryById:", error);
     res.status(500).json({ message: "Failed to fetch product inventory details" });
   }
 };
 const ProductInventoryList = async (req, res) => {
   try {
-    // Fetch all product inventories with associated Product and StoreWeightOptions
+    // First verify the weight options exist
+    const testWeightOption = await WeightOption.findOne();
+    console.log('Sample WeightOption:', testWeightOption?.toJSON());
+
     const productInv = await ProductInventory.findAll({
       include: [
-        {
-          model: Product,
-          as: "inventoryProducts",
+        { 
+          model: Product, 
+          as: "inventoryProducts" 
         },
         {
           model: StoreWeightOption,
           as: "storeWeightOptions",
+          include: [{ 
+            model: WeightOption, 
+            as: "weightOption",
+            required: false, // Important: make this left join
+            attributes: ['id', 'weight', 'normal_price', 'subscribe_price', 'mrp_price']
+          }],
         },
       ],
     });
 
-    // Fetch all coupons from the Coupons model
     const allCoupons = await Coupon.findAll();
 
-    // Map each inventory with its coupons and weight options
-    const response = productInv.map((inventory) => {
-      const couponIds = inventory.Coupons || [];
+    const response = productInv?.map((inventory) => {
+      // Coupon handling (keep your existing code)
+      let couponIds = [];
+      
+      // Handle different coupon ID formats
+      if (Array.isArray(inventory.Coupons)) {
+        couponIds = inventory.Coupons;
+      } else if (typeof inventory.Coupons === 'string') {
+        try {
+          couponIds = JSON.parse(inventory.Coupons);
+        } catch (e) {
+          console.error("Failed to parse Coupons field:", inventory.Coupons);
+          couponIds = [];
+        }
+      }
 
-      // Find the corresponding coupon details from the allCoupons array
-      const coupons = couponIds
-        .map((couponId) => {
-          const coupon = allCoupons.find((c) => c.id === couponId);
-          return coupon
-            ? {
-                id: coupon.id,
-                coupon_title: coupon.coupon_title,
-                coupon_value: coupon.coupon_val,
-                // Add other coupon fields if needed
-              }
-            : null;
+      // Map coupon IDs to coupon objects
+      const coupons = couponIds?.map(couponId => {
+          const coupon = allCoupons.find(c => c.id === couponId);
+          return coupon ? {
+            id: coupon.id,
+            coupon_title: coupon.coupon_title,
+            coupon_value: coupon.coupon_val
+          } : null;
         })
         .filter(Boolean);
 
-      // Return the inventory with mapped coupons and weight options
+
+      const storeWeightOptions = inventory.storeWeightOptions.map((option) => {
+        // Debug the raw option first
+        console.log('StoreWeightOption:', option.toJSON());
+        
+        const weightOption = option.weightOption;
+        console.log('Associated WeightOption:', weightOption?.toJSON());
+
+        // Get prices from WeightOption if available, otherwise use StoreWeightOption
+        return {
+          id: option.id,
+          product_inventory_id: option.product_inventory_id,
+          product_id: option.product_id,
+          weight_id: option.weight_id,
+          quantity: option.quantity, // From StoreWeightOption
+          total: option.total,       // From StoreWeightOption
+          weight: weightOption?.weight || "N/A",
+          normal_price: weightOption?.normal_price || option.normal_price || null,
+          subscription_price: weightOption?.subscribe_price || option.subscription_price || null,
+          mrp_price: weightOption?.mrp_price || option.mrp_price || null,
+        };
+      });
+
       return {
         ...inventory.toJSON(),
         coupons,
-        storeWeightOptions: inventory.storeWeightOptions, // Already included via association
+        storeWeightOptions,
       };
-    });
+    }) || [];
 
     res.status(200).json(response);
   } catch (error) {
-    console.log(error);
+    console.error("Error in ProductInventoryList:", error);
     res.status(500).json({ message: "Failed to fetch product inventory list" });
   }
 };
@@ -330,7 +371,7 @@ const getProductsbyStore = async (req, res, next) => {
         {
           model: WeightOption,
           as: "weightOptions", // Assuming the association alias is 'weightOptions'
-          attributes: ["weight", "subscribe_price", "normal_price", "mrp_price"], // Select relevant fields
+          attributes: ["id","weight", "subscribe_price", "normal_price", "mrp_price"], // Select relevant fields
         },
       ],
       attributes: { exclude: [] }, // Fetch all columns of Product
