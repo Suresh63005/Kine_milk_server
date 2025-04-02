@@ -8,7 +8,7 @@ const StoreWeightOption = require("../../Models/StoreWeightOption");
 
 const addFavorite = async (req, res) => {
   try {
-    const { pid, store_id } = req.body;
+    const { pid, store_id } = req.body; 
     const uid = req.user.userId;
 
     if (!pid || !store_id || !uid) {
@@ -46,7 +46,7 @@ const addFavorite = async (req, res) => {
     const favorite = await Favorite.create({
       uid,
       store_id,
-      pid: inventory.id,
+      pid: inventory.product_id,
     });
     console.log("Created Favorite:", favorite.toJSON());
 
