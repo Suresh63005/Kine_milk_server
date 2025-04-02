@@ -13,6 +13,7 @@ const sequelize = require("../../config/db");
 const ProductInvetory = require('../../Models/ProductInventory');
 const Time = require("../../Models/Time");
 const Notification = require("../../Models/Notification");
+const WeightOption = require("../../Models/WeightOption");
 
 const ListAllInstantOrders = asyncHandler(async (req, res) => {
 
@@ -365,7 +366,7 @@ const ViewInstantOrderById = asyncHandler(async (req, res) => {
   const getRecommendedProducts = async (req, res) => {
     console.log("Reached getRecommendedProducts API");
     
-    const uid = req.user?.id; // Use authenticated user ID
+    const uid = req.user?.userId; 
     console.log("Authenticated User ID:", uid);
   
     if (!uid) {
@@ -382,7 +383,7 @@ const ViewInstantOrderById = asyncHandler(async (req, res) => {
         include: [
           {
             model: NormalOrderProduct,
-            as: 'NormalProducts', // Ensure correct alias
+            as: 'NormalProducts',
             attributes: ['product_id'],
           },
         ],
@@ -400,7 +401,7 @@ const ViewInstantOrderById = asyncHandler(async (req, res) => {
       }
   
       const productIds = [...new Set(recentOrders.flatMap(order => 
-        order.NormalProducts.map(op => op.product_id) // Fix alias here
+        order.NormalProducts.map(op => op.product_id) 
       ))];
   
       const purchasedProducts = await Product.findAll({
@@ -412,7 +413,14 @@ const ViewInstantOrderById = asyncHandler(async (req, res) => {
   
       const recommendedProducts = await Product.findAll({
         where: { cat_id: categoryIds, id: { [Op.notIn]: productIds } },
-        attributes: ['id', 'title', 'img'],
+        // attributes: ['id', 'title', 'img'],
+        include: [
+          {
+            model: WeightOption,
+            as: "weightOptions",
+            attributes: ["id", "weight", "subscribe_price", "normal_price", "mrp_price"],
+          },
+        ],
         limit: 10,
       });
   

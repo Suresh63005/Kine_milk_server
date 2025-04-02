@@ -261,12 +261,14 @@ WeightOption.hasMany(SubscribeOrderProduct,{
   as:"subscribeProductWeight",
 })
 
-Favorite.belongsTo(WeightOption,{
-  foreignKey:"weight_id",
-  as:"cartProductsWeight",
-})
+Favorite.belongsTo(ProductInventory, {
+  foreignKey: "pid",
+  as: "inventory",
+});
+ProductInventory.hasMany(Favorite, {
+  foreignKey: "pid",
+  as: "favorites",
+});
 
-WeightOption.hasMany(Favorite,{
-  foreignKey:"weight_id",
-  as:"cartProductsWeight"
-})
+StoreWeightOption.belongsTo(WeightOption, { foreignKey: "weight_id", as: "weightOptions" });
+WeightOption.hasMany(StoreWeightOption, { foreignKey: "weight_id", as: "storeWeightOptions" });

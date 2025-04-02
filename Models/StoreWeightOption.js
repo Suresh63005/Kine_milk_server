@@ -18,18 +18,14 @@ const StoreWeightOption = sequelize.define(
       type: DataTypes.UUID,
       allowNull: false,
     },
-    weight: {
-      type: DataTypes.STRING,
+    weight_id: {
+      type: DataTypes.UUID,
       allowNull: false,
     },
     quantity: {
       type: DataTypes.BIGINT,
       allowNull: false,
       defaultValue: 1,
-    },
-    unit_price: {
-      type: DataTypes.FLOAT,
-      allowNull: false,
     },
     total: {
       type: DataTypes.FLOAT,

@@ -18,10 +18,6 @@ const Favorite = sequelize.define(
       type: DataTypes.UUID,
       allowNull: false,
     },
-    weight_id: {
-      type: DataTypes.UUID,
-      allowNull: true,
-    },
     store_id: {
       type: DataTypes.UUID,
       allowNull: false,
