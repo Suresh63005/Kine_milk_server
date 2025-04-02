@@ -7,6 +7,8 @@ const Address = require("../../Models/Address");
 const SubscribeOrderProduct = require("../../Models/SubscribeOrderProduct");
 const Product = require("../../Models/Product");
 const Time = require("../../Models/Time");
+const Category = require("../../Models/Category");
+const WeightOption = require("../../Models/WeightOption");
 
 const FetchSubscribeOrdersByStatus = asyncHandler(async (req, res) => {
     console.log("Decoded User:", req.user);
@@ -119,7 +121,7 @@ const FetchSubscribeOrdersByStatus = asyncHandler(async (req, res) => {
   const ViewSubscribeOrderById = asyncHandler(async (req, res) => {
     console.log("Decoded User:", req.user);
   
-    const uid = req.user.userId;
+    const uid = req.user.storeId;
     if (!uid) {
       return res.status(401).json({
         ResponseCode: "401",
@@ -157,6 +159,18 @@ const FetchSubscribeOrdersByStatus = asyncHandler(async (req, res) => {
                 model: Product,
                 as: "productDetails",
                 attributes: ["id", "title", "description","img"],
+                include:[
+                  {
+                    model:Category,
+                    as:"category",
+                    attributes:['id','title']
+                  },
+                ]
+              },
+              {
+                model:WeightOption,
+                as:"subscribeProductWeight",
+                attributes:["id","weight","subscribe_price","normal_price","mrp_price"]
               },
             ],
           },
