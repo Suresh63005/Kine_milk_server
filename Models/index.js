@@ -188,3 +188,15 @@ Product.hasMany(ProductInventory, {
   as: "productInventories",
 });
 
+// In StoreWeightOption model
+StoreWeightOption.belongsTo(WeightOption, {
+  foreignKey: 'weight_id',
+  as: 'weightOption'
+});
+
+// In WeightOption model
+WeightOption.hasMany(StoreWeightOption, {
+  foreignKey: 'weight_id',
+  as: 'storeWeightOptions'
+});
+
