@@ -7,6 +7,8 @@ const Store = require("../../Models/Store");
 const ProductInventory = require("../../Models/ProductInventory");
 const Notification = require("../../Models/Notification");
 const { Op } = require("sequelize");
+const StoreWeightOption = require("../../Models/StoreWeightOption");
+const WeightOption = require("../../Models/WeightOption");
 
 
 // Function to calculate distance
@@ -224,7 +226,7 @@ const homeAPI = async (req, res) => {
         status: 1,
         store_id: { [Op.in]: stores.map((store) => store.id) },
       },
-      attributes: ["id", "product_id", "quantity"],
+      attributes: ["id", "product_id"],
       include: [
         {
           model: Product,
@@ -233,12 +235,9 @@ const homeAPI = async (req, res) => {
             "id",
             "cat_id",
             "title",
-            "mrp_price",
             "img",
             "description",
-            "subscribe_price",
-            "normal_price",
-            "weight",
+            
           ],
           include: [
             {
@@ -246,6 +245,11 @@ const homeAPI = async (req, res) => {
               as: "category",
               attributes: ["id", "title"],
             },
+            {
+              model: WeightOption,
+              as: "weightOptions", 
+              attributes: ["id","weight", "subscribe_price", "normal_price", "mrp_price"], 
+            }
           ],
         },
       ],
@@ -259,7 +263,7 @@ const homeAPI = async (req, res) => {
       });
     }
 
-    const outOfStockProducts = productInventory.filter((item) => item.quantity === 0);
+    const outOfStockProducts = productInventory.filter((item) => item?.quantity === 0);
     if (outOfStockProducts.length > 0) {
       return res.json({
         ResponseCode: "400",

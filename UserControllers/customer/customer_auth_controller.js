@@ -7,6 +7,7 @@ const NormalOrder = require("../../Models/NormalOrder");
 const Address = require("../../Models/Address");
 const Favorite = require("../../Models/Favorite");
 const Cart = require("../../Models/Cart");
+const uploadToS3 = require("../../config/fileUpload.aws");
 
 
 const VerifyCustomerMobile = asyncHandler(async (req, res) => {
@@ -117,6 +118,7 @@ const UpdateCustomerDetails = asyncHandler(async (req, res) => {
   }
 
   const { name, email } = req.body;
+  const file = req.file;
 
   if (!name && !email) {
       return res.status(400).json({
@@ -127,7 +129,11 @@ const UpdateCustomerDetails = asyncHandler(async (req, res) => {
   }
 
   try {
-      console.log(`Updating customer (ID: ${uid}) details - Name: ${name}, Email: ${email}`);
+      console.log(
+        `Updating customer (ID: ${uid}) details - Name: ${name}, Email: ${email}, Image: ${
+          file ? file.originalname : "None"
+        }`
+      );
 
       const customer = await User.findOne({ where: { id: uid } });
 
@@ -139,7 +145,16 @@ const UpdateCustomerDetails = asyncHandler(async (req, res) => {
           });
       }
 
-      await customer.update({ name, email });
+      let imageUrl = customer.img;
+      if(file){
+        imageUrl = await uploadToS3(file, "profile-images")
+      }
+
+      await customer.update({
+        name: name || customer.name,
+        email: email || customer.email,
+        img:imageUrl
+      });
 
       return res.status(200).json({
           ResponseCode: "200",
@@ -159,53 +174,73 @@ const UpdateCustomerDetails = asyncHandler(async (req, res) => {
 });
 
 const deleteCustomer = async (req, res) => {
-    
-    const  uid  = req.user.userId;
+  const uid = req.user.userId;
+  if (!uid) {
+    return res.status(400).json({
+      ResponseCode: "401",
+      Result: "false",
+      ResponseMsg: "User ID not provided",
+    });
+  }
 
-    try {
+  try {
+    const customer = await User.findOne({ where: { id: uid } });
 
-        const suborder = await SubscribeOrder.destroy({where:{uid}});
-        const normalOrder = await NormalOrder.destroy({where:{uid}});
-        const address = await Address.destroy({where:{uid}});
-        const fav = await Favorite.destroy({where:{uid}});
-        const cart = await Cart.destroy({where:{uid}});
-        
-   const customer = await User.destroy({ where: { id: uid } });
-
-   if(!customer){
-    return res.status(404).json({
+    if (!customer) {
+      return res.status(404).json({
         ResponseCode: "404",
         Result: "false",
-        ResponseMsg: "Customer not found",  
-
-        
-    })
-   }
-
-
-
-   
-
-   
-
-
-
-   return res.status(200).json({
-    ResponseCode: "200",
-    Result: "true",
-    ResponseMsg: "Customer deleted successfully",
-    });
-
-    } catch (error) {
-        console.error("Error deleting customer:", error.message);
-        return res.status(500).json({
-            ResponseCode: "500",
-            Result: "false",
-            ResponseMsg: "Internal server error: " + error.message,
-            });
-        
+        ResponseMsg: "Customer not found",
+      });
     }
-}
+
+    if (customer.img) {
+      const urlParts = customer.img.split("/");
+      const key = urlParts.slice(3).join("/");
+
+      const deleteParams = {
+        Bucket: process.env.S3_BUCKET_NAME,
+        Key: AWS_ACCESS_KEY_ID,
+      };
+      try {
+        const command = new DeleteObjectCommand(deleteParams);
+        await s3.send(command);
+        console.log(`Deleted image from S3: ${key}`);
+      } catch (s3Error) {
+        console.error("Error deleting image from S3:", s3Error.message);
+      }
+    }
+
+    const suborder = await SubscribeOrder.destroy({ where: { uid } });
+    const normalOrder = await NormalOrder.destroy({ where: { uid } });
+    const address = await Address.destroy({ where: { uid } });
+    const fav = await Favorite.destroy({ where: { uid } });
+    const cart = await Cart.destroy({ where: { uid } });
+
+    const deletedRows = await User.destroy({ where: { id: uid } });
+
+    if (deletedRows === 0) {
+      return res.status(404).json({
+        ResponseCode: "404",
+        Result: "false",
+        ResponseMsg: "Customer not found",
+      });
+    }
+
+    return res.status(200).json({
+      ResponseCode: "200",
+      Result: "true",
+      ResponseMsg: "Customer deleted successfully",
+    });
+  } catch (error) {
+    console.error("Error deleting customer:", error.message);
+    return res.status(500).json({
+      ResponseCode: "500",
+      Result: "false",
+      ResponseMsg: "Internal server error: " + error.message,
+    });
+  }
+};
 
 
 const updateOneSignalSubscription = async (req, res) => {

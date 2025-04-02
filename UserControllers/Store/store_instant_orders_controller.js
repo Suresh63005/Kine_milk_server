@@ -12,6 +12,9 @@ const Address = require("../../Models/Address");
 const sequelize = require("../../config/db");
 const ProductInvetory = require('../../Models/ProductInventory');
 const Time = require("../../Models/Time");
+const Notification = require("../../Models/Notification");
+const WeightOption = require("../../Models/WeightOption");
+const Category = require("../../Models/Category");
 
 const ListAllInstantOrders = asyncHandler(async (req, res) => {
 
@@ -153,7 +156,7 @@ const FetchAllInstantOrdersByStatus = asyncHandler(async (req, res) => {
               {
                 model: Product,
                 as: "ProductDetails", 
-                attributes: ["id", "title", "description", "normal_price", "mrp_price", "img","weight"],
+                attributes: ["id", "title", "description"],
               },
             ],
               },
@@ -321,13 +324,25 @@ const ViewInstantOrderById = asyncHandler(async (req, res) => {
           {
             model: NormalOrderProduct,
             as: "NormalProducts", 
-            attributes: ["id", "product_id", "pquantity", "price"], // Include `product_id` here
+            attributes: ["id", "product_id", "pquantity", "price"], 
             include: [
               {
                 model: Product,
                 as: "ProductDetails", 
-                attributes: ["id", "title", "description", "normal_price", "mrp_price", "img","weight"],
+                attributes: ["id", "title", "description","img"],
+                include:[
+                  {
+                    model:Category,
+                    as:"category",
+                    attributes:['id','title']
+                  },
+                ]
               },
+              {
+                model:WeightOption,
+                as:"productWeight",
+                attributes:["id","weight","subscribe_price","normal_price","mrp_price"]
+              }
             ],
           },
           {
@@ -364,7 +379,7 @@ const ViewInstantOrderById = asyncHandler(async (req, res) => {
   const getRecommendedProducts = async (req, res) => {
     console.log("Reached getRecommendedProducts API");
     
-    const uid = req.user?.id; // Use authenticated user ID
+    const uid = req.user?.userId; 
     console.log("Authenticated User ID:", uid);
   
     if (!uid) {
@@ -381,7 +396,7 @@ const ViewInstantOrderById = asyncHandler(async (req, res) => {
         include: [
           {
             model: NormalOrderProduct,
-            as: 'NormalProducts', // Ensure correct alias
+            as: 'NormalProducts',
             attributes: ['product_id'],
           },
         ],
@@ -399,7 +414,7 @@ const ViewInstantOrderById = asyncHandler(async (req, res) => {
       }
   
       const productIds = [...new Set(recentOrders.flatMap(order => 
-        order.NormalProducts.map(op => op.product_id) // Fix alias here
+        order.NormalProducts.map(op => op.product_id) 
       ))];
   
       const purchasedProducts = await Product.findAll({
@@ -411,7 +426,19 @@ const ViewInstantOrderById = asyncHandler(async (req, res) => {
   
       const recommendedProducts = await Product.findAll({
         where: { cat_id: categoryIds, id: { [Op.notIn]: productIds } },
-        attributes: ['id', 'title', 'normal_price', 'img'],
+        // attributes: ['id', 'title', 'img'],
+        include: [
+          {
+            model:Category,
+            as:"category",
+            attributes:["id","title"]
+          },
+          {
+            model: WeightOption,
+            as: "weightOptions",
+            attributes: ["id", "weight", "subscribe_price", "normal_price", "mrp_price"],
+          },
+        ],
         limit: 10,
       });
   

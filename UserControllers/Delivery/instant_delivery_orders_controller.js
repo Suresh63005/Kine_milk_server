@@ -9,6 +9,7 @@ const asyncHandler = require("../../middlewares/errorHandler");
 const Notification = require("../../Models/Notification");
 const SubscribeOrder = require("../../Models/SubscribeOrder");
 const SubscribeOrderProduct = require("../../Models/SubscribeOrderProduct");
+const WeightOption = require("../../Models/WeightOption");
 
 // const FetchAllInstantDeliveryOrdersByStatus = asyncHandler(async (req, res) => {
 //     console.log("Decoded User:", req.user);
@@ -210,10 +211,7 @@ const FetchAllInstantDeliveryOrdersByStatus = asyncHandler(async (req, res) => {
             "id",
             "title",
             "description",
-            "normal_price",
-            "mrp_price",
             "img",
-            "weight",
           ],
         },
       ],
@@ -450,12 +448,14 @@ const ViewOrderDetails = asyncHandler(async (req, res) => {
                 "id",
                 "title",
                 "description",
-                "normal_price",
-                "mrp_price",
                 "img",
-                "weight"
               ],
             },
+            {
+              model:WeightOption,
+              as:"productWeight",
+              attributes:["id","weight","subscribe_price","normal_price","mrp_price"]
+            }
           ],
         },
         {
