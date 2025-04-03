@@ -187,14 +187,24 @@ const ViewSubscribeOrderDetails = asyncHandler(async (req, res) => {
         ResponseMsg: "Order not found or not assigned to this rider!",
       });
     }
+
+    console.log("Raw delivered_dates:", subscribeOrders.delivered_dates);
+    console.log("Type of delivered_dates:", typeof subscribeOrders.delivered_dates);
+
+    const deliveredDates = Array.isArray(subscribeOrders.delivered_dates)
+    ? subscribeOrders.delivered_dates
+    : [];
+
     return res.status(200).json({
       success: true,
-      ResponseCode: "Subscribe Order details fetched successfully",
+      ResponseCode: "200",
+      Result: "true",
+      ResponseMsg: "Subscribe Order details fetched successfully",
       Data: {
         ...subscribeOrders.dataValues,
-        delivered_dates: JSON.parse(subscribeOrders.delivered_dates || "[]"),
+        delivered_dates: deliveredDates,
       },
-    });
+    });;
   } catch (error) {
     console.error("Error Occurs While Fetching Order Details: ", error);
     return res.status(500).json({
