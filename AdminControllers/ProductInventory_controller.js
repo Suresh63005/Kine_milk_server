@@ -6,6 +6,7 @@ const Coupons = require("../Models/Coupon");
 const Coupon = require("../Models/Coupon");
 const WeightOption = require("../Models/WeightOption")
 const StoreWeightOption = require("../Models/StoreWeightOption")
+const Categories = require("../Models/Category")
 
 const upsertInventory = async (req, res) => {
   const { id, store_id, product_id, date, weightOptions, coupons } = req.body;
@@ -205,8 +206,16 @@ const ProductInventoryList = async (req, res) => {
       include: [
         { 
           model: Product, 
-          as: "inventoryProducts" 
+          as: "inventoryProducts",
+          include:[{
+            
+              model: Categories, 
+              as: "category",
+              attributes:["id","title"]
+            
+          }]
         },
+        
         {
           model: StoreWeightOption,
           as: "storeWeightOptions",
