@@ -142,7 +142,7 @@ const PostProductReview = asyncHandler(async (req, res) => {
       reviews.map(async (r) => {
         const product = await Product.findOne({
           where: { id: r.productId },
-          attributes: ['id', 'title', 'img', 'description', 'normal_price', 'mrp_price', 'discount', 'cat_id']
+          attributes: ['id', 'title', 'img', 'description', 'discount', 'cat_id']
         });
   
         if (!product) {
