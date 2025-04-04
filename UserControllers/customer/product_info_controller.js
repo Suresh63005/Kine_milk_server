@@ -3,12 +3,14 @@ const Product = require("../../Models/Product");
 const ProductImage = require("../../Models/productImages");
 const Category = require("../../Models/Category");
 const WeightOption = require("../../Models/WeightOption");
+const ProductInventory = require("../../Models/ProductInventory");
+const StoreWeightOption = require("../../Models/StoreWeightOption");
 
 const productInfo = async (req, res) => {
     try {
         const {  pid } = req.body;
         
-
+        
         if ( !pid) {
             return res.status(400).json({
                 ResponseCode: "401",
@@ -17,29 +19,39 @@ const productInfo = async (req, res) => {
             });
         }
 
-        // Fetch the product
-        const product = await Product.findOne({
-          where: { id: pid },
-          include: [
-            {
-                model:Category,
-                as:"category",
-                attributes:["id","title"]
-            },
-            {
-              model: ProductImage,
-              as: "extraImages",
-              attributes: ["img"],
-              required: false,
-            },
-            {
-                model: WeightOption,
-                as: "weightOptions", // Alias for the association (ensure this matches your model definition)
-                attributes: ["weight", "subscribe_price", "normal_price", "mrp_price"], // Select specific fields
-              }
-          ],
-        });
 
+
+
+        const product = await ProductInventory.findAll({
+            include: [
+              { 
+                model: Product, 
+                as: "inventoryProducts",
+                include:[{
+                  
+                    model: Category, 
+                    as: "category",
+                    attributes:["id","title"]
+                  
+                }]
+              },
+              
+              {
+                model: StoreWeightOption,
+                as: "storeWeightOptions",
+                include: [{ 
+                  model: WeightOption, 
+                  as: "weightOption",
+                  required: false, // Important: make this left join
+                  attributes: ['id', 'weight', 'normal_price', 'subscribe_price', 'mrp_price']
+                }],
+              },
+            ],
+          });
+
+
+
+     
         if (!product) {
             return res.status(404).json({
                 ResponseCode: "404",
