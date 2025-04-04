@@ -4,7 +4,7 @@ const { DataTypes } = require("sequelize");
 const Setting = sequelize.define(
   "Setting",
   {
-   id: {
+    id: {
       type: DataTypes.UUID,
       allowNull: false,
       defaultValue: DataTypes.UUIDV4,
@@ -58,20 +58,31 @@ const Setting = sequelize.define(
       type: DataTypes.BIGINT,
       allowNull: false,
     },
+    refferal_amount: {
+      type: DataTypes.BIGINT,
+      allowNull: true, // Made optional
+      validate: {
+        min: 0, // Still enforce non-negative values if provided
+      },
+    },
     privacy_policy: {
-      type: DataTypes.TEXT("long"), 
+      type: DataTypes.TEXT("long"),
       allowNull: false,
     },
     terms_conditions: {
-      type: DataTypes.TEXT("long"), 
+      type: DataTypes.TEXT("long"),
       allowNull: false,
     },
     cancellation_policy: {
-      type: DataTypes.TEXT("long"), 
+      type: DataTypes.TEXT("long"),
       allowNull: false,
     },
   },
-  { tableName: "tbl_setting", timestamps: true, paranoid: true }
+  {
+    tableName: "tbl_setting",
+    timestamps: true,
+    paranoid: true,
+  }
 );
 
 module.exports = Setting;
