@@ -119,7 +119,7 @@ app.use("/store",require('./AdminRoutes/Store.route'))
 app.use("/user",require("./AdminRoutes/User.route"))
 app.use("/productinventory",require('./AdminRoutes/ProductInventory_route'))
 app.use("/notifications",require('./UserRoutes/notification_route'));
-
+app.use("/orders",require("./AdminRoutes/Order.route"))
 
 
 // User Routes

@@ -285,11 +285,18 @@ ProductInventory.hasMany(Favorite, {
   as: "favorites",
 });
 
+
+SubscribeOrder.belongsTo(Store,{
+  foreignKey:"store_id",
+  as:"store",
+})
+
 ProductReview.belongsTo(NormalOrderProduct, { 
   foreignKey: 'product_id', 
   targetKey: 'product_id', 
   as: 'normalOrderProduct' 
 });
+
 // ProductInventory.belongsTo(Category,{foreignKey:"cat"})
 // StoreWeightOption.belongsTo(WeightOption, { foreignKey: "weight_id", as: "weightOptions" });
 // WeightOption.hasMany(StoreWeightOption, { foreignKey: "weight_id", as: "storeWeightOptions" });
