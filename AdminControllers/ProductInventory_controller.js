@@ -147,10 +147,44 @@ const deleteProductInventory = async (req, res) => {
     return res.status(500).json({ message: "Internal Server Error" });
   }
 };
+
+// product shown store_id based 
+
+
+const getProductsByStoreId = async (req, res) => {
+  const { storeId } = req.params;
+  try {
+    const products = await ProductInventory.findAll({
+      where: {
+        store_id: storeId,
+      },
+      include: [
+        {
+          model: Product,
+          as: "inventoryProducts", // Make sure this alias matches the association in your models
+          attributes: ['id', 'title'], // Include only the fields you need, like 'id' and 'title'
+        }
+      ],
+      attributes: ['id', 'product_id', 'quantity', 'total', 'date', 'status', 'Coupons'], // Fields from ProductInventory
+    });
+
+    // If no products found
+    if (!products.length) {
+      return res.status(404).json({ message: 'No products found for this store.' });
+    }
+    
+    return res.status(200).json(products);  // Send the products along with product titles
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({ message: 'An error occurred while fetching products.' });
+  }
+}
+
 module.exports = {
   addInventory,
   getProductInventoryById,
   ProductInventoryList,
   toggleProductInventoryStatus,
-  deleteProductInventory
+  deleteProductInventory,
+  getProductsByStoreId
 };
