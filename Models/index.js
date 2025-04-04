@@ -178,7 +178,7 @@ Time.hasMany(NormalOrder, { foreignKey: "timeslot_id", as: "timeslot" });
 Review.belongsTo(NormalOrder, {
   foreignKey: "order_id",
   constraints: false,
-  scope: { order_type: "normal" },
+  // scope: { order_type: "normal" },
   as: "normalorderdeliveryreview",
 });
 NormalOrder.hasMany(Review, {
@@ -221,6 +221,7 @@ WeightOption.hasMany(Cart, {
 });
 
 const StoreWeightOption = require("./StoreWeightOption");
+const ProductReview = require("./ProductReview");
 ProductInventory.hasMany(StoreWeightOption, {
   foreignKey: "product_inventory_id",
   as: "storeWeightOptions",
@@ -284,10 +285,18 @@ ProductInventory.hasMany(Favorite, {
   as: "favorites",
 });
 
+
 SubscribeOrder.belongsTo(Store,{
   foreignKey:"store_id",
   as:"store",
 })
+
+ProductReview.belongsTo(NormalOrderProduct, { 
+  foreignKey: 'product_id', 
+  targetKey: 'product_id', 
+  as: 'normalOrderProduct' 
+});
+
 // ProductInventory.belongsTo(Category,{foreignKey:"cat"})
 // StoreWeightOption.belongsTo(WeightOption, { foreignKey: "weight_id", as: "weightOptions" });
 // WeightOption.hasMany(StoreWeightOption, { foreignKey: "weight_id", as: "storeWeightOptions" });

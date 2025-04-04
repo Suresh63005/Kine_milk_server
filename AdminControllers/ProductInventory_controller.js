@@ -31,6 +31,14 @@ const upsertInventory = async (req, res) => {
           ResponseMsg: "Weight ID is required for all weight options.",
         });
       }
+      const weightExists = await WeightOption.findOne({ where: { id: option.weight_id } });
+      if (!weightExists) {
+        return res.status(404).json({
+          ResponseCode: "404",
+          Result: "false",
+          ResponseMsg: `Weight option with ID ${option.weight_id} not found.`,
+        });
+      }
     }
 
     const store = await Store.findOne({ where: { id: store_id } });
