@@ -244,13 +244,19 @@ const homeAPI = async (req, res) => {
               model: Category,
               as: "category",
               attributes: ["id", "title"],
-            },
-            {
-              model: WeightOption,
-              as: "weightOptions", 
-              attributes: ["id","weight", "subscribe_price", "normal_price", "mrp_price"], 
             }
+            
           ],
+        },
+        {
+          model: StoreWeightOption,
+          as: "storeWeightOptions",
+          include: [{ 
+            model: WeightOption, 
+            as: "weightOption",
+            required: false, // Important: make this left join
+            attributes: ['id', 'weight', 'normal_price', 'subscribe_price', 'mrp_price']
+          }],
         },
       ],
     });
