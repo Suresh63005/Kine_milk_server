@@ -151,7 +151,7 @@ const addFavorite = async (req, res) => {
                     include: [
                       {
                         model: WeightOption,
-                        as: "weightOptions",
+                        as: "weightOption",
                         attributes: ["id", "normal_price", "subscribe_price", "mrp_price", "weight"],
                       },
                     ],
