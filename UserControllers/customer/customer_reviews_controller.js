@@ -1,11 +1,15 @@
+const { Op } = require('sequelize');
 const NormalOrder = require('../../Models/NormalOrder');
 const NormalOrderProduct = require('../../Models/NormalOrderProduct');
 const Product = require('../../Models/Product');
 const ProductReivew = require('../../Models/ProductReview');
 const Rider = require('../../Models/Rider');
 const User = require('../../Models/User');
+const WeightOption = require('../../Models/WeightOption');
 const Review = require('../../Models/review');
 const asyncHandler = require('../../middlewares/errorHandler');
+const SubscribeOrder = require('../../Models/SubscribeOrder');
+const SubscribeOrderProduct = require('../../Models/SubscribeOrderProduct');
 
 // const PostProductReview = asyncHandler(async (req, res) => {
 //     const uid = req.user.userId; 
@@ -293,12 +297,40 @@ const FetchMyReviewsOnProducts = asyncHandler(async(req,res)=>{
   try {
     const reviews = await ProductReivew.findAll({
       where:{user_id:uid},
-      attributes:['id','rating','review'],
+      attributes: ['id', 'rating', 'review', 'order_id', 'product_id'],
       include:[
         {
-          model:Product,
-          as:'product',
-          attributes:['id','title','img','description','normal_price','mrp_price','discount']
+          model:NormalOrderProduct,
+          as:"normalOrderProduct",
+          attributes:["product_id","oid","weight_id"],
+          required:true,
+          include: [
+            {
+              model: NormalOrder,
+              as: "NormalProducts",
+              where: { 
+                uid: uid,
+                status: 'Completed' 
+              },
+              attributes: ['id', 'status']
+            },
+            {
+              model: Product,
+              as: "ProductDetails",
+              attributes: ['id', 'title', 'img', 'description', 'discount'],
+              include:[
+               { 
+                model: WeightOption,
+              as: "weightOptions",
+              attributes: ['id', 'product_id', 'weight', 'subscribe_price', 'normal_price', 'mrp_price'],
+              where:{
+                id: { [Op.col]: 'normalOrderProduct.weight_id' }
+              },
+              required:false
+            }
+              ]
+            }
+          ]
         }
       ]
     })
@@ -312,31 +344,104 @@ const FetchMyReviewsOnProducts = asyncHandler(async(req,res)=>{
    }
 })
 
-const FetchMyReviewsOnDeliveryBoys = asyncHandler(async(req,res)=>{
+const FetchMyReviewsOnDeliveryBoys = asyncHandler(async (req, res) => {
   const uid = req.user.userId;
-  if(!uid){
-    return res.status(401).json({message:"Unauthorized! User not found."})
+  if (!uid) {
+    return res.status(401).json({ message: "Unauthorized! User not found." });
   }
+  
   try {
     const reviews = await Review.findAll({
-      where:{user_id:uid},
-      attributes:['id','rating','review'],
-      include:[
+      where: { user_id: uid, },
+      attributes: ['id', 'rating', 'review', 'order_id', 'rider_id', 'store_id', 'order_type'],
+      include: [
         {
-          model:Rider,
-          as:'rider',
-          attributes:['id','title','img']
-        }
+          model: Rider,
+          as: 'rider',
+          attributes: ['id', 'title', 'img']
+        },
+        {
+          model: User,
+          as: "user",
+          attributes: ['id', 'name', 'email', 'img'],
+          where: { id: uid }
+        },
+        {
+          model: NormalOrder,
+          as: "normalorderdeliveryreview",
+          where: { uid: uid, status: "Completed" },
+          attributes: ['id', 'status'],
+          required: false,
+          include: [
+            {
+              model: NormalOrderProduct,
+              as: 'NormalProducts',
+              attributes: ['product_id', 'weight_id', 'pquantity', 'price'],
+              include: [
+                {
+                  model: Product,
+                  as: 'ProductDetails',
+                  attributes: ['id', 'title', 'img', 'description', 'discount'],
+                  include: [
+                    {
+                      model: WeightOption,
+                      as: 'weightOptions',
+                      attributes: ['id', 'weight', 'subscribe_price', 'normal_price', 'mrp_price'],
+                      where: {
+                        id: { [Op.col]: 'normalorderdeliveryreview.NormalProducts.weight_id' }
+                      },
+                      required: false
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        // {
+        //   model: SubscribeOrder,
+        //   as: "suborderdeliveryreview",
+        //   where: { uid: uid, status: "Completed" },
+        //   attributes: ['id', 'status',],
+        //   required: false,
+        //   include: [
+        //     {
+        //       model: SubscribeOrderProduct,
+        //       as: 'orderProducts',
+        //       attributes: ['product_id', 'weight_id', 'pquantity', 'price'],
+        //       include: [
+        //         {
+        //           model: Product,
+        //           as: 'productDetails',
+        //           attributes: ['id', 'title', 'img', 'description', 'discount'],
+        //           include: [
+        //             {
+        //               model: WeightOption,
+        //               as: 'weightOptions',
+        //               attributes: ['id', 'weight', 'subscribe_price', 'normal_price', 'mrp_price'],
+        //               where: {
+        //                 id: { [Op.col]: 'suborderdeliveryreview.orderProducts.weight_id' }
+        //               },
+        //               required: false
+        //             }
+        //           ]
+        //         }
+        //       ]
+        //     }
+        //   ]
+        // }
       ]
-    })
-    if(reviews.length===0){
-      return res.status(404).json({message:"No Reviews Found!"})
+    });
+
+    if (reviews.length === 0) {
+      return res.status(404).json({ message: "No Reviews Found!" });
     }
-    return res.status(200).json({message:"Reviews fetched successfully",reviews})
+
+    return res.status(200).json({ message: "Reviews fetched successfully", reviews });
   } catch (error) {
     console.error("Error Occurs while fetching reviews:", error);
-    return res.status(500).json({ message: "Internal server error" + error.message });
+    return res.status(500).json({ message: "Internal server error: " + error.message });
   }
-})
+});
 
 module.exports = { PostProductReview,PostDeliveryBoyReview,FetchMyReviewsOnProducts,FetchMyReviewsOnDeliveryBoys };
