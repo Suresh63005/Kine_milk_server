@@ -349,60 +349,128 @@ const deleteProductInventory = async (req, res) => {
 
  // Ensure WeightOption model is imported
 
-const getProductsbyStore = async (req, res, next) => {
+// const getProductsbyStore = async (req, res, next) => {
+//   try {
+//     const { store_id } = req.params;
+
+//     if (!store_id) {
+//       return res.status(400).json({ message: "Store ID is required" });
+//     }
+
+//     // Fetch categories associated with the store_id
+//     const store = await Store.findOne({
+//       where: { id: store_id },
+//       attributes: ["catid"], // Assuming 'catid' contains category IDs in JSON format
+//     });
+
+//     if (!store || !store.catid) {
+//       return res.status(404).json({ message: "Store not found or no categories linked" });
+//     }
+
+//     // Parse catid properly (Handles cases where it's stored as JSON or CSV)
+//     let categoryIds;
+//     try {
+//       categoryIds = JSON.parse(store.catid); // Try parsing as JSON
+//     } catch (error) {
+//       categoryIds = store.catid.split(",").map((id) => id.trim()); // Fallback to CSV
+//     }
+
+//     if (!Array.isArray(categoryIds) || categoryIds.length === 0) {
+//       return res.status(200).json({ message: "No categories found for this store", products: [] });
+//     }
+
+//     // Fetch all product details that belong to these category IDs, including weight options
+//     const products = await Product.findAll({
+//       where: {
+//         cat_id: categoryIds, // Sequelize automatically converts array to IN condition
+//       },
+//       include: [
+//         {
+//           model: WeightOption,
+//           as: "weightOptions", // Assuming the association alias is 'weightOptions'
+//           attributes: ["id","weight", "subscribe_price", "normal_price", "mrp_price"], // Select relevant fields
+//         },
+//       ],
+//       attributes: { exclude: [] }, // Fetch all columns of Product
+//     });
+
+//     console.info("Successfully retrieved products by store with weight options");
+//     res.status(200).json({ products });
+//   } catch (error) {
+//     console.error("Error fetching products:", error);
+//     res.status(500).json({ message: "Internal Server Error" });
+//   }
+// };
+
+const getProductsbyStore = async (req, res) => {
   try {
     const { store_id } = req.params;
-
     if (!store_id) {
       return res.status(400).json({ message: "Store ID is required" });
     }
 
-    // Fetch categories associated with the store_id
-    const store = await Store.findOne({
-      where: { id: store_id },
-      attributes: ["catid"], // Assuming 'catid' contains category IDs in JSON format
-    });
-
-    if (!store || !store.catid) {
+    // Fetch store and parse category IDs
+    const store = await Store.findOne({ where: { id: store_id }, attributes: ["catid"] });
+    if (!store?.catid) {
       return res.status(404).json({ message: "Store not found or no categories linked" });
     }
 
-    // Parse catid properly (Handles cases where it's stored as JSON or CSV)
-    let categoryIds;
-    try {
-      categoryIds = JSON.parse(store.catid); // Try parsing as JSON
-    } catch (error) {
-      categoryIds = store.catid.split(",").map((id) => id.trim()); // Fallback to CSV
-    }
+    const categoryIds = Array.isArray(store.catid)
+      ? store.catid
+      : JSON.parse(store.catid || "[]").length
+      ? JSON.parse(store.catid)
+      : store.catid.split(",").map((id) => id.trim());
 
-    if (!Array.isArray(categoryIds) || categoryIds.length === 0) {
+    if (!categoryIds.length) {
       return res.status(200).json({ message: "No categories found for this store", products: [] });
     }
 
-    // Fetch all product details that belong to these category IDs, including weight options
-    const products = await Product.findAll({
-      where: {
-        cat_id: categoryIds, // Sequelize automatically converts array to IN condition
-      },
+    // Fetch product inventories with necessary includes
+    const productInventories = await ProductInventory.findAll({
+      where: { store_id },
       include: [
         {
-          model: WeightOption,
-          as: "weightOptions", // Assuming the association alias is 'weightOptions'
-          attributes: ["id","weight", "subscribe_price", "normal_price", "mrp_price"], // Select relevant fields
+          model: Product,
+          as: "inventoryProducts",
+          where: { cat_id: categoryIds },
+          include: [{ model: Categories, as: "category", attributes: ["id", "title"] }],
+        },
+        {
+          model: StoreWeightOption,
+          as: "storeWeightOptions",
+          include: [
+            {
+              model: WeightOption,
+              as: "weightOption",
+              required: false,
+              attributes: ["id", "weight", "normal_price", "subscribe_price", "mrp_price"],
+            },
+          ],
         },
       ],
-      attributes: { exclude: [] }, // Fetch all columns of Product
     });
 
-    console.info("Successfully retrieved products by store with weight options");
+    // Transform the response
+    const products = productInventories.map((inventory) => {
+      const data = inventory.toJSON();
+      data.storeWeightOptions = data.storeWeightOptions.map((option) => ({
+        ...option,
+        weight: option.weightOption?.weight || "N/A",
+        normal_price: option.weightOption?.normal_price || null,
+        subscription_price: option.weightOption?.subscribe_price || null,
+        mrp_price: option.weightOption?.mrp_price || null,
+        weightOption: undefined, // Remove nested weightOption to avoid duplication
+      }));
+      return data;
+    });
+
+    console.info("Successfully retrieved products by store with storeWeightOptions");
     res.status(200).json({ products });
   } catch (error) {
     console.error("Error fetching products:", error);
     res.status(500).json({ message: "Internal Server Error" });
   }
 };
-
-
 
 module.exports = {
   upsertInventory,
