@@ -23,6 +23,7 @@ const productInfo = async (req, res) => {
 
 
         const product = await ProductInventory.findAll({
+            where: { id: pid },
             include: [
               { 
                 model: Product, 

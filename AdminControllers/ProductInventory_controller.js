@@ -22,6 +22,16 @@ const upsertInventory = async (req, res) => {
       });
     }
 
+    const weightIds = weightOptions.map((option) => option.weight_id);
+    const uniqueWeightIds = new Set(weightIds);
+    if (uniqueWeightIds.size !== weightIds.length) {
+      return res.status(400).json({
+        ResponseCode: "400",
+        Result: "false",
+        ResponseMsg: "Duplicate weight IDs found in weightOptions. Each weight ID must be unique.",
+      });
+    }
+
     // Validate weightOptions
     for (const option of weightOptions) {
       if (!option.weight_id) {
@@ -29,6 +39,14 @@ const upsertInventory = async (req, res) => {
           ResponseCode: "400",
           Result: "false",
           ResponseMsg: "Weight ID is required for all weight options.",
+        });
+      }
+      const weightExists = await WeightOption.findOne({ where: { id: option.weight_id } });
+      if (!weightExists) {
+        return res.status(404).json({
+          ResponseCode: "404",
+          Result: "false",
+          ResponseMsg: `Weight option with ID ${option.weight_id} not found.`,
         });
       }
     }
@@ -232,6 +250,7 @@ const ProductInventoryList = async (req, res) => {
               attributes: ['id', 'weight', 'normal_price', 'subscribe_price', 'mrp_price'],
             },
           ],
+
         },
       ],
     });
@@ -335,6 +354,7 @@ const deleteProductInventory = async (req, res) => {
         .json({ message: "Product Inventory permanently deleted successfully" });
     }
     await productInv.destroy();
+    await StoreWeightOption.destroy({ where: { product_inventory_id: id } });
     return res.status(200).json({ message: "Product Inventory soft deleted successfully" });
   } catch (error) {
     console.error(error);
@@ -397,7 +417,22 @@ const getProductsbyStore = async (req, res, next) => {
   }
 };
 
-
+const deleteInventoryStoreWeightOptions = async (req, res) => {
+  const { inventory_id, weight_id } = req.body;
+  try {
+    const storeWeightOption = await StoreWeightOption.findOne({
+      where: { product_inventory_id: inventory_id, weight_id:weight_id },
+    });
+    if (!storeWeightOption) {
+      return res.status(404).json({ message: "Store Weight Option not found" });
+    }
+    await storeWeightOption.destroy();
+    res.status(200).json({ message: "Store Weight Option deleted successfully" });
+  } catch (error) {
+    console.error("Error deleting Store Weight Option:", error);
+    res.status(500).json({ message: "Internal Server Error" });
+  }
+};
 
 module.exports = {
   upsertInventory,
@@ -406,4 +441,5 @@ module.exports = {
   toggleProductInventoryStatus,
   deleteProductInventory,
   getProductsbyStore,
+  deleteInventoryStoreWeightOptions
 };

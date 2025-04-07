@@ -8,10 +8,12 @@ const Address = require("../../Models/Address");
 const Favorite = require("../../Models/Favorite");
 const Cart = require("../../Models/Cart");
 const uploadToS3 = require("../../config/fileUpload.aws");
-
+const { generateReferralCode } = require("../../utils/referralCode");
+const WalletReport = require("../../Models/WalletReport");
+const { v4: uuidv4 } = require('uuid');
 
 const VerifyCustomerMobile = asyncHandler(async (req, res) => {
-    let { mobile } = req.body;
+    let { mobile,refercode } = req.body;
 
     if (!mobile) {
         return res.status(400).json({ message: "Mobile number is required!" });
@@ -39,7 +41,58 @@ const VerifyCustomerMobile = asyncHandler(async (req, res) => {
                 name: userRecord.displayName || null,
                 status: 1,
                 registartion_date: new Date(),
+                refercode:refercode || generateReferralCode(),
+                parentcode:null,
             });
+
+            if (refercode) {
+              const refercode = await User.findOne({ where: { refercode } });
+              if (!refercode || refercode.id === user.id) {
+                await user.update({ parentcode: null });
+              } else {
+                const rewardAmount = 100;
+                const newWalletBalance = (refercode.wallet || 0) + rewardAmount;
+                await refercode.update({ wallet: newWalletBalance });
+
+                const transactionNo = `TXN${uuidv4().split("-")[0]}`;
+                await WalletReport.create({
+                  uid: referrer.id,
+                  message: `Referral reward for inviting user ${mobile}`,
+                  status: 1,
+                  amt: rewardAmount,
+                  transaction_no: transactionNo,
+                  tdate: new Date(),
+                  transaction_type: "Credited",
+                });
+              }
+            }
+        }else{
+          if (refercode && !user.parentcode) {
+            const referrer = await User.findOne({ where: { refercode } });
+            if (!referrer || referrer.id === user.id) {
+                return res.status(400).json({ message: "Invalid referral code or self-referral not allowed!" });
+            }
+
+            await user.update({ parentcode: refercode });
+
+            const rewardAmount = 100;
+            const newWalletBalance = (referrer.wallet || 0) + rewardAmount;
+            await referrer.update({ wallet: newWalletBalance });
+
+            const transactionNo = `TXN${uuidv4().split("-")[0]}`;
+            await WalletReport.create({
+                uid: referrer.id,
+                message: `Referral reward for inviting user ${mobile}`,
+                status: 1,
+                amt: rewardAmount,
+                transaction_no: transactionNo,
+                tdate: new Date(),
+                transaction_type: "Credited"
+            });
+          }
+          if (!user.refercode) {
+            await user.update({ refercode: generateReferralCode() });
+        }
         }
 
         const token = jwt.sign(
@@ -49,9 +102,9 @@ const VerifyCustomerMobile = asyncHandler(async (req, res) => {
         );
 
         return res.status(200).json({
-            message: "Mobile number verified successfully!",
-            user,
-            token,
+          message: "Mobile number verified successfully!",
+          user,
+          token,
         });
 
     } catch (error) {
@@ -335,6 +388,93 @@ const updateOneSignalSubscription = async (req, res) => {
     }
   };
 
-module.exports = { 
-    VerifyCustomerMobile,FetchCustomerDetails,UpdateCustomerDetails,deleteCustomer,updateOneSignalSubscription,removeOneSignalId
+
+const GetReferralCode = async(req,res)=>{
+  const uid = req.user.userId;
+  if(!uid){
+    return res.status(401).json({ message: "Unauthorized: User not found!" });
+  }
+  try {
+    let user = await User.findByPk(uid);
+    if (!user) {
+      return res.status(404).json({ message: "User not found!" });
+    }
+
+    if(!user.refercode){
+      const refercode = generateReferralCode();
+      await user.update({refercode:refercode})
+    }
+
+    return res.status(200).json({
+      message:"Referral code fetched successfully!",
+      refercode:user.refercode,
+      // referralLink: `https://verify-customer/signup?ref=${user.refercode}`
+    })
+  } catch (error) {
+    console.error("Error fetching referral code:", error);
+    return res.status(500).json({ message: "Internal Server Error" });
+  }
+}
+
+const ApplyReferralCode = async(req,res)=>{
+  const uid = req.user.userId;
+  const {refercode}=req.body;
+  if(!uid){
+    return res.status(401).json({ message: "Unauthorized: User not found!" });
+  }
+  if(!refercode){
+    return res.status(400).json({message:"Referal code is required!"})
+  }
+  try {
+    const newUser = await User.findByPk(uid);
+    if (!newUser) {
+      return res.status(404).json({ message: "New user not found!" });
+    }
+
+    if (newUser.parentcode) {
+      return res.status(400).json({ message: "Referral code already applied!" });
+    }
+
+    const referrer = await User.findOne({where:{refercode}})
+    if(!referrer || referrer.id === uid){
+      return res.status(400).json({ message: "Invalid referral code or self-referral not allowed!" });
+    }
+
+    await newUser.update({ parentcode: refercode });
+
+    const rewardAmount = 100;
+    const newWalletBalance =(referrer.wallet || 0) + rewardAmount;
+    await referrer.update({wallet:newWalletBalance})
+
+    const transactionNo = `TXN${uuidv4().split("-")[0]}`;
+    await WalletReport.create({
+      uid: referrer.id,
+      message: `Referral reward for inviting user ${newUser.mobile}`,
+      status: 1,
+      amt: rewardAmount,
+      transaction_no: transactionNo,
+      tdate: new Date(),
+      transaction_type: "Credited"
+    });
+
+    return res.status(200).json({
+      message:"Referral applied successfully!",
+      parentcode:newUser.parentcode,
+      referralWallet:newWalletBalance
+    })
+  } catch (error) {
+    console.error("Error applying referral code:", error);
+    return res.status(500).json({ message: "Internal Server Error" });
+  }
+}
+
+module.exports = {
+  VerifyCustomerMobile,
+  FetchCustomerDetails,
+  UpdateCustomerDetails,
+  deleteCustomer,
+  updateOneSignalSubscription,
+  removeOneSignalId,
+  GetReferralCode,
+  ApplyReferralCode
 };
