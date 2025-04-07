@@ -237,7 +237,6 @@ const ProductInventoryList = async (req, res) => {
         {
           model: StoreWeightOption,
           as: "storeWeightOptions",
-          required:true,
           include: [{ 
             model: WeightOption, 
             as: "weightOption",
