@@ -242,6 +242,7 @@ const ProductInventoryList = async (req, res) => {
         {
           model: StoreWeightOption,
           as: "storeWeightOptions",
+
           include: [
             {
               model: WeightOption,
@@ -250,6 +251,7 @@ const ProductInventoryList = async (req, res) => {
               attributes: ['id', 'weight', 'normal_price', 'subscribe_price', 'mrp_price'],
             },
           ],
+
 
         },
       ],
