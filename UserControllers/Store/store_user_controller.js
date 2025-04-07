@@ -9,7 +9,7 @@ const jwt = require('jsonwebtoken');
 const StoreProfile = asyncHandler(async (req, res) => {
   console.log("Decoded User:", req.user);
 
-  const uid = req.user.userId;
+  const uid = req.user.storeId;
   if (!uid) {
     return res.status(400).json({
       ResponseCode: "401",
@@ -43,7 +43,7 @@ const StoreProfile = asyncHandler(async (req, res) => {
 const EditStoreProfile = asyncHandler(async (req, res) => {
   console.log("Decoded User:", req.user);
 
-  const uid = req.user?.userId;
+  const uid = req.user?.storeId;
   if (!uid) {
       return res.status(400).json({
           ResponseCode: "401",
