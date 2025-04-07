@@ -14,5 +14,6 @@ router.get("/getallproductinv",ProductInventory.ProductInventoryList)
 router.patch("/toggle-status/",ProductInventory.toggleProductInventoryStatus)
 router.delete("/delete/:id",ProductInventory.deleteProductInventory)
 router.get("/getproductbystore/:store_id",ProductInventory.getProductsbyStore)
+router.delete("/delete-weight-options",ProductInventory.deleteInventoryStoreWeightOptions)
 
 module.exports = router;
