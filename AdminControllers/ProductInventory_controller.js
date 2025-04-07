@@ -22,6 +22,16 @@ const upsertInventory = async (req, res) => {
       });
     }
 
+    const weightIds = weightOptions.map((option) => option.weight_id);
+    const uniqueWeightIds = new Set(weightIds);
+    if (uniqueWeightIds.size !== weightIds.length) {
+      return res.status(400).json({
+        ResponseCode: "400",
+        Result: "false",
+        ResponseMsg: "Duplicate weight IDs found in weightOptions. Each weight ID must be unique.",
+      });
+    }
+
     // Validate weightOptions
     for (const option of weightOptions) {
       if (!option.weight_id) {
@@ -230,7 +240,7 @@ const ProductInventoryList = async (req, res) => {
           include: [{ 
             model: WeightOption, 
             as: "weightOption",
-            required: false, // Important: make this left join
+            required: true, // Important: make this left join
             attributes: ['id', 'weight', 'normal_price', 'subscribe_price', 'mrp_price']
           }],
         },
@@ -340,6 +350,7 @@ const deleteProductInventory = async (req, res) => {
         .json({ message: "Product Inventory permanently deleted successfully" });
     }
     await productInv.destroy();
+    await StoreWeightOption.destroy({ where: { product_inventory_id: id } });
     return res.status(200).json({ message: "Product Inventory soft deleted successfully" });
   } catch (error) {
     console.error(error);
