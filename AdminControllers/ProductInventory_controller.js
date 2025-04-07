@@ -198,33 +198,40 @@ const getProductInventoryById = async (req, res, next) => {
 };
 const ProductInventoryList = async (req, res) => {
   try {
-    // First verify the weight options exist
+    const { store_id } = req.query; // Get store_id from query params
+
+    
     const testWeightOption = await WeightOption.findOne();
     console.log('Sample WeightOption:', testWeightOption?.toJSON());
 
+    
+    const where = store_id ? { store_id } : {};
+
     const productInv = await ProductInventory.findAll({
+      where, 
       include: [
-        { 
-          model: Product, 
+        {
+          model: Product,
           as: "inventoryProducts",
-          include:[{
-            
+          include: [
+            {
               model: Categories, 
               as: "category",
-              attributes:["id","title"]
-            
-          }]
+              attributes: ["id", "title"],
+            },
+          ],
         },
-        
         {
           model: StoreWeightOption,
           as: "storeWeightOptions",
-          include: [{ 
-            model: WeightOption, 
-            as: "weightOption",
-            required: false, // Important: make this left join
-            attributes: ['id', 'weight', 'normal_price', 'subscribe_price', 'mrp_price']
-          }],
+          include: [
+            {
+              model: WeightOption,
+              as: "weightOption",
+              required: false, // Left join
+              attributes: ['id', 'weight', 'normal_price', 'subscribe_price', 'mrp_price'],
+            },
+          ],
         },
       ],
     });
@@ -232,10 +239,8 @@ const ProductInventoryList = async (req, res) => {
     const allCoupons = await Coupon.findAll();
 
     const response = productInv?.map((inventory) => {
-      // Coupon handling (keep your existing code)
+      // Coupon handling
       let couponIds = [];
-      
-      // Handle different coupon ID formats
       if (Array.isArray(inventory.Coupons)) {
         couponIds = inventory.Coupons;
       } else if (typeof inventory.Coupons === 'string') {
@@ -247,33 +252,31 @@ const ProductInventoryList = async (req, res) => {
         }
       }
 
-      // Map coupon IDs to coupon objects
-      const coupons = couponIds?.map(couponId => {
-          const coupon = allCoupons.find(c => c.id === couponId);
-          return coupon ? {
-            id: coupon.id,
-            coupon_title: coupon.coupon_title,
-            coupon_value: coupon.coupon_val
-          } : null;
+      const coupons = couponIds
+        ?.map((couponId) => {
+          const coupon = allCoupons.find((c) => c.id === couponId);
+          return coupon
+            ? {
+                id: coupon.id,
+                coupon_title: coupon.coupon_title,
+                coupon_value: coupon.coupon_val,
+              }
+            : null;
         })
         .filter(Boolean);
 
-
       const storeWeightOptions = inventory.storeWeightOptions.map((option) => {
-        // Debug the raw option first
         console.log('StoreWeightOption:', option.toJSON());
-        
         const weightOption = option.weightOption;
         console.log('Associated WeightOption:', weightOption?.toJSON());
 
-        // Get prices from WeightOption if available, otherwise use StoreWeightOption
         return {
           id: option.id,
           product_inventory_id: option.product_inventory_id,
           product_id: option.product_id,
           weight_id: option.weight_id,
-          quantity: option.quantity, // From StoreWeightOption
-          total: option.total,       // From StoreWeightOption
+          quantity: option.quantity,
+          total: option.total,
           weight: weightOption?.weight || "N/A",
           normal_price: weightOption?.normal_price || option.normal_price || null,
           subscription_price: weightOption?.subscribe_price || option.subscription_price || null,
