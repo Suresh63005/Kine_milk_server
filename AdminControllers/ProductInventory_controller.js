@@ -237,10 +237,11 @@ const ProductInventoryList = async (req, res) => {
         {
           model: StoreWeightOption,
           as: "storeWeightOptions",
+          required:true,
           include: [{ 
             model: WeightOption, 
             as: "weightOption",
-            required: true, // Important: make this left join
+            required: false, 
             attributes: ['id', 'weight', 'normal_price', 'subscribe_price', 'mrp_price']
           }],
         },
