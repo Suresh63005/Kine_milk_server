@@ -402,8 +402,6 @@ const getProductsbyStore = async (req, res, next) => {
   }
 };
 
-
-
 module.exports = {
   upsertInventory,
   getProductInventoryById,
