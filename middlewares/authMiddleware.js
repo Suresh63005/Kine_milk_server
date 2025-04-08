@@ -89,10 +89,10 @@ const isAuthenticated = async (req, res, next) => {
         if (user) {
           req.user = {
             ...user.toJSON(),
-            riderId: decoded.riderId, // Attach riderId explicitly
+            riderId: decoded.riderId,
           };
           console.log("Rider Authenticated:", req.user);
-          return next(); // Exit early if rider is authenticated
+          return next(); 
         }
       }
   
@@ -102,10 +102,10 @@ const isAuthenticated = async (req, res, next) => {
         if (user) {
           req.user = {
             ...user.toJSON(),
-            storeId: decoded.storeId, // Attach storeId explicitly
+            storeId: decoded.storeId,
           };
           console.log("Store Authenticated:", req.user);
-          return next(); // Exit early if store is authenticated
+          return next();
         }
       }
   
@@ -116,10 +116,10 @@ const isAuthenticated = async (req, res, next) => {
         if (user) {
           req.user = {
             ...user.toJSON(),
-            userId: decoded.userId, // Attach userId explicitly
+            userId: decoded.userId,
           };
           console.log("User Authenticated:", req.user);
-          return next(); // Exit early if user is authenticated
+          return next(); 
         }
       }
   
