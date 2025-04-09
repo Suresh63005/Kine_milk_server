@@ -1,4 +1,4 @@
-const { Sequelize } = require("sequelize");
+const { Sequelize, Op } = require("sequelize");
 const SubscribeOrder = require("../../Models/SubscribeOrder");
 const Product = require("../../Models/Product");
 const SubscribeOrderProduct = require("../../Models/SubscribeOrderProduct");
@@ -13,6 +13,7 @@ const WalletReport = require("../../Models/WalletReport");
 const db = require("../../config/db");
 const Store = require("../../Models/Store");
 const WeightOption = require("../../Models/WeightOption");
+const Cart = require("../../Models/Cart");
 
 const generateOrderId = () => {
   const randomNum = Math.floor(100000 + Math.random() * 900000);
@@ -84,6 +85,9 @@ const subscribeOrder = async (req, res) => {
         ResponseMsg: "Store not found",
       });
     }
+
+    const cartOrderType = "Subscription";
+
     const odate = new Date();
 
     // Create the order
@@ -135,6 +139,21 @@ const subscribeOrder = async (req, res) => {
         );
       })
     );
+
+    const cartItemsToRemove = products.map((item)=>({
+      uid,
+      product_id: item.product_id,
+      orderType: cartOrderType,
+      weight_id: item.weight_id,
+    }))
+
+    await Cart.destroy({
+      where:{
+        [Op.or]:cartItemsToRemove
+      },
+      transaction:t
+    })
+    console.log("Cart items removed for subscription order:", cartItemsToRemove.length);
 
     const updatedAmount = user.wallet - o_total;
     if (updatedAmount < 0) {
