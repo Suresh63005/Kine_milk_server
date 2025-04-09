@@ -9,6 +9,7 @@ const Notification = require("../../Models/Notification");
 const { Op } = require("sequelize");
 const StoreWeightOption = require("../../Models/StoreWeightOption");
 const WeightOption = require("../../Models/WeightOption");
+const ProductImage = require("../../Models/productImages");
 
 
 // Function to calculate distance
@@ -152,21 +153,22 @@ const getDistance = (lat1, lon1, lat2, lon2) => {
 
 const homeAPI = async (req, res) => {
   const { pincode } = req.params;
-  console.log("Raw req.body:", req.body); // Log raw body
   const { latitude, longitude } = req.body;
 
   console.log("Request Params:", { pincode });
   console.log("Request Body:", { latitude, longitude });
 
-  if (!pincode && (!latitude || !longitude)) {
+  // Require both pincode and latitude/longitude
+  if (!pincode || !latitude || !longitude) {
     return res.json({
       ResponseCode: "400",
       Result: "false",
-      ResponseMsg: "Either pincode or both latitude and longitude are required!",
+      ResponseMsg: "Pincode, latitude, and longitude are all required!",
     });
   }
 
   try {
+    // Fetch banners and categories (unchanged)
     const banners = await Banner.findAll({
       where: { status: 1 },
       attributes: ["id", "img"],
@@ -178,22 +180,26 @@ const homeAPI = async (req, res) => {
     });
 
     let stores = [];
+    let fetchMethod = ""; // To track how stores were fetched
 
-    if (pincode) {
-      stores = await Store.findAll({
-        where: {
-          status: 1,
-          pincode: pincode,
-        },
-        attributes: ["id", "title", "rimg", "full_address", "lats", "longs"],
-      });
-      console.log(`Stores found for pincode ${pincode}:`, stores.length);
-    }
+    // Step 1: Try fetching stores by pincode
+    stores = await Store.findAll({
+      where: {
+        status: 1,
+        pincode: pincode, // Match exact pincode
+      },
+      attributes: ["id", "title", "rimg", "full_address", "lats", "longs"],
+    });
+    console.log(`Stores found for pincode ${pincode}:`, stores.length);
 
-    if ((!stores || stores.length === 0) && latitude && longitude) {
+    if (stores.length > 0) {
+      fetchMethod = "pincode";
+      console.log(`Stores fetched successfully using pincode: ${pincode}`);
+    } else {
+      // Step 2: Fallback to radius search using latitude/longitude
       const userLat = parseFloat(latitude);
       const userLon = parseFloat(longitude);
-      console.log("Falling back to radius search with lat/lon:", { userLat, userLon });
+      console.log("No stores found for pincode. Falling back to radius search:", { userLat, userLon });
 
       const allStores = await Store.findAll({
         where: { status: 1 },
@@ -204,23 +210,31 @@ const homeAPI = async (req, res) => {
       stores = allStores.filter((store) => {
         const storeLat = parseFloat(store.lats);
         const storeLon = parseFloat(store.longs);
+        if (!storeLat || !storeLon) {
+          console.log(`Store ${store.title} skipped: Invalid lat/lon (${store.lats}, ${store.longs})`);
+          return false;
+        }
         const distance = getDistance(userLat, userLon, storeLat, storeLon);
         console.log(`Store: ${store.title}, Lat: ${storeLat}, Lon: ${storeLon}, Distance: ${distance}km`);
-        return distance <= 10;
+        return distance <= 10; // 10km radius
       });
-      console.log("Stores within 10km:", stores.length);
+
+      if (stores.length > 0) {
+        fetchMethod = "latitude/longitude";
+        console.log(`Stores fetched successfully using latitude/longitude: ${latitude}, ${longitude}`);
+      }
     }
 
-    if (!stores || stores.length === 0) {
+    if (stores.length === 0) {
+      console.log("No stores found by either pincode or latitude/longitude.");
       return res.json({
         ResponseCode: "400",
         Result: "false",
-        ResponseMsg: pincode
-          ? "No stores found for your pincode or within 10km of your location!"
-          : "No stores found within 10km of your location!",
+        ResponseMsg: "No stores found for your pincode or within 10km of your location!",
       });
     }
 
+    // Fetch product inventory for the found stores
     const productInventory = await ProductInventory.findAll({
       where: {
         status: 1,
@@ -231,37 +245,37 @@ const homeAPI = async (req, res) => {
         {
           model: Product,
           as: "inventoryProducts",
-          attributes: [
-            "id",
-            "cat_id",
-            "title",
-            "img",
-            "description",
-            
-          ],
+          attributes: ["id", "cat_id", "title", "img", "description"],
           include: [
+            {
+              model: ProductImage,
+              as: "extraImages",
+              attributes: ["id", "product_id", "img"],
+            },
             {
               model: Category,
               as: "category",
               attributes: ["id", "title"],
-            }
-            
+            },
           ],
         },
         {
           model: StoreWeightOption,
           as: "storeWeightOptions",
-          include: [{ 
-            model: WeightOption, 
-            as: "weightOption",
-            required: false, // Important: make this left join
-            attributes: ['id', 'weight', 'normal_price', 'subscribe_price', 'mrp_price']
-          }],
+          include: [
+            {
+              model: WeightOption,
+              as: "weightOption",
+              required: false,
+              attributes: ["id", "weight", "normal_price", "subscribe_price", "mrp_price"],
+            },
+          ],
         },
       ],
     });
 
     if (!productInventory || productInventory.length === 0) {
+      console.log("No products available in the fetched stores.");
       return res.json({
         ResponseCode: "400",
         Result: "false",
@@ -269,8 +283,10 @@ const homeAPI = async (req, res) => {
       });
     }
 
+    // Check for out-of-stock products
     const outOfStockProducts = productInventory.filter((item) => item?.quantity === 0);
     if (outOfStockProducts.length > 0) {
+      console.log("Some products are out of stock:", outOfStockProducts.length);
       return res.json({
         ResponseCode: "400",
         Result: "false",
@@ -282,12 +298,12 @@ const homeAPI = async (req, res) => {
       });
     }
 
+    // Group products by category
     const categoryProducts = [];
     for (const category of categories) {
       const productsInCategory = productInventory.filter(
         (productItem) => productItem.inventoryProducts?.cat_id === category?.id
       );
-
       if (productsInCategory.length > 0) {
         categoryProducts.push({
           name: category?.title,
@@ -296,12 +312,13 @@ const homeAPI = async (req, res) => {
       }
     }
 
+    console.log("Home data prepared successfully.");
     return res.json({
       ResponseCode: "200",
       Result: "true",
       ResponseMsg: "Home Data Fetched Successfully!",
       HomeData: {
-        store: stores[0],
+        store: stores[0], // First store (adjust if all stores needed)
         Banlist: banners,
         Catlist: categories,
         CategoryProducts: categoryProducts,
@@ -314,6 +331,7 @@ const homeAPI = async (req, res) => {
       ResponseCode: "500",
       Result: "false",
       ResponseMsg: "Internal Server Error",
+      error: error.message,
     });
   }
 };

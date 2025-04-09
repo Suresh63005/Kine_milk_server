@@ -6,6 +6,7 @@ const WeightOption = require("../../Models/WeightOption");
 const ProductInventory = require("../../Models/ProductInventory");
 const StoreWeightOption = require("../../Models/StoreWeightOption");
 const { Op } = require("sequelize");
+const ProductImage = require("../../Models/productImages");
 
 const addFavorite = async (req, res) => {
   try {
@@ -172,6 +173,11 @@ const addFavorite = async (req, res) => {
             attributes: ["id", "cat_id", "title", "img", "description"], // Match desired fields
             include: [
               {
+                model: ProductImage,
+                as: "extraImages",
+                attributes: ["id", "product_id", "img"],
+              },
+              {
                 model: Category,
                 as: "category",
                 attributes: ["id", "title"],
@@ -185,7 +191,13 @@ const addFavorite = async (req, res) => {
               {
                 model: WeightOption,
                 as: "weightOption",
-                attributes: ["id", "weight", "normal_price", "subscribe_price", "mrp_price"],
+                attributes: [
+                  "id",
+                  "weight",
+                  "normal_price",
+                  "subscribe_price",
+                  "mrp_price",
+                ],
               },
             ],
           },
@@ -202,6 +214,11 @@ const addFavorite = async (req, res) => {
           title: inventory.inventoryProducts.title,
           img: inventory.inventoryProducts.img,
           description: inventory.inventoryProducts.description,
+          extraImages: inventory.inventoryProducts.extraImages.map(image => ({
+            id: image.id,
+            product_id: image.product_id,
+            img: image.img,
+          })),
           category: {
             id: inventory.inventoryProducts.category.id,
             title: inventory.inventoryProducts.category.title,
