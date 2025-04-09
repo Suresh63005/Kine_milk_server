@@ -17,6 +17,7 @@ const WeightOption = require("../../Models/WeightOption");
 const Category = require("../../Models/Category");
 const ProductInventory = require("../../Models/ProductInventory");
 const StoreWeightOption = require("../../Models/StoreWeightOption");
+const ProductImage = require("../../Models/productImages");
 
 const ListAllInstantOrders = asyncHandler(async (req, res) => {
 
@@ -437,6 +438,11 @@ const ViewInstantOrderById = asyncHandler(async (req, res) => {
               id: { [Op.notIn]: productIds }, 
             },
             include: [
+              {
+                model:ProductImage,
+                as:"extraImages",
+                attributes:["id","product_id","img"],
+              },
               {
                 model: Category,
                 as: "category",

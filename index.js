@@ -137,6 +137,7 @@ app.use("/u_timeslot", require("./UserRoutes/customer/timeslot_route"));
 app.use("/reviews",require('./UserRoutes/customer/customer_review_routes'))
 app.use("/u_wallet", require("./UserRoutes/customer/wallet_route"));
 app.use("/u_customersupport", require("./UserRoutes/customer/customerSupport_route"));
+app.use("/u_faq",require('./UserRoutes/customer/faq_route'))
 
 {/** Stores */}
 

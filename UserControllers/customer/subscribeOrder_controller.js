@@ -478,7 +478,7 @@ const cancelOrder = async (req, res) => {
     await Notification.create({
       uid,
       datetime: new Date(),
-      title: "Order Subscription  CAncelled",
+      title: "Order Subscription  Cancelled",
       description: `Your order Cancelled.`,
     });
 
