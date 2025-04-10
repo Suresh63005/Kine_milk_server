@@ -11,6 +11,7 @@ const uploadToS3 = require("../../config/fileUpload.aws");
 const { generateReferralCode } = require("../../utils/referralCode");
 const WalletReport = require("../../Models/WalletReport");
 const { v4: uuidv4 } = require('uuid');
+const Setting = require("../../Models/Setting");
 
 const VerifyCustomerMobile = asyncHandler(async (req, res) => {
     let { mobile,refercode } = req.body;
@@ -33,6 +34,12 @@ const VerifyCustomerMobile = asyncHandler(async (req, res) => {
         }
 
         let user = await User.findOne({ where: { mobile } });
+        const setting = await Setting.findOne();
+
+        const referralAmount =
+          setting && setting.refferal_amount !== null
+            ? parseFloat(setting.refferal_amount)
+            : 0;
 
         if (!user) {
             user = await User.create({
@@ -41,73 +48,71 @@ const VerifyCustomerMobile = asyncHandler(async (req, res) => {
                 name: userRecord.displayName || null,
                 status: 1,
                 registartion_date: new Date(),
-                refercode:refercode || generateReferralCode(),
+                refercode:generateReferralCode(),
                 parentcode:null,
             });
 
             if (refercode) {
-              const refercode = await User.findOne({ where: { refercode } });
-              if (!refercode || refercode.id === user.id) {
-                await user.update({ parentcode: null });
+              const referrer = await User.findOne({ where: { refercode } });
+              if (!referrer || referrer.id === user.id) {
+                console.log("Invalid referral code or self-referral detected.");
               } else {
-                const rewardAmount = 100;
-                const newWalletBalance = (refercode.wallet || 0) + rewardAmount;
-                await refercode.update({ wallet: newWalletBalance });
-
+                await user.update({ parentcode: refercode });
+                const newWalletBalance = (referrer.wallet || 0) + referralAmount;
+                await referrer.update({ wallet: newWalletBalance });
+      
                 const transactionNo = `TXN${uuidv4().split("-")[0]}`;
                 await WalletReport.create({
                   uid: referrer.id,
                   message: `Referral reward for inviting user ${mobile}`,
                   status: 1,
-                  amt: rewardAmount,
+                  amt: referralAmount,
                   transaction_no: transactionNo,
                   tdate: new Date(),
                   transaction_type: "Credited",
                 });
               }
             }
-        }else{
-          if (refercode && !user.parentcode) {
-            const referrer = await User.findOne({ where: { refercode } });
-            if (!referrer || referrer.id === user.id) {
-                return res.status(400).json({ message: "Invalid referral code or self-referral not allowed!" });
+          } else {
+            // Existing user
+            if (!user.refercode) {
+              await user.update({ refercode: generateReferralCode() });
             }
-
-            await user.update({ parentcode: refercode });
-
-            const rewardAmount = 100;
-            const newWalletBalance = (referrer.wallet || 0) + rewardAmount;
-            await referrer.update({ wallet: newWalletBalance });
-
-            const transactionNo = `TXN${uuidv4().split("-")[0]}`;
-            await WalletReport.create({
+      
+            if (refercode && !user.parentcode) {
+              const referrer = await User.findOne({ where: { refercode } });
+              if (!referrer || referrer.id === user.id) {
+                return res.status(400).json({ message: "Invalid referral code or self-referral not allowed!" });
+              }
+      
+              await user.update({ parentcode: refercode });
+              const newWalletBalance = (referrer.wallet || 0) + referralAmount;
+              await referrer.update({ wallet: newWalletBalance });
+      
+              const transactionNo = `TXN${uuidv4().split("-")[0]}`;
+              await WalletReport.create({
                 uid: referrer.id,
                 message: `Referral reward for inviting user ${mobile}`,
                 status: 1,
-                amt: rewardAmount,
+                amt: referralAmount,
                 transaction_no: transactionNo,
                 tdate: new Date(),
-                transaction_type: "Credited"
-            });
+                transaction_type: "Credited",
+              });
+            }
           }
-          if (!user.refercode) {
-            await user.update({ refercode: generateReferralCode() });
-        }
-        }
-
-        const token = jwt.sign(
+      
+          const token = jwt.sign(
             { userId: user.id, mobile: user.mobile },
             process.env.JWT_SECRET,
-            { expiresIn: "7d" }
-        );
-
-        return res.status(200).json({
-          message: "Mobile number verified successfully!",
-          user,
-          token,
-        });
-
-    } catch (error) {
+          );
+      
+          return res.status(200).json({
+            message: "Mobile number verified successfully!",
+            user,
+            token,
+          });
+        } catch (error) {
         if (error.code === "auth/user-not-found") {
             return res.status(404).json({ message: "Mobile number not registered in Firebase." });
         }
@@ -389,32 +394,43 @@ const updateOneSignalSubscription = async (req, res) => {
   };
 
 
-const GetReferralCode = async(req,res)=>{
-  const uid = req.user.userId;
-  if(!uid){
-    return res.status(401).json({ message: "Unauthorized: User not found!" });
-  }
-  try {
-    let user = await User.findByPk(uid);
-    if (!user) {
-      return res.status(404).json({ message: "User not found!" });
+  const GetReferralCode = async (req, res) => {
+    const uid = req.user.userId;
+  
+    if (!uid) {
+      return res.status(401).json({ message: "Unauthorized: User not found!" });
     }
-
-    if(!user.refercode){
-      const refercode = generateReferralCode();
-      await user.update({refercode:refercode})
+  
+    try {
+      let user = await User.findByPk(uid);
+      if (!user) {
+        return res.status(404).json({ message: "User not found!" });
+      }
+  
+      const setting = await Setting.findOne();
+      const referralAmount = setting && setting.refferal_amount !== null 
+        ? parseFloat(setting.refferal_amount) 
+        : 0;
+  
+      if (!user.refercode) {
+        const refercode = generateReferralCode();
+        await user.update({ refercode });
+      }
+  
+      return res.status(200).json({
+        message: "Referral code fetched successfully!",
+        refercode: user.refercode,
+        referralAmount,
+        // referralLink: `${process.env.APP_BASE_URL}/signup?ref=${user.refercode}`, // Use env variable for base URL
+      });
+    } catch (error) {
+      console.error("Error fetching referral code:", error.message);
+      return res.status(500).json({ 
+        message: "Internal Server Error",
+        error: error.message 
+      });
     }
-
-    return res.status(200).json({
-      message:"Referral code fetched successfully!",
-      refercode:user.refercode,
-      // referralLink: `https://verify-customer/signup?ref=${user.refercode}`
-    })
-  } catch (error) {
-    console.error("Error fetching referral code:", error);
-    return res.status(500).json({ message: "Internal Server Error" });
-  }
-}
+  };
 
 const ApplyReferralCode = async(req,res)=>{
   const uid = req.user.userId;

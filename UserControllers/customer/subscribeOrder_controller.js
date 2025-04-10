@@ -14,6 +14,7 @@ const db = require("../../config/db");
 const Store = require("../../Models/Store");
 const WeightOption = require("../../Models/WeightOption");
 const Cart = require("../../Models/Cart");
+const Coupon = require("../../Models/Coupon");
 
 const generateOrderId = () => {
   const randomNum = Math.floor(100000 + Math.random() * 900000);
@@ -28,8 +29,8 @@ const subscribeOrder = async (req, res) => {
     days,
     timeslot_id,
     o_type,
-    cou_id,
-    cou_amt,
+    coupon_id,
+    // cou_amt,
     subtotal,
     d_charge,
     store_charge,
@@ -86,6 +87,45 @@ const subscribeOrder = async (req, res) => {
       });
     }
 
+    let appliedCoupon = null;
+    let couponAmount = 0;
+    let finalTotal = parseFloat(o_total);
+    
+    if(coupon_id){
+      const coupon = await Coupon.findByPk(coupon_id, { transaction: t });
+      if (!coupon) {
+        await t.rollback();
+        return res.status(400).json({
+          ResponseCode: "400",
+          Result: "false",
+          ResponseMsg: "Coupon not found",
+        });
+      }
+      // Check if coupon is active and not expired
+      const currentDate = new Date();
+      if (coupon.status !== 1 || new Date(coupon.expire_date) < currentDate) {
+        await t.rollback();
+        return res.status(400).json({
+          ResponseCode: "400",
+          Result: "false",
+          ResponseMsg: "Coupon is inactive or expired",
+        });
+      }
+      // Check if subtotal meets the minimum amount requirement
+      const subtotalNum = parseFloat(subtotal);
+      if (subtotalNum < parseFloat(coupon.min_amt)) {
+        await t.rollback();
+        return res.status(400).json({
+          ResponseCode: "400",
+          Result: "false",
+          ResponseMsg: `Subtotal (${subtotalNum}) is less than the minimum amount required (${coupon.min_amt}) for this coupon`,
+        });
+      }
+      couponAmount = parseFloat(coupon.coupon_val);
+      finalTotal = finalTotal - couponAmount;
+      if (finalTotal < 0) finalTotal = 0;
+      appliedCoupon = coupon;
+    }
     const cartOrderType = "Subscription";
 
     const odate = new Date();
@@ -102,13 +142,13 @@ const subscribeOrder = async (req, res) => {
         start_date,
         end_date: end_date || null,
         days,
-        cou_id: cou_id || null,
-        cou_amt: cou_amt || 0,
+        cou_id: appliedCoupon ? appliedCoupon.id : null,
+        cou_amt: couponAmount,
         subtotal,
         d_charge: d_charge || 0,
         store_charge: store_charge || 0,
         tax: tax || 0,
-        o_total,
+        o_total:finalTotal,
         a_note,
         order_id: generateOrderId(),
       },
@@ -274,7 +314,8 @@ const subscribeOrder = async (req, res) => {
       Result: "true",
       ResponseMsg: "Order created successfully!",
       order_id: order.order_id,
-      o_total,
+      o_total:finalTotal,
+      coupon_applied:appliedCoupon ? {id:appliedCoupon.id,title:appliedCoupon.coupon_title,amount:couponAmount}:null,
       items: orderItems,
     });
   } catch (error) {
