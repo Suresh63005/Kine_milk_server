@@ -388,14 +388,14 @@ const ViewInstantOrderById = asyncHandler(async (req, res) => {
     if (!uid) {
       return res.status(400).json({
         ResponseCode: "400",
-        Result: "false",
+        Result: "false",  
         ResponseMsg: "User not authenticated",
       });
     }
   
     try {
       const recentOrders = await NormalOrder.findAll({
-        where: { uid },
+        where: { uid:uid,status:"Completed" },
         include: [
           {
             model: NormalOrderProduct,
