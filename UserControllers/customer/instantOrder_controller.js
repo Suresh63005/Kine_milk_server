@@ -13,6 +13,7 @@ const Review = require("../../Models/review");
 const Store = require("../../Models/Store");
 const sequelize = require("../../config/db");
 const WeightOption = require("../../Models/WeightOption");
+const Cart = require("../../Models/Cart");
 
 const generateOrderId = () => {
   const randomNum = Math.floor(100000 + Math.random() * 900000);
@@ -85,6 +86,8 @@ const instantOrder = async (req, res) => {
       });
     }
 
+    const cartOrderType = "Normal";
+
     // Create the order
     const order = await NormalOrder.create(
       {
@@ -133,6 +136,22 @@ const instantOrder = async (req, res) => {
         );
       })
     );
+
+    const cartItemsToRemove = products.map(item=>({
+      uid,
+      product_id: item.product_id,
+      orderType: cartOrderType, 
+      weight_id: item.weight_id,
+    }))
+
+    await Cart.destroy({
+      where: {
+        [Op.or]: cartItemsToRemove,
+      },
+      transaction,
+    });
+    console.log("Cart items removed for instant order:", cartItemsToRemove.length);
+
     if (!trans_id && user.wallet >= o_total) {
       await User.update(
         { wallet: user.wallet - o_total },

@@ -15,6 +15,9 @@ const Time = require("../../Models/Time");
 const Notification = require("../../Models/Notification");
 const WeightOption = require("../../Models/WeightOption");
 const Category = require("../../Models/Category");
+const ProductInventory = require("../../Models/ProductInventory");
+const StoreWeightOption = require("../../Models/StoreWeightOption");
+const ProductImage = require("../../Models/productImages");
 
 const ListAllInstantOrders = asyncHandler(async (req, res) => {
 
@@ -409,44 +412,99 @@ const ViewInstantOrderById = asyncHandler(async (req, res) => {
           ResponseCode: "200",
           Result: "true",
           ResponseMsg: "No recent purchases found",
-          recommendedProducts: [],
+          items: [],
         });
       }
   
       const productIds = [...new Set(recentOrders.flatMap(order => 
-        order.NormalProducts.map(op => op.product_id) 
+        order.NormalProducts.map(op => op.product_id)
       ))];
+      console.log("Purchased Product IDs:", productIds);
   
       const purchasedProducts = await Product.findAll({
         where: { id: productIds },
         attributes: ['cat_id'],
       });
-  
       const categoryIds = [...new Set(purchasedProducts.map(p => p.cat_id))];
+      console.log("Category IDs:", categoryIds);
   
-      const recommendedProducts = await Product.findAll({
-        where: { cat_id: categoryIds, id: { [Op.notIn]: productIds } },
-        // attributes: ['id', 'title', 'img'],
+      const recommendedInventories = await ProductInventory.findAll({
         include: [
           {
-            model:Category,
-            as:"category",
-            attributes:["id","title"]
+            model: Product,
+            as: "inventoryProducts",
+            where: {
+              cat_id: categoryIds,
+              id: { [Op.notIn]: productIds }, 
+            },
+            include: [
+              {
+                model:ProductImage,
+                as:"extraImages",
+                attributes:["id","product_id","img"],
+              },
+              {
+                model: Category,
+                as: "category",
+                attributes: ["id", "title"],
+              },
+            ],
           },
           {
-            model: WeightOption,
-            as: "weightOptions",
-            attributes: ["id", "weight", "subscribe_price", "normal_price", "mrp_price"],
+            model: StoreWeightOption,
+            as: "storeWeightOptions",
+            paranoid: true,
+            include: [
+              {
+                model: WeightOption,
+                as: "weightOption",
+                attributes: ["id", "weight", "subscribe_price", "normal_price", "mrp_price"],
+              },
+            ],
           },
         ],
         limit: 10,
       });
   
+      const items = recommendedInventories.map(inventory => ({
+        id: inventory.id,
+        product_id: inventory.product_id,
+        inventoryProducts: {
+          id: inventory.inventoryProducts.id,
+          cat_id: inventory.inventoryProducts.cat_id,
+          title: inventory.inventoryProducts.title,
+          img: inventory.inventoryProducts.img,
+          description: inventory.inventoryProducts.description,
+          category: {
+            id: inventory.inventoryProducts.category.id,
+            title: inventory.inventoryProducts.category.title,
+          },
+        },
+        storeWeightOptions: inventory.storeWeightOptions.map(option => ({
+          id: option.id,
+          product_inventory_id: option.product_inventory_id,
+          product_id: option.product_id,
+          weight_id: option.weight_id,
+          quantity: option.quantity,
+          total: option.total,
+          createdAt: option.createdAt,
+          updatedAt: option.updatedAt,
+          deletedAt: option.deletedAt,
+          weightOption: {
+            id: option.weightOption.id,
+            weight: option.weightOption.weight,
+            normal_price: option.weightOption.normal_price,
+            subscribe_price: option.weightOption.subscribe_price,
+            mrp_price: option.weightOption.mrp_price,
+          },
+        })),
+      }));
+  
       return res.status(200).json({
         ResponseCode: "200",
         Result: "true",
         ResponseMsg: "Recommended products fetched successfully",
-        recommendedProducts,
+        items,
       });
   
     } catch (error) {
