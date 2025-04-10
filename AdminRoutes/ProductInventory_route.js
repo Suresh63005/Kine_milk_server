@@ -9,11 +9,11 @@ const router = express.Router();
 router.post("/upsert",adminMiddleware.isAdmin,ProductInventory.upsertInventory);
 
 router.post("/upsert-productinv",adminMiddleware.isAdmin,upload.none(),ProductInventory.upsertInventory);
-router.get("/getproductinv/:id",adminMiddleware.isAdmin,ProductInventory.getProductInventoryById);
-router.get("/getallproductinv",adminMiddleware.isAdmin,ProductInventory.ProductInventoryList)
+router.get("/getproductinv/:id",ProductInventory.getProductInventoryById);
+router.get("/getallproductinv",ProductInventory.ProductInventoryList)
 router.patch("/toggle-status/",adminMiddleware.isAdmin,ProductInventory.toggleProductInventoryStatus)
-router.delete("/delete/:id",adminMiddleware.isAdmin,ProductInventory.deleteProductInventory)
-router.get("/getproductbystore/:store_id",adminMiddleware.isAdmin,ProductInventory.getProductsbyStore)
+router.delete("/delete/:id",ProductInventory.deleteProductInventory)
+router.get("/getproductbystore/:store_id",ProductInventory.getProductsbyStore)
 router.delete("/delete-weight-options",adminMiddleware.isAdmin,ProductInventory.deleteInventoryStoreWeightOptions)
 
 module.exports = router;
