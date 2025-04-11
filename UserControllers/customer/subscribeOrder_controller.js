@@ -358,7 +358,7 @@ const getOrdersByStatus = async (req, res) => {
             {
               model:WeightOption,
               as:"subscribeProductWeight",
-              attributes:["id","normal_price","subscribe_price","mrp_price"]
+              attributes:["id","normal_price","subscribe_price","mrp_price","weight"]
             },
             {
               model: Product,
