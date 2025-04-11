@@ -332,7 +332,7 @@ const AcceptSubscriptionOrder = asyncHandler(async (req, res) => {
 
     try {
       const userNotificationContent = {
-        app_id: process.env.ONESIGNAL_APP_ID,
+        app_id: process.env.ONESIGNAL_CUSTOMER_APP_ID,
         include_player_ids: [user.one_subscription],
         data: { user_id: user.id, type: "order accepted" },
         contents: {
@@ -347,7 +347,7 @@ const AcceptSubscriptionOrder = asyncHandler(async (req, res) => {
         {
           headers: {
             "Content-Type": "application/json; charset=utf-8",
-            Authorization: `Basic ${process.env.ONESIGNAL_API_KEY}`,
+            Authorization: `Basic ${process.env.ONESIGNAL_CUSTOMER_API_KEY}`,
           },
         }
       );

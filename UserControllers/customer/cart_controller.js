@@ -3,6 +3,7 @@ const Product = require("../../Models/Product");
 const User = require("../../Models/User");
 const cron = require('node-cron');
 const WeightOption = require("../../Models/WeightOption");
+const axios = require("axios");
 
 
 const upsertCart = async (req, res) => {
@@ -143,26 +144,43 @@ try {
 
   }
 
-  const sendDailyCartNotifications = async()=>{
+  const sendDailyCartNotifications = async () => {
     try {
+      // Find users with items in their cart
       const userWithCartItems = await Cart.findAll({
-        attributes:['uid'],group:['uid']
-      })
-      const userIds = userWithCartItems.map(cart=>cart.id)
+        attributes: ["uid"],
+        group: ["uid"],
+      });
+  
+      const userIds = userWithCartItems.map((cart) => cart.uid); // Fix: Use uid, not id
       if (userIds.length === 0) {
-        console.log('No users with items in the cart.');
+        console.log("No users with items in the cart.");
         return;
       }
+  
+      // Fetch users with their one_subscription
       const users = await User.findAll({
-        where:{id:userIds},
-        attributes:['id','name','one_subscription']
-      })
-      for(const user of users){
+        where: { id: userIds },
+        attributes: ["id", "name", "one_subscription"],
+      });
+  
+      if (users.length === 0) {
+        console.log("No matching users found.");
+        return;
+      }
+  
+      // Send notifications to each user
+      for (const user of users) {
+        if (!user.one_subscription) {
+          console.warn(`User ${user.id} (${user.name}) has no OneSignal subscription ID`);
+          continue; // Skip if no subscription
+        }
+  
         try {
           const notificationContent = {
-            app_id: process.env.ONESIGNAL_APP_ID,
+            app_id: process.env.ONESIGNAL_CUSTOMER_APP_ID,
             include_player_ids: [user.one_subscription],
-            data: { user_id: user.id, type: 'cart reminder' },
+            data: { user_id: user.id, type: "cart reminder" },
             contents: {
               en: `${user.name}, you have items in your cart. Complete your purchase today!`,
             },
@@ -170,36 +188,35 @@ try {
           };
   
           const response = await axios.post(
-            'https://onesignal.com/api/v1/notifications',
+            "https://onesignal.com/api/v1/notifications",
             notificationContent,
             {
               headers: {
-                'Content-Type': 'application/json; charset=utf-8',
-                Authorization: `Basic ${process.env.ONESIGNAL_API_KEY}`,
+                "Content-Type": "application/json; charset=utf-8",
+                Authorization: `Basic ${process.env.ONESIGNAL_CUSTOMER_API_KEY}`,
               },
             }
           );
   
-          console.log(`Notification sent to ${user.name}:`, response.data);
+          if (response.data.errors) {
+            throw new Error(response.data.errors[0]);
+          }
+          console.log(`Notification sent to ${user.name} (${user.id}):`, response.data);
         } catch (error) {
-          console.error(`Failed to send notification to ${user.name}:`, error);
+          const errorMsg = error.response?.data?.errors?.[0] || error.message;
+          console.error(`Failed to send notification to ${user.name} (${user.id}): ${errorMsg}`);
         }
       }
     } catch (error) {
-      console.error('Error in sending notifications:', error);
+      console.error("Error in sending daily cart notifications:", error.message);
     }
-  }
+  };
   
-  // cron.schedule('0 9 * * *',()=>{
-  //   console.log("Running daily cart notification job...");
-  //   sendDailyCartNotifications()
-  // })
-
-  cron.schedule('26 12 * * *', () => {
-    console.log("Running daily cart notification job at 12:30 PM...");
+  // Schedule to run daily at 10:00 PAM
+  cron.schedule("00 10 * * *", () => {
+    console.log("Running daily cart notification job at 10:00 AM...");
     sendDailyCartNotifications();
   });
-  
 
   module.exports = {
     upsertCart,
