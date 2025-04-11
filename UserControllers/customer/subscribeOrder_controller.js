@@ -15,6 +15,8 @@ const Store = require("../../Models/Store");
 const WeightOption = require("../../Models/WeightOption");
 const Cart = require("../../Models/Cart");
 const Coupon = require("../../Models/Coupon");
+const axios = require("axios"); 
+
 
 const generateOrderId = () => {
   const randomNum = Math.floor(100000 + Math.random() * 900000);
@@ -247,7 +249,8 @@ const subscribeOrder = async (req, res) => {
         }
       );
 
-      console.log(response, "notification sent");
+      // console.log(response, "notification sent");
+      console.log("User notification sent:", response.data);
     } catch (error) {
       console.log(error);
     }
@@ -272,7 +275,8 @@ const subscribeOrder = async (req, res) => {
           },
         }
       )
-      console.log(storeResponse.data, "store notification sent");
+      // console.log(storeResponse.data, "store notification sent");
+      console.log("Store notification sent:", storeResponse.data);
     } catch (error) {
       console.log("Store notification error:", error);
     }

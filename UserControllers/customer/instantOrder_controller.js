@@ -1,7 +1,7 @@
 const { Sequelize, Op } = require("sequelize");
 
 const Product = require("../../Models/Product");
-
+const axios = require("axios"); 
 const NormalOrder = require("../../Models/NormalOrder");
 const NormalOrderProduct = require("../../Models/NormalOrderProduct");
 const Notification = require("../../Models/Notification");
@@ -193,12 +193,12 @@ const instantOrder = async (req, res) => {
     });
     console.log("Cart items removed for instant order:", cartItemsToRemove.length);
 
-    if (!trans_id && user.wallet >= o_total) {
+    if (!trans_id && user.wallet >= finalTotal) {
       await User.update(
-        { wallet: user.wallet - o_total },
+        { wallet: user.wallet - finalTotal },
         { where: { id: uid }, transaction }
       );
-    } else if (!trans_id && user.wallet < o_total) {
+    } else if (!trans_id && user.wallet < finalTotal) {
       throw new Error("Insufficient wallet balance");
     }
 
@@ -224,7 +224,8 @@ const instantOrder = async (req, res) => {
         }
       );
 
-      console.log(response, "notification sent");
+      // console.log(response, "notification sent");
+      console.log("User notification sent:", response.data);
     } catch (error) {
       console.log(error);
     }
@@ -249,7 +250,8 @@ const instantOrder = async (req, res) => {
           },
         }
       )
-      console.log(storeResponse.data, "store notification sent");
+      // console.log(storeResponse.data, "store notification sent");
+      console.log("Store notification sent:", storeResponse.data);
     } catch (error) {
       console.log("Store notification error:", error);
     }
@@ -327,7 +329,7 @@ const getOrdersByStatus = async (req, res) => {
             {
               model:WeightOption,
               as:"productWeight",
-              attributes:["id","normal_price","subscribe_price","mrp_price"]
+              attributes:["id","normal_price","subscribe_price","mrp_price","weight"]
             },
             {
               model: Product,
