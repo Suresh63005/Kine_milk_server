@@ -211,91 +211,114 @@ const FetchAllInstantOrdersByStatus = asyncHandler(async (req, res) => {
 
 
 const AssignOrderToRider = asyncHandler(async (req, res) => {
-    
-    // const uid = "3aacc235-d219-4566-a00c-787765609da1";
-    const uid = req.user?.storeId; 
+  const uid = req.user?.storeId;
 
+  if (!uid) {
+    return res.status(400).json({
+      ResponseCode: "401",
+      Result: "false",
+      ResponseMsg: "User ID not provided",
+    });
+  }
 
-    if (!uid) {
-        return res.status(400).json({
-            ResponseCode: "401",
-            Result: "false",
-            ResponseMsg: "User ID not provided",
-        });
+  console.log("Fetching orders for user ID:", uid);
+
+  const { order_id, rider_id } = req.body;
+  if (!order_id || !rider_id) {
+    return res.status(400).json({
+      message: "Order ID and Rider ID are required!",
+    });
+  }
+
+  try {
+    // Find the pending order
+    const order = await NormalOrder.findOne({
+      where: { id: order_id, status: "Pending" },
+    });
+    if (!order) {
+      return res.status(404).json({
+        message: "Pending order not found!",
+      });
     }
-    console.log("Fetching orders for user ID:", uid);
-    
-    const { order_id, rider_id } = req.body;
-    if (!order_id || !rider_id) {
-        return res.status(400).json({ message: "Order ID and Rider ID are required!" });
+
+    const storeId = order.store_id;
+    if (!storeId) {
+      return res.status(404).json({
+        message: "Store ID not found for this order!",
+      });
     }
-    try {
-        const order = await NormalOrder.findOne({ where: { id: order_id, status: "Pending" } });
-        if (!order) {
-            return res.status(404).json({ message: "Pending order not found!" });
-        }
 
-        const storeId = order.store_id;
+    // Find the rider
+    const rider = await Rider.findOne({
+      where: { id: rider_id, status: 1, store_id: storeId },
+    });
+    console.log(rider, "Rider******************************");
+    if (!rider) {
+      return res.status(404).json({
+        message: "Rider not found or inactive!",
+      });
+    }
 
-        if (!storeId) {
-            return res.status(404).json({ message: "Store ID not found for this order!" });
-        }
-                
-        const rider = await Rider.findOne({ where: { id: rider_id, status: 1, store_id:storeId } });
-        console.log(rider, "Rider******************************");
-        if (!rider) {
-            return res.status(404).json({ message: "Rider not found OR inactive!" });
-        }
+    // Update the order
+    await NormalOrder.update(
+      { rid: rider_id, status: "Processing" },
+      { where: { id: order_id } }
+    );
 
-        await NormalOrder.update(
-            { rid: rider_id, status: "Processing" },
-            { where: { id: order_id } }
+    const updatedOrder = await NormalOrder.findOne({
+      where: { id: order_id },
+    });
+
+    // Send push notification to rider
+    if (rider.one_subscription) {
+      try {
+        const riderNotificationContent = {
+          app_id: process.env.ONESIGNAL_APP_ID,
+          include_player_ids: [rider.one_subscription],
+          data: { rider_id: rider.id, type: "order assigned" },
+          contents: {
+            en: `You have been assigned a new order! Order ID: ${updatedOrder.order_id}`,
+          },
+          headings: { en: "New Order Assignment" },
+        };
+
+        const riderResponse = await axios.post(
+          "https://onesignal.com/api/v1/notifications",
+          riderNotificationContent,
+          {
+            headers: {
+              "Content-Type": "application/json; charset=utf-8",
+              Authorization: `Basic ${process.env.ONESIGNAL_API_KEY}`,
+            },
+          }
         );
 
-        const updatedOrder = await NormalOrder.findOne({ where: { id: order_id } });
-
-        try {
-          const riderNotificationContent = {
-            app_id: process.env.ONESIGNAL_APP_ID,
-            include_player_ids: [rider.one_subscription],
-            data: { rider_id: rider.id, type: "order assigned" },
-            contents: {
-              en: `You have been assigned a new order! Order ID: ${updatedOrder.order_id}`,
-            },
-            headings: { en: "New Order Assignment" },
-          };
-    
-          const riderResponse = await axios.post(
-            "https://onesignal.com/api/v1/notifications",
-            riderNotificationContent,
-            {
-              headers: {
-                "Content-Type": "application/json; charset=utf-8",
-                Authorization: `Basic ${process.env.ONESIGNAL_API_KEY}`,
-              },
-            }
-          );
-          console.log(riderResponse.data, "rider notification sent");
-        } catch (error) {
-          console.log("Rider notification error:", error);
-        }
-
-        await Notification.create(
-          {
-            uid: rider.id, 
-            datetime: new Date(),
-            title: "New Order Assigned",
-            description: `You have been assigned Order ID ${updatedOrder.order_id}.`,
-          },)
-
-        return res.status(200).json({
-            message: "Order assigned to rider successfully!",
-            order: updatedOrder
-        });
-    } catch (error) {
-        console.error("Error assigning order:", error.message);
-        return res.status(500).json({ message: "Internal server error: " + error.message });
+        console.log("Rider notification response:", riderResponse.data);
+      } catch (error) {
+        console.error("Rider notification error:", error.response?.data || error.message);
+      }
+    } else {
+      console.warn(`Rider ${rider_id} has no OneSignal subscription ID`);
     }
+
+    // Create notification record
+    await Notification.create({
+      uid: rider.id,
+      datetime: new Date(),
+      title: "New Order Assigned",
+      description: `You have been assigned Order ID ${updatedOrder.order_id}.`,
+    });
+
+    return res.status(200).json({
+      message: "Order assigned to rider successfully!",
+      order: updatedOrder,
+    });
+  } catch (error) {
+    console.error("Error assigning order:", error.message);
+    return res.status(500).json({
+      message: "Internal server error: " + error.message,
+    });
+  }
 });
 
 const ViewInstantOrderById = asyncHandler(async (req, res) => {

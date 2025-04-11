@@ -282,7 +282,7 @@ const RemoveOneSignalId = asyncHandler(async(req,res)=>{
   }
   try {
     const store = await Store.findByPk(uid);
-    if(!user){
+    if(!store){
       return res.status(404).json({
         ResponseCode: "404",
         Result: "false",
