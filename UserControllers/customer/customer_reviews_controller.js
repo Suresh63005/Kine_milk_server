@@ -462,12 +462,10 @@ const FetchMyReviewsOnProducts = asyncHandler(async (req, res) => {
         {
           model: SubscribeOrderProduct,
           as: "orderProducts",
-          attributes:["product_id"],
           include: [
             {
               model: Product,
               as: "productDetails",
-              attributes:["id"],
             },
             {
               model: WeightOption,
