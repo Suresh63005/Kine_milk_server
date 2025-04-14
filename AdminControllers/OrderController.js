@@ -11,6 +11,9 @@ const getNormalOrders = async (req, res) => {
   try {
     const { search, fromDate, toDate, page = 1, limit = 10 } = req.query;
 
+    console.log(req.query, "rrrrrrrrrrrrrrrrrrrrrrrrrr");
+
+    // Step 1: Build the base where clause for filtering all data
     const where = {};
     if (search) {
       where[Op.or] = [
@@ -26,8 +29,19 @@ const getNormalOrders = async (req, res) => {
       where.odate = { ...where.odate, [Op.lte]: new Date(toDate) };
     }
 
+    // Step 2: Get the total count of all matching records (no pagination yet)
+    const totalCount = await NormalOrder.count({
+      where,
+      include: [
+        { model: Store, as: "store", attributes: ['title'] },
+        { model: User, as: "user", attributes: ['name', 'mobile'] },
+        { model: Time, as: "timeslot", attributes: ['mintime', 'maxtime'] },
+      ],
+    });
+
+    // Step 3: Apply pagination to fetch only the current page's rows
     const offset = (page - 1) * limit;
-    const { count, rows } = await NormalOrder.findAndCountAll({
+    const rows = await NormalOrder.findAll({
       where,
       include: [
         { model: Store, as: "store", attributes: ['title'] },
@@ -39,6 +53,7 @@ const getNormalOrders = async (req, res) => {
       offset: parseInt(offset),
     });
 
+    // Step 4: Format the rows
     const formattedOrders = rows.map(order => ({
       order_id: order.order_id,
       order_date: order.odate,
@@ -49,11 +64,12 @@ const getNormalOrders = async (req, res) => {
       timeslot: `${order.timeslot?.mintime} - ${order.timeslot?.maxtime}`,
     }));
 
+    // Step 5: Send the response with total count based on full search
     res.json({
       orders: formattedOrders,
-      total: count,
+      total: totalCount,
       currentPage: parseInt(page),
-      totalPages: Math.ceil(count / limit),
+      totalPages: Math.ceil(totalCount / limit),
     });
   } catch (error) {
     console.error(error);
@@ -64,6 +80,7 @@ const getNormalOrders = async (req, res) => {
 const downloadNormalOrders = async (req, res) => {
   try {
     const { fromDate, toDate } = req.query;
+    console.log(req.query,"kkkkkkkkkkkkkkkkkkkkkkk")
 
     const where = {};
     if (fromDate) where.odate = { [Op.gte]: new Date(fromDate) };
@@ -118,6 +135,7 @@ const downloadNormalOrders = async (req, res) => {
 const downloadSingleNormalOrder = async (req, res) => {
   try {
     const { orderId } = req.params;
+    console.log(req.params,"rrrrrrrrrrrrrrrrrrrrrrrrrrrrrr")
 
     const order = await NormalOrder.findOne({
       where: { order_id: orderId },
@@ -169,6 +187,7 @@ const downloadSingleNormalOrder = async (req, res) => {
   }
 };
 
+console.log("-------------")
 // Subscribe Orders Controller
 const getSubscribeOrders = async (req, res) => {
   try {

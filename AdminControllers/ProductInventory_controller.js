@@ -10,7 +10,7 @@ const Categories = require("../Models/Category")
 
 const upsertInventory = async (req, res) => {
   const { id, store_id, product_id, date, weightOptions, coupons } = req.body;
-  console.log(req.body);
+  console.log("Inventory request body:", req.body);
 
   try {
     // Validation
@@ -32,25 +32,7 @@ const upsertInventory = async (req, res) => {
       });
     }
 
-    // Validate weightOptions
-    for (const option of weightOptions) {
-      if (!option.weight_id) {
-        return res.status(400).json({
-          ResponseCode: "400",
-          Result: "false",
-          ResponseMsg: "Weight ID is required for all weight options.",
-        });
-      }
-      const weightExists = await WeightOption.findOne({ where: { id: option.weight_id } });
-      if (!weightExists) {
-        return res.status(404).json({
-          ResponseCode: "404",
-          Result: "false",
-          ResponseMsg: `Weight option with ID ${option.weight_id} not found.`,
-        });
-      }
-    }
-
+    // Validate store and product
     const store = await Store.findOne({ where: { id: store_id } });
     if (!store) {
       return res.status(404).json({
@@ -69,7 +51,37 @@ const upsertInventory = async (req, res) => {
       });
     }
 
+    // Validate weightOptions against product's WeightOption records
+    const validWeightOptions = await WeightOption.findAll({
+      where: { product_id, id: weightIds },
+    });
+    const validWeightIds = validWeightOptions.map(wo => wo.id);
+    for (const option of weightOptions) {
+      if (!option.weight_id) {
+        return res.status(400).json({
+          ResponseCode: "400",
+          Result: "false",
+          ResponseMsg: "Weight ID is required for all weight options.",
+        });
+      }
+      if (!validWeightIds.includes(option.weight_id)) {
+        return res.status(400).json({
+          ResponseCode: "400",
+          Result: "false",
+          ResponseMsg: `Weight option with ID ${option.weight_id} is invalid or does not belong to product ${product_id}.`,
+        });
+      }
+      if (option.quantity == null || option.total == null) {
+        return res.status(400).json({
+          ResponseCode: "400",
+          Result: "false",
+          ResponseMsg: "Quantity and total are required for all weight options.",
+        });
+      }
+    }
+
     if (!id) {
+      // Check for duplicate inventory
       const existingInventory = await ProductInventory.findOne({
         where: { store_id, product_id },
       });
@@ -84,6 +96,7 @@ const upsertInventory = async (req, res) => {
 
     let inventory;
     if (id) {
+      // Update existing inventory
       inventory = await ProductInventory.findOne({ where: { id } });
       if (!inventory) {
         return res.status(404).json({
@@ -96,16 +109,20 @@ const upsertInventory = async (req, res) => {
       inventory.Coupons = coupons || inventory.Coupons;
       await inventory.save();
 
+      // Delete existing StoreWeightOption records
       await StoreWeightOption.destroy({ where: { product_inventory_id: inventory.id } });
+
+      // Create new StoreWeightOption records
       const weightOptionRecords = weightOptions.map((option) => ({
         product_inventory_id: inventory.id,
         product_id,
         weight_id: option.weight_id,
-        quantity: option.quantity,
-        total: option.total,
+        quantity: parseFloat(option.quantity),
+        total: parseFloat(option.total),
       }));
       await StoreWeightOption.bulkCreate(weightOptionRecords);
 
+      console.log("Inventory updated successfully:", inventory.toJSON());
       return res.status(200).json({
         ResponseCode: "200",
         Result: "true",
@@ -116,6 +133,7 @@ const upsertInventory = async (req, res) => {
         },
       });
     } else {
+      // Create new inventory
       inventory = await ProductInventory.create({
         store_id,
         product_id,
@@ -124,15 +142,17 @@ const upsertInventory = async (req, res) => {
         status: 1,
       });
 
+      // Create StoreWeightOption records
       const weightOptionRecords = weightOptions.map((option) => ({
         product_inventory_id: inventory.id,
         product_id,
         weight_id: option.weight_id,
-        quantity: option.quantity,
-        total: option.total,
+        quantity: parseFloat(option.quantity),
+        total: parseFloat(option.total),
       }));
       await StoreWeightOption.bulkCreate(weightOptionRecords);
 
+      console.log("Inventory created successfully:", inventory.toJSON());
       return res.status(201).json({
         ResponseCode: "201",
         Result: "true",

@@ -32,7 +32,7 @@ exports.authMiddleware = asyncHandler(async (req, res, next) => {
 
 exports.isAdmin = asyncHandler(async (req, res, next) => {
   const token = req.cookies.token || req.headers.authorization?.split(" ")[1];
-  console.log("Token: ", token);
+  // console.log("Token: ", token);
 
   if (!token) {
     return next(new Error("Unauthorized: No token provided"));
@@ -40,10 +40,10 @@ exports.isAdmin = asyncHandler(async (req, res, next) => {
 
   try {
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
-    console.log("Decoded token: ", decoded);
+    // console.log("Decoded token: ", decoded);
 
     req.user = await Admin.findByPk(decoded.id);
-    console.log("Admin user found: ", req.user);
+    // console.log("Admin user found: ", req.user);
 
     if (!req.user) {
       return next(); // Move to next middleware (authMiddleware)
