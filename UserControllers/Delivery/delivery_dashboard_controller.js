@@ -62,8 +62,10 @@ const DeliveryDashboard = asyncHandler(async (req, res) => {
         where: {
           store_id,
           rid: riderId,
-          status: { [Op.or]: ["On Route", "Processing"] },
+          status: { [Op.or]: ["On Route", "Active"] },
         },
+        order: [["updatedAt", "DESC"]],
+        limit: 10,
         include: [
           {
             model: User,
@@ -97,8 +99,10 @@ const DeliveryDashboard = asyncHandler(async (req, res) => {
         where: {
           store_id,
           rid: riderId,
-          status: { [Op.or]: ["Processing", "Active"] },
+          status: { [Op.or]: ["Active"] },
         },
+        order: [["updatedAt", "DESC"]],
+        limit: 10,
         include: [
           {
             model: User,
