@@ -20,7 +20,7 @@ const axios = require("axios");
 
 const generateOrderId = () => {
   const randomNum = Math.floor(100000 + Math.random() * 900000);
-  return `#${randomNum}`;
+  return `${randomNum}`;
 };
 
 const subscribeOrder = async (req, res) => {
@@ -229,7 +229,7 @@ const subscribeOrder = async (req, res) => {
 
     try {
       const notificationContent = {
-        app_id: process.env.ONESIGNAL_APP_ID,
+        app_id: process.env.ONESIGNAL_CUSTOMER_APP_ID,
         include_player_ids: [user.one_subscription],
         data: { user_id: user.id, type: "Subscription order confirmed" },
         contents: {
@@ -244,7 +244,7 @@ const subscribeOrder = async (req, res) => {
         {
           headers: {
             "Content-Type": "application/json; charset=utf-8",
-            Authorization: `Basic ${process.env.ONESIGNAL_API_KEY}`,
+            Authorization: `Basic ${process.env.ONESIGNAL_CUSTOMER_API_KEY}`,
           },
         }
       );
@@ -257,7 +257,7 @@ const subscribeOrder = async (req, res) => {
 
     try {
       const storeNotificationContent = {
-        app_id:process.env.ONESIGNAL_APP_ID,
+        app_id:process.env.ONESIGNAL_STORE_APP_ID,
         include_player_ids:[store.one_subscription],
         data:{store_id:store.id,type:"new subscription order received"},
         contents:{
@@ -271,7 +271,7 @@ const subscribeOrder = async (req, res) => {
         {
           headers: {
             "Content-Type": "application/json; charset=utf-8",
-            Authorization: `Basic ${process.env.ONESIGNAL_API_KEY}`,
+            Authorization: `Basic ${process.env.ONESIGNAL_STORE_API_KEY}`,
           },
         }
       )
@@ -514,7 +514,7 @@ const cancelOrder = async (req, res) => {
 
     try {
       const notificationContent = {
-        app_id: process.env.ONESIGNAL_APP_ID,
+        app_id: process.env.ONESIGNAL_CUSTOMER_APP_ID,
         include_player_ids: [user.one_subscription],
         data: { user_id: user.id, type: "Subscription order Cancelled" },
         contents: {
@@ -529,7 +529,7 @@ const cancelOrder = async (req, res) => {
         {
           headers: {
             "Content-Type": "application/json; charset=utf-8",
-            Authorization: `Basic ${process.env.ONESIGNAL_API_KEY}`,
+            Authorization: `Basic ${process.env.ONESIGNAL_CUSTOMER_API_KEY}`,
           },
         }
       );

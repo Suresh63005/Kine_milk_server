@@ -11,6 +11,7 @@ const SubscribeOrder = require("../../Models/SubscribeOrder");
 const SubscribeOrderProduct = require("../../Models/SubscribeOrderProduct");
 const WeightOption = require("../../Models/WeightOption");
 const axios = require("axios"); 
+const Store = require("../../Models/Store");
 
 
 // const FetchAllInstantDeliveryOrdersByStatus = asyncHandler(async (req, res) => {
@@ -209,12 +210,7 @@ const FetchAllInstantDeliveryOrdersByStatus = asyncHandler(async (req, res) => {
         {
           model: Product,
           as: alias === "NormalProducts" ? "ProductDetails" : "productDetails",
-          attributes: [
-            "id",
-            "title",
-            "description",
-            "img",
-          ],
+          attributes: ["id", "title", "description", "img"],
         },
       ],
     });
@@ -225,7 +221,7 @@ const FetchAllInstantDeliveryOrdersByStatus = asyncHandler(async (req, res) => {
         rid: riderId,
         status: normalOrderStatusFilter,
       },
-      order: [["createdAt", "DESC"]],
+      order: [["updatedAt", "DESC"]], // Sort by assignment time
       include: [
         productInclude(NormalOrderProduct, "NormalProducts"),
         {
@@ -241,7 +237,7 @@ const FetchAllInstantDeliveryOrdersByStatus = asyncHandler(async (req, res) => {
         rid: riderId,
         status: subscribeOrderStatusFilter,
       },
-      order: [["createdAt", "DESC"]],
+      order: [["updatedAt", "DESC"]], // Sort by assignment time
       include: [
         productInclude(SubscribeOrderProduct, "orderProducts"),
         {
@@ -251,30 +247,20 @@ const FetchAllInstantDeliveryOrdersByStatus = asyncHandler(async (req, res) => {
       ],
     });
 
-    const formattedInstantOrders = instantOrders.map(order => ({
+    const formattedInstantOrders = instantOrders.map((order) => ({
       ...order.toJSON(),
       orderType: "NormalOrder",
     }));
 
-    const formattedSubscribeOrders = subscriptionOrders.map(order => ({
+    const formattedSubscribeOrders = subscriptionOrders.map((order) => ({
       ...order.toJSON(),
       orderType: "SubscribeOrder",
     }));
 
-    // const allOrders = {
-    //   instantOrders: instantOrders || [], 
-    //   subscriptionOrders: subscriptionOrders || [], 
-    // };
-
-    const allOrders = [...formattedInstantOrders, ...formattedSubscribeOrders];
-
-    // if (!instantOrders.length && !subscriptionOrders.length) {
-    //   return res.status(404).json({
-    //     ResponseCode: "404",
-    //     Result: "false",
-    //     ResponseMsg: "No orders found with the given status!",
-    //   });
-    // }
+    // Combine and sort by updatedAt DESC
+    const allOrders = [...formattedInstantOrders, ...formattedSubscribeOrders].sort(
+      (a, b) => new Date(b.updatedAt) - new Date(a.updatedAt)
+    );
 
     if (!allOrders.length) {
       return res.status(404).json({
@@ -332,11 +318,19 @@ const AcceptInstantOrders = asyncHandler(async (req, res) => {
       });
     }
 
-    const user = await User.findByPk(order.uid)
+    const user = await User.findByPk(order.uid);
     if (!user) {
       return res.status(404).json({
         success: false,
         message: "User not found for this order!",
+      });
+    }
+
+    const store = await Store.findByPk(order.store_id);
+    if (!store) {
+      return res.status(404).json({
+        success: false,
+        message: "Store not found for this order!",
       });
     }
 
@@ -347,50 +341,93 @@ const AcceptInstantOrders = asyncHandler(async (req, res) => {
 
     const updatedOrder = await NormalOrder.findOne({ where: { id: order_id } });
 
-    try {
-      const userNotificationContent = {
-        app_id: process.env.ONESIGNAL_APP_ID,
-        include_player_ids: [user.one_subscription], 
-        data: { user_id: user.id, type: "order accepted" },
-        contents: {
-          en: `${user.name}, Your order (ID: ${updatedOrder.order_id}) is now on the way!`,
-        },
-        headings: { en: "Order On Route" },
-      };
-
-      const userResponse = await axios.post(
-        "https://onesignal.com/api/v1/notifications",
-        userNotificationContent,
-        {
-          headers: {
-            "Content-Type": "application/json; charset=utf-8",
-            Authorization: `Basic ${process.env.ONESIGNAL_API_KEY}`,
+    // Send push notification to user if one_subscription exists
+    if (user.one_subscription) {
+      try {
+        const userNotificationContent = {
+          app_id: process.env.ONESIGNAL_CUSTOMER_APP_ID,
+          include_player_ids: [user.one_subscription],
+          data: { user_id: user.id, type: "order accepted" },
+          contents: {
+            en: `${user.name}, Your order (ID: ${updatedOrder.order_id}) is now on the way!`,
           },
+          headings: { en: "Order On Route" },
+        };
+
+        const userResponse = await axios.post(
+          "https://onesignal.com/api/v1/notifications",
+          userNotificationContent,
+          {
+            headers: {
+              "Content-Type": "application/json; charset=utf-8",
+              Authorization: `Basic ${process.env.ONESIGNAL_CUSTOMER_API_KEY}`,
+            },
+          }
+        );
+
+        if (userResponse.data.errors) {
+          throw new Error(userResponse.data.errors[0]);
         }
-      );
-      console.log(userResponse.data, "user notification sent");
-    } catch (error) {
-      console.log("User notification error:", error);
+        console.log("User notification sent successfully:", userResponse.data);
+      } catch (error) {
+        const errorMsg = error.response?.data?.errors?.[0] || error.message;
+        console.error(`Failed to send notification to user ${user.id}: ${errorMsg}`);
+      }
+    } else {
+      console.warn(`User ${user.id} has no OneSignal subscription ID`);
     }
 
+    // Send push notification to store if one_subscription exists
+    if (store.one_subscription) {
+      try {
+        const storeNotificationContent = {
+          app_id: process.env.ONESIGNAL_STORE_APP_ID,
+          include_player_ids: [store.one_subscription],
+          data: { store_id: store.id, type: "order accepted by rider" },
+          contents: {
+            en: `Order (ID: ${updatedOrder.order_id}) has been accepted by the rider and is on the way.`,
+          },
+          headings: { en: "Order Accepted" },
+        };
+
+        const storeResponse = await axios.post(
+          "https://onesignal.com/api/v1/notifications",
+          storeNotificationContent,
+          {
+            headers: {
+              "Content-Type": "application/json; charset=utf-8",
+              Authorization: `Basic ${process.env.ONESIGNAL_STORE_API_KEY}`,
+            },
+          }
+        );
+
+        if (storeResponse.data.errors) {
+          throw new Error(storeResponse.data.errors[0]);
+        }
+        console.log("Store notification sent successfully:", storeResponse.data);
+      } catch (error) {
+        const errorMsg = error.response?.data?.errors?.[0] || error.message;
+        console.error(`Failed to send notification to store ${store.id}: ${errorMsg}`);
+      }
+    } else {
+      console.warn(`Store ${store.id} has no OneSignal subscription ID`);
+    }
+
+    // Create notification records
     await Promise.all([
-      Notification.create(
-        {
-          uid: user.id, 
-          datetime: new Date(),
-          title: "Order On Route",
-          description: `Your order (ID: ${updatedOrder.order_id}) has been accepted and is on the way!`,
-        },
-      ),
-      Notification.create(
-        {
-          uid: order.store_id,
-          datetime: new Date(),
-          title: "Order Accepted by Rider",
-          description: `Order (ID: ${updatedOrder.order_id}) has been accepted by the rider and is on the way.`,
-        },
-      )
-    ])
+      Notification.create({
+        uid: user.id,
+        datetime: new Date(),
+        title: "Order On Route",
+        description: `Your order (ID: ${updatedOrder.order_id}) has been accepted and is on the way!`,
+      }),
+      Notification.create({
+        uid: order.store_id,
+        datetime: new Date(),
+        title: "Order Accepted by Rider",
+        description: `Order (ID: ${updatedOrder.order_id}) has been accepted by the rider and is on the way.`,
+      }),
+    ]);
 
     return res.status(200).json({
       success: true,

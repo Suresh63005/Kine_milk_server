@@ -273,7 +273,7 @@ const AssignOrderToRider = asyncHandler(async (req, res) => {
     if (rider.one_subscription) {
       try {
         const riderNotificationContent = {
-          app_id: process.env.ONESIGNAL_APP_ID,
+          app_id: process.env.ONESIGNAL_DELIVERY_APP_ID,
           include_player_ids: [rider.one_subscription],
           data: { rider_id: rider.id, type: "order assigned" },
           contents: {
@@ -288,7 +288,7 @@ const AssignOrderToRider = asyncHandler(async (req, res) => {
           {
             headers: {
               "Content-Type": "application/json; charset=utf-8",
-              Authorization: `Basic ${process.env.ONESIGNAL_API_KEY}`,
+              Authorization: `Basic ${process.env.ONESIGNAL_DELIVERY_API_KEY}`,
             },
           }
         );

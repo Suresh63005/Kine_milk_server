@@ -18,7 +18,7 @@ const Coupon = require("../../Models/Coupon");
 
 const generateOrderId = () => {
   const randomNum = Math.floor(100000 + Math.random() * 900000);
-  return `#${randomNum}`;
+  return `${randomNum}`;
 };
 
 const instantOrder = async (req, res) => {
@@ -160,7 +160,10 @@ const instantOrder = async (req, res) => {
         if (!product)
           throw new Error(`Product with ID ${item.product_id} not found`);
 
-        const weight = await WeightOption.findByPk(item.weight_id);
+        const weight = await WeightOption.findByPk(item.weight_id, { transaction });
+        if (!weight) {
+          throw new Error(`Weight option with ID ${item.weight_id} not found`);
+        }
 
         const itemPrice = weight.normal_price * item.quantity;
 
@@ -204,7 +207,7 @@ const instantOrder = async (req, res) => {
 
     try {
       const notificationContent = {
-        app_id: process.env.ONESIGNAL_APP_ID,
+        app_id: process.env.ONESIGNAL_CUSTOMER_APP_ID,
         include_player_ids: [user.one_subscription],
         data: { user_id: user.id, type: "instant order placed" },
         contents: {
@@ -219,7 +222,7 @@ const instantOrder = async (req, res) => {
         {
           headers: {
             "Content-Type": "application/json; charset=utf-8",
-            Authorization: `Basic ${process.env.ONESIGNAL_API_KEY}`,
+            Authorization: `Basic ${process.env.ONESIGNAL_CUSTOMER_API_KEY}`,
           },
         }
       );
@@ -232,7 +235,7 @@ const instantOrder = async (req, res) => {
 
     try {
       const storeNotificationContent = {
-        app_id:process.env.ONESIGNAL_APP_ID,
+        app_id:process.env.ONESIGNAL_STORE_APP_ID,
         include_player_ids:[store.one_subscription],
         data:{store_id:store.id,type:"new order received"},
         contents:{
@@ -246,7 +249,7 @@ const instantOrder = async (req, res) => {
         {
           headers: {
             "Content-Type": "application/json; charset=utf-8",
-            Authorization: `Basic ${process.env.ONESIGNAL_API_KEY}`,
+            Authorization: `Basic ${process.env.ONESIGNAL_STORE_API_KEY}`,
           },
         }
       )
@@ -512,7 +515,7 @@ const cancelOrder = async (req, res) => {
 
     try {
       const notificationContent = {
-        app_id: process.env.ONESIGNAL_APP_ID,
+        app_id: process.env.ONESIGNAL_CUSTOMER_APP_ID,
         include_player_ids: [user.one_subscription],
         data: { user_id: user.id, type: "instant order Cancelled" },
         contents: {
@@ -527,7 +530,7 @@ const cancelOrder = async (req, res) => {
         {
           headers: {
             "Content-Type": "application/json; charset=utf-8",
-            Authorization: `Basic ${process.env.ONESIGNAL_API_KEY}`,
+            Authorization: `Basic ${process.env.ONESIGNAL_CUSTOMER_API_KEY}`,
           },
         }
       );
