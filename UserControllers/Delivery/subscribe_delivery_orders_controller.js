@@ -8,6 +8,8 @@ const User = require("../../Models/User");
 const Address = require("../../Models/Address");
 const Notification = require("../../Models/Notification");
 const WeightOption = require("../../Models/WeightOption");
+const axios = require("axios"); 
+
 
 const FetchAllSubscribeOrders = asyncHandler(async (req, res) => {
   console.log("Decoded User:", req.user);
@@ -293,12 +295,21 @@ const AcceptSubscriptionOrder = asyncHandler(async (req, res) => {
   }
   try {
     const order = await SubscribeOrder.findOne({
-      where: { id: orderId, rid: riderId, status: "Processing" },
+      where: { id: orderId, rid: riderId, status:{[Op.in]:[ "Processing","Active"]} },
     });
     if (!order) {
       return res.status(404).json({
         success: false,
-        message: "Order not found or already processed!",
+        message: "Order not found, not assigned to you, or already processed!",
+      });
+    }
+
+    if (order.status === "Active") {
+      return res.status(200).json({
+        success: true,
+        ResponseCode: "200",
+        ResponseMsg: "Order is already accepted and active!",
+        order,
       });
     }
 

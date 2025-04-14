@@ -24,12 +24,12 @@ const allowAdminOrAuthenticated = (req, res, next) => {
     });
 };
 
-router.post("/upsert", upload.single("img"),categoryController.upsertCategory);
-router.get("/all", categoryController.getAllCategories);
-router.get("/getbyid/:id",categoryController.getCategoryById)
+router.post("/upsert", upload.single("img"),adminMiddleware.isAdmin,categoryController.upsertCategory);
+router.get("/all", adminMiddleware.isAdmin,categoryController.getAllCategories);
+router.get("/getbyid/:id",adminMiddleware.isAdmin,categoryController.getCategoryById)
 router.delete("/delete/:id",adminMiddleware.isAdmin,categoryController.deleteCategory)
 router.patch("/update/:id",adminMiddleware.isAdmin,categoryController.upsertCategory)
 router.get("/count",adminMiddleware.isAdmin,categoryController.getCategoryCount)
-router.patch("/toggle-status",categoryController.toggleCategoryStatus)
+router.patch("/toggle-status",adminMiddleware.isAdmin,categoryController.toggleCategoryStatus)
 
 module.exports=router

@@ -9,7 +9,7 @@ const jwt = require('jsonwebtoken');
 const StoreProfile = asyncHandler(async (req, res) => {
   console.log("Decoded User:", req.user);
 
-  const uid = req.user.userId;
+  const uid = req.user.storeId;
   if (!uid) {
     return res.status(400).json({
       ResponseCode: "401",
@@ -43,7 +43,7 @@ const StoreProfile = asyncHandler(async (req, res) => {
 const EditStoreProfile = asyncHandler(async (req, res) => {
   console.log("Decoded User:", req.user);
 
-  const uid = req.user?.userId;
+  const uid = req.user?.storeId;
   if (!uid) {
       return res.status(400).json({
           ResponseCode: "401",
@@ -282,7 +282,7 @@ const RemoveOneSignalId = asyncHandler(async(req,res)=>{
   }
   try {
     const store = await Store.findByPk(uid);
-    if(!user){
+    if(!store){
       return res.status(404).json({
         ResponseCode: "404",
         Result: "false",
@@ -314,7 +314,7 @@ const RemoveOneSignalId = asyncHandler(async(req,res)=>{
 
 const ListAllUsers = async()=>{
   const listUsersResult = await storeFirebase.auth().listUsers();
-  console.log("All Firebase Users:", listUsersResult.users.map(user => user.phoneNumber));
+  // console.log("All Firebase Users:", listUsersResult.users.map(user => user.phoneNumber));
 }
 ListAllUsers();
 

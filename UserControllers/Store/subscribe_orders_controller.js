@@ -229,7 +229,7 @@ const FetchSubscribeOrdersByStatus = asyncHandler(async (req, res) => {
 
 const AssignOrderToRider = asyncHandler(async (req, res) => {
   console.log("Decoded User:", req.user);
-  const uid = req.user.storeId;
+  const uid = req.user?.storeId;
   if (!uid) {
     return res.status(400).json({
       ResponseCode: "401",
@@ -246,24 +246,42 @@ const AssignOrderToRider = asyncHandler(async (req, res) => {
   }
   try {
     const order = await SubscribeOrder.findOne({
-      where: { id: order_id, status: "Pending" },
+      where: { id: order_id, status:{[Op.in]:["Pending","Active"]} },
     });
     if (!order) {
-      return res.status(404).json({ message: "Pending Order not found!" });
+      return res.status(404).json({ message: "Pending or Active order not found for this store!" });
     }
     const rider = await Rider.findOne({ where: { id: rider_id, status: 1 } });
     if (!rider) {
       return res.status(404).json({ message: "Rider not found! OR inactive!" });
     }
+
+    const isReassignment = order.rid && order.rid !== rider_id;
+    const previousRiderId = order.rid;
+    const newStatus = order.status === "Pending" ? "Processing" : "Active";
+
     await SubscribeOrder.update(
-      { rid: rider_id, status: "Processing" },
+      { rid: rider_id, status: newStatus },
       { where: { id: order_id } }
     );
     const updatedOrder = await SubscribeOrder.findOne({
       where: { id: order_id },
     });
+
+    let message = "Order assigned to rider successfully!";
+    if (isReassignment) {
+      message = `Order reassigned from rider ${previousRiderId} to rider ${rider_id} successfully!`;
+      console.log(
+        `Reassignment: Order ${order_id} from rider ${previousRiderId} to ${rider_id}`
+      );
+    } else {
+      console.log(`Assignment: Order ${order_id} to rider ${rider_id}`);
+    }
+
     return res.status(200).json({
-      message: "Order assigned to rider successfully!",
+      ResponseCode: "200",
+      Result: "true",
+      message: message,
       order: updatedOrder,
     });
   } catch (error) {

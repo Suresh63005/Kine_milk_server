@@ -3,6 +3,6 @@ const { homeAPI,NotificationsAPI } = require("../../UserControllers/customer/hom
 
 const router = express.Router();
 
-router.get("/:pincode?",homeAPI);
+router.post("/:pincode?",homeAPI);
 
 module.exports = router;
