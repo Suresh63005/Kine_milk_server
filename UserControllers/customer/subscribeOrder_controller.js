@@ -341,7 +341,7 @@ const getOrdersByStatus = async (req, res) => {
 
     console.log();
 
-    const validStatuses = ["Pending", "Active", "Completed", "Cancelled"];
+    const validStatuses = ["Pending","Processing", "Active", "Completed", "Cancelled"];
     if (!validStatuses.includes(status)) {
       return res
         .status(400)
@@ -373,6 +373,8 @@ const getOrdersByStatus = async (req, res) => {
                 {
                   model: ProductReview,
                   as: "ProductReviews",
+                  where: { user_id: uid, order_id: Sequelize.col("orderProducts->productDetails->ProductReviews.order_id")},
+                  required:false
                 },
               ],
             },
