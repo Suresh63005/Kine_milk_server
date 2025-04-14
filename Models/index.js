@@ -291,6 +291,16 @@ SubscribeOrder.belongsTo(Store,{
   as:"store",
 })
 
+
+ProductInventory.belongsTo(Store,{
+  foreignKey:"store_id",
+  as:"stock"
+})
+Store.hasMany(ProductInventory,{
+  foreignKey:"store_id",
+  as:"productInventories"
+})
+
 ProductReview.belongsTo(NormalOrderProduct, { 
   foreignKey: 'product_id', 
   targetKey: 'product_id', 
@@ -305,6 +315,7 @@ ProductReview.belongsTo(SubscribeOrderProduct, {
 
 ProductReview.belongsTo(NormalOrder, { foreignKey: "order_id", as: "normalOrder", constraints: false });
 ProductReview.belongsTo(SubscribeOrder, { foreignKey: "order_id", as: "subscribeOrder", constraints: false });
+
 
 // ProductInventory.belongsTo(Category,{foreignKey:"cat"})
 // StoreWeightOption.belongsTo(WeightOption, { foreignKey: "weight_id", as: "weightOptions" });

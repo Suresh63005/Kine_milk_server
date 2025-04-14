@@ -120,7 +120,8 @@ app.use("/user",require("./AdminRoutes/User.route"))
 app.use("/productinventory",require('./AdminRoutes/ProductInventory_route'))
 app.use("/notifications",require('./UserRoutes/notification_route'));
 app.use("/orders",require("./AdminRoutes/Order.route"))
-
+app.use("/payments",require("./AdminRoutes/paymentRoutes"))
+app.use("/",require("./AdminRoutes/stockRoutes"))
 
 // User Routes
 app.use("/user",require('./UserRoutes/user_auth_route'))
