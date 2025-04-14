@@ -4,6 +4,7 @@ const SubscribeOrder = require('../Models/SubscribeOrder');
 const Store = require('../Models/Store');
 const User = require('../Models/User');
 const { Op } = require('sequelize');
+const Coupon = require('../Models/Coupon');
 
 // Normal Payments Controller
 const getNormalPayments = async (req, res) => {
@@ -220,10 +221,11 @@ const getSubscribePayments = async (req, res) => {
       include: [
         { model: Store, as: "store", attributes: ['title'] },
         { model: User, as: "user", attributes: ['name', 'mobile'] },
+        // {model: Coupon, as:"coupon",attributes:["coupon_code",""]}
       ],
       attributes: [
         'order_id', 'odate', 'o_total', 'subtotal', 'tax', 'd_charge', 
-        'cou_amt', 'wall_amt', 'trans_id', 'store_charge', 'commission'
+        'cou_amt', 'wall_amt', 'trans_id', 'store_charge', 'commission','end_date'
       ],
       limit: parseInt(limit),
       offset: parseInt(offset),
@@ -239,6 +241,7 @@ const getSubscribePayments = async (req, res) => {
       tax: payment.tax,
       delivery_charge: payment.d_charge,
       coupon_amount: payment.cou_amt,
+      end_date:payment.end_date,
       wallet_amount: payment.wall_amt,
       transaction_id: payment.trans_id,
     }));

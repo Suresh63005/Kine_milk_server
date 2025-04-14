@@ -62,46 +62,46 @@ const Store = sequelize.define(
       type: DataTypes.STRING,
       allowNull: false,
     },
-    store_charge: {
-      type: DataTypes.FLOAT,
-      allowNull: false,
-    },
-    dcharge: {
-      type: DataTypes.FLOAT,
-      allowNull: true,
-    },
-    morder: {
-      type: DataTypes.INTEGER,
-      allowNull: false,
-    },
-    commission: {
-      type: DataTypes.FLOAT,
-      allowNull: false,
-    },
-    bank_name: {
-      type: DataTypes.TEXT,
-      allowNull: false,
-    },
-    ifsc: {
-      type: DataTypes.TEXT,
-      allowNull: false,
-    },
-    receipt_name: {
-      type: DataTypes.TEXT,
-      allowNull: false,
-    },
-    acc_number: {
-      type: DataTypes.TEXT,
-      allowNull: false,
-    },
-    paypal_id: {
-      type: DataTypes.TEXT,
-      allowNull: false,
-    },
-    upi_id: {
-      type: DataTypes.TEXT,
-      allowNull: false,
-    },
+    // store_charge: {
+    //   type: DataTypes.FLOAT,
+    //   allowNull: false,
+    // },
+    // dcharge: {
+    //   type: DataTypes.FLOAT,
+    //   allowNull: true,
+    // },
+    // morder: {
+    //   type: DataTypes.INTEGER,
+    //   allowNull: false,
+    // },
+    // commission: {
+    //   type: DataTypes.FLOAT,
+    //   allowNull: false,
+    // },
+    // bank_name: {
+    //   type: DataTypes.TEXT,
+    //   allowNull: false,
+    // },
+    // ifsc: {
+    //   type: DataTypes.TEXT,
+    //   allowNull: false,
+    // },
+    // receipt_name: {
+    //   type: DataTypes.TEXT,
+    //   allowNull: false,
+    // },
+    // acc_number: {
+    //   type: DataTypes.TEXT,
+    //   allowNull: false,
+    // },
+    // paypal_id: {
+    //   type: DataTypes.TEXT,
+    //   allowNull: false,
+    // },
+    // upi_id: {
+    //   type: DataTypes.TEXT,
+    //   allowNull: false,
+    // },
     email: {
       type: DataTypes.TEXT,
       allowNull: false,
@@ -123,26 +123,26 @@ const Store = sequelize.define(
       type: DataTypes.TEXT,
       allowNull: false,
     },
-    charge_type: {
-      type: DataTypes.TEXT,
-      allowNull: false,
-    },
-    ukm: {
-      type: DataTypes.INTEGER,
-      defaultValue: null,
-    },
-    uprice: {
-      type: DataTypes.INTEGER,
-      defaultValue: null,
-    },
-    aprice: {
-      type: DataTypes.INTEGER,
-      defaultValue: null,
-    },
-    zone_id: {
-      type: DataTypes.TEXT,
-      allowNull: true,
-    },
+    // charge_type: {
+    //   type: DataTypes.TEXT,
+    //   allowNull: false,
+    // },
+    // ukm: {
+    //   type: DataTypes.INTEGER,
+    //   defaultValue: null,
+    // },
+    // uprice: {
+    //   type: DataTypes.INTEGER,
+    //   defaultValue: null,
+    // },
+    // aprice: {
+    //   type: DataTypes.INTEGER,
+    //   defaultValue: null,
+    // },
+    // zone_id: {
+    //   type: DataTypes.TEXT,
+    //   allowNull: true,
+    // },
     cover_img: {
       type: DataTypes.TEXT,
       allowNull: false,

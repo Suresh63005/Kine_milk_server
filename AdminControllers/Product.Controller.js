@@ -6,6 +6,8 @@ const uploadToS3 = require("../config/fileUpload.aws");
 const Store = require("../Models/Store");
 const WeightOption = require("../Models/WeightOption")
 const ProductImage = require("../Models/productImages");
+const ProductInvetory = require("../Models/ProductInventory")
+const StoreWeightOption = require("../Models/StoreWeightOption")
 
 const upsertProduct = async (req, res) => {
   try {
@@ -80,7 +82,7 @@ const upsertProduct = async (req, res) => {
     if (req.files?.img) {
       imageUrl = await uploadToS3(req.files.img[0], "images");
     }
-    console.log(imageUrl);
+    console.log("Image URL:", imageUrl);
 
     let product;
     if (id) {
@@ -105,6 +107,14 @@ const upsertProduct = async (req, res) => {
         discount: discount || product.discount,
       });
 
+      // Fetch existing WeightOption and StoreWeightOption data to preserve quantity/total
+      const oldWeightOptions = await WeightOption.findAll({
+        where: { product_id: id },
+      });
+      const weightMap = new Map(
+        oldWeightOptions.map(wo => [wo.weight, wo.id])
+      );
+
       // Delete existing weight options
       await WeightOption.destroy({ where: { product_id: id } });
 
@@ -116,9 +126,45 @@ const upsertProduct = async (req, res) => {
         normal_price: parseFloat(option.normal_price),
         mrp_price: parseFloat(option.mrp_price),
       }));
-      await WeightOption.bulkCreate(weightOptionEntries);
+      const newWeightOptions = await WeightOption.bulkCreate(weightOptionEntries);
 
-      console.log("Product updated successfully:", product);
+      // Update StoreWeightOption records in ProductInventory
+      const inventories = await ProductInvetory.findAll({
+        where: { product_id: id },
+        include: [{ model: StoreWeightOption, as: "storeWeightOptions" }],
+      });
+
+      for (const inventory of inventories) {
+        const oldStoreWeightOptions = inventory.storeWeightOptions || [];
+        const storeWeightMap = new Map(
+          oldStoreWeightOptions.map(swo => [
+            oldWeightOptions.find(wo => wo.id === swo.weight_id)?.weight,
+            { quantity: swo.quantity, total: swo.total },
+          ])
+        );
+
+        // Delete existing StoreWeightOption records
+        await StoreWeightOption.destroy({
+          where: { product_inventory_id: inventory.id },
+        });
+
+        // Create new StoreWeightOption records
+        const newStoreWeightOptions = parsedWeightOptions.map((option, index) => {
+          const newWeightOption = newWeightOptions[index];
+          const oldData = storeWeightMap.get(option.weight) || { quantity: 0, total: 0 };
+          return {
+            product_inventory_id: inventory.id,
+            product_id: id,
+            weight_id: newWeightOption.id,
+            quantity: oldData.quantity,
+            total: oldData.total,
+          };
+        });
+
+        await StoreWeightOption.bulkCreate(newStoreWeightOptions);
+      }
+
+      console.log("Product updated successfully:", product.toJSON());
       return res.status(200).json({
         ResponseCode: "200",
         Result: "true",
@@ -148,7 +194,7 @@ const upsertProduct = async (req, res) => {
         discount: discount || "",
       });
 
-      // Create weight options
+      // Create new weight options
       const weightOptionEntries = parsedWeightOptions.map((option) => ({
         product_id: product.id,
         weight: option.weight,
@@ -158,7 +204,7 @@ const upsertProduct = async (req, res) => {
       }));
       await WeightOption.bulkCreate(weightOptionEntries);
 
-      console.log("Product created successfully:", product);
+      console.log("Product created successfully:", product.toJSON());
       return res.status(200).json({
         ResponseCode: "200",
         Result: "true",
@@ -239,6 +285,7 @@ const getProductById = asyncHandler(async (req, res) => {
       title: product.title,
       img: product.img,
       status: product.status,
+      discount:product.discount,
       cat_id: product.cat_id,
       description: product.description,
       out_of_stock: product.out_of_stock,

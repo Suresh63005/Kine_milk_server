@@ -98,8 +98,8 @@ NormalOrder.belongsTo(Product, {
 // SubscribeOrder.belongsTo(PaymentList, { as: "paymentmethod", foreignKey: "p_method_id" });
 // PaymentList.hasMany(SubscribeOrder, { as: "suborders", foreignKey: "p_method_id"});
 
-// SubscribeOrder.belongsTo(Coupon, { as: "coupon", foreignKey: "cou_id" });
-// Coupon.hasMany(SubscribeOrder, { as: "suborders", foreignKey: "cou_id"});
+SubscribeOrder.belongsTo(Coupon, { as: "coupon", foreignKey: "cou_id" });
+Coupon.hasMany(SubscribeOrder, { as: "suborders", foreignKey: "cou_id"});
 
 SubscribeOrder.belongsTo(Rider, { as: "subrider", foreignKey: "rid" });
 Rider.hasMany(SubscribeOrder, { as: "suborders", foreignKey: "rid" });
