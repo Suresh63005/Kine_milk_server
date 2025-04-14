@@ -339,9 +339,7 @@ const getOrdersByStatus = async (req, res) => {
   try {
     const { uid, status } = req.body;
 
-    console.log();
-
-    const validStatuses = ["Pending","Processing", "Active", "Completed", "Cancelled"];
+    const validStatuses = ["Pending", "Processing", "Active", "Completed", "Cancelled"];
     if (!validStatuses.includes(status)) {
       return res
         .status(400)
@@ -353,28 +351,26 @@ const getOrdersByStatus = async (req, res) => {
       include: [
         {
           model: SubscribeOrderProduct,
-          as: "orderProducts", // Ensure 'orderProducts' alias is correct in the model associations
+          as: "orderProducts",
           include: [
             {
-              model:WeightOption,
-              as:"subscribeProductWeight",
-              attributes:["id","normal_price","subscribe_price","mrp_price","weight"]
+              model: WeightOption,
+              as: "subscribeProductWeight",
+              attributes: ["id", "normal_price", "subscribe_price", "mrp_price", "weight"],
             },
             {
               model: Product,
-              as: "productDetails", // Ensure 'productDetails' alias is correct in the model associations
-              attributes: [
-                "id",
-                "title",
-                "img",
-                "description",
-              ], // Specify the fields you need
+              as: "productDetails",
+              attributes: ["id", "title", "img", "description"],
               include: [
                 {
                   model: ProductReview,
                   as: "ProductReviews",
-                  where: { user_id: uid, order_id: Sequelize.col("orderProducts->productDetails->ProductReviews.order_id")},
-                  required:false
+                  where: {
+                    // user_id: uid,
+                    order_id: Sequelize.col("SubscribeOrder.id"), // Reference the root SubscribeOrder.id
+                  },
+                  required: false, // Allow orders without reviews
                 },
               ],
             },
@@ -397,7 +393,6 @@ const getOrdersByStatus = async (req, res) => {
       ],
       order: [["createdAt", "DESC"]],
     });
-
 
     res.status(200).json({
       ResponseCode: "200",
