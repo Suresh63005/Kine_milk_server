@@ -335,6 +335,7 @@ const subscribeOrder = async (req, res) => {
   }
 };
 
+
 const getOrdersByStatus = async (req, res) => {
   try {
     const { uid, status } = req.body;
@@ -362,17 +363,6 @@ const getOrdersByStatus = async (req, res) => {
               model: Product,
               as: "productDetails",
               attributes: ["id", "title", "img", "description"],
-              include: [
-                {
-                  model: ProductReview,
-                  as: "ProductReviews",
-                  where: {
-                    // user_id: uid,
-                    order_id: Sequelize.col("SubscribeOrder.id"), // Reference the root SubscribeOrder.id
-                  },
-                  required: false, // Allow orders without reviews
-                },
-              ],
             },
           ],
           attributes: ["pquantity"],
@@ -393,6 +383,20 @@ const getOrdersByStatus = async (req, res) => {
       ],
       order: [["createdAt", "DESC"]],
     });
+
+    // Manually attach ProductReviews
+    for (let order of orders) {
+      for (let orderProduct of order.orderProducts) {
+        const productReviews = await ProductReview.findAll({
+          where: {
+            user_id: uid,
+            product_id: orderProduct.productDetails.id,
+            order_id: order.id,
+          },
+        });
+        orderProduct.productDetails.setDataValue("ProductReviews", productReviews);
+      }
+    }
 
     res.status(200).json({
       ResponseCode: "200",
