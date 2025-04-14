@@ -101,7 +101,7 @@ const WalletReportHistory = async (req, res) => {
   try {
     const walletHistory = await WalletReport.findAll({
       where: { uid: uid },
-      // order: [["tdate", "DESC"]],
+      order: [["createdAt", "DESC"]],
     });
     if (!walletHistory || walletHistory.length === 0) {
       return res.status(404).json({

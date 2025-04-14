@@ -210,12 +210,7 @@ const FetchAllInstantDeliveryOrdersByStatus = asyncHandler(async (req, res) => {
         {
           model: Product,
           as: alias === "NormalProducts" ? "ProductDetails" : "productDetails",
-          attributes: [
-            "id",
-            "title",
-            "description",
-            "img",
-          ],
+          attributes: ["id", "title", "description", "img"],
         },
       ],
     });
@@ -226,7 +221,7 @@ const FetchAllInstantDeliveryOrdersByStatus = asyncHandler(async (req, res) => {
         rid: riderId,
         status: normalOrderStatusFilter,
       },
-      order: [["createdAt", "DESC"]],
+      order: [["updatedAt", "DESC"]], // Sort by assignment time
       include: [
         productInclude(NormalOrderProduct, "NormalProducts"),
         {
@@ -242,7 +237,7 @@ const FetchAllInstantDeliveryOrdersByStatus = asyncHandler(async (req, res) => {
         rid: riderId,
         status: subscribeOrderStatusFilter,
       },
-      order: [["createdAt", "DESC"]],
+      order: [["updatedAt", "DESC"]], // Sort by assignment time
       include: [
         productInclude(SubscribeOrderProduct, "orderProducts"),
         {
@@ -252,30 +247,20 @@ const FetchAllInstantDeliveryOrdersByStatus = asyncHandler(async (req, res) => {
       ],
     });
 
-    const formattedInstantOrders = instantOrders.map(order => ({
+    const formattedInstantOrders = instantOrders.map((order) => ({
       ...order.toJSON(),
       orderType: "NormalOrder",
     }));
 
-    const formattedSubscribeOrders = subscriptionOrders.map(order => ({
+    const formattedSubscribeOrders = subscriptionOrders.map((order) => ({
       ...order.toJSON(),
       orderType: "SubscribeOrder",
     }));
 
-    // const allOrders = {
-    //   instantOrders: instantOrders || [], 
-    //   subscriptionOrders: subscriptionOrders || [], 
-    // };
-
-    const allOrders = [...formattedInstantOrders, ...formattedSubscribeOrders];
-
-    // if (!instantOrders.length && !subscriptionOrders.length) {
-    //   return res.status(404).json({
-    //     ResponseCode: "404",
-    //     Result: "false",
-    //     ResponseMsg: "No orders found with the given status!",
-    //   });
-    // }
+    // Combine and sort by updatedAt DESC
+    const allOrders = [...formattedInstantOrders, ...formattedSubscribeOrders].sort(
+      (a, b) => new Date(b.updatedAt) - new Date(a.updatedAt)
+    );
 
     if (!allOrders.length) {
       return res.status(404).json({

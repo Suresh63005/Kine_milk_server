@@ -15,6 +15,15 @@ const sequelize = new Sequelize(process.env.DB_NAME, process.env.DB_USER, proces
         acquire: 30000, 
         idle: 10000, 
       },
+      dialectOptions: {
+        timezone: "+05:30",
+        typeCast: function (field, next) {
+          if (field.type === "DATETIME" || field.type === "DATE") {
+            return field.string();
+          }
+          return next();
+        },
+      },
   });
 
 sequelize.authenticate()

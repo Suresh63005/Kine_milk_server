@@ -297,6 +297,15 @@ ProductReview.belongsTo(NormalOrderProduct, {
   as: 'normalOrderProduct' 
 });
 
+ProductReview.belongsTo(SubscribeOrderProduct, {
+  foreignKey: 'product_id',
+  targetKey: 'product_id',
+  as: 'subscribeOrderProduct'
+});
+
+ProductReview.belongsTo(NormalOrder, { foreignKey: "order_id", as: "normalOrder", constraints: false });
+ProductReview.belongsTo(SubscribeOrder, { foreignKey: "order_id", as: "subscribeOrder", constraints: false });
+
 // ProductInventory.belongsTo(Category,{foreignKey:"cat"})
 // StoreWeightOption.belongsTo(WeightOption, { foreignKey: "weight_id", as: "weightOptions" });
 // WeightOption.hasMany(StoreWeightOption, { foreignKey: "weight_id", as: "storeWeightOptions" });

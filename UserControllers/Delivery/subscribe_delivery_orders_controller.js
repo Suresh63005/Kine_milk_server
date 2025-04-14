@@ -66,10 +66,6 @@ const FetchAllSubscribeOrders = asyncHandler(async (req, res) => {
                 "id",
                 "title",
                 "description",
-                "subscribe_price",
-                "normal_price",
-                "mrp_price",
-                "weight",
               ],
             },
           ],
@@ -96,6 +92,7 @@ const FetchAllSubscribeOrders = asyncHandler(async (req, res) => {
           ],
         },
       ],
+      order: [["createdAt", "DESC"]],
     });
     if (!subscribeOrders.length) {
       return res
