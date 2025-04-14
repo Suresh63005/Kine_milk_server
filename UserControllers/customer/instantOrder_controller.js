@@ -1,7 +1,7 @@
 const { Sequelize, Op } = require("sequelize");
 
 const Product = require("../../Models/Product");
-
+const axios = require("axios"); 
 const NormalOrder = require("../../Models/NormalOrder");
 const NormalOrderProduct = require("../../Models/NormalOrderProduct");
 const Notification = require("../../Models/Notification");
@@ -14,10 +14,11 @@ const Store = require("../../Models/Store");
 const sequelize = require("../../config/db");
 const WeightOption = require("../../Models/WeightOption");
 const Cart = require("../../Models/Cart");
+const Coupon = require("../../Models/Coupon");
 
 const generateOrderId = () => {
   const randomNum = Math.floor(100000 + Math.random() * 900000);
-  return `#${randomNum}`;
+  return `${randomNum}`;
 };
 
 const instantOrder = async (req, res) => {
@@ -25,8 +26,8 @@ const instantOrder = async (req, res) => {
     products,
     timeslot_id,
     o_type,
-    cou_id,
-    cou_amt,
+    coupon_id,
+    // cou_amt,
     subtotal,
     d_charge,
     store_charge,
@@ -86,6 +87,46 @@ const instantOrder = async (req, res) => {
       });
     }
 
+    let appliedCoupon = null;
+    let couponAmount = 0;
+    let finalTotal = parseFloat(o_total)
+
+    if(coupon_id){
+      const coupon = await Coupon.findByPk(coupon_id,{transaction});
+      if (!coupon) {
+        await transaction.rollback();
+        return res.status(400).json({
+          ResponseCode: "400",
+          Result: "false",
+          ResponseMsg: "Coupon not found",
+        });
+      }
+      // Check if coupon is active and not expired
+      const currentDate = new Date();
+      if (coupon.status !== 1 || new Date(coupon.expire_date) < currentDate) {
+        await transaction.rollback();
+        return res.status(400).json({
+          ResponseCode: "400",
+          Result: "false",
+          ResponseMsg: "Coupon is inactive or expired",
+        });
+      }
+      // Check if subtotal meets the minimum amount requirement
+      const subtotalNum = parseFloat(subtotal);
+      if (subtotalNum < parseFloat(coupon.min_amt)) {
+        await transaction.rollback();
+        return res.status(400).json({
+          ResponseCode: "400",
+          Result: "false",
+          ResponseMsg: `Subtotal (${subtotalNum}) is less than the minimum amount required (${coupon.min_amt}) for this coupon`,
+        });
+      }
+      couponAmount = parseFloat(coupon.coupon_val);
+      finalTotal = finalTotal - couponAmount;
+      if (finalTotal < 0) finalTotal = 0; 
+      appliedCoupon = coupon;
+    }
+
     const cartOrderType = "Normal";
 
     // Create the order
@@ -97,13 +138,13 @@ const instantOrder = async (req, res) => {
         odate,
         timeslot_id,
         o_type,
-        cou_id: cou_id || null,
-        cou_amt: cou_amt || 0,
+        cou_id: appliedCoupon ? appliedCoupon.id : null,
+        cou_amt: couponAmount || 0,
         subtotal,
         d_charge: d_charge || 0,
         store_charge: store_charge || 0,
         tax: tax || 0,
-        o_total,
+        o_total:finalTotal,
         a_note,
         order_id: generateOrderId(),
         trans_id,
@@ -119,7 +160,10 @@ const instantOrder = async (req, res) => {
         if (!product)
           throw new Error(`Product with ID ${item.product_id} not found`);
 
-        const weight = await WeightOption.findByPk(item.weight_id);
+        const weight = await WeightOption.findByPk(item.weight_id, { transaction });
+        if (!weight) {
+          throw new Error(`Weight option with ID ${item.weight_id} not found`);
+        }
 
         const itemPrice = weight.normal_price * item.quantity;
 
@@ -152,18 +196,18 @@ const instantOrder = async (req, res) => {
     });
     console.log("Cart items removed for instant order:", cartItemsToRemove.length);
 
-    if (!trans_id && user.wallet >= o_total) {
+    if (!trans_id && user.wallet >= finalTotal) {
       await User.update(
-        { wallet: user.wallet - o_total },
+        { wallet: user.wallet - finalTotal },
         { where: { id: uid }, transaction }
       );
-    } else if (!trans_id && user.wallet < o_total) {
+    } else if (!trans_id && user.wallet < finalTotal) {
       throw new Error("Insufficient wallet balance");
     }
 
     try {
       const notificationContent = {
-        app_id: process.env.ONESIGNAL_APP_ID,
+        app_id: process.env.ONESIGNAL_CUSTOMER_APP_ID,
         include_player_ids: [user.one_subscription],
         data: { user_id: user.id, type: "instant order placed" },
         contents: {
@@ -178,19 +222,20 @@ const instantOrder = async (req, res) => {
         {
           headers: {
             "Content-Type": "application/json; charset=utf-8",
-            Authorization: `Basic ${process.env.ONESIGNAL_API_KEY}`,
+            Authorization: `Basic ${process.env.ONESIGNAL_CUSTOMER_API_KEY}`,
           },
         }
       );
 
-      console.log(response, "notification sent");
+      // console.log(response, "notification sent");
+      console.log("User notification sent:", response.data);
     } catch (error) {
       console.log(error);
     }
 
     try {
       const storeNotificationContent = {
-        app_id:process.env.ONESIGNAL_APP_ID,
+        app_id:process.env.ONESIGNAL_STORE_APP_ID,
         include_player_ids:[store.one_subscription],
         data:{store_id:store.id,type:"new order received"},
         contents:{
@@ -204,11 +249,12 @@ const instantOrder = async (req, res) => {
         {
           headers: {
             "Content-Type": "application/json; charset=utf-8",
-            Authorization: `Basic ${process.env.ONESIGNAL_API_KEY}`,
+            Authorization: `Basic ${process.env.ONESIGNAL_STORE_API_KEY}`,
           },
         }
       )
-      console.log(storeResponse.data, "store notification sent");
+      // console.log(storeResponse.data, "store notification sent");
+      console.log("Store notification sent:", storeResponse.data);
     } catch (error) {
       console.log("Store notification error:", error);
     }
@@ -243,7 +289,8 @@ const instantOrder = async (req, res) => {
       Result: "true",
       ResponseMsg: "Instant Order created successfully!",
       order_id: order.order_id,
-      o_total,
+      o_total:finalTotal,
+      coupon_applied:appliedCoupon ? {id:appliedCoupon.id,title:appliedCoupon.coupon_title,amount:couponAmount}:null,
       items: orderItems,
     });
   } catch (error) {
@@ -285,7 +332,7 @@ const getOrdersByStatus = async (req, res) => {
             {
               model:WeightOption,
               as:"productWeight",
-              attributes:["id","normal_price","subscribe_price","mrp_price"]
+              attributes:["id","normal_price","subscribe_price","mrp_price","weight"]
             },
             {
               model: Product,
@@ -468,7 +515,7 @@ const cancelOrder = async (req, res) => {
 
     try {
       const notificationContent = {
-        app_id: process.env.ONESIGNAL_APP_ID,
+        app_id: process.env.ONESIGNAL_CUSTOMER_APP_ID,
         include_player_ids: [user.one_subscription],
         data: { user_id: user.id, type: "instant order Cancelled" },
         contents: {
@@ -483,7 +530,7 @@ const cancelOrder = async (req, res) => {
         {
           headers: {
             "Content-Type": "application/json; charset=utf-8",
-            Authorization: `Basic ${process.env.ONESIGNAL_API_KEY}`,
+            Authorization: `Basic ${process.env.ONESIGNAL_CUSTOMER_API_KEY}`,
           },
         }
       );

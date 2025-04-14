@@ -8,6 +8,8 @@ const User = require("../../Models/User");
 const Address = require("../../Models/Address");
 const Notification = require("../../Models/Notification");
 const WeightOption = require("../../Models/WeightOption");
+const axios = require("axios"); 
+
 
 const FetchAllSubscribeOrders = asyncHandler(async (req, res) => {
   console.log("Decoded User:", req.user);
@@ -64,10 +66,6 @@ const FetchAllSubscribeOrders = asyncHandler(async (req, res) => {
                 "id",
                 "title",
                 "description",
-                "subscribe_price",
-                "normal_price",
-                "mrp_price",
-                "weight",
               ],
             },
           ],
@@ -94,6 +92,7 @@ const FetchAllSubscribeOrders = asyncHandler(async (req, res) => {
           ],
         },
       ],
+      order: [["createdAt", "DESC"]],
     });
     if (!subscribeOrders.length) {
       return res
@@ -330,7 +329,7 @@ const AcceptSubscriptionOrder = asyncHandler(async (req, res) => {
 
     try {
       const userNotificationContent = {
-        app_id: process.env.ONESIGNAL_APP_ID,
+        app_id: process.env.ONESIGNAL_CUSTOMER_APP_ID,
         include_player_ids: [user.one_subscription],
         data: { user_id: user.id, type: "order accepted" },
         contents: {
@@ -345,7 +344,7 @@ const AcceptSubscriptionOrder = asyncHandler(async (req, res) => {
         {
           headers: {
             "Content-Type": "application/json; charset=utf-8",
-            Authorization: `Basic ${process.env.ONESIGNAL_API_KEY}`,
+            Authorization: `Basic ${process.env.ONESIGNAL_CUSTOMER_API_KEY}`,
           },
         }
       );

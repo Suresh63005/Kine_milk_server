@@ -459,7 +459,7 @@ const FetchAllProductReviews = asyncHandler(async (req, res) => {
 const ViewProductReviews = asyncHandler(async (req, res) => {
   console.log("Decoded User:", req.user);
 
-  const uid = req.user?.userId;
+  const uid = req.user?.storeId;
   if (!uid) {
     return res.status(400).json({
       ResponseCode: "401",
@@ -541,7 +541,7 @@ const ViewProductReviews = asyncHandler(async (req, res) => {
 
 const FetchAllDeliveryBoyReviews = asyncHandler(async(req,res)=>{
   console.log("Decoded User", req.user);
-  const uid = req.user?.userId;
+  const uid = req.user?.storeId;
 
   if (!uid) {
     return res.status(401).json({
@@ -585,7 +585,7 @@ const FetchAllDeliveryBoyReviews = asyncHandler(async(req,res)=>{
 
 const ViewDeliveryBoyReviews = asyncHandler(async (req, res) => {
   console.log("Decoded User", req.user);
-  const uid = req.user?.userId;
+  const uid = req.user?.storeId;
 
   if (!uid) {
     return res.status(401).json({

@@ -8,12 +8,23 @@ const sequelize = new Sequelize(process.env.DB_NAME, process.env.DB_USER, proces
     dialectModule:require('mysql2'),
     port: process.env.DB_PORT ,
     timezone: process.env.TIMEZONE || "+05:30",
-    logging: false,
+
+    logging:false, 
+
     pool: {
         max: 10, 
         min: 0,  
         acquire: 30000, 
         idle: 10000, 
+      },
+      dialectOptions: {
+        timezone: "+05:30",
+        typeCast: function (field, next) {
+          if (field.type === "DATETIME" || field.type === "DATE") {
+            return field.string();
+          }
+          return next();
+        },
       },
   });
 

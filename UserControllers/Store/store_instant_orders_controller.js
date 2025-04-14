@@ -18,6 +18,9 @@ const Category = require("../../Models/Category");
 const ProductInventory = require("../../Models/ProductInventory");
 const StoreWeightOption = require("../../Models/StoreWeightOption");
 const ProductImage = require("../../Models/productImages");
+const axios = require("axios"); 
+const SubscribeOrderProduct = require("../../Models/SubscribeOrderProduct");
+const SubscribeOrder = require("../../Models/SubscribeOrder");
 
 const ListAllInstantOrders = asyncHandler(async (req, res) => {
 
@@ -208,91 +211,114 @@ const FetchAllInstantOrdersByStatus = asyncHandler(async (req, res) => {
 
 
 const AssignOrderToRider = asyncHandler(async (req, res) => {
-    
-    // const uid = "3aacc235-d219-4566-a00c-787765609da1";
-    const uid = req.user?.storeId; 
+  const uid = req.user?.storeId;
 
+  if (!uid) {
+    return res.status(400).json({
+      ResponseCode: "401",
+      Result: "false",
+      ResponseMsg: "User ID not provided",
+    });
+  }
 
-    if (!uid) {
-        return res.status(400).json({
-            ResponseCode: "401",
-            Result: "false",
-            ResponseMsg: "User ID not provided",
-        });
+  console.log("Fetching orders for user ID:", uid);
+
+  const { order_id, rider_id } = req.body;
+  if (!order_id || !rider_id) {
+    return res.status(400).json({
+      message: "Order ID and Rider ID are required!",
+    });
+  }
+
+  try {
+    // Find the pending order
+    const order = await NormalOrder.findOne({
+      where: { id: order_id, status: "Pending" },
+    });
+    if (!order) {
+      return res.status(404).json({
+        message: "Pending order not found!",
+      });
     }
-    console.log("Fetching orders for user ID:", uid);
-    
-    const { order_id, rider_id } = req.body;
-    if (!order_id || !rider_id) {
-        return res.status(400).json({ message: "Order ID and Rider ID are required!" });
+
+    const storeId = order.store_id;
+    if (!storeId) {
+      return res.status(404).json({
+        message: "Store ID not found for this order!",
+      });
     }
-    try {
-        const order = await NormalOrder.findOne({ where: { id: order_id, status: "Pending" } });
-        if (!order) {
-            return res.status(404).json({ message: "Pending order not found!" });
-        }
 
-        const storeId = order.store_id;
+    // Find the rider
+    const rider = await Rider.findOne({
+      where: { id: rider_id, status: 1, store_id: storeId },
+    });
+    console.log(rider, "Rider******************************");
+    if (!rider) {
+      return res.status(404).json({
+        message: "Rider not found or inactive!",
+      });
+    }
 
-        if (!storeId) {
-            return res.status(404).json({ message: "Store ID not found for this order!" });
-        }
-                
-        const rider = await Rider.findOne({ where: { id: rider_id, status: 1, store_id:storeId } });
-        console.log(rider, "Rider******************************");
-        if (!rider) {
-            return res.status(404).json({ message: "Rider not found OR inactive!" });
-        }
+    // Update the order
+    await NormalOrder.update(
+      { rid: rider_id, status: "Processing" },
+      { where: { id: order_id } }
+    );
 
-        await NormalOrder.update(
-            { rid: rider_id, status: "Processing" },
-            { where: { id: order_id } }
+    const updatedOrder = await NormalOrder.findOne({
+      where: { id: order_id },
+    });
+
+    // Send push notification to rider
+    if (rider.one_subscription) {
+      try {
+        const riderNotificationContent = {
+          app_id: process.env.ONESIGNAL_DELIVERY_APP_ID,
+          include_player_ids: [rider.one_subscription],
+          data: { rider_id: rider.id, type: "order assigned" },
+          contents: {
+            en: `You have been assigned a new order! Order ID: ${updatedOrder.order_id}`,
+          },
+          headings: { en: "New Order Assignment" },
+        };
+
+        const riderResponse = await axios.post(
+          "https://onesignal.com/api/v1/notifications",
+          riderNotificationContent,
+          {
+            headers: {
+              "Content-Type": "application/json; charset=utf-8",
+              Authorization: `Basic ${process.env.ONESIGNAL_DELIVERY_API_KEY}`,
+            },
+          }
         );
 
-        const updatedOrder = await NormalOrder.findOne({ where: { id: order_id } });
-
-        try {
-          const riderNotificationContent = {
-            app_id: process.env.ONESIGNAL_APP_ID,
-            include_player_ids: [rider.one_subscription],
-            data: { rider_id: rider.id, type: "order assigned" },
-            contents: {
-              en: `You have been assigned a new order! Order ID: ${updatedOrder.order_id}`,
-            },
-            headings: { en: "New Order Assignment" },
-          };
-    
-          const riderResponse = await axios.post(
-            "https://onesignal.com/api/v1/notifications",
-            riderNotificationContent,
-            {
-              headers: {
-                "Content-Type": "application/json; charset=utf-8",
-                Authorization: `Basic ${process.env.ONESIGNAL_API_KEY}`,
-              },
-            }
-          );
-          console.log(riderResponse.data, "rider notification sent");
-        } catch (error) {
-          console.log("Rider notification error:", error);
-        }
-
-        await Notification.create(
-          {
-            uid: rider.id, 
-            datetime: new Date(),
-            title: "New Order Assigned",
-            description: `You have been assigned Order ID ${updatedOrder.order_id}.`,
-          },)
-
-        return res.status(200).json({
-            message: "Order assigned to rider successfully!",
-            order: updatedOrder
-        });
-    } catch (error) {
-        console.error("Error assigning order:", error.message);
-        return res.status(500).json({ message: "Internal server error: " + error.message });
+        console.log("Rider notification response:", riderResponse.data);
+      } catch (error) {
+        console.error("Rider notification error:", error.response?.data || error.message);
+      }
+    } else {
+      console.warn(`Rider ${rider_id} has no OneSignal subscription ID`);
     }
+
+    // Create notification record
+    await Notification.create({
+      uid: rider.id,
+      datetime: new Date(),
+      title: "New Order Assigned",
+      description: `You have been assigned Order ID ${updatedOrder.order_id}.`,
+    });
+
+    return res.status(200).json({
+      message: "Order assigned to rider successfully!",
+      order: updatedOrder,
+    });
+  } catch (error) {
+    console.error("Error assigning order:", error.message);
+    return res.status(500).json({
+      message: "Internal server error: " + error.message,
+    });
+  }
 });
 
 const ViewInstantOrderById = asyncHandler(async (req, res) => {
@@ -379,10 +405,149 @@ const ViewInstantOrderById = asyncHandler(async (req, res) => {
   });
   
 
+  // const getRecommendedProducts = async (req, res) => {
+  //   console.log("Reached getRecommendedProducts API");
+    
+  //   const uid = req.user?.userId; 
+  //   console.log("Authenticated User ID:", uid);
+  
+  //   if (!uid) {
+  //     return res.status(400).json({
+  //       ResponseCode: "400",
+  //       Result: "false",  
+  //       ResponseMsg: "User not authenticated",
+  //     });
+  //   }
+  
+  //   try {
+  //     const recentOrders = await NormalOrder.findAll({
+  //       where: { uid:uid,status:"Completed" },
+  //       include: [
+  //         {
+  //           model: NormalOrderProduct,
+  //           as: 'NormalProducts',
+  //           attributes: ['product_id'],
+  //         },
+  //       ],
+  //       order: [['createdAt', 'DESC']],
+  //       limit: 10,
+  //     });
+  
+  //     if (!recentOrders.length) {
+  //       return res.status(200).json({
+  //         ResponseCode: "200",
+  //         Result: "true",
+  //         ResponseMsg: "No recent purchases found",
+  //         items: [],
+  //       });
+  //     }
+  
+  //     const productIds = [...new Set(recentOrders.flatMap(order => 
+  //       order.NormalProducts.map(op => op.product_id)
+  //     ))];
+  //     console.log("Purchased Product IDs:", productIds);
+  
+  //     const purchasedProducts = await Product.findAll({
+  //       where: { id: productIds },
+  //       attributes: ['cat_id'],
+  //     });
+  //     const categoryIds = [...new Set(purchasedProducts.map(p => p.cat_id))];
+  //     console.log("Category IDs:", categoryIds);
+  
+  //     const recommendedInventories = await ProductInventory.findAll({
+  //       include: [
+  //         {
+  //           model: Product,
+  //           as: "inventoryProducts",
+  //           where: {
+  //             cat_id: categoryIds,
+  //             id: { [Op.notIn]: productIds }, 
+  //           },
+  //           include: [
+  //             {
+  //               model:ProductImage,
+  //               as:"extraImages",
+  //               attributes:["id","product_id","img"],
+  //             },
+  //             {
+  //               model: Category,
+  //               as: "category",
+  //               attributes: ["id", "title"],
+  //             },
+  //           ],
+  //         },
+  //         {
+  //           model: StoreWeightOption,
+  //           as: "storeWeightOptions",
+  //           paranoid: true,
+  //           include: [
+  //             {
+  //               model: WeightOption,
+  //               as: "weightOption",
+  //               attributes: ["id", "weight", "subscribe_price", "normal_price", "mrp_price"],
+  //             },
+  //           ],
+  //         },
+  //       ],
+  //       limit: 10,
+  //     });
+  
+  //     const items = recommendedInventories.map(inventory => ({
+  //       id: inventory.id,
+  //       product_id: inventory.product_id,
+  //       inventoryProducts: {
+  //         id: inventory.inventoryProducts.id,
+  //         cat_id: inventory.inventoryProducts.cat_id,
+  //         title: inventory.inventoryProducts.title,
+  //         img: inventory.inventoryProducts.img,
+  //         description: inventory.inventoryProducts.description,
+  //         category: {
+  //           id: inventory.inventoryProducts.category.id,
+  //           title: inventory.inventoryProducts.category.title,
+  //         },
+  //       },
+  //       storeWeightOptions: inventory.storeWeightOptions.map(option => ({
+  //         id: option.id,
+  //         product_inventory_id: option.product_inventory_id,
+  //         product_id: option.product_id,
+  //         weight_id: option.weight_id,
+  //         quantity: option.quantity,
+  //         total: option.total,
+  //         createdAt: option.createdAt,
+  //         updatedAt: option.updatedAt,
+  //         deletedAt: option.deletedAt,
+  //         weightOption: {
+  //           id: option.weightOption.id,
+  //           weight: option.weightOption.weight,
+  //           normal_price: option.weightOption.normal_price,
+  //           subscribe_price: option.weightOption.subscribe_price,
+  //           mrp_price: option.weightOption.mrp_price,
+  //         },
+  //       })),
+  //     }));
+  
+  //     return res.status(200).json({
+  //       ResponseCode: "200",
+  //       Result: "true",
+  //       ResponseMsg: "Recommended products fetched successfully",
+  //       items,
+  //     });
+  
+  //   } catch (error) {
+  //     console.error("Error fetching recommended products:", error);
+  //     return res.status(500).json({
+  //       ResponseCode: "500",
+  //       Result: "false",
+  //       ResponseMsg: "Server Error",
+  //       error: error.message,
+  //     });
+  //   }
+  // };
+  
   const getRecommendedProducts = async (req, res) => {
     console.log("Reached getRecommendedProducts API");
-    
-    const uid = req.user?.userId; 
+  
+    const uid = req.user?.userId;
     console.log("Authenticated User ID:", uid);
   
     if (!uid) {
@@ -394,20 +559,50 @@ const ViewInstantOrderById = asyncHandler(async (req, res) => {
     }
   
     try {
-      const recentOrders = await NormalOrder.findAll({
-        where: { uid },
+      // Fetch recent completed Normal Orders
+      const recentNormalOrders = await NormalOrder.findAll({
+        where: { uid, status: "Completed" },
         include: [
           {
             model: NormalOrderProduct,
-            as: 'NormalProducts',
-            attributes: ['product_id'],
+            as: "NormalProducts",
+            attributes: ["product_id"],
           },
         ],
-        order: [['createdAt', 'DESC']],
-        limit: 10,
+        order: [["createdAt", "DESC"]],
       });
   
-      if (!recentOrders.length) {
+      // Fetch recent completed Subscription Orders
+      const recentSubscribeOrders = await SubscribeOrder.findAll({
+        where: { uid, status: "Completed" },
+        include: [
+          {
+            model: SubscribeOrderProduct,
+            as: "orderProducts",
+            attributes: ["product_id"],
+          },
+        ],
+        order: [["createdAt", "DESC"]],
+      });
+  
+      // Combine and sort all orders by createdAt, then take the latest 5
+      const allOrders = [
+        ...recentNormalOrders.map((order) => ({
+          type: "normal",
+          createdAt: order.createdAt,
+          products: order.NormalProducts,
+        })),
+        ...recentSubscribeOrders.map((order) => ({
+          type: "subscribe",
+          createdAt: order.createdAt,
+          products: order.orderProducts,
+        })),
+      ].sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt)).slice(0, 5);
+  
+      console.log("Latest 5 Orders Count:", allOrders.length);
+      console.log("Latest 5 Orders:", JSON.stringify(allOrders, null, 2));
+  
+      if (!allOrders.length) {
         return res.status(200).json({
           ResponseCode: "200",
           Result: "true",
@@ -416,38 +611,21 @@ const ViewInstantOrderById = asyncHandler(async (req, res) => {
         });
       }
   
-      const productIds = [...new Set(recentOrders.flatMap(order => 
-        order.NormalProducts.map(op => op.product_id)
-      ))];
-      console.log("Purchased Product IDs:", productIds);
+      // Extract product IDs from the latest 5 orders
+      const productIds = [...new Set(allOrders.flatMap((order) => order.products.map((op) => op.product_id)))];
+      console.log("Recent Product IDs:", productIds);
   
-      const purchasedProducts = await Product.findAll({
-        where: { id: productIds },
-        attributes: ['cat_id'],
-      });
-      const categoryIds = [...new Set(purchasedProducts.map(p => p.cat_id))];
-      console.log("Category IDs:", categoryIds);
-  
-      const recommendedInventories = await ProductInventory.findAll({
+      // Fetch product details from ProductInventory
+      const recentInventories = await ProductInventory.findAll({
+        where: { product_id: { [Op.in]: productIds } },
         include: [
           {
             model: Product,
             as: "inventoryProducts",
-            where: {
-              cat_id: categoryIds,
-              id: { [Op.notIn]: productIds }, 
-            },
+            required: true,
             include: [
-              {
-                model:ProductImage,
-                as:"extraImages",
-                attributes:["id","product_id","img"],
-              },
-              {
-                model: Category,
-                as: "category",
-                attributes: ["id", "title"],
-              },
+              { model: ProductImage, as: "extraImages", attributes: ["id", "product_id", "img"] },
+              { model: Category, as: "category", attributes: ["id", "title"] },
             ],
           },
           {
@@ -463,52 +641,61 @@ const ViewInstantOrderById = asyncHandler(async (req, res) => {
             ],
           },
         ],
-        limit: 10,
       });
   
-      const items = recommendedInventories.map(inventory => ({
-        id: inventory.id,
-        product_id: inventory.product_id,
-        inventoryProducts: {
-          id: inventory.inventoryProducts.id,
-          cat_id: inventory.inventoryProducts.cat_id,
-          title: inventory.inventoryProducts.title,
-          img: inventory.inventoryProducts.img,
-          description: inventory.inventoryProducts.description,
-          category: {
-            id: inventory.inventoryProducts.category.id,
-            title: inventory.inventoryProducts.category.title,
+      console.log("Recent Inventories Count:", recentInventories.length);
+      console.log("Recent Inventories:", JSON.stringify(recentInventories, null, 2));
+  
+      // Check for missing products
+      const foundProductIds = recentInventories.map((inv) => inv.product_id);
+      const missingProductIds = productIds.filter((id) => !foundProductIds.includes(id));
+      if (missingProductIds.length > 0) {
+        console.warn("Missing inventory for product IDs:", missingProductIds);
+      }
+  
+      // Format the response with strict null check
+      const items = recentInventories.map((inventory) => {
+        if (!inventory.inventoryProducts) {
+          console.error(`Inventory ${inventory.id} has no product data`);
+          return null;
+        }
+        return {
+          id: inventory.id,
+          product_id: inventory.product_id,
+          inventoryProducts: {
+            id: inventory.inventoryProducts.id,
+            cat_id: inventory.inventoryProducts.cat_id,
+            title: inventory.inventoryProducts.title,
+            img: inventory.inventoryProducts.img,
+            description: inventory.inventoryProducts.description,
+            category: {
+              id: inventory.inventoryProducts.category.id,
+              title: inventory.inventoryProducts.category.title,
+            },
           },
-        },
-        storeWeightOptions: inventory.storeWeightOptions.map(option => ({
-          id: option.id,
-          product_inventory_id: option.product_inventory_id,
-          product_id: option.product_id,
-          weight_id: option.weight_id,
-          quantity: option.quantity,
-          total: option.total,
-          createdAt: option.createdAt,
-          updatedAt: option.updatedAt,
-          deletedAt: option.deletedAt,
-          weightOption: {
-            id: option.weightOption.id,
-            weight: option.weightOption.weight,
-            normal_price: option.weightOption.normal_price,
-            subscribe_price: option.weightOption.subscribe_price,
-            mrp_price: option.weightOption.mrp_price,
-          },
-        })),
-      }));
+          storeWeightOptions: inventory.storeWeightOptions.map((option) => ({
+            id: option.id,
+            product_inventory_id: option.product_inventory_id,
+            product_id: option.product_id,
+            weight_id: option.weight_id,
+            quantity: option.quantity,
+            total: option.total,
+            createdAt: option.createdAt,
+            updatedAt: option.updatedAt,
+            deletedAt: option.deletedAt,
+            weightOption: option.weightOption || { id: null, weight: "N/A", subscribe_price: 0, normal_price: 0, mrp_price: 0 },
+          })),
+        };
+      }).filter((item) => item !== null);
   
       return res.status(200).json({
         ResponseCode: "200",
         Result: "true",
-        ResponseMsg: "Recommended products fetched successfully",
+        ResponseMsg: "Recent purchased products fetched successfully",
         items,
       });
-  
     } catch (error) {
-      console.error("Error fetching recommended products:", error);
+      console.error("Error fetching recent products:", error);
       return res.status(500).json({
         ResponseCode: "500",
         Result: "false",
@@ -517,7 +704,7 @@ const ViewInstantOrderById = asyncHandler(async (req, res) => {
       });
     }
   };
-  
+
   const getNearByProducts = async(req,res)=>{
     const uid = req.user.userId;
     if(!uid){
