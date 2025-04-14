@@ -39,7 +39,7 @@ const FetchSubscribeOrdersByStatus = asyncHandler(async (req, res) => {
     try {
       let queryFilter = { store_id };
       if (status === "active") {
-        queryFilter.status = { [Op.in]: ["Pending", "Active"] };
+        queryFilter.status = { [Op.in]: ["Pending", "Active","Processing"] };
       } else if (status === "completed") {
         queryFilter.status = "Completed";
       } else if (status === "cancelled") {
