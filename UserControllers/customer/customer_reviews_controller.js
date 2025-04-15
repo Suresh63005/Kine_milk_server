@@ -21,7 +21,7 @@ const PostProductReviewForInstantOrder = asyncHandler(async (req, res) => {
     });
   }
 
-  const { storeId, reviews } = req.body;
+  const { storeId, reviews,orderId } = req.body;
   if (!storeId || !reviews || !Array.isArray(reviews) || reviews.length === 0) {
     return res.status(400).json({
       ResponseCode: "400",
@@ -80,7 +80,7 @@ const PostProductReviewForInstantOrder = asyncHandler(async (req, res) => {
           user_id: uid,
           product_id: r.productId,
           store_id: storeId,
-          order_id: orderProduct.NormalProducts.id,
+          order_id: orderId,
           category_id: product.cat_id,
           rating: r.totalRate,
           review: r.rateText,
