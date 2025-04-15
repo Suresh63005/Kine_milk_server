@@ -228,7 +228,7 @@ const getSubscribeOrders = async (req, res) => {
       store_name: order.store?.title,
       order_status: order.status,
       user_mobile_no: order.user?.mobile,
-      timeslot: `${order.timeslot?.mintime} - ${order.timeslot?.maxtime}`,
+      timeslots: `${order.timeslots?.mintime} - ${order.timeslots?.maxtime}`,
     }));
 
     res.json({
