@@ -30,15 +30,6 @@ jobs:
         source: node-backend.zip
         target: /home/ubuntu/
 
-    - name: Create .env on EC2
-      uses: appleboy/ssh-action@v1.0.0
-      with:
-        host: ${{ secrets.EC2_HOST }}
-        username: ${{ secrets.EC2_USER }}
-        key: ${{ secrets.EC2_KEY }}
-        script: |
-          echo "${{ secrets.ENV_FILE }}" > /home/ubuntu/node-app/.env
-
     - name: SSH and Deploy Node App
       uses: appleboy/ssh-action@v1.0.0
       with:
@@ -49,17 +40,25 @@ jobs:
           sudo apt update
           sudo apt install unzip -y
 
+          # Unzip into temp folder
           mkdir -p ~/node-app-temp
           unzip -o ~/node-backend.zip -d ~/node-app-temp
 
-          # Keep .env and replace rest
-          cp ~/node-app/.env ~/node-app-temp/.env || true
+          # Create or preserve .env
+          if [ -f ~/node-app/.env ]; then
+            cp ~/node-app/.env ~/node-app-temp/.env
+          else
+            echo "${{ secrets.ENV_FILE }}" > ~/node-app-temp/.env
+          fi
+
+          # Replace old app with new version
           rm -rf ~/node-app
           mv ~/node-app-temp ~/node-app
 
           cd ~/node-app
           npm install
 
+          # Ensure PM2 is installed
           if ! command -v pm2 &> /dev/null; then
             sudo npm install -g pm2
           fi
