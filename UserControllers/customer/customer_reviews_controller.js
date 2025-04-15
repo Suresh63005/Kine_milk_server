@@ -1,6 +1,6 @@
 const { Op } = require('sequelize');
 const NormalOrder = require('../../Models/NormalOrder');
-const NormalOrderProduct = require('../../Models/NormalOrderProduct');
+const NormalOrderProduct = require("../../Models/NormalOrderProduct");
 const Product = require('../../Models/Product');
 const Rider = require('../../Models/Rider');
 const User = require('../../Models/User');
@@ -10,91 +10,6 @@ const asyncHandler = require('../../middlewares/errorHandler');
 const SubscribeOrder = require('../../Models/SubscribeOrder');
 const SubscribeOrderProduct = require('../../Models/SubscribeOrderProduct');
 const ProductReview = require('../../Models/ProductReview');
-
-// const PostProductReview = asyncHandler(async (req, res) => {
-//     const uid = req.user.userId; 
-
-//     if (!uid) {
-//         return res.status(401).json({ message: "Unauthorized! User not found." });
-//     }
-
-//     const { orderId, rateText, totalRate } = req.body;
-
-//     if (!orderId || !rateText || !totalRate) {
-//         return res.status(400).json({ message: "All Fields Required!" });
-//     }
-
-//     try {
-//         // Fetch order with product_id
-//         const order = await NormalOrder.findOne({
-//             where: { id: orderId, uid: uid },
-//             attributes: ['id', 'status', 'product_id'],
-//             include: [{ model: Product, as: "ordered_product", attributes: ['id', 'title'] }] // Use updated alias
-//         });
-              
-        
-//         console.log("Fetched Order:", order);
-        
-//         if (!order) {
-//             return res.status(403).json({ message: "Order not found or does not belong to you!" });
-//         }
-        
-//         if (!order.product) {
-//             return res.status(404).json({ message: "Order has no associated product!" });
-//         }
-        
-
-//         if (order.status !== 'Completed') {
-//             return res.status(403).json({ message: `You can only review delivered products! Current status: ${order.status}` });
-//         }
-
-//         // Fetch product details using product_id
-//         const product = await Product.findOne({
-//             where: { id: order.product_id },
-//             attributes: ['id', 'title', 'img', 'description', 'normal_price', 'mrp_price', 'discount']
-//         });
-
-//         console.log("Fetched Product Data:", product);
-
-//         if (!product) {
-//             return res.status(404).json({ message: "Product not found!" });
-//         }
-
-//         // Update review fields
-//         await NormalOrder.update(
-//             {
-//                 is_rate: 1,
-//                 rate_text: rateText,
-//                 total_rate: totalRate,
-//                 review_date: new Date()
-//             },
-//             { where: { id: orderId } }
-//         );
-
-//         // Fetch updated review details
-//         const updatedReview = await NormalOrder.findOne({
-//             where: { id: orderId },
-//             attributes: ['id', 'rate_text', 'total_rate', 'review_date']
-//         });
-
-//         // Fetch customer details
-//         const customer = await User.findOne({
-//             where: { id: uid },
-//             attributes: ['id', 'name', 'email']
-//         });
-
-//         return res.status(200).json({ 
-//             message: "Review submitted successfully!",
-//             review: updatedReview,
-//             customer,
-//             product
-//         });
-
-//     } catch (error) {
-//         console.error("Error posting review:", error);
-//         return res.status(500).json({ message: "Error posting review: " + error.message });
-//     }
-// });
 
 const PostProductReviewForInstantOrder = asyncHandler(async (req, res) => {
   const uid = req.user.userId;
@@ -140,32 +55,32 @@ const PostProductReviewForInstantOrder = asyncHandler(async (req, res) => {
           include: [
             {
               model: NormalOrder,
-              as: "order",
+              as: "NormalProducts",
               where: { uid, status: "Completed" },
               attributes: ["id", "store_id"],
             },
           ],
         });
 
-        if (!orderProduct || !orderProduct.order) {
+        if (!orderProduct || !orderProduct.NormalProducts) {
           throw new Error(
             `Product ${r.productId} has not been ordered in any completed instant order!`
           );
         }
 
         // Validate store
-        if (orderProduct.order.store_id !== storeId) {
+        if (orderProduct.NormalProducts.store_id !== storeId) {
           throw new Error(
             `Product ${r.productId} was not ordered from store ${storeId}!`
           );
         }
 
-        // Create review (no duplicate check)
+        // Create review (no duplicate check, per subscription controller)
         const newReview = await ProductReview.create({
           user_id: uid,
           product_id: r.productId,
           store_id: storeId,
-          order_id: orderProduct.order.id,
+          order_id: orderProduct.NormalProducts.id,
           category_id: product.cat_id,
           rating: r.totalRate,
           review: r.rateText,
@@ -214,6 +129,7 @@ const PostProductReviewForInstantOrder = asyncHandler(async (req, res) => {
     });
   }
 });
+
 
 const PostProductReviewForSubscribeOrder = asyncHandler(async (req, res) => {
   const uid = req.user.userId;

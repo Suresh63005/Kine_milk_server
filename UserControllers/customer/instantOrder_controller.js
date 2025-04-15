@@ -343,12 +343,6 @@ const getOrdersByStatus = async (req, res) => {
                 "img",
                 "description",
               ], // Specify the fields you need
-              include: [
-                {
-                  model: ProductReview,
-                  as: "ProductReviews",
-                },
-              ],
             },
           ],
           attributes: ["pquantity"],
@@ -370,6 +364,24 @@ const getOrdersByStatus = async (req, res) => {
       order: [["createdAt", "DESC"]],
     });
 
+    for (let order of orders) {
+      for (let orderProduct of order.NormalProducts) {
+        // Check if ProductDetails exists before fetching reviews
+        if (orderProduct.ProductDetails) {
+          const productReviews = await ProductReview.findAll({
+            where: {
+              user_id: uid,
+              product_id: orderProduct.ProductDetails.id,
+              order_id: order.id,
+            },
+          });
+          orderProduct.ProductDetails.setDataValue("ProductReviews", productReviews);
+        } else {
+          // If ProductDetails is null, set an empty ProductReviews array
+          orderProduct.setDataValue("ProductReviews", []);
+        }
+      }
+    }
     
 
     res.status(200).json({
