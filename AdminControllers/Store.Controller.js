@@ -8,10 +8,6 @@ const bcrypt = require("bcryptjs");
 
 const upsertStore = asyncHandler(async (req, res) => {
   try {
-    // const { error } = upsertStoreSchema.validate(req.body);
-    // if (error) {
-    //   return res.status(400).json({ error: error.details[0].message });
-    // }
     const {
       id,
       title,
@@ -25,191 +21,180 @@ const upsertStore = asyncHandler(async (req, res) => {
       landmark,
       lats,
       longs,
-      store_charge,
-      // dcharge,
-      morder,
-      commission,
+      email,
+      rstatus,
+      mobile,
+      password,
+      sdesc,
+      cancle_policy,
+      zone_id,
+      slogan_title,
+      opentime,
+      closetime,
+      is_pickup,
+      owner_name,
+      tags,
+      // Commented out for potential future use
+      /*
       bank_name,
       ifsc,
       receipt_name,
       acc_number,
       paypal_id,
       upi_id,
-      email,
-      rstatus,
-      mobile, // Required for Firebase
-      password,
-      sdesc,
-      cancle_policy,
-      charge_type,
-      
-      // ukm,
-      // uprice,
-      // aprice,
-      zone_id,
-      slogan_title,
-      // cdesc,
-      opentime,
-      closetime,
-      is_pickup,
-      owner_name,
-      tags,
+      */
     } = req.body;
 
-    
-  
-    console.log(req.body,"nallaaaaaaaaaaaaa jilakarraaaaaaa moggaaaaaaaaaaaaaaaaaaaaaaaaaaa");
+    // Validate required fields
+    if (!id && !password) {
+      return res.status(400).json({ success: false, message: "Password is required when creating a new store." });
+    }
+
     let rimg, cover_img;
-
-
-    
 
     if (req.files?.rimg) {
       rimg = await uploadToS3(req.files.rimg[0], "store-logos");
     } else if (!id) {
-      return res.status(400).json({ error: "Store logo is required for a new store." });
+      return res.status(400).json({ success: false, message: "Store logo is required for a new store." });
     }
 
     if (req.files?.cover_img?.[0]) {
       cover_img = await uploadToS3(req.files.cover_img[0], "store-covers");
     } else if (!id) {
-      return res.status(400).json({ error: "Cover image is required for a new store." });
+      return res.status(400).json({ success: false, message: "Cover image is required for a new store." });
     }
-   
-    
-    
+
     let store;
     if (id) {
+      // Update existing store
       store = await Store.findByPk(id);
       if (!store) {
-        return res.status(404).json({ ResponseCode: "404", Result: "false", ResponseMsg: "Store not found." });
+        return res.status(404).json({ success: false, message: "Store not found." });
       }
+
       let hashedPassword = store.password;
-    if (password) {
-      const salt = await bcrypt.genSalt(10);
-      hashedPassword = await bcrypt.hash(password, salt);
-    }
+      if (password) { // Only hash and update password if provided
+        const salt = await bcrypt.genSalt(10);
+        hashedPassword = await bcrypt.hash(password, salt);
+      }
+
       await store.update({
         title,
         status,
         rate,
         slogan,
         lcode,
-        catid: catid,
+        catid,
         full_address,
         pincode,
         landmark,
         lats,
         longs,
-        store_charge,
-        // dcharge,
-        morder,
-        commission,
+        email,
+        rstatus,
+        mobile,
+        password: hashedPassword, // Use existing password if not provided
+        sdesc,
+        cancle_policy,
+        zone_id,
+        slogan_title,
+        opentime,
+        closetime,
+        is_pickup,
+        rimg: rimg || store.rimg,
+        cover_img: cover_img || store.cover_img,
+        owner_name,
+        tags,
+        // Commented out for potential future use
+        /*
         bank_name,
         ifsc,
         receipt_name,
         acc_number,
         paypal_id,
         upi_id,
-        email,
-        rstatus,
-        mobile,
-        password:hashedPassword,
-        sdesc,
-        cancle_policy,
-        charge_type,
-        // ukm,
-        // uprice,
-        // aprice,
-        tags: tags,
-        zone_id,
-        slogan_title,
-        // cdesc,
-        opentime,
-        closetime,
-        is_pickup,
-        rimg: rimg || store.rimg,
-        cover_img: cover_img || store.cover_img,
-        owner_name
+        */
       });
-      
-      return res.status(200).json({ message: "Store updated successfully!", store });
+
+      return res.status(200).json({ success: true, message: "Store updated successfully!", store });
     } else {
+      // Create new store
       const salt = await bcrypt.genSalt(10);
       const hashedPassword = await bcrypt.hash(password, salt);
-      // **Create new store**
+
       store = await Store.create({
         title,
         status,
         rate,
         slogan,
         lcode,
-        catid: catid,
+        catid,
         full_address,
         pincode,
         landmark,
         lats,
         longs,
-        store_charge,
-        // dcharge,
-        morder,
-        commission,
-        bank_name,
-        ifsc,
-        receipt_name,
-        acc_number,
-        paypal_id,
-        upi_id,
         email,
         rstatus,
         mobile,
-        password:hashedPassword,
+        password: hashedPassword,
         sdesc,
         cancle_policy,
-        charge_type,
-        // ukm,
-        // uprice,
-        // aprice,
         zone_id,
         slogan_title,
-        // cdesc,
         opentime,
         closetime,
         is_pickup,
         rimg,
         cover_img,
         owner_name,
-        tags: tags,
+        tags,
+        // Commented out for potential future use
+        /*
+        bank_name,
+        ifsc,
+        receipt_name,
+        acc_number,
+        paypal_id,
+        upi_id,
+        */
       });
-      
-      // **Check if the mobile number already exists in Firebase Authentication**
+
+      // Check if the mobile number already exists in Firebase Authentication
       try {
         const userRecord = await storeFirebase.auth().getUserByPhoneNumber(`+${mobile}`);
         console.log("User already exists in Firebase:", userRecord.uid);
       } catch (firebaseError) {
         if (firebaseError.code === "auth/user-not-found") {
-          // **Create a new Firebase Authentication user with only the mobile number**
+          // Create a new Firebase Authentication user with only the mobile number
           try {
             const newUser = await storeFirebase.auth().createUser({
               phoneNumber: `+${mobile}`,
             });
-
             console.log("New Firebase user created:", newUser.uid);
           } catch (createError) {
             console.error("Error creating Firebase user:", createError);
-            return res.status(500).json({ success: false, message: "Error creating Firebase user", error: createError.message });
+            return res.status(500).json({
+              success: false,
+              message: "Error creating Firebase user",
+              error: createError.message,
+            });
           }
         } else {
           console.error("Error fetching Firebase user:", firebaseError);
-          return res.status(500).json({ success: false, message: "Error checking Firebase user", error: firebaseError.message });
+          return res.status(500).json({
+            success: false,
+            message: "Error checking Firebase user",
+            error: firebaseError.message,
+          });
         }
       }
-    }
 
-    return res.status(200).json({ success: true, message: "Store saved successfully", store });
+      return res.status(200).json({ success: true, message: "Store created successfully!", store });
+    }
   } catch (error) {
     console.error("Error in upsertStore:", error);
-    return res.status(500).json({ success: false, message: "Internal Server Error" });
+    return res.status(500).json({ success: false, message: "Failed to save store." });
   }
 });
 
