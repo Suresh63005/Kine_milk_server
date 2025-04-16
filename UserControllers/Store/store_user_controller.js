@@ -312,10 +312,10 @@ const RemoveOneSignalId = asyncHandler(async(req,res)=>{
   }
 })
 
-const ListAllUsers = async()=>{
-  const listUsersResult = await storeFirebase.auth().listUsers();
-  // console.log("All Firebase Users:", listUsersResult.users.map(user => user.phoneNumber));
-}
-ListAllUsers();
+// const ListAllUsers = async()=>{
+//   const listUsersResult = await storeFirebase.auth().listUsers();
+//   console.log("All Firebase Users:", listUsersResult.users.map(user => user.phoneNumber));
+// }
+// ListAllUsers();
 
 module.exports = { StoreProfile, EditStoreProfile,verifyMobile,UpdateOneSignalSubscription,RemoveOneSignalId };
