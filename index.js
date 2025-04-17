@@ -72,7 +72,7 @@ app.use(express.urlencoded({ extended: true }));
 
 app.use(
   cors({
-    origin: ["http://localhost:3000","http://localhost:3001","http://65.1.110.32:3000","https://kine-milk-client.vercel.app","http://localhost:54451"],
+    origin: ["http://localhost:3000","http://localhost:3001","https://kine-milk-client-test.vercel.app","https://kine-milk-client.vercel.app","http://localhost:54451","https://43d0-183-82-109-252.ngrok-free.app"],
     credentials: true,
     allowedHeaders: ["Content-Type", "Authorization"]
   })
