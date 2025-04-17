@@ -770,3 +770,22 @@
 {"level":"info","message":"Successfully fetch all Banners","service":"kine_milk_server","timestamp":"2025-04-14T09:18:48.525Z"}
 {"level":"info","message":"sucessfully get all categories","service":"kine_milk_server","timestamp":"2025-04-14T09:20:30.110Z"}
 {"level":"info","message":"sucessfully get all categories","service":"kine_milk_server","timestamp":"2025-04-14T09:20:30.186Z"}
+{"level":"info","message":"Store signed in successfully","service":"kine_milk_server","timestamp":"2025-04-17T09:43:48.589Z"}
+{"0":"8","1":"4","10":"0","11":"5","12":"5","13":"-","14":"4","15":"9","16":"5","17":"e","18":"-","19":"a","2":"2","20":"5","21":"0","22":"2","23":"-","24":"f","25":"7","26":"2","27":"5","28":"1","29":"3","3":"6","30":"e","31":"d","32":"8","33":"b","34":"1","35":"c","4":"f","5":"1","6":"e","7":"4","8":"-","9":"e","level":"info","message":"Successfully fetched all riders for store_id:","service":"kine_milk_server","timestamp":"2025-04-17T09:43:59.346Z"}
+{"0":"8","1":"4","10":"0","11":"5","12":"5","13":"-","14":"4","15":"9","16":"5","17":"e","18":"-","19":"a","2":"2","20":"5","21":"0","22":"2","23":"-","24":"f","25":"7","26":"2","27":"5","28":"1","29":"3","3":"6","30":"e","31":"d","32":"8","33":"b","34":"1","35":"c","4":"f","5":"1","6":"e","7":"4","8":"-","9":"e","level":"info","message":"Successfully fetched all riders for store_id:","service":"kine_milk_server","timestamp":"2025-04-17T09:43:59.413Z"}
+{"level":"error","message":"Invalid Email","service":"kine_milk_server","timestamp":"2025-04-17T09:46:16.228Z"}
+{"level":"info","message":"Store signed in successfully","service":"kine_milk_server","timestamp":"2025-04-17T09:46:23.037Z"}
+{"level":"info","message":"Successfully fetched orders for store_id: 8426f1e4-e055-495e-a502-f72513ed8b1c with status: Pending","service":"kine_milk_server","timestamp":"2025-04-17T09:48:11.356Z"}
+{"level":"info","message":"Successfully fetched orders for store_id: 8426f1e4-e055-495e-a502-f72513ed8b1c with status: Pending","service":"kine_milk_server","timestamp":"2025-04-17T09:48:11.435Z"}
+{"level":"info","message":"Successfully fetched orders for store_id: 8426f1e4-e055-495e-a502-f72513ed8b1c with status: Completed","service":"kine_milk_server","timestamp":"2025-04-17T09:48:18.520Z"}
+{"level":"info","message":"Successfully fetched orders for store_id: 8426f1e4-e055-495e-a502-f72513ed8b1c with status: Completed","service":"kine_milk_server","timestamp":"2025-04-17T09:48:18.613Z"}
+{"level":"info","message":"Successfully fetched orders for store_id: 8426f1e4-e055-495e-a502-f72513ed8b1c with status: Cancelled","service":"kine_milk_server","timestamp":"2025-04-17T09:48:22.855Z"}
+{"level":"info","message":"Successfully fetched orders for store_id: 8426f1e4-e055-495e-a502-f72513ed8b1c with status: Cancelled","service":"kine_milk_server","timestamp":"2025-04-17T09:48:22.943Z"}
+{"level":"info","message":"Successfully fetched orders for store_id: 8426f1e4-e055-495e-a502-f72513ed8b1c with status: Pending","service":"kine_milk_server","timestamp":"2025-04-17T09:48:28.044Z"}
+{"level":"info","message":"Successfully fetched orders for store_id: 8426f1e4-e055-495e-a502-f72513ed8b1c with status: Pending","service":"kine_milk_server","timestamp":"2025-04-17T09:48:28.124Z"}
+{"level":"info","message":"Successfully fetched orders for store_id: 8426f1e4-e055-495e-a502-f72513ed8b1c with status: Completed","service":"kine_milk_server","timestamp":"2025-04-17T09:48:32.171Z"}
+{"level":"info","message":"Successfully fetched orders for store_id: 8426f1e4-e055-495e-a502-f72513ed8b1c with status: Completed","service":"kine_milk_server","timestamp":"2025-04-17T09:48:32.255Z"}
+{"level":"info","message":"Successfully fetched orders for store_id: 8426f1e4-e055-495e-a502-f72513ed8b1c with status: Cancelled","service":"kine_milk_server","timestamp":"2025-04-17T09:48:36.022Z"}
+{"level":"info","message":"Successfully fetched orders for store_id: 8426f1e4-e055-495e-a502-f72513ed8b1c with status: Cancelled","service":"kine_milk_server","timestamp":"2025-04-17T09:48:36.111Z"}
+{"level":"info","message":"Admin signed in successfully","service":"kine_milk_server","timestamp":"2025-04-17T09:49:22.350Z"}
+{"level":"info","message":"Store signed in successfully","service":"kine_milk_server","timestamp":"2025-04-17T09:54:17.777Z"}
