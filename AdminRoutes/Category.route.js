@@ -1,7 +1,7 @@
 const express=require("express")
 const router=express.Router();
 const categoryController=require("../AdminControllers/Category.Controller");
-const upload = require("../utils/multerConfig");
+const {upload,handleMulterError} = require("../utils/multerConfig");
 const adminMiddleware = require('../middlewares/adminMiddleware');
 const authMiddleware = require('../middlewares/authMiddleware');
 
@@ -24,7 +24,7 @@ const allowAdminOrAuthenticated = (req, res, next) => {
     });
 };
 
-router.post("/upsert", upload.single("img"),adminMiddleware.isAdmin,categoryController.upsertCategory);
+router.post("/upsert", upload.single("img"),handleMulterError,adminMiddleware.isAdmin,categoryController.upsertCategory);
 router.get("/all", adminMiddleware.isAdmin,categoryController.getAllCategories);
 router.get("/getbyid/:id",adminMiddleware.isAdmin,categoryController.getCategoryById)
 router.delete("/delete/:id",adminMiddleware.isAdmin,categoryController.deleteCategory)

@@ -9,12 +9,28 @@ const { Op } = require('sequelize');
 
 const getStockReports = async (req, res) => {
   try {
-    const { search } = req.query;
+    const { search, storeId } = req.query;
+
+    console.log('getStockReports query:', req.query);
+
+    // Validate storeId
+    if (storeId && storeId !== 'undefined' && storeId !== '') {
+      const storeExists = await Store.findByPk(storeId);
+      if (!storeExists) {
+        console.log(`Invalid storeId: ${storeId}`);
+        return res.status(400).json({ message: `Store with ID ${storeId} not found` });
+      }
+    }
 
     const where = {};
+    if (storeId && storeId !== 'undefined' && storeId !== '') {
+      where.id = storeId;
+    }
     if (search) {
       where.title = { [Op.like]: `%${search}%` };
     }
+
+    console.log('Query where:', where);
 
     const stores = await Store.findAll({
       where,
@@ -31,10 +47,10 @@ const getStockReports = async (req, res) => {
                 {
                   model: Category,
                   as: 'category',
-                  attributes: ['id', 'title'], // Already correct
+                  attributes: ['id', 'title'],
                 },
               ],
-              attributes: ['id', 'title'], // Changed from 'name' to 'title'
+              attributes: ['id', 'title'],
             },
             {
               model: StoreWeightOption,
@@ -52,6 +68,7 @@ const getStockReports = async (req, res) => {
           attributes: ['id', 'total', 'date'],
         },
       ],
+      logging: (sql) => console.log('SQL Query:', sql),
     });
 
     const formattedStores = stores.map((store) => {
@@ -61,9 +78,9 @@ const getStockReports = async (req, res) => {
       // Parse store.catid to get all linked category IDs
       let storeCategoryIds = [];
       try {
-        storeCategoryIds = JSON.parse(store.catid); // Assuming catid is JSON
+        storeCategoryIds = JSON.parse(store.catid);
       } catch (e) {
-        storeCategoryIds = store.catid.split(',').map(id => id.trim()); // Fallback to comma-separated
+        storeCategoryIds = store.catid.split(',').map(id => id.trim());
       }
 
       inventories.forEach((inventory) => {
@@ -87,7 +104,7 @@ const getStockReports = async (req, res) => {
 
         categoriesMap[category.id].products.push({
           id: product.id,
-          title: product.title, // Changed from 'name' to 'title'
+          title: product.title,
           stock: inventory.total,
           lastUpdated: inventory.date,
           weightDetails,
@@ -130,7 +147,27 @@ const getStockReports = async (req, res) => {
 
 const downloadAllStockReports = async (req, res) => {
   try {
+    const { storeId } = req.query;
+    console.log('downloadAllStockReports query:', req.query);
+
+    // Validate storeId
+    if (storeId && storeId !== 'undefined' && storeId !== '') {
+      const storeExists = await Store.findByPk(storeId);
+      if (!storeExists) {
+        console.log(`Invalid storeId: ${storeId}`);
+        return res.status(400).json({ message: `Store with ID ${storeId} not found` });
+      }
+    }
+
+    const where = {};
+    if (storeId && storeId !== 'undefined' && storeId !== '') {
+      where.id = storeId;
+    }
+
+    console.log('Query where:', where);
+
     const stores = await Store.findAll({
+      where,
       include: [
         {
           model: ProductInventory,
@@ -146,7 +183,7 @@ const downloadAllStockReports = async (req, res) => {
                   attributes: ['title'],
                 },
               ],
-              attributes: ['title'], // Changed from 'name' to 'title'
+              attributes: ['title'],
             },
             {
               model: StoreWeightOption,
@@ -164,6 +201,7 @@ const downloadAllStockReports = async (req, res) => {
           attributes: ['total', 'date'],
         },
       ],
+      logging: (sql) => console.log('SQL Query:', sql),
     });
 
     const workbook = new ExcelJS.Workbook();
@@ -172,7 +210,7 @@ const downloadAllStockReports = async (req, res) => {
     worksheet.columns = [
       { header: 'Store Name', key: 'storeName', width: 25 },
       { header: 'Category', key: 'category', width: 20 },
-      { header: 'Product Title', key: 'productTitle', width: 30 }, // Changed from 'Product Name' to 'Product Title'
+      { header: 'Product Title', key: 'productTitle', width: 30 },
       { header: 'Weight', key: 'weight', width: 15 },
       { header: 'Stock Quantity', key: 'stock', width: 15 },
       { header: 'Total Stock', key: 'totalStock', width: 15 },
@@ -188,7 +226,7 @@ const downloadAllStockReports = async (req, res) => {
             worksheet.addRow({
               storeName: store.title,
               category: inventory.inventoryProducts?.category?.title || 'N/A',
-              productTitle: inventory.inventoryProducts?.title || 'N/A', // Changed from 'productName' to 'productTitle'
+              productTitle: inventory.inventoryProducts?.title || 'N/A',
               weight: weightOpt.weightOption?.weight || 'N/A',
               stock: weightOpt.quantity || 0,
               totalStock: inventory.total || 0,
@@ -199,7 +237,7 @@ const downloadAllStockReports = async (req, res) => {
           worksheet.addRow({
             storeName: store.title,
             category: inventory.inventoryProducts?.category?.title || 'N/A',
-            productTitle: inventory.inventoryProducts?.title || 'N/A', // Changed from 'productName' to 'productTitle'
+            productTitle: inventory.inventoryProducts?.title || 'N/A',
             weight: 'N/A',
             stock: 0,
             totalStock: inventory.total || 0,
@@ -223,6 +261,7 @@ const downloadAllStockReports = async (req, res) => {
 const downloadSingleStoreStockReport = async (req, res) => {
   try {
     const { storeId } = req.params;
+    console.log('downloadSingleStoreStockReport params:', req.params);
 
     const store = await Store.findOne({
       where: { id: storeId },
@@ -241,7 +280,7 @@ const downloadSingleStoreStockReport = async (req, res) => {
                   attributes: ['title'],
                 },
               ],
-              attributes: ['title'], // Changed from 'name' to 'title'
+              attributes: ['title'],
             },
             {
               model: StoreWeightOption,
@@ -259,6 +298,7 @@ const downloadSingleStoreStockReport = async (req, res) => {
           attributes: ['total', 'date'],
         },
       ],
+      logging: (sql) => console.log('SQL Query:', sql),
     });
 
     if (!store) {
@@ -271,7 +311,7 @@ const downloadSingleStoreStockReport = async (req, res) => {
     worksheet.columns = [
       { header: 'Store Name', key: 'storeName', width: 25 },
       { header: 'Category', key: 'category', width: 20 },
-      { header: 'Product Title', key: 'productTitle', width: 30 }, // Changed from 'Product Name' to 'Product Title'
+      { header: 'Product Title', key: 'productTitle', width: 30 },
       { header: 'Weight', key: 'weight', width: 15 },
       { header: 'Stock Quantity', key: 'stock', width: 15 },
       { header: 'Total Stock', key: 'totalStock', width: 15 },
@@ -286,7 +326,7 @@ const downloadSingleStoreStockReport = async (req, res) => {
           worksheet.addRow({
             storeName: store.title,
             category: inventory.inventoryProducts?.category?.title || 'N/A',
-            productTitle: inventory.inventoryProducts?.title || 'N/A', // Changed from 'productName' to 'productTitle'
+            productTitle: inventory.inventoryProducts?.title || 'N/A',
             weight: weightOpt.weightOption?.weight || 'N/A',
             stock: weightOpt.quantity || 0,
             totalStock: inventory.total || 0,
@@ -297,7 +337,7 @@ const downloadSingleStoreStockReport = async (req, res) => {
         worksheet.addRow({
           storeName: store.title,
           category: inventory.inventoryProducts?.category?.title || 'N/A',
-          productTitle: inventory.inventoryProducts?.title || 'N/A', // Changed from 'productName' to 'productTitle'
+          productTitle: inventory.inventoryProducts?.title || 'N/A',
           weight: 'N/A',
           stock: 0,
           totalStock: inventory.total || 0,

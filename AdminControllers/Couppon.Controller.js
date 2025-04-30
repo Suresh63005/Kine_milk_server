@@ -16,7 +16,8 @@ const upsertCoupon = async (req, res) => {
     status,
     coupon_code,
     subtitle,
-    expire_date,
+    start_date,
+    end_date,
     min_amt,
     coupon_val,
     description,
@@ -54,7 +55,8 @@ const upsertCoupon = async (req, res) => {
         status,
         coupon_code,
         subtitle,
-        expire_date,
+        start_date,
+        end_date,
         min_amt,
         coupon_val,
         description,
@@ -84,7 +86,8 @@ const upsertCoupon = async (req, res) => {
         status,
         coupon_code,
         subtitle,
-        expire_date,
+        start_date,
+        end_date,
         min_amt,
         coupon_val,
         description,
@@ -115,7 +118,11 @@ const upsertCoupon = async (req, res) => {
    
 const getAllCoupon = async (req, res, next) => {
   try {
-    const CouponDetails = await Coupon.findAll();
+    const CouponDetails = await Coupon.findAll({
+      status:1,
+      start_date: {[Op.lte]: new Date()},
+      end_date:{[Op.gte]:new Date()}
+    });
 
     logger.info("Successfully retrieved all coupons");
     res.status(200).json(CouponDetails);
@@ -126,8 +133,20 @@ const getAllCoupon = async (req, res, next) => {
 };
 
 const getCouponCount=asynHandler(async(req,res)=>{
-    const CouponCount=await Coupon.count();
-    const CouponAll=await Coupon.findAll();
+    const CouponCount = await Coupon.count({
+      where: {
+        status: 1,
+        start_date: { [Op.lte]: new Date() },
+        end_date: { [Op.gte]: new Date() },
+      },
+    });
+    const CouponAll=await Coupon.findAll({
+      where: {
+        status: 1,
+        start_date: { [Op.lte]: new Date() },
+        end_date: { [Op.gte]: new Date() },
+      },
+    });
     logger.info("Delivery",CouponCount)
     res.status(200).json({CouponAll,Delivery:CouponCount})
 });
@@ -140,7 +159,7 @@ const getCouponById=asynHandler(async(req,res)=>{
     // }
 
     const {id}=req.params;
-    const CouponById=await Coupon.findOne({where:{id:id}});
+    const CouponById = await Coupon.findByPk(id);
     if(!CouponById){
         logger.error('Coupon not found')
         return res.status(404).json({error:"Coupon not found"})
@@ -241,6 +260,35 @@ const toggleCouponStatus = asynHandler(async (req, res) => {
     }
 });
 
+const searchCoupon = asynHandler(async (req, res) => {
+  const { error } = DeliverySearchSchema.validate(req.body);
+  if (error) {
+    logger.error(error.details[0].message);
+    return res.status(400).json({ error: error.details[0].message });
+  }
+  const { id, title } = req.body;
+  const whereClause = {
+    status: 1,
+    start_date: { [Op.lte]: new Date() },
+    end_date: { [Op.gte]: new Date() },
+  };
+  if (id) {
+    whereClause.id = id;
+  }
+  if (title && title.trim() !== "") {
+    whereClause.coupon_title = { [Op.like]: `%${title.trim()}%` };
+  }
+
+  const Coupons = await Coupon.findAll({ where: whereClause });
+
+  if (Coupons.length === 0) {
+    logger.error("No matching coupons found");
+    return res.status(404).json({ error: "No matching coupons found" });
+  }
+  logger.info("Coupons found");
+  res.status(200).json(Coupons);
+});
+
 module.exports={
     upsertCoupon,
     getAllCoupon,
@@ -248,5 +296,6 @@ module.exports={
     getCouponById,
     deleteCoupon,
     searchDelivery,
-    toggleCouponStatus
+    toggleCouponStatus,
+    searchCoupon
 }

@@ -61,6 +61,7 @@ const ProductInventory = require("./Models/ProductInventory");
 const Setting = require("./Models/Setting");
 const ProductReview = require('./Models/ProductReview');
 const upload = require("./utils/multerConfig");
+const Unit = require('./Models/Unit');
 
 app.use(morgan("dev"));
 // Middlewares
@@ -72,7 +73,10 @@ app.use(express.urlencoded({ extended: true }));
 
 app.use(
   cors({
-    origin: ["http://localhost:3000","http://localhost:3001","https://kine-milk-client-test.vercel.app","https://kine-milk-client.vercel.app","http://localhost:54451","https://43d0-183-82-109-252.ngrok-free.app"],
+
+    origin: ["http://localhost:3000","http://localhost:3001","http://localhost:3002","https://kine-milk-client.vercel.app","https://kine-client-dev.vercel.app"],
+
+
     credentials: true,
     allowedHeaders: ["Content-Type", "Authorization"]
   })
@@ -112,6 +116,7 @@ app.use("/rider",require("./AdminRoutes/Rider.route"))
 // app.use("/gallery",require("./AdminRoutes/Gallery.route"))
 app.use("/faq",require("./AdminRoutes/Faq.route"))
 app.use("/time",require("./AdminRoutes/Time.route"))
+app.use("/rider-time",require("./AdminRoutes/RiderTimeSlots.route"))
 app.use("/normalorder",require("./AdminRoutes/NormalOrder.route"))
 app.use("/subscribeorders",require("./AdminRoutes/Subscribeorder.router"))
 app.use("/banner",require('./AdminRoutes/Banner.route'))
@@ -122,6 +127,11 @@ app.use("/notifications",require('./UserRoutes/notification_route'));
 app.use("/orders",require("./AdminRoutes/Order.route"))
 app.use("/payments",require("./AdminRoutes/paymentRoutes"))
 app.use("/",require("./AdminRoutes/stockRoutes"))
+app.use("/",require('./AdminRoutes/Unit.route'))
+app.use("/rider-reports",require("./AdminRoutes/RideReports.route"))
+app.use("/orders",require("./AdminRoutes/StoreOrderReports.route"))
+app.use("/payments",require("./AdminRoutes/StorePaymentReport.route"))
+app.use("/api",require("./AdminRoutes/StoreStockReport.route"))
 
 // User Routes
 app.use("/user",require('./UserRoutes/user_auth_route'))

@@ -65,4 +65,6 @@ const customerFirebase = admin.initializeApp(
   "customer"
 );
 
+
 module.exports = { storeFirebase, deliveryFirebase, customerFirebase };
+

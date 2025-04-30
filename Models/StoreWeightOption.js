@@ -27,6 +27,11 @@ const StoreWeightOption = sequelize.define(
       allowNull: false,
       defaultValue: 1,
     },
+    subscription_quantity: {
+      type: DataTypes.BIGINT,
+      allowNull: true,
+      defaultValue: 0,
+    },
     total: {
       type: DataTypes.FLOAT,
       allowNull: false,

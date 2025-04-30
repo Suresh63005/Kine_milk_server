@@ -1,12 +1,11 @@
-const asynHandler = require("../middlewares/errorHandler");
+const asyncHandler = require("../middlewares/errorHandler");
 const Product = require("../Models/Product");
 const ProductInventory = require("../Models/ProductInventory");
 const Store = require("../Models/Store");
-const Coupons = require("../Models/Coupon");
 const Coupon = require("../Models/Coupon");
-const WeightOption = require("../Models/WeightOption")
-const StoreWeightOption = require("../Models/StoreWeightOption")
-const Categories = require("../Models/Category")
+const WeightOption = require("../Models/WeightOption");
+const StoreWeightOption = require("../Models/StoreWeightOption");
+const Categories = require("../Models/Category");
 
 const upsertInventory = async (req, res) => {
   const { id, store_id, product_id, date, weightOptions, coupons } = req.body;
@@ -78,6 +77,14 @@ const upsertInventory = async (req, res) => {
           ResponseMsg: "Quantity and total are required for all weight options.",
         });
       }
+      // Validate subscription_quantity if subscription_required = 1
+      if (product.subscription_required === 1 && option.subscription_quantity == null) {
+        return res.status(400).json({
+          ResponseCode: "400",
+          Result: "false",
+          ResponseMsg: "Subscription quantity is required for subscription-required products.",
+        });
+      }
     }
 
     if (!id) {
@@ -118,6 +125,7 @@ const upsertInventory = async (req, res) => {
         product_id,
         weight_id: option.weight_id,
         quantity: parseFloat(option.quantity),
+        subscription_quantity: product.subscription_required === 1 ? parseFloat(option.subscription_quantity) : 0,
         total: parseFloat(option.total),
       }));
       await StoreWeightOption.bulkCreate(weightOptionRecords);
@@ -148,6 +156,7 @@ const upsertInventory = async (req, res) => {
         product_id,
         weight_id: option.weight_id,
         quantity: parseFloat(option.quantity),
+        subscription_quantity: product.subscription_required === 1 ? parseFloat(option.subscription_quantity) : 0,
         total: parseFloat(option.total),
       }));
       await StoreWeightOption.bulkCreate(weightOptionRecords);
@@ -179,11 +188,16 @@ const getProductInventoryById = async (req, res, next) => {
   try {
     const productInv = await ProductInventory.findByPk(id, {
       include: [
-        { model: Product, as: "inventoryProducts" },
+        {
+          model: Product,
+          as: "inventoryProducts",
+          attributes: ['id', 'title', 'subscription_required'], // Include subscription_required
+        },
         {
           model: StoreWeightOption,
           as: "storeWeightOptions",
           include: [{ model: WeightOption, as: "weightOption" }],
+          attributes: ['id', 'product_inventory_id', 'product_id', 'weight_id', 'quantity', 'subscription_quantity', 'total'],
         },
       ],
     });
@@ -234,45 +248,43 @@ const getProductInventoryById = async (req, res, next) => {
     res.status(500).json({ message: "Failed to fetch product inventory details" });
   }
 };
+
 const ProductInventoryList = async (req, res) => {
   try {
-    const { store_id } = req.query; // Get store_id from query params
+    const { store_id } = req.query;
 
-    
     const testWeightOption = await WeightOption.findOne();
     console.log('Sample WeightOption:', testWeightOption?.toJSON());
 
-    
     const where = store_id ? { store_id } : {};
 
     const productInv = await ProductInventory.findAll({
-      where, 
+      where,
       include: [
         {
           model: Product,
           as: "inventoryProducts",
           include: [
             {
-              model: Categories, 
+              model: Categories,
               as: "category",
               attributes: ["id", "title"],
             },
           ],
+          attributes: ['id', 'title', 'subscription_required', 'img'], // Added 'img'
         },
         {
           model: StoreWeightOption,
           as: "storeWeightOptions",
-
           include: [
             {
               model: WeightOption,
               as: "weightOption",
-              required: false, // Left join
+              required: false,
               attributes: ['id', 'weight', 'normal_price', 'subscribe_price', 'mrp_price'],
             },
           ],
-
-
+          attributes: ['id', 'product_inventory_id', 'product_id', 'weight_id', 'quantity', 'subscription_quantity', 'total'],
         },
       ],
     });
@@ -280,7 +292,6 @@ const ProductInventoryList = async (req, res) => {
     const allCoupons = await Coupon.findAll();
 
     const response = productInv?.map((inventory) => {
-      // Coupon handling
       let couponIds = [];
       if (Array.isArray(inventory.Coupons)) {
         couponIds = inventory.Coupons;
@@ -317,6 +328,7 @@ const ProductInventoryList = async (req, res) => {
           product_id: option.product_id,
           weight_id: option.weight_id,
           quantity: option.quantity,
+          subscription_quantity: option.subscription_quantity,
           total: option.total,
           weight: weightOption?.weight || "N/A",
           normal_price: weightOption?.normal_price || option.normal_price || null,
@@ -339,24 +351,25 @@ const ProductInventoryList = async (req, res) => {
   }
 };
 
+module.exports = ProductInventoryList;
 
-const toggleProductInventoryStatus=async (req,res)=>{
-  const  {id ,value}=req.body;
+const toggleProductInventoryStatus = async (req, res) => {
+  const { id, value } = req.body;
   try {
-    const productInv=await ProductInventory.findByPk(id);
-    if(!productInv){
-      return res.status(404).json({message:"Product Inventory not found"})
+    const productInv = await ProductInventory.findByPk(id);
+    if (!productInv) {
+      return res.status(404).json({ message: "Product Inventory not found" });
     }
-    productInv.status=value;
+    productInv.status = value;
     await productInv.save();
     res.status(200).json({
-      message:"Product Inventory status updated successfully",
-      updatedStatus:productInv.status
-    })
+      message: "Product Inventory status updated successfully",
+      updatedStatus: productInv.status,
+    });
   } catch (error) {
-      res.status(500).json({message:"Internal Server Error"})
+    res.status(500).json({ message: "Internal Server Error" });
   }
-}
+};
 
 const deleteProductInventory = async (req, res) => {
   const { id } = req.params;
@@ -384,58 +397,97 @@ const deleteProductInventory = async (req, res) => {
   }
 };
 
- // Ensure WeightOption model is imported
-
 const getProductsbyStore = async (req, res, next) => {
   try {
     const { store_id } = req.params;
+    console.log("Store ID:", store_id);
 
     if (!store_id) {
       return res.status(400).json({ message: "Store ID is required" });
     }
 
-    // Fetch categories associated with the store_id
     const store = await Store.findOne({
       where: { id: store_id },
-      attributes: ["catid"], // Assuming 'catid' contains category IDs in JSON format
+      attributes: ["catid"],
     });
+    console.log("Store:", store);
 
     if (!store || !store.catid) {
       return res.status(404).json({ message: "Store not found or no categories linked" });
     }
 
-    // Parse catid properly (Handles cases where it's stored as JSON or CSV)
     let categoryIds;
     try {
-      categoryIds = JSON.parse(store.catid); // Try parsing as JSON
+      categoryIds = JSON.parse(store.catid);
     } catch (error) {
-      categoryIds = store.catid.split(",").map((id) => id.trim()); // Fallback to CSV
+      categoryIds = store.catid.split(",").map((id) => id.trim());
     }
 
     if (!Array.isArray(categoryIds) || categoryIds.length === 0) {
-      return res.status(200).json({ message: "No categories found for this store", products: [] });
+      return res.status(200).json({ message: "No categories found for this store", categories: [] });
     }
 
-    // Fetch all product details that belong to these category IDs, including weight options
+    const categories = await Categories.findAll({
+      where: { id: categoryIds },
+      attributes: ["id", "title", "status"],
+    });
+
+    if (!categories.length) {
+      return res.status(200).json({ message: "No valid categories found", categories: [] });
+    }
+
     const products = await Product.findAll({
-      where: {
-        cat_id: categoryIds, // Sequelize automatically converts array to IN condition
-      },
+      where: { cat_id: categoryIds },
       include: [
         {
           model: WeightOption,
-          as: "weightOptions", // Assuming the association alias is 'weightOptions'
-          attributes: ["id","weight", "subscribe_price", "normal_price", "mrp_price"], // Select relevant fields
+          as: "weightOptions",
+          attributes: ["id", "weight", "subscribe_price", "normal_price", "mrp_price"],
         },
       ],
-      attributes: { exclude: [] }, // Fetch all columns of Product
+      attributes: [
+        "id",
+        "cat_id",
+        "title",
+        "img",
+        "description",
+        "status",
+        "out_of_stock",
+        "subscription_required",
+        "quantity",
+        "date",
+        "discount",
+      ],
     });
+    console.log("Fetched products:", products);
 
-    console.info("Successfully retrieved products by store with weight options");
-    res.status(200).json({ products });
+    const response = {
+      categories: categories.map((category) => ({
+        id: category.id,
+        name: category.title,
+        status: category.status,
+        products: products
+          .filter((product) => product.cat_id === category.id)
+          .map((product) => ({
+            id: product.id,
+            title: product.title,
+            img: product.img,
+            description: product.description,
+            status: product.status,
+            out_of_stock: product.out_of_stock,
+            subscription_required: product.subscription_required,
+            quantity: product.quantity,
+            date: product.date,
+            discount: product.discount,
+            weightOptions: product.weightOptions || [],
+          })),
+      })),
+    };
+
+    return res.status(200).json(response);
   } catch (error) {
-    console.error("Error fetching products:", error);
-    res.status(500).json({ message: "Internal Server Error" });
+    console.error("Error fetching categories and products:", error);
+    return res.status(500).json({ message: "Internal Server Error" });
   }
 };
 
@@ -443,7 +495,7 @@ const deleteInventoryStoreWeightOptions = async (req, res) => {
   const { inventory_id, weight_id } = req.body;
   try {
     const storeWeightOption = await StoreWeightOption.findOne({
-      where: { product_inventory_id: inventory_id, weight_id:weight_id },
+      where: { product_inventory_id: inventory_id, weight_id: weight_id },
     });
     if (!storeWeightOption) {
       return res.status(404).json({ message: "Store Weight Option not found" });
@@ -463,5 +515,5 @@ module.exports = {
   toggleProductInventoryStatus,
   deleteProductInventory,
   getProductsbyStore,
-  deleteInventoryStoreWeightOptions
+  deleteInventoryStoreWeightOptions,
 };
