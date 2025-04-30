@@ -275,11 +275,13 @@ const getSubscribeOrders = async (req, res) => {
     const formattedOrders = rows.map(order => ({
       order_id: order.order_id,
       order_date: order.odate,
+
       username: order.user?.name || 'N/A',
       store_name: order.store?.title || 'N/A',
       order_status: order.status || 'N/A',
       user_mobile_no: order.user?.mobile || 'N/A',
       timeslots: order.timeslots ? `${order.timeslots.mintime} - ${order.timeslots.maxtime}` : 'N/A',
+
     }));
 
     res.json({

@@ -39,7 +39,7 @@ const FetchSubscribeOrdersByStatus = asyncHandler(async (req, res) => {
     try {
       let queryFilter = { store_id };
       if (status === "active") {
-        queryFilter.status = { [Op.in]: ["Pending", "Active"] };
+        queryFilter.status = { [Op.in]: ["Pending", "Active","Processing"] };
       } else if (status === "completed") {
         queryFilter.status = "Completed";
       } else if (status === "cancelled") {
@@ -246,10 +246,10 @@ const AssignOrderToRider = asyncHandler(async (req, res) => {
   }
   try {
     const order = await SubscribeOrder.findOne({
-      where: { id: order_id, status:{[Op.in]:["Pending","Active"]} },
+      where: { id: order_id, status:{[Op.in]:["Pending","Active","Processing"]} },
     });
     if (!order) {
-      return res.status(404).json({ message: "Pending or Active order not found for this store!" });
+      return res.status(404).json({ message: "Pending or Active or Processing order not found for this store!" });
     }
     const rider = await Rider.findOne({ where: { id: rider_id, status: 1 } });
     if (!rider) {

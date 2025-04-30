@@ -335,13 +335,12 @@ const subscribeOrder = async (req, res) => {
   }
 };
 
+
 const getOrdersByStatus = async (req, res) => {
   try {
     const { uid, status } = req.body;
 
-    console.log();
-
-    const validStatuses = ["Pending", "Active", "Completed", "Cancelled"];
+    const validStatuses = ["Pending", "Processing", "Active", "Completed", "Cancelled"];
     if (!validStatuses.includes(status)) {
       return res
         .status(400)
@@ -353,28 +352,17 @@ const getOrdersByStatus = async (req, res) => {
       include: [
         {
           model: SubscribeOrderProduct,
-          as: "orderProducts", // Ensure 'orderProducts' alias is correct in the model associations
+          as: "orderProducts",
           include: [
             {
-              model:WeightOption,
-              as:"subscribeProductWeight",
-              attributes:["id","normal_price","subscribe_price","mrp_price","weight"]
+              model: WeightOption,
+              as: "subscribeProductWeight",
+              attributes: ["id", "normal_price", "subscribe_price", "mrp_price", "weight"],
             },
             {
               model: Product,
-              as: "productDetails", // Ensure 'productDetails' alias is correct in the model associations
-              attributes: [
-                "id",
-                "title",
-                "img",
-                "description",
-              ], // Specify the fields you need
-              include: [
-                {
-                  model: ProductReview,
-                  as: "ProductReviews",
-                },
-              ],
+              as: "productDetails",
+              attributes: ["id", "title", "img", "description"],
             },
           ],
           attributes: ["pquantity"],
@@ -396,6 +384,19 @@ const getOrdersByStatus = async (req, res) => {
       order: [["createdAt", "DESC"]],
     });
 
+    // Manually attach ProductReviews
+    for (let order of orders) {
+      for (let orderProduct of order.orderProducts) {
+        const productReviews = await ProductReview.findAll({
+          where: {
+            user_id: uid,
+            product_id: orderProduct.productDetails.id,
+            order_id: order.id,
+          },
+        });
+        orderProduct.productDetails.setDataValue("ProductReviews", productReviews);
+      }
+    }
 
     res.status(200).json({
       ResponseCode: "200",

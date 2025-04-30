@@ -63,6 +63,10 @@ SubscribeOrder.hasMany(SubscribeOrderProduct, {
   foreignKey: "oid",
   as: "orderProducts",
 });
+SubscribeOrderProduct.belongsTo(SubscribeOrder, {
+  foreignKey: "oid",
+  as: "orderDetails",
+});
 SubscribeOrderProduct.belongsTo(Product, {
   foreignKey: "product_id",
   as: "productDetails",
