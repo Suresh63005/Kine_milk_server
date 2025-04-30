@@ -1,37 +1,26 @@
 const ExcelJS = require('exceljs');
-const { Op, literal } = require('sequelize');
 const NormalOrder = require('../Models/NormalOrder');
 const SubscribeOrder = require('../Models/SubscribeOrder');
 const Store = require('../Models/Store');
 const User = require('../Models/User');
 const Time = require('../Models/Time');
+const { Op } = require('sequelize');
 
-// Normal Orders Controller
-const getNormalOrders = async (req, res) => {
+// Normal Orders By Store Controller
+const getNormalOrdersByStore = async (req, res) => {
   try {
-    const { search, fromDate, toDate, storeId, page = 1, limit = 10 } = req.query;
+    const { store_id, search, fromDate, toDate, page = 1, limit = 10 } = req.query;
 
-    console.log('getNormalOrders query:', req.query);
-
-    // Validate storeId
-    if (storeId && storeId !== 'undefined' && storeId !== '') {
-      const storeExists = await Store.findByPk(storeId);
-      if (!storeExists) {
-        console.log(`Invalid storeId: ${storeId}`);
-        return res.status(400).json({ message: `Store with ID ${storeId} not found` });
-      }
+    if (!store_id) {
+      return res.status(400).json({ message: 'Store ID is required' });
     }
 
     // Build the where clause
-    const where = {};
-    if (storeId && storeId !== 'undefined' && storeId !== '') {
-      where.store_id = storeId;
-    }
+    const where = { store_id }; // Filter by store_id
     if (search) {
       where[Op.or] = [
         { order_id: { [Op.like]: `%${search}%` } },
         { '$user.name$': { [Op.like]: `%${search}%` } },
-        { '$store.title$': { [Op.like]: `%${search}%` } },
       ];
     }
     if (fromDate) {
@@ -41,34 +30,29 @@ const getNormalOrders = async (req, res) => {
       where.odate = { ...where.odate, [Op.lte]: new Date(toDate) };
     }
 
-    console.log('Query where:', where);
-
     // Get total count
     const totalCount = await NormalOrder.count({
       where,
       include: [
         { model: Store, as: 'store', attributes: ['title'] },
         { model: User, as: 'user', attributes: ['name', 'mobile'] },
-        { model: Time, as: 'timeslot', attributes: ['mintime', 'maxtime'] },
       ],
     });
 
-    // Fetch paginated rows with raw query logging
+    // Fetch paginated rows
     const offset = (page - 1) * limit;
     const rows = await NormalOrder.findAll({
       where,
       include: [
         { model: Store, as: 'store', attributes: ['title'] },
         { model: User, as: 'user', attributes: ['name', 'mobile'] },
-        { model: Time, as: 'timeslot', attributes: ['mintime', 'maxtime'] },
       ],
       attributes: ['order_id', 'odate', 'status'],
       limit: parseInt(limit),
       offset: parseInt(offset),
-      logging: (sql) => console.log('SQL Query:', sql),
     });
 
-    // Format rows
+    // Format orders (no timeslot)
     const formattedOrders = rows.map(order => ({
       order_id: order.order_id,
       order_date: order.odate,
@@ -76,10 +60,8 @@ const getNormalOrders = async (req, res) => {
       store_name: order.store?.title || 'N/A',
       order_status: order.status || 'N/A',
       user_mobile_no: order.user?.mobile || 'N/A',
-      timeslot: order.timeslot ? `${order.timeslot.mintime} - ${order.timeslot.maxtime}` : 'N/A',
     }));
 
-    // Send response
     res.json({
       orders: formattedOrders,
       total: totalCount,
@@ -87,47 +69,30 @@ const getNormalOrders = async (req, res) => {
       totalPages: Math.ceil(totalCount / limit),
     });
   } catch (error) {
-    console.error('Error fetching normal orders:', error);
-    res.status(500).json({ message: 'Error fetching normal orders' });
+    console.error('Error fetching normal orders by store:', error);
+    res.status(500).json({ message: 'Error fetching normal orders by store' });
   }
 };
 
-const downloadNormalOrders = async (req, res) => {
+const downloadNormalOrdersByStore = async (req, res) => {
   try {
-    const { fromDate, toDate, storeId } = req.query;
-    console.log('downloadNormalOrders query:', req.query);
+    const { store_id, fromDate, toDate } = req.query;
 
-    // Validate storeId
-    if (storeId && storeId !== 'undefined' && storeId !== '') {
-      const storeExists = await Store.findByPk(storeId);
-      if (!storeExists) {
-        console.log(`Invalid storeId: ${storeId}`);
-        return res.status(400).json({ message: `Store with ID ${storeId} not found` });
-      }
+    if (!store_id) {
+      return res.status(400).json({ message: 'Store ID is required' });
     }
 
-    const where = {};
-    if (storeId && storeId !== 'undefined' && storeId !== '') {
-      where.store_id = storeId;
-    }
-    if (fromDate) {
-      where.odate = { [Op.gte]: new Date(fromDate) };
-    }
-    if (toDate) {
-      where.odate = { ...where.odate, [Op.lte]: new Date(toDate) };
-    }
-
-    console.log('Query where:', where);
+    const where = { store_id }; // Filter by store_id
+    if (fromDate) where.odate = { [Op.gte]: new Date(fromDate) };
+    if (toDate) where.odate = { ...where.odate, [Op.lte]: new Date(toDate) };
 
     const orders = await NormalOrder.findAll({
       where,
       include: [
         { model: Store, as: 'store', attributes: ['title'] },
         { model: User, as: 'user', attributes: ['name', 'mobile'] },
-        { model: Time, as: 'timeslot', attributes: ['mintime', 'maxtime'] },
       ],
       attributes: ['order_id', 'odate', 'status'],
-      logging: (sql) => console.log('SQL Query:', sql),
     });
 
     const formattedOrders = orders.map(order => ({
@@ -137,11 +102,10 @@ const downloadNormalOrders = async (req, res) => {
       store_name: order.store?.title || 'N/A',
       order_status: order.status || 'N/A',
       user_mobile_no: order.user?.mobile || 'N/A',
-      timeslot: order.timeslot ? `${order.timeslot.mintime} - ${order.timeslot.maxtime}` : 'N/A',
     }));
 
     const workbook = new ExcelJS.Workbook();
-    const worksheet = workbook.addWorksheet('Normal Orders');
+    const worksheet = workbook.addWorksheet('Normal Orders By Store');
 
     worksheet.columns = [
       { header: 'Order ID', key: 'order_id', width: 15 },
@@ -150,40 +114,41 @@ const downloadNormalOrders = async (req, res) => {
       { header: 'Store Name', key: 'store_name', width: 25 },
       { header: 'Order Status', key: 'order_status', width: 15 },
       { header: 'Mobile No', key: 'user_mobile_no', width: 15 },
-      { header: 'Timeslot', key: 'timeslot', width: 15 },
     ];
 
     worksheet.addRows(formattedOrders);
 
     res.setHeader('Content-Type', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
-    res.setHeader('Content-Disposition', 'attachment; filename=normal_orders.xlsx');
+    res.setHeader('Content-Disposition', 'attachment; filename=normal_orders_by_store.xlsx');
 
     await workbook.xlsx.write(res);
     res.end();
   } catch (error) {
-    console.error('Error downloading normal orders:', error);
-    res.status(500).json({ message: 'Error downloading normal orders' });
+    console.error('Error downloading normal orders by store:', error);
+    res.status(500).json({ message: 'Error downloading normal orders by store' });
   }
 };
 
-const downloadSingleNormalOrder = async (req, res) => {
+const downloadSingleNormalOrderByStore = async (req, res) => {
   try {
     const { orderId } = req.params;
-    console.log('downloadSingleNormalOrder params:', req.params);
+    const { store_id } = req.query;
+
+    if (!store_id) {
+      return res.status(400).json({ message: 'Store ID is required' });
+    }
 
     const order = await NormalOrder.findOne({
-      where: { order_id: orderId },
+      where: { order_id: orderId, store_id }, // Filter by store_id
       include: [
         { model: Store, as: 'store', attributes: ['title'] },
         { model: User, as: 'user', attributes: ['name', 'mobile'] },
-        { model: Time, as: 'timeslot', attributes: ['mintime', 'maxtime'] },
       ],
       attributes: ['order_id', 'odate', 'status'],
-      logging: (sql) => console.log('SQL Query:', sql),
     });
 
     if (!order) {
-      return res.status(404).json({ message: 'Order not found' });
+      return res.status(404).json({ message: 'Order not found or does not belong to this store' });
     }
 
     const formattedOrder = {
@@ -193,11 +158,10 @@ const downloadSingleNormalOrder = async (req, res) => {
       store_name: order.store?.title || 'N/A',
       order_status: order.status || 'N/A',
       user_mobile_no: order.user?.mobile || 'N/A',
-      timeslot: order.timeslot ? `${order.timeslot.mintime} - ${order.timeslot.maxtime}` : 'N/A',
     };
 
     const workbook = new ExcelJS.Workbook();
-    const worksheet = workbook.addWorksheet('Normal Order');
+    const worksheet = workbook.addWorksheet('Normal Order By Store');
 
     worksheet.columns = [
       { header: 'Order ID', key: 'order_id', width: 15 },
@@ -206,47 +170,36 @@ const downloadSingleNormalOrder = async (req, res) => {
       { header: 'Store Name', key: 'store_name', width: 25 },
       { header: 'Order Status', key: 'order_status', width: 15 },
       { header: 'Mobile No', key: 'user_mobile_no', width: 15 },
-      { header: 'Timeslot', key: 'timeslot', width: 15 },
     ];
 
     worksheet.addRow(formattedOrder);
 
     res.setHeader('Content-Type', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
-    res.setHeader('Content-Disposition', `attachment; filename=normal_order_${orderId}.xlsx`);
+    res.setHeader('Content-Disposition', `attachment; filename=normal_order_${formattedOrder.username}_by_store.xlsx`);
 
     await workbook.xlsx.write(res);
     res.end();
   } catch (error) {
-    console.error('Error downloading single order:', error);
-    res.status(500).json({ message: 'Error downloading single order' });
+    console.error('Error downloading single normal order by store:', error);
+    res.status(500).json({ message: 'Error downloading single normal order by store' });
   }
 };
 
-// Subscribe Orders Controller
-const getSubscribeOrders = async (req, res) => {
+// Subscribe Orders By Store Controller
+const getSubscribeOrdersByStore = async (req, res) => {
   try {
-    const { search, fromDate, toDate, storeId, page = 1, limit = 10 } = req.query;
+    const { store_id, search, fromDate, toDate, page = 1, limit = 10 } = req.query;
 
-    console.log('getSubscribeOrders query:', req.query);
-
-    // Validate storeId
-    if (storeId && storeId !== 'undefined' && storeId !== '') {
-      const storeExists = await Store.findByPk(storeId);
-      if (!storeExists) {
-        console.log(`Invalid storeId: ${storeId}`);
-        return res.status(400).json({ message: `Store with ID ${storeId} not found` });
-      }
+    if (!store_id) {
+      return res.status(400).json({ message: 'Store ID is required' });
     }
 
-    const where = {};
-    if (storeId && storeId !== 'undefined' && storeId !== '') {
-      where.store_id = storeId;
-    }
+    // Build the where clause
+    const where = { store_id }; // Filter by store_id
     if (search) {
       where[Op.or] = [
         { order_id: { [Op.like]: `%${search}%` } },
         { '$user.name$': { [Op.like]: `%${search}%` } },
-        { '$store.title$': { [Op.like]: `%${search}%` } },
       ];
     }
     if (fromDate) {
@@ -256,9 +209,7 @@ const getSubscribeOrders = async (req, res) => {
       where.odate = { ...where.odate, [Op.lte]: new Date(toDate) };
     }
 
-    console.log('Query where:', where);
-
-    const offset = (page - 1) * limit;
+    // Get total count
     const { count, rows } = await SubscribeOrder.findAndCountAll({
       where,
       include: [
@@ -268,10 +219,10 @@ const getSubscribeOrders = async (req, res) => {
       ],
       attributes: ['order_id', 'odate', 'status'],
       limit: parseInt(limit),
-      offset: parseInt(offset),
-      logging: (sql) => console.log('SQL Query:', sql),
+      offset: (page - 1) * limit,
     });
 
+    // Format orders
     const formattedOrders = rows.map(order => ({
       order_id: order.order_id,
       order_date: order.odate,
@@ -279,7 +230,7 @@ const getSubscribeOrders = async (req, res) => {
       store_name: order.store?.title || 'N/A',
       order_status: order.status || 'N/A',
       user_mobile_no: order.user?.mobile || 'N/A',
-      timeslots: order.timeslots ? `${order.timeslots.mintime} - ${order.timeslots.maxtime}` : 'N/A',
+      timeslots: `${order.timeslots?.mintime || 'N/A'} - ${order.timeslots?.maxtime || 'N/A'}`,
     }));
 
     res.json({
@@ -289,37 +240,22 @@ const getSubscribeOrders = async (req, res) => {
       totalPages: Math.ceil(count / limit),
     });
   } catch (error) {
-    console.error('Error fetching subscribe orders:', error);
-    res.status(500).json({ message: 'Error fetching subscribe orders' });
+    console.error('Error fetching subscribe orders by store:', error);
+    res.status(500).json({ message: 'Error fetching subscribe orders by store' });
   }
 };
 
-const downloadSubscribeOrders = async (req, res) => {
+const downloadSubscribeOrdersByStore = async (req, res) => {
   try {
-    const { fromDate, toDate, storeId } = req.query;
-    console.log('downloadSubscribeOrders query:', req.query);
+    const { store_id, fromDate, toDate } = req.query;
 
-    // Validate storeId
-    if (storeId && storeId !== 'undefined' && storeId !== '') {
-      const storeExists = await Store.findByPk(storeId);
-      if (!storeExists) {
-        console.log(`Invalid storeId: ${storeId}`);
-        return res.status(400).json({ message: `Store with ID ${storeId} not found` });
-      }
+    if (!store_id) {
+      return res.status(400).json({ message: 'Store ID is required' });
     }
 
-    const where = {};
-    if (storeId && storeId !== 'undefined' && storeId !== '') {
-      where.store_id = storeId;
-    }
-    if (fromDate) {
-      where.odate = { [Op.gte]: new Date(fromDate) };
-    }
-    if (toDate) {
-      where.odate = { ...where.odate, [Op.lte]: new Date(toDate) };
-    }
-
-    console.log('Query where:', where);
+    const where = { store_id }; // Filter by store_id
+    if (fromDate) where.odate = { [Op.gte]: new Date(fromDate) };
+    if (toDate) where.odate = { ...where.odate, [Op.lte]: new Date(toDate) };
 
     const orders = await SubscribeOrder.findAll({
       where,
@@ -329,7 +265,6 @@ const downloadSubscribeOrders = async (req, res) => {
         { model: Time, as: 'timeslots', attributes: ['mintime', 'maxtime'] },
       ],
       attributes: ['order_id', 'odate', 'status'],
-      logging: (sql) => console.log('SQL Query:', sql),
     });
 
     const formattedOrders = orders.map(order => ({
@@ -339,11 +274,11 @@ const downloadSubscribeOrders = async (req, res) => {
       store_name: order.store?.title || 'N/A',
       order_status: order.status || 'N/A',
       user_mobile_no: order.user?.mobile || 'N/A',
-      timeslot: order.timeslots ? `${order.timeslots.mintime} - ${order.timeslots.maxtime}` : 'N/A',
+      timeslots: `${order.timeslots?.mintime || 'N/A'} - ${order.timeslots?.maxtime || 'N/A'}`,
     }));
 
     const workbook = new ExcelJS.Workbook();
-    const worksheet = workbook.addWorksheet('Subscribe Orders');
+    const worksheet = workbook.addWorksheet('Subscribe Orders By Store');
 
     worksheet.columns = [
       { header: 'Order ID', key: 'order_id', width: 15 },
@@ -352,40 +287,43 @@ const downloadSubscribeOrders = async (req, res) => {
       { header: 'Store Name', key: 'store_name', width: 25 },
       { header: 'Order Status', key: 'order_status', width: 15 },
       { header: 'Mobile No', key: 'user_mobile_no', width: 15 },
-      { header: 'Timeslot', key: 'timeslot', width: 15 },
+      { header: 'Timeslot', key: 'timeslots', width: 15 },
     ];
 
     worksheet.addRows(formattedOrders);
 
     res.setHeader('Content-Type', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
-    res.setHeader('Content-Disposition', 'attachment; filename=subscribe_orders.xlsx');
+    res.setHeader('Content-Disposition', 'attachment; filename=subscribe_orders_by_store.xlsx');
 
     await workbook.xlsx.write(res);
     res.end();
   } catch (error) {
-    console.error('Error downloading subscribe orders:', error);
-    res.status(500).json({ message: 'Error downloading subscribe orders' });
+    console.error('Error downloading subscribe orders by store:', error);
+    res.status(500).json({ message: 'Error downloading subscribe orders by store' });
   }
 };
 
-const downloadSingleSubscribeOrder = async (req, res) => {
+const downloadSingleSubscribeOrderByStore = async (req, res) => {
   try {
     const { orderId } = req.params;
-    console.log('downloadSingleSubscribeOrder params:', req.params);
+    const { store_id } = req.query;
+
+    if (!store_id) {
+      return res.status(400).json({ message: 'Store ID is required' });
+    }
 
     const order = await SubscribeOrder.findOne({
-      where: { order_id: orderId },
+      where: { order_id: orderId, store_id }, // Filter by store_id
       include: [
         { model: Store, as: 'store', attributes: ['title'] },
         { model: User, as: 'user', attributes: ['name', 'mobile'] },
         { model: Time, as: 'timeslots', attributes: ['mintime', 'maxtime'] },
       ],
       attributes: ['order_id', 'odate', 'status'],
-      logging: (sql) => console.log('SQL Query:', sql),
     });
 
     if (!order) {
-      return res.status(404).json({ message: 'Order not found' });
+      return res.status(404).json({ message: 'Order not found or does not belong to this store' });
     }
 
     const formattedOrder = {
@@ -395,11 +333,11 @@ const downloadSingleSubscribeOrder = async (req, res) => {
       store_name: order.store?.title || 'N/A',
       order_status: order.status || 'N/A',
       user_mobile_no: order.user?.mobile || 'N/A',
-      timeslot: order.timeslots ? `${order.timeslots.mintime} - ${order.timeslots.maxtime}` : 'N/A',
+      timeslots: `${order.timeslots?.mintime || 'N/A'} - ${order.timeslots?.maxtime || 'N/A'}`,
     };
 
     const workbook = new ExcelJS.Workbook();
-    const worksheet = workbook.addWorksheet('Subscribe Order');
+    const worksheet = workbook.addWorksheet('Subscribe Order By Store');
 
     worksheet.columns = [
       { header: 'Order ID', key: 'order_id', width: 15 },
@@ -408,27 +346,34 @@ const downloadSingleSubscribeOrder = async (req, res) => {
       { header: 'Store Name', key: 'store_name', width: 25 },
       { header: 'Order Status', key: 'order_status', width: 15 },
       { header: 'Mobile No', key: 'user_mobile_no', width: 15 },
-      { header: 'Timeslot', key: 'timeslot', width: 15 },
+      { header: 'Timeslot', key: 'timeslots', width: 15 },
     ];
 
     worksheet.addRow(formattedOrder);
 
     res.setHeader('Content-Type', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
-    res.setHeader('Content-Disposition', `attachment; filename=subscribe_order_${orderId}.xlsx`);
+    res.setHeader('Content-Disposition', `attachment; filename=subscribe_order_${orderId}_by_store.xlsx`);
 
     await workbook.xlsx.write(res);
     res.end();
   } catch (error) {
-    console.error('Error downloading single subscribe order:', error);
-    res.status(500).json({ message: 'Error downloading single subscribe order' });
+    console.error('Error downloading single subscribe order by store:', error);
+    res.status(500).json({ message: 'Error downloading single subscribe order by store' });
   }
 };
 
 module.exports = {
-  getNormalOrders,
-  downloadNormalOrders,
-  downloadSingleNormalOrder,
-  getSubscribeOrders,
-  downloadSubscribeOrders,
-  downloadSingleSubscribeOrder,
+  getNormalOrdersByStore,
+  downloadNormalOrdersByStore,
+  downloadSingleNormalOrderByStore,
+  getSubscribeOrdersByStore,
+  downloadSubscribeOrdersByStore,
+  downloadSingleSubscribeOrderByStore,
+  // Include existing controllers if needed
+//   getNormalOrders,
+//   downloadNormalOrders,
+//   downloadSingleNormalOrder,
+//   getSubscribeOrders,
+//   downloadSubscribeOrders,
+//   downloadSingleSubscribeOrder,
 };

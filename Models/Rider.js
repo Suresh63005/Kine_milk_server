@@ -50,6 +50,22 @@ const Rider = sequelize.define(
       type: DataTypes.TEXT,
       allowNull: true,
     },
+    ride_timeslots: {
+      type: DataTypes.JSON,
+      allowNull: true,
+      defaultValue: [], // Default to empty array
+    },
+    rider_status: {
+      type: DataTypes.ENUM(
+        'available',
+        'unavailable',
+        'product delivered',
+        'not delivered',
+        'order assigned'
+      ),
+      allowNull: false,
+      defaultValue: 'unavailable',
+    },
   },
   { tableName: "tbl_rider", timestamps: true, paranoid: true }
 );

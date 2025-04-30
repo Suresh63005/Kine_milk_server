@@ -4,28 +4,23 @@ const SubscribeOrder = require('../Models/SubscribeOrder');
 const Store = require('../Models/Store');
 const User = require('../Models/User');
 const { Op } = require('sequelize');
-const Coupon = require('../Models/Coupon');
 
-// Normal Payments Controller
-const getNormalPayments = async (req, res) => {
+// Normal Payments By Store Controller
+const getNormalPaymentsByStore = async (req, res) => {
   try {
-    const { search, fromDate, toDate, storeId, page = 1, limit = 10 } = req.query;
+    const { store_id, search, fromDate, toDate, page = 1, limit = 10 } = req.query;
 
-    console.log('getNormalPayments query:', req.query);
-
-    // Validate storeId
-    if (storeId && storeId !== 'undefined' && storeId !== '') {
-      const storeExists = await Store.findByPk(storeId);
-      if (!storeExists) {
-        console.log(`Invalid storeId: ${storeId}`);
-        return res.status(400).json({ message: `Store with ID ${storeId} not found` });
-      }
+    if (!store_id) {
+      return res.status(400).json({ message: 'Store ID is required' });
     }
 
-    const where = {};
-    if (storeId && storeId !== 'undefined' && storeId !== '') {
-      where.store_id = storeId;
+    // Validate store_id exists in Store model
+    const store = await Store.findByPk(store_id);
+    if (!store) {
+      return res.status(404).json({ message: 'Store not found' });
     }
+
+    const where = { store_id };
     if (search) {
       where[Op.or] = [
         { order_id: { [Op.like]: `%${search}%` } },
@@ -39,8 +34,6 @@ const getNormalPayments = async (req, res) => {
     if (toDate) {
       where.odate = { ...where.odate, [Op.lte]: new Date(toDate) };
     }
-
-    console.log('Query where:', where);
 
     const offset = (page - 1) * limit;
     const { count, rows } = await NormalOrder.findAndCountAll({
@@ -51,11 +44,10 @@ const getNormalPayments = async (req, res) => {
       ],
       attributes: [
         'order_id', 'odate', 'o_total', 'subtotal', 'tax', 'd_charge',
-        'cou_amt', 'wall_amt', 'trans_id', 'store_charge', 'commission'
+        'cou_amt', 'wall_amt', 'trans_id', 'store_charge', 'commission',
       ],
       limit: parseInt(limit),
       offset: parseInt(offset),
-      logging: (sql) => console.log('SQL Query:', sql),
     });
 
     const formattedPayments = rows.map(payment => ({
@@ -79,37 +71,28 @@ const getNormalPayments = async (req, res) => {
       totalPages: Math.ceil(count / limit),
     });
   } catch (error) {
-    console.error('Error fetching normal payments:', error);
-    res.status(500).json({ message: 'Error fetching normal payments' });
+    console.error('Error fetching normal payments by store:', error);
+    res.status(500).json({ message: 'Error fetching normal payments by store' });
   }
 };
 
-const downloadNormalPayments = async (req, res) => {
+const downloadNormalPaymentsByStore = async (req, res) => {
   try {
-    const { fromDate, toDate, storeId } = req.query;
-    console.log('downloadNormalPayments query:', req.query);
+    const { store_id, fromDate, toDate } = req.query;
 
-    // Validate storeId
-    if (storeId && storeId !== 'undefined' && storeId !== '') {
-      const storeExists = await Store.findByPk(storeId);
-      if (!storeExists) {
-        console.log(`Invalid storeId: ${storeId}`);
-        return res.status(400).json({ message: `Store with ID ${storeId} not found` });
-      }
+    if (!store_id) {
+      return res.status(400).json({ message: 'Store ID is required' });
     }
 
-    const where = {};
-    if (storeId && storeId !== 'undefined' && storeId !== '') {
-      where.store_id = storeId;
-    }
-    if (fromDate) {
-      where.odate = { [Op.gte]: new Date(fromDate) };
-    }
-    if (toDate) {
-      where.odate = { ...where.odate, [Op.lte]: new Date(toDate) };
+    // Validate store_id exists in Store model
+    const store = await Store.findByPk(store_id);
+    if (!store) {
+      return res.status(404).json({ message: 'Store not found' });
     }
 
-    console.log('Query where:', where);
+    const where = { store_id };
+    if (fromDate) where.odate = { [Op.gte]: new Date(fromDate) };
+    if (toDate) where.odate = { ...where.odate, [Op.lte]: new Date(toDate) };
 
     const payments = await NormalOrder.findAll({
       where,
@@ -119,9 +102,8 @@ const downloadNormalPayments = async (req, res) => {
       ],
       attributes: [
         'order_id', 'odate', 'o_total', 'subtotal', 'tax', 'd_charge',
-        'cou_amt', 'wall_amt', 'trans_id', 'store_charge', 'commission'
+        'cou_amt', 'wall_amt', 'trans_id', 'store_charge', 'commission',
       ],
-      logging: (sql) => console.log('SQL Query:', sql),
     });
 
     const formattedPayments = payments.map(payment => ({
@@ -139,7 +121,7 @@ const downloadNormalPayments = async (req, res) => {
     }));
 
     const workbook = new ExcelJS.Workbook();
-    const worksheet = workbook.addWorksheet('Normal Payments');
+    const worksheet = workbook.addWorksheet('Normal Payments By Store');
 
     worksheet.columns = [
       { header: 'Order ID', key: 'order_id', width: 15 },
@@ -158,36 +140,45 @@ const downloadNormalPayments = async (req, res) => {
     worksheet.addRows(formattedPayments);
 
     res.setHeader('Content-Type', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
-    res.setHeader('Content-Disposition', 'attachment; filename=normal_payments.xlsx');
+    res.setHeader('Content-Disposition', 'attachment; filename=normal_payments_by_store.xlsx');
 
     await workbook.xlsx.write(res);
     res.end();
   } catch (error) {
-    console.error('Error downloading normal payments:', error);
-    res.status(500).json({ message: 'Error downloading normal payments' });
+    console.error('Error downloading normal payments by store:', error);
+    res.status(500).json({ message: 'Error downloading normal payments by store' });
   }
 };
 
-const downloadSingleNormalPayment = async (req, res) => {
+const downloadSingleNormalPaymentByStore = async (req, res) => {
   try {
     const { orderId } = req.params;
-    console.log('downloadSingleNormalPayment params:', req.params);
+    const { store_id } = req.query;
+
+    if (!store_id) {
+      return res.status(400).json({ message: 'Store ID is required' });
+    }
+
+    // Validate store_id exists in Store model
+    const store = await Store.findByPk(store_id);
+    if (!store) {
+      return res.status(404).json({ message: 'Store not found' });
+    }
 
     const payment = await NormalOrder.findOne({
-      where: { order_id: orderId },
+      where: { order_id: orderId, store_id },
       include: [
         { model: Store, as: 'store', attributes: ['title'] },
         { model: User, as: 'user', attributes: ['name', 'mobile'] },
       ],
       attributes: [
         'order_id', 'odate', 'o_total', 'subtotal', 'tax', 'd_charge',
-        'cou_amt', 'wall_amt', 'trans_id', 'store_charge', 'commission'
+        'cou_amt', 'wall_amt', 'trans_id', 'store_charge', 'commission',
       ],
-      logging: (sql) => console.log('SQL Query:', sql),
     });
 
     if (!payment) {
-      return res.status(404).json({ message: 'Payment not found' });
+      return res.status(404).json({ message: 'Payment not found or does not belong to this store' });
     }
 
     const formattedPayment = {
@@ -205,7 +196,7 @@ const downloadSingleNormalPayment = async (req, res) => {
     };
 
     const workbook = new ExcelJS.Workbook();
-    const worksheet = workbook.addWorksheet('Normal Payment');
+    const worksheet = workbook.addWorksheet('Normal Payment By Store');
 
     worksheet.columns = [
       { header: 'Order ID', key: 'order_id', width: 15 },
@@ -224,36 +215,32 @@ const downloadSingleNormalPayment = async (req, res) => {
     worksheet.addRow(formattedPayment);
 
     res.setHeader('Content-Type', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
-    res.setHeader('Content-Disposition', `attachment; filename=normal_payment_${orderId}.xlsx`);
+    res.setHeader('Content-Disposition', `attachment; filename=normal_payment_${orderId}_by_store.xlsx`);
 
     await workbook.xlsx.write(res);
     res.end();
   } catch (error) {
-    console.error('Error downloading single normal payment:', error);
-    res.status(500).json({ message: 'Error downloading single normal payment' });
+    console.error('Error downloading single normal payment by store:', error);
+    res.status(500).json({ message: 'Error downloading single normal payment by store' });
   }
 };
 
-// Subscribe Payments Controller
-const getSubscribePayments = async (req, res) => {
+// Subscribe Payments By Store Controller
+const getSubscribePaymentsByStore = async (req, res) => {
   try {
-    const { search, fromDate, toDate, storeId, page = 1, limit = 10 } = req.query;
+    const { store_id, search, fromDate, toDate, page = 1, limit = 10 } = req.query;
 
-    console.log('getSubscribePayments query:', req.query);
-
-    // Validate storeId
-    if (storeId && storeId !== 'undefined' && storeId !== '') {
-      const storeExists = await Store.findByPk(storeId);
-      if (!storeExists) {
-        console.log(`Invalid storeId: ${storeId}`);
-        return res.status(400).json({ message: `Store with ID ${storeId} not found` });
-      }
+    if (!store_id) {
+      return res.status(400).json({ message: 'Store ID is required' });
     }
 
-    const where = {};
-    if (storeId && storeId !== 'undefined' && storeId !== '') {
-      where.store_id = storeId;
+    // Validate store_id exists in Store model
+    const store = await Store.findByPk(store_id);
+    if (!store) {
+      return res.status(404).json({ message: 'Store not found' });
     }
+
+    const where = { store_id };
     if (search) {
       where[Op.or] = [
         { order_id: { [Op.like]: `%${search}%` } },
@@ -268,8 +255,6 @@ const getSubscribePayments = async (req, res) => {
       where.odate = { ...where.odate, [Op.lte]: new Date(toDate) };
     }
 
-    console.log('Query where:', where);
-
     const offset = (page - 1) * limit;
     const { count, rows } = await SubscribeOrder.findAndCountAll({
       where,
@@ -279,11 +264,10 @@ const getSubscribePayments = async (req, res) => {
       ],
       attributes: [
         'order_id', 'odate', 'o_total', 'subtotal', 'tax', 'd_charge',
-        'cou_amt', 'wall_amt', 'trans_id', 'store_charge', 'commission', 'end_date'
+        'cou_amt', 'wall_amt', 'trans_id', 'store_charge', 'commission', 'end_date',
       ],
       limit: parseInt(limit),
       offset: parseInt(offset),
-      logging: (sql) => console.log('SQL Query:', sql),
     });
 
     const formattedPayments = rows.map(payment => ({
@@ -298,7 +282,7 @@ const getSubscribePayments = async (req, res) => {
       coupon_amount: payment.cou_amt || 0,
       wallet_amount: payment.wall_amt || 0,
       transaction_id: payment.trans_id || 'N/A',
-      end_date: payment.end_date ? new Date(payment.end_date).toLocaleDateString() : 'N/A',
+      end_date: payment.end_date,
     }));
 
     res.json({
@@ -308,37 +292,28 @@ const getSubscribePayments = async (req, res) => {
       totalPages: Math.ceil(count / limit),
     });
   } catch (error) {
-    console.error('Error fetching subscribe payments:', error);
-    res.status(500).json({ message: 'Error fetching subscribe payments' });
+    console.error('Error fetching subscribe payments by store:', error);
+    res.status(500).json({ message: 'Error fetching subscribe payments by store' });
   }
 };
 
-const downloadSubscribePayments = async (req, res) => {
+const downloadSubscribePaymentsByStore = async (req, res) => {
   try {
-    const { fromDate, toDate, storeId } = req.query;
-    console.log('downloadSubscribePayments query:', req.query);
+    const { store_id, fromDate, toDate } = req.query;
 
-    // Validate storeId
-    if (storeId && storeId !== 'undefined' && storeId !== '') {
-      const storeExists = await Store.findByPk(storeId);
-      if (!storeExists) {
-        console.log(`Invalid storeId: ${storeId}`);
-        return res.status(400).json({ message: `Store with ID ${storeId} not found` });
-      }
+    if (!store_id) {
+      return res.status(400).json({ message: 'Store ID is required' });
     }
 
-    const where = {};
-    if (storeId && storeId !== 'undefined' && storeId !== '') {
-      where.store_id = storeId;
-    }
-    if (fromDate) {
-      where.odate = { [Op.gte]: new Date(fromDate) };
-    }
-    if (toDate) {
-      where.odate = { ...where.odate, [Op.lte]: new Date(toDate) };
+    // Validate store_id exists in Store model
+    const store = await Store.findByPk(store_id);
+    if (!store) {
+      return res.status(404).json({ message: 'Store not found' });
     }
 
-    console.log('Query where:', where);
+    const where = { store_id };
+    if (fromDate) where.odate = { [Op.gte]: new Date(fromDate) };
+    if (toDate) where.odate = { ...where.odate, [Op.lte]: new Date(toDate) };
 
     const payments = await SubscribeOrder.findAll({
       where,
@@ -348,9 +323,8 @@ const downloadSubscribePayments = async (req, res) => {
       ],
       attributes: [
         'order_id', 'odate', 'o_total', 'subtotal', 'tax', 'd_charge',
-        'cou_amt', 'wall_amt', 'trans_id', 'store_charge', 'commission', 'end_date'
+        'cou_amt', 'wall_amt', 'trans_id', 'store_charge', 'commission', 'end_date',
       ],
-      logging: (sql) => console.log('SQL Query:', sql),
     });
 
     const formattedPayments = payments.map(payment => ({
@@ -365,11 +339,11 @@ const downloadSubscribePayments = async (req, res) => {
       coupon_amount: payment.cou_amt || 0,
       wallet_amount: payment.wall_amt || 0,
       transaction_id: payment.trans_id || 'N/A',
-      end_date: payment.end_date ? new Date(payment.end_date).toLocaleDateString() : 'N/A',
+      end_date: payment.end_date,
     }));
 
     const workbook = new ExcelJS.Workbook();
-    const worksheet = workbook.addWorksheet('Subscribe Payments');
+    const worksheet = workbook.addWorksheet('Subscribe Payments By Store');
 
     worksheet.columns = [
       { header: 'Order ID', key: 'order_id', width: 15 },
@@ -389,36 +363,45 @@ const downloadSubscribePayments = async (req, res) => {
     worksheet.addRows(formattedPayments);
 
     res.setHeader('Content-Type', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
-    res.setHeader('Content-Disposition', 'attachment; filename=subscribe_payments.xlsx');
+    res.setHeader('Content-Disposition', 'attachment; filename=subscribe_payments_by_store.xlsx');
 
     await workbook.xlsx.write(res);
     res.end();
   } catch (error) {
-    console.error('Error downloading subscribe payments:', error);
-    res.status(500).json({ message: 'Error downloading subscribe payments' });
+    console.error('Error downloading subscribe payments by store:', error);
+    res.status(500).json({ message: 'Error downloading subscribe payments by store' });
   }
 };
 
-const downloadSingleSubscribePayment = async (req, res) => {
+const downloadSingleSubscribePaymentByStore = async (req, res) => {
   try {
     const { orderId } = req.params;
-    console.log('downloadSingleSubscribePayment params:', req.params);
+    const { store_id } = req.query;
+
+    if (!store_id) {
+      return res.status(400).json({ message: 'Store ID is required' });
+    }
+
+    // Validate store_id exists in Store model
+    const store = await Store.findByPk(store_id);
+    if (!store) {
+      return res.status(404).json({ message: 'Store not found' });
+    }
 
     const payment = await SubscribeOrder.findOne({
-      where: { order_id: orderId },
+      where: { order_id: orderId, store_id },
       include: [
         { model: Store, as: 'store', attributes: ['title'] },
         { model: User, as: 'user', attributes: ['name', 'mobile'] },
       ],
       attributes: [
         'order_id', 'odate', 'o_total', 'subtotal', 'tax', 'd_charge',
-        'cou_amt', 'wall_amt', 'trans_id', 'store_charge', 'commission', 'end_date'
+        'cou_amt', 'wall_amt', 'trans_id', 'store_charge', 'commission', 'end_date',
       ],
-      logging: (sql) => console.log('SQL Query:', sql),
     });
 
     if (!payment) {
-      return res.status(404).json({ message: 'Payment not found' });
+      return res.status(404).json({ message: 'Payment not found or does not belong to this store' });
     }
 
     const formattedPayment = {
@@ -433,11 +416,11 @@ const downloadSingleSubscribePayment = async (req, res) => {
       coupon_amount: payment.cou_amt || 0,
       wallet_amount: payment.wall_amt || 0,
       transaction_id: payment.trans_id || 'N/A',
-      end_date: payment.end_date ? new Date(payment.end_date).toLocaleDateString() : 'N/A',
+      end_date: payment.end_date,
     };
 
     const workbook = new ExcelJS.Workbook();
-    const worksheet = workbook.addWorksheet('Subscribe Payment');
+    const worksheet = workbook.addWorksheet('Subscribe Payment By Store');
 
     worksheet.columns = [
       { header: 'Order ID', key: 'order_id', width: 15 },
@@ -457,21 +440,21 @@ const downloadSingleSubscribePayment = async (req, res) => {
     worksheet.addRow(formattedPayment);
 
     res.setHeader('Content-Type', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
-    res.setHeader('Content-Disposition', `attachment; filename=subscribe_payment_${orderId}.xlsx`);
+    res.setHeader('Content-Disposition', `attachment; filename=subscribe_payment_${orderId}_by_store.xlsx`);
 
     await workbook.xlsx.write(res);
     res.end();
   } catch (error) {
-    console.error('Error downloading single subscribe payment:', error);
-    res.status(500).json({ message: 'Error downloading single subscribe payment' });
+    console.error('Error downloading single subscribe payment by store:', error);
+    res.status(500).json({ message: 'Error downloading single subscribe payment by store' });
   }
 };
 
 module.exports = {
-  getNormalPayments,
-  downloadNormalPayments,
-  downloadSingleNormalPayment,
-  getSubscribePayments,
-  downloadSubscribePayments,
-  downloadSingleSubscribePayment,
+  getNormalPaymentsByStore,
+  downloadNormalPaymentsByStore,
+downloadSingleNormalPaymentByStore,
+  getSubscribePaymentsByStore,
+  downloadSubscribePaymentsByStore,
+  downloadSingleSubscribePaymentByStore,
 };

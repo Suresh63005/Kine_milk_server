@@ -21,6 +21,7 @@ const upsertProduct = async (req, res) => {
       subscription_required,
       weightOptions,
       discount,
+      batch_number
     } = req.body;
 
     console.log("Request body:", req.body);
@@ -105,6 +106,7 @@ const upsertProduct = async (req, res) => {
         out_of_stock,
         subscription_required,
         discount: discount || product.discount,
+        batch_number
       });
 
       // Fetch existing WeightOption and StoreWeightOption data to preserve quantity/total
@@ -192,6 +194,7 @@ const upsertProduct = async (req, res) => {
         out_of_stock,
         subscription_required,
         discount: discount || "",
+        batch_number
       });
 
       // Create new weight options
@@ -290,6 +293,8 @@ const getProductById = asyncHandler(async (req, res) => {
       description: product.description,
       out_of_stock: product.out_of_stock,
       subscription_required: product.subscription_required,
+      package_type: product.package_type,
+      batch_number: product.batch_number,
       weightOptions: product.weightOptions, // Included from the association
     },
   });
@@ -297,12 +302,12 @@ const getProductById = asyncHandler(async (req, res) => {
 
 const deleteProduct = asyncHandler(async (req, res) => {
   const { id } = req.params;
-
+  console.log("Received ID for deletion:", id);
 
   const product = await Product.findOne({ where: { id }, paranoid: false });
 
   if (!product) {
-    logger.error("");
+    logger.error(`Product not found for ID: ${id}`);
     return res.status(404).json({ error: "Product not found" });
   }
 

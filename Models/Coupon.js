@@ -5,7 +5,7 @@ const Coupon = sequelize.define(
   "Coupon",
   {
     id: {
-      
+
       type: DataTypes.UUID,
       allowNull: false,
       primaryKey: true,
@@ -23,7 +23,11 @@ const Coupon = sequelize.define(
       type: DataTypes.TEXT,
       allowNull: false,
     },
-    expire_date: {
+    start_date: {
+      type: DataTypes.DATE,
+      allowNull: false,
+    },
+    end_date: {
       type: DataTypes.DATE,
       allowNull: false,
     },
