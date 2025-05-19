@@ -6,11 +6,14 @@ const asyncHandler = require("../../middlewares/errorHandler");
 const Address = require("../../Models/Address");
 const SubscribeOrderProduct = require("../../Models/SubscribeOrderProduct");
 const Product = require("../../Models/Product");
+const Time = require("../../Models/Time");
+const Category = require("../../Models/Category");
+const WeightOption = require("../../Models/WeightOption");
 
 const FetchSubscribeOrdersByStatus = asyncHandler(async (req, res) => {
     console.log("Decoded User:", req.user);
   
-    const uid = req.user.userId;
+    const uid = req.user.storeId;
     if (!uid) {
       return res.status(400).json({
         ResponseCode: "401",
@@ -48,6 +51,12 @@ const FetchSubscribeOrdersByStatus = asyncHandler(async (req, res) => {
         where: queryFilter,
         order: [["createdAt", "DESC"]],
         include: [
+          {
+            model:Time,
+            as:"timeslots",
+            attributes:["mintime","maxtime"],
+            required:false
+          },
           {
             model: SubscribeOrderProduct,
             as: "orderProducts",
@@ -112,7 +121,7 @@ const FetchSubscribeOrdersByStatus = asyncHandler(async (req, res) => {
   const ViewSubscribeOrderById = asyncHandler(async (req, res) => {
     console.log("Decoded User:", req.user);
   
-    const uid = req.user.userId;
+    const uid = req.user.storeId;
     if (!uid) {
       return res.status(401).json({
         ResponseCode: "401",
@@ -136,13 +145,32 @@ const FetchSubscribeOrdersByStatus = asyncHandler(async (req, res) => {
         where: { id: orderId, store_id: storeId },
         include: [
           {
+            model:Time,
+            as:"timeslots",
+            attributes:["mintime","maxtime"],
+            where:{store_id:storeId},
+            required:false
+          },
+          {
             model: SubscribeOrderProduct,
             as: "orderProducts",
             include: [
               {
                 model: Product,
                 as: "productDetails",
-                attributes: ["id", "title", "description", "normal_price", "mrp_price", "img"],
+                attributes: ["id", "title", "description","img"],
+                include:[
+                  {
+                    model:Category,
+                    as:"category",
+                    attributes:['id','title']
+                  },
+                ]
+              },
+              {
+                model:WeightOption,
+                as:"subscribeProductWeight",
+                attributes:["id","weight","subscribe_price","normal_price","mrp_price"]
               },
             ],
           },
@@ -201,7 +229,7 @@ const FetchSubscribeOrdersByStatus = asyncHandler(async (req, res) => {
 
 const AssignOrderToRider = asyncHandler(async (req, res) => {
   console.log("Decoded User:", req.user);
-  const uid = req.user.userId;
+  const uid = req.user.storeId;
   if (!uid) {
     return res.status(400).json({
       ResponseCode: "401",
@@ -228,7 +256,7 @@ const AssignOrderToRider = asyncHandler(async (req, res) => {
       return res.status(404).json({ message: "Rider not found! OR inactive!" });
     }
     await SubscribeOrder.update(
-      { rid: rider_id, status: "Active" },
+      { rid: rider_id, status: "Processing" },
       { where: { id: order_id } }
     );
     const updatedOrder = await SubscribeOrder.findOne({

@@ -18,6 +18,10 @@ const Cart = sequelize.define(
       type: DataTypes.UUID,
       allowNull: false,
     },
+    weight_id:{
+      type:DataTypes.UUID,
+      allowNull:true
+    },
     quantity: { 
       type: DataTypes.INTEGER,
       allowNull: true,

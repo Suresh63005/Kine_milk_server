@@ -169,12 +169,16 @@ const Store = sequelize.define(
     },
     is_pickup: {
       type: DataTypes.INTEGER,
-      allowNull: false,
+      allowNull: true,
     },
     owner_name:{
       type:DataTypes.TEXT,
       allowNull:false
-    }
+    },
+    one_subscription: {
+      type: DataTypes.TEXT,
+      allowNull: true,
+    },
   },
   { tableName: "tbl_store", timestamps: true, paranoid: true }
 );

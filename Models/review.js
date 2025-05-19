@@ -1,7 +1,6 @@
 const sequelize = require("../config/db");
 const { DataTypes } = require("sequelize");
 
-
 const Review = sequelize.define(
   "Tbl_reviews",
   {
@@ -11,18 +10,24 @@ const Review = sequelize.define(
       defaultValue: DataTypes.UUIDV4,
       primaryKey: true,
     },
-    user_id:{
-        type: DataTypes.UUID,
-        allowNull: false,
-    },
-    store_id:{
-
-      type:DataTypes.UUID,
-      allowNull:false,
-
-    },
-    rider_id:{
+    user_id: {
       type: DataTypes.UUID,
+      allowNull: false,
+    },
+    store_id: {
+      type: DataTypes.UUID,
+      allowNull: false,
+    },
+    rider_id: {
+      type: DataTypes.UUID,
+      allowNull: false,
+    },
+    order_id: {
+      type: DataTypes.UUID,
+      allowNull: false,
+    },
+    order_type: {
+      type: DataTypes.ENUM("normal", "subscribe"), 
       allowNull: false,
     },
     rating: {
@@ -30,7 +35,7 @@ const Review = sequelize.define(
       allowNull: false,
     },
     review: {
-        type: DataTypes.TEXT,
+      type: DataTypes.TEXT,
     },
     status: {
       type: DataTypes.INTEGER,
@@ -44,6 +49,5 @@ const Review = sequelize.define(
     paranoid: true,
   }
 );
-
 
 module.exports = Review;

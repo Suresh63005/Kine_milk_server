@@ -10,7 +10,8 @@ const upsertTime = async (req, res) => {
     //     logger.error(`Validation error: ${error.message}`);
     //     return res.status(400).json({ success: false, message: error.message });
     // }
-    const { id,mintime,maxtime,status,store_id } = req.body;
+    const { id,mintime,maxtime,status } = req.body;
+    const {store_id} = req.params
     console.log(req.body)
     try {
         if(id){
@@ -38,21 +39,28 @@ const upsertTime = async (req, res) => {
     
 };
 
-const getAllTimes=asynHandler(async(req,res,next)=>{
-
-    const {store_id} = req.body;
-
+const getAllTimes = async (req, res, next) => {
     try {
+        const { store_id } = req.params;
 
-        const Times=await Time.findAll({where:{store_id}});
-    logger.info("sucessfully get all Time's");
-    res.status(200).json(Times);
+        if (!store_id) {
+            return res.status(400).json({ message: "Store ID is required" });
+        }
+
+        const times = await Time.findAll({ where: { store_id } });
+
+        if (!times || times.length === 0) {
+            return res.status(404).json({ message: "No time slots found for this store" });
+        }
+
+        console.log("Successfully fetched all time slots");
+        res.status(200).json(times);
         
     } catch (error) {
-        
+        console.error("Error fetching time slots:", error);
+        next(error); // Pass error to the error-handling middleware
     }
-    
-});
+};
 
 const getTimeCount=asynHandler(async(req,res)=>{
     const TimeCount=await Time.count();
@@ -137,6 +145,31 @@ const searchTime=asynHandler(async(req,res)=>{
         logger.info("Times found ")
         res.status(200).json(Time)
 });
+const toggleTimeStatus = async (req, res) => {
+    console.log("Request received:", req.body);
+    const { id, value } = req.body;
+  
+    try {
+      const time = await Time.findByPk(id);
+  
+      if (!time) {
+        logger.error("time not found");
+        return res.status(404).json({ message: "time not found." });
+      }
+  
+      time.status = value;
+      await time.save();
+  
+      logger.info("time updated successfully:", time);
+      res.status(200).json({
+        message: "time status updated successfully.",
+        updatedStatus: time.status,
+      });
+    } catch (error) {
+      logger.error("Error updating time status:", error);
+      res.status(500).json({ message: "Internal server error." });
+    }
+  }
 
 module.exports={
     upsertTime,
@@ -144,5 +177,6 @@ module.exports={
     getTimeCount,
     getTimeById,
     deleteTime,
-    searchTime
+    searchTime,
+    toggleTimeStatus
 }

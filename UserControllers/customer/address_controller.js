@@ -103,7 +103,46 @@ const upSertAddress = async (req, res) => {
     }
   }
 
+  const deleteAddress = async (req, res) => {
+    const uid = req.user.userId;
+    const { addressId } = req.params;
+    console.log(uid, "userid", addressId, "address id");
+
+    try {
+        // Find the address before deleting
+        const findAddress = await Address.findOne({ where: { id: addressId, uid: uid } });
+
+        if (!findAddress) {
+            return res.status(404).json({
+                ResponseCode: "404",
+                Result: "false",
+                ResponseMsg: "Address Not Found",
+            });
+        }
+
+        // Force delete the address (permanent deletion)
+        await Address.destroy({ where: { id: addressId, uid: uid }, force: true });
+
+        return res.status(200).json({
+            ResponseCode: "200",
+            Result: "true",
+            ResponseMsg: "Address Deleted Successfully!",
+        });
+
+    } catch (error) {
+        console.error("Error deleting address:", error);
+        res.status(500).json({ 
+            ResponseCode: "500",
+            Result: "false",
+            ResponseMsg: "Internal Server Error",
+            error: error.message 
+        });
+    }
+};
+
+
   module.exports = {
     upSertAddress,
-    getAddress
+    getAddress,
+    deleteAddress
   }

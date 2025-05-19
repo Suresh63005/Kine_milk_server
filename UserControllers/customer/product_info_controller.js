@@ -1,6 +1,8 @@
 const { where } = require("sequelize");
 const Product = require("../../Models/Product");
 const ProductImage = require("../../Models/productImages");
+const Category = require("../../Models/Category");
+const WeightOption = require("../../Models/WeightOption");
 
 const productInfo = async (req, res) => {
     try {
@@ -16,14 +18,27 @@ const productInfo = async (req, res) => {
         }
 
         // Fetch the product
-        const product = await Product.findOne({where:{id:pid},include: [
+        const product = await Product.findOne({
+          where: { id: pid },
+          include: [
+            {
+                model:Category,
+                as:"category",
+                attributes:["id","title"]
+            },
             {
               model: ProductImage,
               as: "extraImages",
               attributes: ["img"],
-              required:true
+              required: false,
             },
-          ],});
+            {
+                model: WeightOption,
+                as: "weightOptions", // Alias for the association (ensure this matches your model definition)
+                attributes: ["weight", "subscribe_price", "normal_price", "mrp_price"], // Select specific fields
+              }
+          ],
+        });
 
         if (!product) {
             return res.status(404).json({

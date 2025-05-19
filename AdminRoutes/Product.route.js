@@ -1,6 +1,6 @@
 const express=require("express")
 const router=express.Router();
-const { upsertProduct, getAllProducts, getProductById, getProductCount, toggleproductStatus } = require("../AdminControllers/Product.Controller");
+const { upsertProduct, getAllProducts, getProductById, getProductCount, toggleproductStatus, deleteProduct } = require("../AdminControllers/Product.Controller");
 const upload = require("../utils/multerConfig");
 
 router.post("/upsert", upload.fields([
@@ -9,7 +9,7 @@ router.post("/upsert", upload.fields([
 ]), upsertProduct);
 router.get("/all",getAllProducts)
 router.get("/getbyid/:id",getProductById)
-router.delete("/delete/:id",getAllProducts)
+router.delete("/delete/:id",deleteProduct)
 router.patch("/update/:id",getAllProducts)
 router.get("/count",getProductCount)
 router.patch("/toggle-status",toggleproductStatus)

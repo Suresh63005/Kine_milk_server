@@ -4,6 +4,7 @@ const logger = require("../utils/logger");
 const uploadToS3 = require("../config/fileUpload.aws");
 const { upsertStoreSchema, storeDeleteSchema } = require("../utils/validation");
 const {storeFirebase} = require("../config/firebase-config");
+const bcrypt = require("bcryptjs");
 
 const upsertStore = asyncHandler(async (req, res) => {
   try {
@@ -76,13 +77,18 @@ const upsertStore = asyncHandler(async (req, res) => {
     }
    
     
-
+    
     let store;
     if (id) {
       store = await Store.findByPk(id);
       if (!store) {
         return res.status(404).json({ ResponseCode: "404", Result: "false", ResponseMsg: "Store not found." });
       }
+      let hashedPassword = store.password;
+    if (password) {
+      const salt = await bcrypt.genSalt(10);
+      hashedPassword = await bcrypt.hash(password, salt);
+    }
       await store.update({
         title,
         status,
@@ -108,7 +114,7 @@ const upsertStore = asyncHandler(async (req, res) => {
         email,
         rstatus,
         mobile,
-        password,
+        password:hashedPassword,
         sdesc,
         cancle_policy,
         charge_type,
@@ -129,6 +135,8 @@ const upsertStore = asyncHandler(async (req, res) => {
       
       return res.status(200).json({ message: "Store updated successfully!", store });
     } else {
+      const salt = await bcrypt.genSalt(10);
+      const hashedPassword = await bcrypt.hash(password, salt);
       // **Create new store**
       store = await Store.create({
         title,
@@ -155,7 +163,7 @@ const upsertStore = asyncHandler(async (req, res) => {
         email,
         rstatus,
         mobile,
-        password,
+        password:hashedPassword,
         sdesc,
         cancle_policy,
         charge_type,
@@ -311,4 +319,40 @@ const toggleStoreStatus = async (req, res) => {
   }
 }
 
-module.exports = { upsertStore,fetchStores,fetchStoreById,deleteStore,toggleStoreStatus };
+
+
+
+const updateStoreEmailPassword = asyncHandler(async (req, res) => {
+  try {
+    const { store_id } = req.params; // store_id is coming from params, but it's actually 'id' in Store model
+    const { email, password } = req.body;
+
+    // Validate input
+    if (!store_id) {
+      return res.status(400).json({ success: false, message: "Store ID is required." });
+    }
+    if (!email || !password) {
+      return res.status(400).json({ success: false, message: "Email and password are required." });
+    }
+
+    // Find store by ID (store_id is actually 'id' in the Store model)
+    const store = await Store.findOne({ where: { id: store_id } });
+
+    if (!store) {
+      return res.status(404).json({ success: false, message: "Store not found." });
+    }
+
+    // Hash the password before updating
+    const hashedPassword = await bcrypt.hash(password, 10);
+
+    // Update only email & password
+    await store.update({ email, password: hashedPassword });
+
+    return res.status(200).json({ success: true, message: "Store email and password updated successfully!" });
+  } catch (error) {
+    console.error("Error updating store email & password:", error);
+    return res.status(500).json({ success: false, message: "Internal Server Error" });
+  }
+});
+
+module.exports = { upsertStore,fetchStores,fetchStoreById,deleteStore,toggleStoreStatus,updateStoreEmailPassword  };

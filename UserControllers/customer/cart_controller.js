@@ -1,11 +1,15 @@
 const Cart = require("../../Models/Cart");
 const Product = require("../../Models/Product");
+const User = require("../../Models/User");
+const cron = require('node-cron');
+const WeightOption = require("../../Models/WeightOption");
+
 
 const upsertCart = async (req, res) => {
     try {
-      const { uid, product_id, quantity,orderType } = req.body;
+      const { uid, product_id, quantity,orderType,weight_id } = req.body;
 
-      if (!uid || !product_id || !orderType ) {
+      if (!uid || !product_id || !orderType || !weight_id ) {
         return res.status(400).json({
           ResponseCode: "400",
           Result: "false",
@@ -14,7 +18,7 @@ const upsertCart = async (req, res) => {
       }
   
       const existingCartItem = await Cart.findOne({
-        where: { uid, product_id,orderType },
+        where: { uid, product_id,orderType,weight_id },
       });
   
       if (existingCartItem) {
@@ -33,7 +37,8 @@ const upsertCart = async (req, res) => {
           uid,
           product_id,
           quantity,
-          orderType
+          orderType,
+          weight_id
         });
   
         return res.status(200).json({
@@ -75,8 +80,12 @@ const upsertCart = async (req, res) => {
         include: [
           {
               model: Product,
-              attributes: ["id", "title", "img","normal_price","subscribe_price", "description"],
-              as: "CartproductDetails" 
+              attributes: ["id", "title", "img", "description"],
+              as: "CartproductDetails"
+          },{
+            model:WeightOption,
+            as:"cartweight",
+            attributes:["weight","subscribe_price","normal_price","mrp_price"]
           }
       ]
       });
@@ -133,10 +142,68 @@ try {
 }
 
   }
+
+  const sendDailyCartNotifications = async()=>{
+    try {
+      const userWithCartItems = await Cart.findAll({
+        attributes:['uid'],group:['uid']
+      })
+      const userIds = userWithCartItems.map(cart=>cart.id)
+      if (userIds.length === 0) {
+        console.log('No users with items in the cart.');
+        return;
+      }
+      const users = await User.findAll({
+        where:{id:userIds},
+        attributes:['id','name','one_subscription']
+      })
+      for(const user of users){
+        try {
+          const notificationContent = {
+            app_id: process.env.ONESIGNAL_APP_ID,
+            include_player_ids: [user.one_subscription],
+            data: { user_id: user.id, type: 'cart reminder' },
+            contents: {
+              en: `${user.name}, you have items in your cart. Complete your purchase today!`,
+            },
+            headings: { en: "Don't forget your cart!" },
+          };
+  
+          const response = await axios.post(
+            'https://onesignal.com/api/v1/notifications',
+            notificationContent,
+            {
+              headers: {
+                'Content-Type': 'application/json; charset=utf-8',
+                Authorization: `Basic ${process.env.ONESIGNAL_API_KEY}`,
+              },
+            }
+          );
+  
+          console.log(`Notification sent to ${user.name}:`, response.data);
+        } catch (error) {
+          console.error(`Failed to send notification to ${user.name}:`, error);
+        }
+      }
+    } catch (error) {
+      console.error('Error in sending notifications:', error);
+    }
+  }
+  
+  // cron.schedule('0 9 * * *',()=>{
+  //   console.log("Running daily cart notification job...");
+  //   sendDailyCartNotifications()
+  // })
+
+  cron.schedule('26 12 * * *', () => {
+    console.log("Running daily cart notification job at 12:30 PM...");
+    sendDailyCartNotifications();
+  });
   
 
   module.exports = {
     upsertCart,
     getCartByUser,
-    deleteCart
+    deleteCart,
+    sendDailyCartNotifications
   }

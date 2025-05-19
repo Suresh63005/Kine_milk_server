@@ -1,7 +1,6 @@
 const sequelize = require("../config/db");
 const { DataTypes } = require("sequelize");
 
-
 const ProductInventory = sequelize.define(
   "ProductInventory",
   {
@@ -11,36 +10,30 @@ const ProductInventory = sequelize.define(
       defaultValue: DataTypes.UUIDV4,
       primaryKey: true,
     },
-   
     store_id: {
       type: DataTypes.UUID,
       allowNull: false,
     },
-    product_id:{
-        type: DataTypes.UUID,
-        allowNull: false,
+    product_id: {
+      type: DataTypes.UUID,
+      allowNull: false,
     },
-    date:{
-        type: DataTypes.DATEONLY,
-        allowNull:false
+    date: {
+      type: DataTypes.DATEONLY,
+      allowNull: false,
     },
-    quantity:{
-      type:DataTypes.BIGINT,
-      defaultValue:1
+    total: {
+      type: DataTypes.BIGINT,
+      defaultValue: 0,
     },
-    total:{
-        type:DataTypes.BIGINT,
-        defaultValue:0
-    },
-    Coupons:{
-      type:DataTypes.JSON,
-      defaultValue:[]
+    Coupons: {
+      type: DataTypes.JSON,
+      defaultValue: [],
     },
     status: {
-        type: DataTypes.INTEGER,
-        allowNull: false,
-      },
-   
+      type: DataTypes.INTEGER,
+      allowNull: false,
+    },
   },
   {
     tableName: "tbl_productInventory",

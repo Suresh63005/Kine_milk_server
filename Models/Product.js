@@ -10,7 +10,6 @@ const Product = sequelize.define(
       defaultValue: DataTypes.UUIDV4,
       primaryKey: true,
     },
-
     cat_id: {
       type: DataTypes.UUID,
       allowNull: false,
@@ -20,7 +19,7 @@ const Product = sequelize.define(
       allowNull: false,
     },
     img: {
-      type: DataTypes.TEXT, // "long" is not needed in Sequelize
+      type: DataTypes.TEXT,
       allowNull: false,
     },
     description: {
@@ -31,18 +30,6 @@ const Product = sequelize.define(
       type: DataTypes.INTEGER,
       allowNull: false,
     },
-    subscribe_price: {
-      type: DataTypes.FLOAT,
-      allowNull: false,
-    },
-    normal_price: {
-      type: DataTypes.FLOAT,
-      allowNull: false,
-    },
-    discount: {
-      type: DataTypes.FLOAT,
-      allowNull: false,
-    },
     out_of_stock: {
       type: DataTypes.INTEGER,
       allowNull: false,
@@ -51,18 +38,19 @@ const Product = sequelize.define(
       type: DataTypes.INTEGER,
       allowNull: false,
     },
-    mrp_price: {
-      type: DataTypes.FLOAT,
-      allowNull: false,
+    quantity: {
+      type: DataTypes.BIGINT,
+      defaultValue: 0,
     },
-    quantity:{
-      type:DataTypes.BIGINT,
-      defaultValue:0
+    date: {
+      type: DataTypes.DATEONLY,
+      allowNull: true,
     },
-    date:{
-      type:DataTypes.DATEONLY,
-      allowNull:true
-    }
+    discount: {
+      type: DataTypes.FLOAT, // Use FLOAT for percentage values
+      allowNull: true, // Optional field
+      defaultValue: 0, // Default to 0 if not provided
+    },
   },
   {
     tableName: "tbl_product",

@@ -4,7 +4,7 @@ const asyncHandler = require("../middlewares/errorHandler");
 const logger = require("../utils/logger");
 const uploadToS3 = require("../config/fileUpload.aws");
 const Store = require("../Models/Store");
-
+const WeightOption = require("../Models/WeightOption")
 const ProductImage = require("../Models/productImages");
 
 const upsertProduct = async (req, res) => {
@@ -15,12 +15,10 @@ const upsertProduct = async (req, res) => {
       status,
       cat_id,
       description,
-      subscribe_price,
-      normal_price,
-      mrp_price,
-      discount,
       out_of_stock,
       subscription_required,
+      weightOptions,
+      discount,
     } = req.body;
 
     console.log("Request body:", req.body);
@@ -30,12 +28,10 @@ const upsertProduct = async (req, res) => {
       !title ||
       !status ||
       !cat_id ||
-      !subscribe_price ||
-      !normal_price ||
-      !mrp_price ||
-      !discount ||
+      !description ||
       !out_of_stock ||
-      !subscription_required
+      !subscription_required ||
+      !weightOptions
     ) {
       return res.status(400).json({
         ResponseCode: "400",
@@ -44,21 +40,51 @@ const upsertProduct = async (req, res) => {
       });
     }
 
-    let imageUrl = null;
-    let extraImageUrls = [];
+    // Parse weightOptions (since it's sent as a JSON string)
+    let parsedWeightOptions;
+    try {
+      parsedWeightOptions = JSON.parse(weightOptions);
+    } catch (error) {
+      return res.status(400).json({
+        ResponseCode: "400",
+        Result: "false",
+        ResponseMsg: "Invalid weightOptions format. Must be a valid JSON string.",
+      });
+    }
 
+    // Validate weightOptions
+    if (!Array.isArray(parsedWeightOptions) || parsedWeightOptions.length === 0) {
+      return res.status(400).json({
+        ResponseCode: "400",
+        Result: "false",
+        ResponseMsg: "At least one weight option is required.",
+      });
+    }
+
+    for (const option of parsedWeightOptions) {
+      if (
+        !option.weight ||
+        !option.subscribe_price ||
+        !option.normal_price ||
+        !option.mrp_price
+      ) {
+        return res.status(400).json({
+          ResponseCode: "400",
+          Result: "false",
+          ResponseMsg: "All fields in weight options (weight, subscribe_price, normal_price, mrp_price) are required.",
+        });
+      }
+    }
+
+    let imageUrl = null;
     if (req.files?.img) {
       imageUrl = await uploadToS3(req.files.img[0], "images");
     }
-
-    if (req.files?.extraImages) {
-      extraImageUrls = await Promise.all(
-        req.files.extraImages.map((file) => uploadToS3(file, "extra-images"))
-      );
-    }
+    console.log(imageUrl);
 
     let product;
     if (id) {
+      // Update existing product
       product = await Product.findByPk(id);
       if (!product) {
         return res.status(404).json({
@@ -74,25 +100,23 @@ const upsertProduct = async (req, res) => {
         status,
         cat_id,
         description,
-        subscribe_price,
-        normal_price,
-        mrp_price,
-        discount,
         out_of_stock,
         subscription_required,
+        discount: discount || product.discount,
       });
 
-      // Clear existing images
-      await ProductImage.destroy({ where: { product_id: id } });
+      // Delete existing weight options
+      await WeightOption.destroy({ where: { product_id: id } });
 
-      // Add new images if any
-      if (extraImageUrls.length > 0) {
-        const newImages = extraImageUrls.map((img) => ({
-          product_id: id,
-          img,
-        }));
-        await ProductImage.bulkCreate(newImages);
-      }
+      // Create new weight options
+      const weightOptionEntries = parsedWeightOptions.map((option) => ({
+        product_id: id,
+        weight: option.weight,
+        subscribe_price: parseFloat(option.subscribe_price),
+        normal_price: parseFloat(option.normal_price),
+        mrp_price: parseFloat(option.mrp_price),
+      }));
+      await WeightOption.bulkCreate(weightOptionEntries);
 
       console.log("Product updated successfully:", product);
       return res.status(200).json({
@@ -102,6 +126,16 @@ const upsertProduct = async (req, res) => {
         product,
       });
     } else {
+      // Check for duplicate title only when creating a new product
+      const existingProduct = await Product.findOne({ where: { title } });
+      if (existingProduct) {
+        return res.status(409).json({
+          ResponseCode: "409",
+          Result: "false",
+          ResponseMsg: "Product with this title already exists.",
+        });
+      }
+
       // Create new product
       product = await Product.create({
         title,
@@ -109,22 +143,20 @@ const upsertProduct = async (req, res) => {
         status,
         cat_id,
         description,
-        subscribe_price,
-        normal_price,
-        mrp_price,
-        discount,
         out_of_stock,
         subscription_required,
+        discount: discount || "",
       });
 
-      // Add extra images if any
-      if (extraImageUrls.length > 0) {
-        const newImages = extraImageUrls.map((img) => ({
-          product_id: product.id,
-          img,
-        }));
-        await ProductImage.bulkCreate(newImages);
-      }
+      // Create weight options
+      const weightOptionEntries = parsedWeightOptions.map((option) => ({
+        product_id: product.id,
+        weight: option.weight,
+        subscribe_price: parseFloat(option.subscribe_price),
+        normal_price: parseFloat(option.normal_price),
+        mrp_price: parseFloat(option.mrp_price),
+      }));
+      await WeightOption.bulkCreate(weightOptionEntries);
 
       console.log("Product created successfully:", product);
       return res.status(200).json({
@@ -145,21 +177,19 @@ const upsertProduct = async (req, res) => {
 };
 
 
-const getAllProducts = asyncHandler(async (req, res, next) => {
-
-
-
+const getAllProducts = async (req, res) => {
   try {
-
-    const Products = await Product.findAll();
-    logger.info("successfully get all products");
-    res.status(200).json(Products);
-
+    const products = await Product.findAll({
+      include: [{ model: WeightOption, as: "weightOptions" }], // Assuming association is set
+    });
+    res.status(200).json(products);
   } catch (error) {
+    res.status(500).json({ error: error.message });
     console.log(error)
-
   }
-});
+};
+
+
 
 const getProductCount = asyncHandler(async (req, res) => {
   const ProductCount = await Product.count();
@@ -169,54 +199,69 @@ const getProductCount = asyncHandler(async (req, res) => {
 });
 
 const getProductById = asyncHandler(async (req, res) => {
-  // const {error}=getproductByIdSchema.validate(req.params)
+  // Uncomment and use Joi validation if needed
+  // const { error } = getproductByIdSchema.validate(req.params);
   // if (error) {
-  //     logger.error(error.details[0].message)
-  //     return res.status(400).json({ error: error.details[0].message });
+  //   logger.error(error.details[0].message);
+  //   return res.status(400).json({ error: error.details[0].message });
   // }
+
   const { id } = req.params;
-  const product = await Product.findOne({ where: { id: id } });
+
+  // Fetch product with associated weightOptions
+  const product = await Product.findOne({
+    where: { id: id },
+    include: [
+      {
+        model: WeightOption,
+        as: "weightOptions", // Alias for the association (ensure this matches your model definition)
+        attributes: ["weight", "subscribe_price", "normal_price", "mrp_price"], // Select specific fields
+      },
+    ],
+  });
+
   if (!product) {
     logger.error("Product not found");
-    return res.status(404).json({ error: "Product not found" });
+    return res.status(404).json({
+      ResponseCode: "404",
+      Result: "false",
+      ResponseMsg: "Product not found",
+    });
   }
-  res.status(200).json(product);
+
+  // Format the response to match your API style
+  res.status(200).json({
+    ResponseCode: "200",
+    Result: "true",
+    ResponseMsg: "Product retrieved successfully",
+    data: {
+      id: product.id,
+      title: product.title,
+      img: product.img,
+      status: product.status,
+      cat_id: product.cat_id,
+      description: product.description,
+      out_of_stock: product.out_of_stock,
+      subscription_required: product.subscription_required,
+      weightOptions: product.weightOptions, // Included from the association
+    },
+  });
 });
 
 const deleteProduct = asyncHandler(async (req, res) => {
   const { id } = req.params;
-  const { forceDelete } = req.body;
 
-  const Product = await Product.findOne({ where: { id }, paranoid: false });
 
-  if (!Product) {
+  const product = await Product.findOne({ where: { id }, paranoid: false });
+
+  if (!product) {
     logger.error("");
     return res.status(404).json({ error: "Product not found" });
   }
 
-  if (Product.deletedAt && forceDelete !== "true") {
-    logger.error(
-      "Product is already soft-deleted. Use forceDelete=true to permanently delete it."
-    );
-    return res
-      .status(400)
-      .json({
-        error:
-          "Product is already soft-deleted. Use forceDelete=true to permanently delete it.",
-      });
-  }
-
-  if (forceDelete === "true") {
-    await Product.destroy({ force: true });
-    logger.info("Product permanently deleted successfully");
-    return res
-      .status(200)
-      .json({ message: "Product permanently deleted successfully" });
-  }
-
-  await Product.destroy();
-  logger.info("Product soft deleted successfully");
-  return res.status(200).json({ message: "Product soft deleted successfully" });
+  await Product.destroy({where:{id}});
+  logger.info("Product deleted successfully");
+  return res.status(200).json({ message: "Product deleted successfully" });
 });
 
 const searchProduct = asyncHandler(async (req, res) => {
@@ -230,13 +275,13 @@ const searchProduct = asyncHandler(async (req, res) => {
     whereClause.title = { [Sequelize.Op.like]: `%${title.trim()}%` };
   }
 
-  const Product = await Product.findAll({ where: whereClause });
+  const product = await Product.findAll({ where: whereClause });
 
-  if (Product.length === 0) {
+  if (product.length === 0) {
     logger.error("No matching admins found");
     return res.status(404).json({ error: "No matching admins found" });
   }
-  res.status(200).json(Product);
+  res.status(200).json(product);
 });
 
 const toggleproductStatus = async (req, res) => {

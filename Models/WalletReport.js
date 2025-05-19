@@ -35,6 +35,10 @@ const WalletReport = sequelize.define(
       type: DataTypes.DATE,
       allowNull: false,
     },
+    transaction_type:{
+      type:DataTypes.ENUM("Credited","Debited"),
+      allowNull:true
+    }
 
   },
   { tableName: "wallet_report", timestamps: true, paranoid: true }

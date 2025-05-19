@@ -113,14 +113,13 @@ const SubscribeOrder = sequelize.define(
     rid: {
       type: DataTypes.UUID,
       allowNull: true,
-      defaultValue: 0,
     },
     wall_amt: {
       type: DataTypes.FLOAT,
       allowNull: true,
     },
     status: {
-      type: DataTypes.ENUM("Pending", "Active", "Completed", "Cancelled"),
+      type: DataTypes.ENUM("Pending", "Active","Processing", "Completed", "Cancelled"),
       allowNull: false,
       defaultValue: "Pending",
     },
@@ -169,6 +168,10 @@ const SubscribeOrder = sequelize.define(
       type: DataTypes.TEXT,
       defaultValue: null,
     },
+    order_id:{
+      type:DataTypes.TEXT,
+      allowNull:true
+    }
   },
   { tableName: "tbl_subscribe_order", timestamps: true, paranoid: true }
 );
