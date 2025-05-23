@@ -60,6 +60,10 @@ const SubscribeOrder = sequelize.define(
       type: DataTypes.DATEONLY,
       allowNull: true,
     },
+    paused_period:{
+      type: DataTypes.JSON,
+      allowNull: true,
+    },
     delivered_dates: {
       type: DataTypes.JSON,
       allowNull: true,
@@ -119,7 +123,7 @@ const SubscribeOrder = sequelize.define(
       allowNull: true,
     },
     status: {
-      type: DataTypes.ENUM("Pending", "Active","Processing", "Completed", "Cancelled"),
+      type: DataTypes.ENUM("Pending", "Active","Processing", "Completed", "Cancelled","Paused"),
       allowNull: false,
       defaultValue: "Pending",
     },

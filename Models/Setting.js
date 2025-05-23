@@ -77,6 +77,14 @@ const Setting = sequelize.define(
       type: DataTypes.TEXT("long"),
       allowNull: false,
     },
+    minimum_subscription_days:{
+      type: DataTypes.INTEGER,
+      allowNull: false,
+    },
+    wallet_amt_suggestions:{
+      type:DataTypes.JSON,
+      allowNull:true
+    }
   },
   {
     tableName: "tbl_setting",
